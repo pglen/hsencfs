@@ -479,7 +479,30 @@ int main(int argc, char *argv[])
     // Primitive debug facility. Use tail -f hsenc.log to monitor this file
     // from a separate terminal. We mostly used the log facility.
 
-    openlog("HSENC",  LOG_PID,  LOG_DAEMON);
+    openlog("HSENCFS",  LOG_PID,  LOG_DAEMON);
+
+    DIR *dd; struct dirent *dir;
+    dd = opendir(mountpoint);
+    if (!dd)
+        {
+        fprintf(stderr,"Cannnot open Mount Point directory\n");
+        exit(5);
+        }
+    int bb = 0;
+    for (int aa = 0; aa < 3; aa++)
+        {
+        if((dir = readdir(dd)) == NULL)
+            break;
+        bb++;
+        }
+    closedir(dd);
+
+    if(bb > 2)
+        {
+        //printf("%s\n", dir->d_name);
+        fprintf(stderr,"Mount Point directory not empty, '%s' mounted already.\n", mountpoint);
+        exit(5);
+        }
 
     if(loglevel > 0)
         {
@@ -540,6 +563,8 @@ int main(int argc, char *argv[])
         if(pass_ritual(mountpoint, mountdata, pass, &plen))
             {
             //fprintf(stderr,"Invalid pass.\n");
+            syslog(LOG_AUTH, "Failed attempt at mounting by %d '%s' -> '%s'",
+                                getuid(), mountdata, mountpoint);
             exit(5);
             }
         }
@@ -547,13 +572,10 @@ int main(int argc, char *argv[])
     if(!quiet)
         {
         if(ondemand)
-            printf("Mounting ... with ondemand password.\n");
+            printf("Mounting ... with on-demand password.\n");
         else
-            printf("Mounting ...\n");
+            printf("Mounting %s\n", mountpoint);
         }
-
-    if(loglevel > 0)
-        syslog(LOG_DEBUG, "Mounted '%s' -> '%s'", mountdata, mountpoint);
 
     // Write back expanded paths
     argv[optind] = mountdata;
@@ -566,7 +588,12 @@ int main(int argc, char *argv[])
     if(loglevel > 0 && ret)
         syslog(LOG_DEBUG, "Mount returned with '%d'", ret);
 
-	return ret;
+	if(loglevel > 0)
+        syslog(LOG_DEBUG, "Mounted '%s' -> '%s'", mountdata, mountpoint);
 
+    syslog(LOG_AUTH, "Mounted by %d '%s' -> '%s'",
+                                 getuid(), mountdata, mountpoint);
+
+    return ret;
 }
 
