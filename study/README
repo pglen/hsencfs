@@ -1,0 +1,16 @@
+                          README
+                        
+ This directory contains misc tests needed during development.
+For example a question on what happens when you truncate a file
+to a shorter length, and then expand that file --> will it ...
+
+  a.) preserve the old data b.) zero it c.) fill it with undefined data
+ 
+Believe it or not, the answer is not as intuitive as it sounds.
+
+  This simple test revealed that windows will preserve the excess data,
+Linux will zero it, OS-ABC-XX will fill in random data. Some Unix-s will
+behave different if the file is a sparse file ... (Note we obfuscated the 
+OS name here)
+
+                                                

@@ -1,0 +1,56 @@
+                            QUICK START
+            
+ To use HSENCFS, type at the command prompt:
+
+      hsencfs  -f  ~/.secretdata ~/secrets
+      
+ Will create and mount the ~/secrets directory. Everything you put in the 
+directory will be encrypted, everything you read will be decrypted. The
+option -f will force creation of new directories.
+
+Will prompt for password.
+
+Note the leading tilde (~) for making dirs relative to your home dir.
+ 
+The backing data directory in the above example is ~/.secretdata. Note the 
+leading dot, for conveniently hiding the backing data from view.
+
+To prevent HSENCFS from prompting, add a pass option:
+
+      hsencfs -f -p yourpass ~/.secretdata ~/secrets
+      
+Make sure you understand the implications for the clear text password.
+
+To prevent HSENCFS from prompting, add a pass program:
+
+      hsencfs -f -a `which hsaskpass` ~/.secretdata ~/secrets
+      
+Where 'hsgetpass' is a program to use for password prompt. It is
+supplied with the HSENCFS project. Notice the backticks, as the 'a' option 
+requires a fully resolved path.
+
+To prevent HSENCFS from prompting in a GUI, add a GUI pass program:
+
+      hsencfs -f -a `which hsaskpass.py` ~/.secretdata ~/secrets
+      
+Where 'hsaskpass.py' is a program to use for password prompt. It is
+supplied with the HSENCFS project. Notice the backticks, as the 'a' option 
+requires a fully resolved path.
+
+To ask HSENCFS to prompt for pass on first file operation:
+
+      hsencfs -f -o -a `which hsaskpass.py` ~/.secretdata ~/secrets
+      
+ You may copy cypher text data in / out from the backing data directory.
+This allows for robust backup or transport / upload. 
+(Ex.: Email / FTP / Remote Drive)
+
+
+
+ 
+ 
+
+
+
+
+

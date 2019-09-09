@@ -1,0 +1,45 @@
+#!/usr/bin/python
+# -*- coding: UTF-8 -*-
+
+# System tray for High Security Encrypting File System.
+
+# ------------------------------------------------------------------------
+# Logging functions. Replicate to a file in home dir ./appname
+# Looks like log, but contains what python normally prints. 
+
+def writelogexc():
+    ee = sys.exc_info()
+    logfile = openlog() 
+    logfile.seek(0, os.SEEK_END)    
+    ddd = time.asctime() + " " + str(ee[0]) + str(ee[1])
+    logfile.write(ddd);
+    traceback.print_tb(sys.exc_info()[2], 5, logfile)
+    logfile.flush ()
+    logfile.close()
+
+def writelog(strx):
+    logfile = openlog() 
+    logfile.seek(0, os.SEEK_END)    
+    ddd = time.asctime() + " " + strx
+    logfile.write(ddd);
+    logfile.flush ()
+    logfile.close()
+
+def openlog():
+    logfile = None
+    homex = os.environ['HOME'] + "/.hstray"
+    try:
+        statinfo = os.stat(homex)
+    except:
+        os.mkdir(homex)
+    try:
+        logfile = open(homex + "/hstray.log", "r+");
+    except:
+        try:
+            logfile = open(homex + "/hstray.log", "w+");
+        except:
+            print "Cannot open/create logfile"  
+    return logfile
+
+
+
