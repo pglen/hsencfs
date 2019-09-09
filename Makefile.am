@@ -4,7 +4,7 @@
 # It will encrypt data on write, decrypt data on read.
 #
 
-SUBDIRS =  bluepoint tools docs
+SUBDIRS =  bluepoint tools docs src
 
 PAN_SERV=GNOME_HSENCApplet.server
 BONOBO_DIR=/usr/lib/bonobo/servers
@@ -20,8 +20,9 @@ dist_bin_SCRIPTS =                  \
         hstray.py
 
 # Auxiliaries
-EXTRA_DIST = hsencrw.c hsencop.c
-EXTRA_DIST += hsicon.png hsicon.svg hspadlock.png hspadlock.svg screenshot.png
+EXTRA_DIST = src/hsencrw.c src/hsencop.c
+EXTRA_DIST += images/hsicon.png images/hsicon.svg images/hspadlock.png \
+                    images/hspadlock.svg images/screenshot.png
 EXTRA_DIST += study
 
 # Fake it into the distribution
@@ -35,33 +36,20 @@ EXTRA_DIST +=                       \
         lazy.sh                     \
         pack.sh                     \
         sha1.sum                    \
-        sha1.sum.old                \
         SUMFILE
-
-bin_PROGRAMS =  hsencfs hsaskpass
-
-# The main program
-hsencfsdir = .
-hsencfs_CFLAGS = -D_FILE_OFFSET_BITS=64 -O2 -I$(srcdir)/bluepoint \
-            -lfuse -lulockmgr
-hsencfs_SOURCES = hsencfs.c hsutils.c hspass.c hsutils.h
-hsencfs_LDADD = bluepoint/bluepoint2.o
-
-# Password helper
-hsaskpass_CFLAGS = -D_FILE_OFFSET_BITS=64 -O2 -I$(srcdir)/bluepoint
 
 check:
     # Create new folder, destroy at end. Good example of installation-less
     # creation of a secret folder with the force option
-	@./hsencfs -q -l 2 -f -p 1234 ~/.testdata ~/testsecrets
+	@./src/hsencfs -q -l 2 -f -p 1234 ~/.testdata ~/testsecrets
 	@-$(srcdir)/enctest.sh
 	@-fusermount -u ~/testsecrets
 	@-rm -rf ~/testsecrets ~/.testdata
 
 clean-local:
-	@-chmod -R u+w hsencfs-*   > /dev/null 2>&1
-	@-rm -rf hsencfs-*.rpm     > /dev/null 2>&1
-	@-rm -rf hsencfs-*.tar.gz  > /dev/null 2>&1
+	@-chmod -R u+w src/hsencfs-*   > /dev/null 2>&1
+	@-rm -rf src/hsencfs-*.rpm     > /dev/null 2>&1
+	@-rm -rf src/hsencfs-*.tar.gz  > /dev/null 2>&1
 	@-rm -f $(PAN_SERV)
 
 # We are forcing this to go to /usr/lib as panel will look for it there
@@ -86,8 +74,8 @@ uninstall-local:
 	-rm -f $(DESTDIR)/$(datarootdir)/pixmaps/hspadlock.png
 
 gensum:
-	-./gensum.sh 
-    
+	-./gensum.sh
+
 # Make RPMS. To run on an older system, the RPM subsystem needed patching.
 # We patched the files as follows:
 #
@@ -145,6 +133,8 @@ test-vars:
 	@echo  bindir=$(bindir)
 	@echo  srcdir=$(srcdir)
 	@echo  prefix=$(prefix)
+
+
 
 
 

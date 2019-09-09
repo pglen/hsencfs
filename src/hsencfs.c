@@ -55,7 +55,7 @@
 #include <getopt.h>
 
 #include "hsutils.h"
-#include "bluepoint2.h"
+#include "../bluepoint/bluepoint2.h"
 
 #define MAXPASSLEN 512
 
@@ -561,6 +561,7 @@ int main(int argc, char *argv[])
 	return ret;
 
 }
+
 
 
 

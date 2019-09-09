@@ -27,7 +27,7 @@
 #include <getopt.h>
 
 #include "hsutils.h"
-#include "bluepoint2.h"
+#include "../bluepoint/bluepoint2.h"
 
 extern char    progname[];
 extern int     loglevel;
@@ -228,6 +228,7 @@ int pass_ritual(char *mountroot, char *mountdata, char *pass, int *plen)
 
     return ret;
 }
+
 
 
 

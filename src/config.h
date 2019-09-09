@@ -112,7 +112,7 @@
 #define LSTAT_FOLLOWS_SLASHED_SYMLINK 1
 
 /* Name of package */
-#define PACKAGE "hsencfs"
+/* #undef PACKAGE */
 
 /* Define to the address where bug reports for this package should be sent. */
 #define PACKAGE_BUGREPORT "bugs@nohost.none"
@@ -136,7 +136,7 @@
 #define STDC_HEADERS 1
 
 /* Version number of package */
-#define VERSION "1.20"
+/* #undef VERSION */
 
 /* Define to `int' if <sys/types.h> doesn't define. */
 /* #undef gid_t */
