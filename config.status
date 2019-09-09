@@ -449,7 +449,7 @@ Copyright (C) 2010 Free Software Foundation, Inc.
 This config.status script is free software; the Free Software Foundation
 gives unlimited permission to copy, distribute and modify it."
 
-ac_pwd='/home/peterglen/src/hsenc/hsenc-020'
+ac_pwd='/home/peterglen/src/hsenc/hsenc'
 srcdir='.'
 INSTALL='/usr/bin/install -c'
 AWK='gawk'
@@ -654,13 +654,13 @@ S["SET_MAKE"]=""
 S["AWK"]="gawk"
 S["INSTALL_STRIP_PROGRAM"]="${SHELL} $(install_sh) -c -s"
 S["STRIP"]=""
-S["install_sh"]="/home/peterglen/src/hsenc/hsenc-020/install-sh"
-S["AMTAR"]="${SHELL} /home/peterglen/src/hsenc/hsenc-020/missing --run tar"
-S["MAKEINFO"]="${SHELL} /home/peterglen/src/hsenc/hsenc-020/missing --run makeinfo"
-S["AUTOHEADER"]="${SHELL} /home/peterglen/src/hsenc/hsenc-020/missing --run autoheader"
-S["AUTOMAKE"]="${SHELL} /home/peterglen/src/hsenc/hsenc-020/missing --run automake-1.7"
-S["AUTOCONF"]="${SHELL} /home/peterglen/src/hsenc/hsenc-020/missing --run autoconf"
-S["ACLOCAL"]="${SHELL} /home/peterglen/src/hsenc/hsenc-020/missing --run aclocal-1.7"
+S["install_sh"]="/home/peterglen/src/hsenc/hsenc/install-sh"
+S["AMTAR"]="${SHELL} /home/peterglen/src/hsenc/hsenc/missing --run tar"
+S["MAKEINFO"]="${SHELL} /home/peterglen/src/hsenc/hsenc/missing --run makeinfo"
+S["AUTOHEADER"]="${SHELL} /home/peterglen/src/hsenc/hsenc/missing --run autoheader"
+S["AUTOMAKE"]="${SHELL} /home/peterglen/src/hsenc/hsenc/missing --run automake-1.7"
+S["AUTOCONF"]="${SHELL} /home/peterglen/src/hsenc/hsenc/missing --run autoconf"
+S["ACLOCAL"]="${SHELL} /home/peterglen/src/hsenc/hsenc/missing --run aclocal-1.7"
 S["VERSION"]="1.17"
 S["PACKAGE"]="hsencfs"
 S["CYGPATH_W"]="echo"

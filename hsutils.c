@@ -1,7 +1,7 @@
 /*
- *  High security encryption file system. We make use of the API offered by 
+ *  High security encryption file system. We make use of the API offered by
  *  the fuse subsystem to intercept file operations.
- */  
+ */
 
 #define FUSE_USE_VERSION 26
 
@@ -27,8 +27,8 @@
 #endif
 
 // -----------------------------------------------------------------------
-// Expand path for home / abs / rel. 
-// The shell does it, but we make sure too, just in case it is called 
+// Expand path for home / abs / rel.
+// The shell does it, but we make sure too, just in case it is called
 // from a another program.
 
 void    expandpath(const char *inp, char *outp, int maxlen)
@@ -41,9 +41,9 @@ void    expandpath(const char *inp, char *outp, int maxlen)
     else if(inp[0] == '~' && inp[1] == '/')     // Home Relative
         {
         char *env = getenv("HOME");
-        strcpy(outp, env);  
+        strcpy(outp, env);
         if(outp[strlen(outp)-1] != '/')
-            strcat(outp, "/"); 
+            strcat(outp, "/");
         strcat(outp, inp + 2);
         }
     else                                        // Relative
@@ -78,9 +78,10 @@ int help()
     printf("                 3 - read/write;   4 - all (noisy)\n");
     printf("Use '--' to at the end of options for appending fuse options. ");
     printf("For example: 'hsencfs sdata mpoint -- -o ro' for read only mount.\n");
-    printf("Typical invocation: \n");    
-    printf("    hsenc -l 2  ~/.secretdata ~/secret\n");    
+    printf("Typical invocation: \n");
+    printf("    hsencfs -l 2  ~/.secretdata ~/secret\n");
 }
+
 
 
 
