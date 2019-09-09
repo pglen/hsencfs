@@ -55,6 +55,7 @@
 #include <getopt.h>
 
 #include "hsutils.h"
+#include "base64.h"
 #include "../bluepoint/bluepoint2.h"
 
 #define MAXPASSLEN 512
@@ -213,7 +214,8 @@ char *hs_askpass(const char *program, char *buf, int buflen)
 
     	//set_perms(PERM_FULL_USER); //TODO
     	closefrom(STDERR_FILENO + 1);
-    	execl(program, (char *)NULL);
+    	execl(program, program, NULL);
+    	//execl(program, (char *)NULL);
     	printf("Unable to run %s", program);
     	_exit(255);
         }
@@ -232,6 +234,7 @@ char *hs_askpass(const char *program, char *buf, int buflen)
     (void) close(pfd[0]);
     (void) sigaction(SIGPIPE, &saved_sa_pipe, NULL);
 
+    // Decode base64
     return(xpass);
 }
 
@@ -514,9 +517,14 @@ int main(int argc, char *argv[])
                     printf("Getting pass from program: '%s'\n", passprog);
 
                 char *res = hs_askpass(passprog, tmp, MAXPASSLEN);
-                if (res && strlen(res))
+                int rlen = strlen(res);
+                unsigned long olen = 0;
+
+                if (res && rlen)
                     {
-                    strncpy(pass, res, sizeof(pass));
+                    unsigned char *res2 = base64_decode(res, rlen, &olen);
+                    //strncpy(pass, res, sizeof(pass));
+                    strncpy(pass, res2, sizeof(pass));
                     }
                 else
                     {
@@ -561,17 +569,4 @@ int main(int argc, char *argv[])
 	return ret;
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 

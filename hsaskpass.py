@@ -1,15 +1,21 @@
 #!/usr/bin/env python
 
+from __future__ import print_function
+
 # GUI propmt for the user of HSENCFS
 
-import os, sys, getopt, signal
-import gobject, gtk
+import os, sys, getopt, signal, base64
+
+import gi
+gi.require_version("Gtk", "3.0")
+from gi.repository import Gtk
+from gi.repository import Gdk
 
 def getpass(title, message):
 
-    dialog = gtk.Dialog(title,
+    dialog = Gtk.Dialog(title,
                    None,
-                   gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT)
+                   Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT)
 
     sp = "   "
     try:
@@ -18,65 +24,69 @@ def getpass(title, message):
         try:
             dialog.set_icon_from_file( \
                 "/usr/local/share/icons/hsencfs/hsicon.png")
-        except:                                              
+        except:
             pass
-    
-    label = gtk.Label(message); 
-    label2 = gtk.Label(sp);     label3 = gtk.Label(sp)
-    hbox = gtk.HBox() ;         hbox.pack_start(label2);  
-    hbox.pack_start(label);     hbox.pack_start(label3)
-    
-    entry = gtk.Entry();    
+
+    label = Gtk.Label(message);
+    label2 = Gtk.Label(sp);     label3 = Gtk.Label(sp)
+    hbox = Gtk.HBox() ;         hbox.pack_start(label2, 0, 0, 0)
+    hbox.pack_start(label, 0, 0, 0);     hbox.pack_start(label3, 0, 0, 0)
+
+    entry = Gtk.Entry();
     entry.set_invisible_char("*")
     entry.set_visibility(False)
-    
-    entry.set_width_chars(64)
-    
-    label21 = gtk.Label(sp);     label31 = gtk.Label(sp)
-    hbox.pack_start(label21);     
-    hbox.pack_start(entry)
-    hbox.pack_start(label31)
-    
-    label22 = gtk.Label(sp);     label32 = gtk.Label(sp)
-    
-    dialog.vbox.pack_start(label22)
-    dialog.vbox.pack_start(hbox)
-    dialog.vbox.pack_start(label32)
 
-    #dialog.set_default_response(gtk.RESPONSE_YES)
+    entry.set_width_chars(64)
+
+    label21 = Gtk.Label(sp);     label31 = Gtk.Label(sp)
+    hbox.pack_start(label21, 0, 0, 0);
+    hbox.pack_start(entry, 0, 0, 0)
+    hbox.pack_start(label31, 0, 0, 0)
+
+    label22 = Gtk.Label(sp);     label32 = Gtk.Label(sp)
+
+    dialog.vbox.pack_start(label22, 0, 0, 0)
+    dialog.vbox.pack_start(hbox, 0, 0, 0)
+    dialog.vbox.pack_start(label32, 0, 0, 0)
+
+    #dialog.set_default_response(Gtk.ResponseType.YES)
     entry.set_activates_default(True)
-    
-    dialog.add_button("_OK", gtk.RESPONSE_YES)
-    dialog.add_button("_Cancel", gtk.RESPONSE_NO)
-    
+
+    dialog.add_button("_OK", Gtk.ResponseType.YES)
+    dialog.add_button("_Cancel", Gtk.ResponseType.NO)
+
     dialog.connect("key-press-event", area_key)
     dialog.show_all()
-    response = dialog.run() 
+    response = dialog.run()
     text = entry.get_text()
-                
+
     # Convert all responses to cancel
-    if  response == gtk.RESPONSE_CANCEL or \
-        response == gtk.RESPONSE_REJECT or \
-        response == gtk.RESPONSE_CLOSE  or \
-        response == gtk.RESPONSE_DELETE_EVENT:
-        response = gtk.RESPONSE_CANCEL        
+    if  response == Gtk.ResponseType.CANCEL or \
+        response == Gtk.ResponseType.REJECT or \
+        response == Gtk.ResponseType.CLOSE  or \
+        response == Gtk.ResponseType.DELETE_EVENT:
+        response = Gtk.ResponseType.CANCEL
     dialog.destroy()
-    
-    if response != gtk.RESPONSE_CANCEL:
+
+    if response != Gtk.ResponseType.CANCEL:
         return  text
-    else: 
+    else:
         return ""
 
 def area_key(win, event):
 
-    if event.keyval == gtk.keysyms.Return:
-        win.response(gtk.RESPONSE_OK)
+    if event.keyval == Gdk.KEY_Return:
+        win.response(Gtk.ResponseType.OK)
 
 # Start of program:
 if __name__ == '__main__':
 
-    text = getpass("Enter HSENCFS Password", "Enter pass: ");    
-    print text
+    text = getpass("Enter HSENCFS Password", "Enter pass: ");
+
+    # Does not have to be rocket science, just to hide from plaintext view:
+
+    print(base64.b64encode(text))
+
 
 
 

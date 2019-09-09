@@ -49,7 +49,8 @@ void    expandpath(const char *inp, char *outp, int maxlen)
     else                                        // Relative
         {
         char  tmp_path[PATH_MAX] ;
-        getcwd(tmp_path, sizeof(tmp_path));
+        char *ppp = getcwd(tmp_path, sizeof(tmp_path));
+        (void)ppp;
         strcpy(outp, tmp_path);  strcat(outp, "/"); strcat(outp, inp);
         }
 }
@@ -81,6 +82,7 @@ int help()
     printf("Typical invocation: \n");
     printf("    hsencfs -l 2  ~/.secretdata ~/secret\n");
 }
+
 
 
 

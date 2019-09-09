@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////
 // Bluepoint2 test decrypter. Outputs to stdout.
-// 
+//
 
 // It blindly decrypts, so make sure if you expect the HSENCFS
 // subsystem to accept the file, use the same pass.
@@ -16,7 +16,7 @@
 #include <errno.h>
 #include <syslog.h>
 #include <sys/time.h>
-           
+
 #include "bluepoint2.h"
 
 /// We use this string to obfuscate the password. Do not change.
@@ -37,11 +37,11 @@ int bpgetpass(const char *fname)
 
 {
     char    *xpass = NULL; int     xlen;
-    
+
     snprintf(tmp, sizeof(tmp),  "\n"
-            "Enter pass for file: '%s'\n" 
-            "Entering wrong pass will decrypt it incorrectly.\n" 
-            "Entering empty pass (Return) will Abort.\n" 
+            "Enter pass for file: '%s'\n"
+            "Entering wrong pass will decrypt it incorrectly.\n"
+            "Entering empty pass (Return) will Abort.\n"
             "\n"
             "Please enter pass: ", fname);
 
@@ -52,15 +52,15 @@ int bpgetpass(const char *fname)
         fprintf(stderr, "Aborted.\n");
         exit(1);
         }
-        
+
     // Dup the results right away, clear it too
     strncpy(pass, xpass, sizeof(pass));
     memset(xpass, 0, xlen);
-    
+
     // Always padd it
     if(xlen % 2)
-        strncat(pass, "x", sizeof(pass));
-    
+        strncat(pass, "x", sizeof(pass)-1);
+
     // Encrypt the results right away
     plen = strlen(pass);
     bluepoint2_encrypt(pass, plen, progname, strlen(progname));
@@ -74,44 +74,45 @@ int main(int argc, char *argv[])
     memset(pass, 0, sizeof(pass));
 
     if(argc < 2)
-        {         
+        {
         fprintf(stderr, "Usage: bdec2 infile\n");
         exit(1);
         }
-        
+
     if(access(argv[1], F_OK) < 0)
         {
         fprintf(stderr, "File '%s' must exist and readable.\n", argv[1]);
         exit(1);
         }
-        
+
     bpgetpass(argv[1]);
-    
+
     FILE *fp = fopen(argv[1], "rb");
     if (!fp)
         {
         fprintf(stderr, "File %s must exist.\n", argv[1]);
         exit(1);
         }
-        
+
     while(1)
         {
         memset(buff, 0, sizeof(buff));
         int loop, len = fread(buff, 1, sizeof(buff), fp);
-        
+
         if(len <= 0)
             break;
-            
+
         hs_decrypt(buff, len, pass, plen);
-        
+
         for (loop = 0; loop < len; loop++)
             putchar(buff[loop]);
-            
+
         if(len < sizeof(buff))
             break;
         }
-    exit(0);    
+    exit(0);
 }
+
 
 
 

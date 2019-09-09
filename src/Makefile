@@ -110,7 +110,8 @@ hsaskpass_LDADD = $(LDADD)
 hsaskpass_LINK = $(CCLD) $(hsaskpass_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
 am_hsencfs_OBJECTS = hsencfs-hsencfs.$(OBJEXT) \
-	hsencfs-hsutils.$(OBJEXT) hsencfs-hspass.$(OBJEXT)
+	hsencfs-hsutils.$(OBJEXT) hsencfs-hspass.$(OBJEXT) \
+	hsencfs-base64.$(OBJEXT)
 hsencfs_OBJECTS = $(am_hsencfs_OBJECTS)
 hsencfs_DEPENDENCIES = ../bluepoint/bluepoint2.o
 hsencfs_LINK = $(CCLD) $(hsencfs_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
@@ -131,8 +132,8 @@ DEFAULT_INCLUDES = -I. -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/hsaskpass-hsaskpass.Po \
-	./$(DEPDIR)/hsencfs-hsencfs.Po ./$(DEPDIR)/hsencfs-hspass.Po \
-	./$(DEPDIR)/hsencfs-hsutils.Po
+	./$(DEPDIR)/hsencfs-base64.Po ./$(DEPDIR)/hsencfs-hsencfs.Po \
+	./$(DEPDIR)/hsencfs-hspass.Po ./$(DEPDIR)/hsencfs-hsutils.Po
 am__mv = mv -f
 AM_V_lt = $(am__v_lt_$(V))
 am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
@@ -185,7 +186,7 @@ AM_DEFAULT_VERBOSITY = 1
 AUTOCONF = autoconf
 AUTOHEADER = autoheader
 AUTOMAKE = automake-1.16
-AWK = gawk
+AWK = mawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
 CFLAGS = 
@@ -197,9 +198,9 @@ DEPDIR = .deps
 ECHO_C = 
 ECHO_N = -n
 ECHO_T = 
-EGREP = /usr/bin/grep -E
+EGREP = /bin/grep -E
 EXEEXT = 
-GREP = /usr/bin/grep
+GREP = /bin/grep
 INSTALL = /usr/bin/install -c
 INSTALL_DATA = ${INSTALL} -m 644
 INSTALL_PROGRAM = ${INSTALL}
@@ -210,7 +211,7 @@ LIBOBJS =
 LIBS = -lulockmgr -lfuse 
 LTLIBOBJS = 
 MAKEINFO = makeinfo
-MKDIR_P = /usr/bin/mkdir -p
+MKDIR_P = /bin/mkdir -p
 OBJEXT = o
 PACKAGE = hsencfs
 PACKAGE_BUGREPORT = bugs@nohost.none
@@ -221,13 +222,13 @@ PACKAGE_URL =
 PACKAGE_VERSION = 1.20
 PATH_SEPARATOR = :
 SET_MAKE = 
-SHELL = /bin/sh
+SHELL = /bin/bash
 STRIP = 
 VERSION = 1.20
-abs_builddir = /home/peterglen/src/hsenc/hsencfs/src
-abs_srcdir = /home/peterglen/src/hsenc/hsencfs/src
-abs_top_builddir = /home/peterglen/src/hsenc/hsencfs
-abs_top_srcdir = /home/peterglen/src/hsenc/hsencfs
+abs_builddir = /home/peterglen/src/hsenc/src
+abs_srcdir = /home/peterglen/src/hsenc/src
+abs_top_builddir = /home/peterglen/src/hsenc
+abs_top_srcdir = /home/peterglen/src/hsenc
 ac_ct_CC = gcc
 am__include = include
 am__leading_dot = .
@@ -246,7 +247,7 @@ host_alias =
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /home/peterglen/src/hsenc/hsencfs/install-sh
+install_sh = ${SHELL} /home/peterglen/src/hsenc/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -258,6 +259,7 @@ pdfdir = ${docdir}
 prefix = /usr/local
 program_transform_name = s,x,x,
 psdir = ${docdir}
+runstatedir = ${localstatedir}/run
 sbindir = ${exec_prefix}/sbin
 sharedstatedir = ${prefix}/com
 srcdir = .
@@ -272,7 +274,7 @@ hsencfsdir = .
 hsencfs_CFLAGS = -D_FILE_OFFSET_BITS=64 -O2 -I$(srcdir)/bluepoint \
             -lfuse -lulockmgr
 
-hsencfs_SOURCES = hsencfs.c hsutils.c hspass.c hsutils.h
+hsencfs_SOURCES = hsencfs.c hsutils.c hspass.c base64.c
 hsencfs_LDADD = ../bluepoint/bluepoint2.o
 
 # Password helper
@@ -368,6 +370,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 include ./$(DEPDIR)/hsaskpass-hsaskpass.Po # am--include-marker
+include ./$(DEPDIR)/hsencfs-base64.Po # am--include-marker
 include ./$(DEPDIR)/hsencfs-hsencfs.Po # am--include-marker
 include ./$(DEPDIR)/hsencfs-hspass.Po # am--include-marker
 include ./$(DEPDIR)/hsencfs-hsutils.Po # am--include-marker
@@ -447,6 +450,20 @@ hsencfs-hspass.obj: hspass.c
 #	$(AM_V_CC)source='hspass.c' object='hsencfs-hspass.obj' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -c -o hsencfs-hspass.obj `if test -f 'hspass.c'; then $(CYGPATH_W) 'hspass.c'; else $(CYGPATH_W) '$(srcdir)/hspass.c'; fi`
+
+hsencfs-base64.o: base64.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -MT hsencfs-base64.o -MD -MP -MF $(DEPDIR)/hsencfs-base64.Tpo -c -o hsencfs-base64.o `test -f 'base64.c' || echo '$(srcdir)/'`base64.c
+	$(AM_V_at)$(am__mv) $(DEPDIR)/hsencfs-base64.Tpo $(DEPDIR)/hsencfs-base64.Po
+#	$(AM_V_CC)source='base64.c' object='hsencfs-base64.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -c -o hsencfs-base64.o `test -f 'base64.c' || echo '$(srcdir)/'`base64.c
+
+hsencfs-base64.obj: base64.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -MT hsencfs-base64.obj -MD -MP -MF $(DEPDIR)/hsencfs-base64.Tpo -c -o hsencfs-base64.obj `if test -f 'base64.c'; then $(CYGPATH_W) 'base64.c'; else $(CYGPATH_W) '$(srcdir)/base64.c'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/hsencfs-base64.Tpo $(DEPDIR)/hsencfs-base64.Po
+#	$(AM_V_CC)source='base64.c' object='hsencfs-base64.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -c -o hsencfs-base64.obj `if test -f 'base64.c'; then $(CYGPATH_W) 'base64.c'; else $(CYGPATH_W) '$(srcdir)/base64.c'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique
@@ -574,6 +591,7 @@ clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
 
 distclean: distclean-am
 		-rm -f ./$(DEPDIR)/hsaskpass-hsaskpass.Po
+	-rm -f ./$(DEPDIR)/hsencfs-base64.Po
 	-rm -f ./$(DEPDIR)/hsencfs-hsencfs.Po
 	-rm -f ./$(DEPDIR)/hsencfs-hspass.Po
 	-rm -f ./$(DEPDIR)/hsencfs-hsutils.Po
@@ -623,6 +641,7 @@ installcheck-am:
 
 maintainer-clean: maintainer-clean-am
 		-rm -f ./$(DEPDIR)/hsaskpass-hsaskpass.Po
+	-rm -f ./$(DEPDIR)/hsencfs-base64.Po
 	-rm -f ./$(DEPDIR)/hsencfs-hsencfs.Po
 	-rm -f ./$(DEPDIR)/hsencfs-hspass.Po
 	-rm -f ./$(DEPDIR)/hsencfs-hsutils.Po
