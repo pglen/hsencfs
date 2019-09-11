@@ -45,11 +45,11 @@ int main(int argc, char *argv[])
 
     printf("HASH:\n");
     hh = bluepoint2_hash(copy, slen);
-    printf("%u 0x%08x\n", hh, hh);
+    printf("%lu 0x%08lx\n", hh, hh);
 
     printf("CRYPTHASH: \n");
     hh = bluepoint2_crypthash(copy, slen, pass, plen);
-    printf("%u 0x%08x\n", hh, hh);
+    printf("%lu 0x%08lx\n", hh, hh);
 
     printf("HASH64:\n");
     unsigned long long int hhh = bluepoint2_hash64(copy, slen);
@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
     if (memcmp(dumped2, orig, olen2))
         {
         printf("Decrypt error.");
-        } 
+        }
     printf("FROMHEX: \n");
     //printf("'%s'", dumped2);
     printf("%s", bluepoint2_dumphex(dumped2, olen2));
@@ -85,5 +85,6 @@ int main(int argc, char *argv[])
     bluepoint2_decrypt(dumped2, olen2, pass, plen);
     printf("decrypted='%s'\n", dumped2);
 }
+
 
 

@@ -78,8 +78,8 @@ static  char    version[] = "1.17";
 // The decoy employed occasionally to stop spyers
 // from figuring out where it is stored
 
-static  char    pass[MAXPASSLEN];
-static  int     plen = sizeof(pass);
+static  char    passx[MAXPASSLEN];
+static  int     plen = sizeof(passx);
 static  char    decoy[MAXPASSLEN];
 static  int     plen2 = sizeof(decoy);
 
@@ -267,11 +267,11 @@ int main(int argc, char *argv[])
     memset(mountpoint,  0, sizeof(mountpoint));
     memset(mountdata,   0, sizeof(mountdata));
     memset(passprog,    0, sizeof(passprog));
-    memset(pass,        0, sizeof(pass));
+    memset(passx,       0, sizeof(passx));
     memset(decoy,       0, sizeof(decoy));
 
     // Just for development. DO NOT USE!
-    //strcpy(pass, "1234"); //plen = strlen(pass);
+    //strcpy(passx, "1234"); //plen = strlen(passx);
 
     // Parse command line
    	while (1)
@@ -317,13 +317,13 @@ int main(int argc, char *argv[])
                break;
 
            case 'p':
-                if (pass[0] != 0)
+                if (passx[0] != 0)
                     {
                     fprintf(stderr, "%s Error: multiple passes on command line.\n", argv[0]);
                     exit(1);
                     }
-                strncpy(pass, optarg, sizeof(pass));
-                plen = strlen(pass);
+                strncpy(passx, optarg, sizeof(passx));
+                plen = strlen(passx);
                 // Randomize optarg
                 for(loop = 0; loop < plen; loop++)
                     {
@@ -515,7 +515,7 @@ int main(int argc, char *argv[])
     //bufsize = ss.st_blksize;
     //printf("Bufsize = %d\n", bufsize);
 
-    bluepoint2_encrypt(decoy, sizeof(decoy), pass, plen);
+    bluepoint2_encrypt(decoy, sizeof(decoy), passx, plen);
 
     if (ondemand)
         {
@@ -530,7 +530,7 @@ int main(int argc, char *argv[])
         }
     else
         {
-        if(pass[0] == 0)
+        if(passx[0] == 0)
             {
             char tmp[MAXPASSLEN];
 
@@ -546,8 +546,8 @@ int main(int argc, char *argv[])
                 if (res && rlen)
                     {
                     unsigned char *res2 = base64_decode(res, rlen, &olen);
-                    //strncpy(pass, res, sizeof(pass));
-                    strncpy(pass, res2, sizeof(pass));
+                    //strncpy(passx, res, sizeof(passx));
+                    strncpy(passx, res2, sizeof(passx));
                     }
                 else
                     {
@@ -560,10 +560,10 @@ int main(int argc, char *argv[])
                 }
             }
         // Will ask for pass if not filled
-        if(pass_ritual(mountpoint, mountdata, pass, &plen))
+        if(pass_ritual(mountpoint, mountdata, passx, &plen))
             {
-            //fprintf(stderr,"Invalid pass.\n");
-            syslog(LOG_AUTH, "Failed attempt at mounting by %d '%s' -> '%s'",
+            fprintf(stderr,"Invalid pass.\n");
+            syslog(LOG_AUTH, "Authentication error on mounting by %d '%s' -> '%s'",
                                 getuid(), mountdata, mountpoint);
             exit(5);
             }
@@ -574,26 +574,42 @@ int main(int argc, char *argv[])
         if(ondemand)
             printf("Mounting ... with on-demand password.\n");
         else
-            printf("Mounting %s\n", mountpoint);
+            printf("Mounting .. %s\n", mountpoint);
         }
 
     // Write back expanded paths
-    argv[optind] = mountdata;
-    argv[optind+1] = mountpoint;
+    argv[optind]    = mountdata;
+    argv[optind+1]  = mountpoint;
 
     // Skip arguments that are parsed already
     int ret = fuse_main(argc - (optind), &argv[optind], &xmp_oper, NULL);
 
-    // Make a log entry if failes
-    if(loglevel > 0 && ret)
-        syslog(LOG_DEBUG, "Mount returned with '%d'", ret);
+    // FUSE MAIN terminates ...
 
-	if(loglevel > 0)
-        syslog(LOG_DEBUG, "Mounted '%s' -> '%s'", mountdata, mountpoint);
+    // Inform user, make a log entry
+    if(ret)
+        {
+        if(loglevel > 0)
+            syslog(LOG_DEBUG, "Mount returned with '%d'", ret);
 
-    syslog(LOG_AUTH, "Mounted by %d '%s' -> '%s'",
+        printf("Mounted by uid %d -> %s\n", getuid(), mountpoint);
+        printf("Mount returned with '%d'\n", ret);
+
+        syslog(LOG_AUTH, "Cannot mount, attempt by %d '%s' -> '%s'",
+                                         getuid(), mountdata, mountpoint);
+        }
+    else
+        {
+        if(loglevel > 0)
+            syslog(LOG_DEBUG, "Mounted '%s' -> '%s'", mountdata, mountpoint);
+
+        printf("Mounted by uid %d -> %s\n", getuid(), mountpoint);
+
+        syslog(LOG_AUTH, "Mounted by %d '%s' -> '%s'",
                                  getuid(), mountdata, mountpoint);
-
+        }
     return ret;
 }
+
+
 

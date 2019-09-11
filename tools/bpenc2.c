@@ -94,6 +94,7 @@ int main(int argc, char *argv[])
         if(len <= 0)
             break;
 
+        //hs_encrypt(buff, sizeof(buff), pass, plen);
         hs_encrypt(buff, len, pass, plen);
 
         for (loop = 0; loop < len; loop++)
@@ -105,6 +106,7 @@ int main(int argc, char *argv[])
 
     exit(0);
 }
+
 
 
 

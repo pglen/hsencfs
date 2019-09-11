@@ -46,7 +46,7 @@ bluepoint2.o: bluepoint2.c /usr/include/stdc-predef.h \
  /usr/include/x86_64-linux-gnu/bits/thread-shared-types.h \
  /usr/include/x86_64-linux-gnu/bits/pthreadtypes-arch.h \
  /usr/include/alloca.h /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
- bluepoint2.h hs_crypt.c bluemac.h
+ bluepoint2.h hs_crypt.c hs_crypt.h bluemac.h
 
 /usr/include/stdc-predef.h:
 
@@ -157,5 +157,7 @@ bluepoint2.o: bluepoint2.c /usr/include/stdc-predef.h \
 bluepoint2.h:
 
 hs_crypt.c:
+
+hs_crypt.h:
 
 bluemac.h:

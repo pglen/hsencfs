@@ -1,5 +1,5 @@
 // The actual file operations
- 
+
 static inline struct xmp_dirp *get_dirp(struct fuse_file_info *fi)
 {
 	return (struct xmp_dirp *) (uintptr_t) fi->fh;
@@ -42,7 +42,7 @@ static int xmp_access(const char *path, int mask)
 
     if (loglevel > 3)
         syslog(LOG_DEBUG, "Get access, file: %s uid: %d\n", path, getuid());
-        
+
 	res = access(path2, mask);
 	if (res == -1)
 		return -errno;
@@ -56,7 +56,7 @@ static int xmp_readlink(const char *path, char *buf, size_t size)
 
 	char  path2[PATH_MAX] ;
     strcpy(path2, mountdata); strcat(path2, path);
-    
+
     res = readlink(path2, buf, size - 1);
 	if (res == -1)
 		return -errno;
@@ -80,7 +80,7 @@ static int xmp_opendir(const char *path, struct fuse_file_info *fi)
 
     char  path2[PATH_MAX] ;
     strcpy(path2, mountdata); strcat(path2, path);
-    
+
 	d->dp = opendir(path2);
 	if (d->dp == NULL) {
 		res = -errno;
@@ -168,7 +168,7 @@ static int xmp_mkdir(const char *path, mode_t mode)
 
     if (loglevel > 3)
         syslog(LOG_DEBUG, "Mkdir dir: %s uid: %d\n", path, getuid());
-        
+
 	res = mkdir(path2, mode);
 	if (res == -1)
 		return -errno;
@@ -202,7 +202,7 @@ static int xmp_rmdir(const char *path)
 
     if (loglevel > 3)
         syslog(LOG_DEBUG, "Removed dir: %s uid: %d\n", path, getuid());
-        
+
 	res = rmdir(path2);
 	if (res == -1)
 		return -errno;
@@ -211,7 +211,7 @@ static int xmp_rmdir(const char *path)
 }
 
 //# Symlink is not implemented in the encrypted file system
-// We disabled symlink, as it confused the dataroot. Remember we link 
+// We disabled symlink, as it confused the dataroot. Remember we link
 // to dataroot as an intercept.
 
 static int xmp_symlink(const char *from, const char *to)
@@ -219,13 +219,13 @@ static int xmp_symlink(const char *from, const char *to)
 	int res;
 
     return -ENOSYS;
-    
+
     char  path2[PATH_MAX] ;
     strcpy(path2, mountdata); strcat(path2, from);
-    
+
     char  path3[PATH_MAX] ;
     strcpy(path3, mountdata); strcat(path3, to);
-    
+
     //if (loglevel > 1)
     //    syslog(LOG_DEBUG, "Symlink file: %s -> %s\n", path, path3);
 
@@ -243,10 +243,10 @@ static int xmp_rename(const char *from, const char *to)
 
     char  path2[PATH_MAX] ;
     strcpy(path2, mountdata); strcat(path2, from);
-    
+
     char  path3[PATH_MAX] ;
     strcpy(path3, mountdata); strcat(path3, to);
-    
+
     if (loglevel > 3)
         syslog(LOG_DEBUG, "Renamed file: %s to %s uid: %d\n", from, to, getuid());
 
@@ -266,13 +266,13 @@ static int xmp_link(const char *from, const char *to)
 	int res;
 
     return -ENOSYS;
-  
+
     char  path2[PATH_MAX] ;
     strcpy(path2, mountdata); strcat(path2, from);
-    
+
     char  path3[PATH_MAX] ;
     strcpy(path3, mountdata); strcat(path3, to);
-    
+
 	//res = link(path2, path3);
 	res = link(from, to);
 	if (res == -1)
@@ -306,7 +306,7 @@ static int xmp_chown(const char *path, uid_t uid, gid_t gid)
     strcpy(path2, mountdata); strcat(path2, path);
 
     if (loglevel > 3)
-        syslog(LOG_DEBUG, "Chown file: %s uid: %d touid: %d togid %d\n", 
+        syslog(LOG_DEBUG, "Chown file: %s uid: %d touid: %d togid %d\n",
                 path, getuid(), uid, gid);
 
 	res = lchown(path2, uid, gid);
@@ -342,7 +342,7 @@ static int xmp_ftruncate(const char *path, off_t size,
 
     if (loglevel > 3)
         syslog(LOG_DEBUG, "Truncated file: %s uid: %d\n", path, getuid());
-        
+
 	res = ftruncate(fi->fh, size);
 	if (res == -1)
 		return -errno;
@@ -370,12 +370,12 @@ static int xmp_utimens(const char *path, const struct timespec ts[2])
 	return 0;
 }
 
-int openpass(const char *path)
+int     openpass(const char *path)
 
 {
     char tmp[MAXPASSLEN];
     int ret = 0;
-    
+
     if(passprog[0] == 0)
         {
         if (loglevel > 1)
@@ -389,12 +389,13 @@ int openpass(const char *path)
             syslog(LOG_DEBUG, "Cannot get pass for %s uid: %d\n", path, getuid());
         return 1;
         }
-    strncpy(pass, res, sizeof(pass));
-    
-    if(pass_ritual(mountpoint, mountdata, pass, &plen))
+
+    strncpy(passx, res, sizeof(passx));
+
+    if(pass_ritual(mountpoint, mountdata, passx, &plen))
         {
         // Force new pass prompt
-        memset(pass, 0, sizeof(pass));
+        memset(passx, 0, sizeof(passx));
         if (loglevel > 1)
             syslog(LOG_DEBUG, "Invalid pass for %s uid: %d\n", path, getuid());
         return 1;
@@ -412,11 +413,11 @@ static int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
     if (loglevel > 1)
         syslog(LOG_DEBUG, "Created file: %s uid: %d\n", path, getuid());
 
-    if(pass[0] == 0)
+    if(passx[0] == 0)
         {
         if (loglevel > 3)
             syslog(LOG_DEBUG, "Empty pass on create file: %s uid: %d\n", path, getuid());
-        int ret = openpass(path);    
+        int ret = openpass(path);
         if (ret)
             return -EACCES;
         }
@@ -437,11 +438,11 @@ static int xmp_open(const char *path, struct fuse_file_info *fi)
     if (loglevel > 1)
         syslog(LOG_DEBUG, "Opened file: %s uid: %d\n", path, getuid());
 
-    if(pass[0] == 0)
+    if(passx[0] == 0)
         {
         if (loglevel > 3)
             syslog(LOG_DEBUG, "Empty pass on open file: %s uid: %d\n", path, getuid());
-        int ret = openpass(path);    
+        int ret = openpass(path);
         if (ret)
             return -EACCES;
         }
@@ -461,7 +462,7 @@ static int xmp_statfs(const char *path, struct statvfs *stbuf)
 
     if (loglevel > 3)
         syslog(LOG_DEBUG, "Stat file: %s uid: %d\n", path, getuid());
-        
+
 	res = statvfs(path2, stbuf);
 	if (res == -1)
 		return -errno;
@@ -580,6 +581,7 @@ static int xmp_lock(const char *path, struct fuse_file_info *fi, int cmd,
 	return ulockmgr_op(fi->fh, cmd, lock, &fi->lock_owner,
 			   sizeof(fi->lock_owner));
 }
+
 
 
 
