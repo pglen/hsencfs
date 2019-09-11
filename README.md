@@ -21,11 +21,13 @@ by time and user ID. The report is sent to syslog. The log is sent to facility
 a new mount. The above command exposes the ~/secrets directory with the
 backing data directory in ~/.secretdata.
 For added convenience, use a dotted (hidden) file for mountdata.
+
 (example: ~/.my_secret_data or ~/.data or ~/.secrets) (note the leading dot)
 
  You may un-mount your secret directory with the normal umount(8) utility
 or the fusermount -u option. After un-mounting, the mounted data is not
 accessible, and the encrypted data is not legible until it is mounted again.
+
 (example: fusermount ~/secrets) The tilde '~' expands to the user's home dir.
 
 
@@ -54,7 +56,7 @@ An example of on-demand command line:
 
         hsencfs -o -a 'which hsaskpass.py` .mydata mysecret
 
-Note the 'which' utility, HSENCF needs absolute path.
+Note the 'which' utility, HSENCFS needs absolute path.
 
 ## Safety, Security, Feeding and Care
 
@@ -63,15 +65,16 @@ and withstood the test of time. The backing files in the data directory
 preserve their original names, size, and access times. The only dependence
 they need is the original password. This means they can be safely copied from
 the backing directory for transport (like email) or backup. Please note
-that HSENCFS relies on the file system having block size 4096. This is
-the case with most modern systems, so it does not present an issue. If the
+that HSENCFS relies on the file system having block size 4096 (multiple of 1024)
+This is the case with most modern systems, so it does not present an issue. If the
 block size is not 4096, HSENCFS will operate fine, but the data may not be
 portable across systems with different block sizes. The internal block size
 of HSENCFS is 1024, which makes it operate across a large number of systems.
+(to date, no system was incompatible)
 
 ### The data directory:
 
-Files can be extracted from the backing data directory with the 'bpdec2'
+ Files can be extracted from the backing data directory with the 'bpdec2'
 utility. To extract a single encrypted file by hand:
 
      bpdec2 ~/secretdata/filename > newname
@@ -90,7 +93,7 @@ accessible from the HSENCFS subsystem. The utilities do not check the
 encryption key, so the wrong password will produce false cipher-text /
 false clear-text. You may reverse false encryption by entering the same
 password on decrypt. These utilities are provided as recovery tools only.
-  The wrong password creates garbled data. ** You have been warned. **
+  The wrong password may create garbled data. ** You have been warned. **
 
 ## The cypher text.
 
@@ -131,11 +134,11 @@ command line. Fuse will not allow the allow_other option unless configured in
 operations. The interception is done from mountdata to mountpoint. Copying
 data to mountpoint ends up encrypted in mountdata. Because of HSENCFS intercept
 concept, encryption / decryption is fast. It is plausible to use it to encrypt
-video streams.
+video streams, or compile programs in the encrypted directory.
 
-### The GNOME Panel Applet:
+### The GNOME Panel Applet: (unsupported)
 
-HSENCFS can be controlled from the GNOME Panel (System Tray) with the
+ HSENCFS can be controlled from the GNOME Panel (System Tray) with the
 hstray.py utility. New mounts can be added, mounted or unmounted. The mounts
 are relative to the user's home directory unless an absolute path is specified.
 
@@ -156,7 +159,8 @@ or the whole system.
 ## Additional Versions:
 
  The industrial version of this project is available upon request.
-Please send a message to the author. (see Sourceforge page)
+Please send a message to the author. (see SourceForge page)
 
 // EOF
+
 

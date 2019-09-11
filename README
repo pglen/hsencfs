@@ -1,0 +1,15 @@
+                            Announcement
+
+ The source code copied out to the ecrypted directory compiles in that
+directory correctly. This means the file access intercet is now random clean,
+as GCC acesses object files by chunk.
+
+ The trick was to pre read to the encryption buffer boundary, and then
+  Decrypt / Patch / Encrypt / Write.
+
+ The last buffer may be partial, so special arragements are made to
+accomodate that.
+
+Peter
+
+
