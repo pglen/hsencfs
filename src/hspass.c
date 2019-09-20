@@ -135,7 +135,7 @@ static  void printpass(char *pp, int ll)
 // Get the password for the current mount or create a new one.
 // Return 0 if all OK.
 
-int pass_ritual(char *mountroot, char *mountdata, char *pass, int *plen)
+int     pass_ritual(char *mountroot, char *mountdata, char *pass, int *plen)
 
 {
     int ret = -1, pask = 0, xlen2 = 0, xlen = strlen(pass);
@@ -233,6 +233,7 @@ int pass_ritual(char *mountroot, char *mountdata, char *pass, int *plen)
 
     return ret;
 }
+
 
 
 

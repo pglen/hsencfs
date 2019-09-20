@@ -1,5 +1,7 @@
 // The actual file operations
 
+#pragma GCC diagnostic ignored "-Wformat-truncation"
+
 static inline struct xmp_dirp *get_dirp(struct fuse_file_info *fi)
 {
 	return (struct xmp_dirp *) (uintptr_t) fi->fh;
@@ -411,7 +413,10 @@ static int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
     strcpy(path2, mountdata); strcat(path2, path);
 
     if (loglevel > 1)
-        syslog(LOG_DEBUG, "Created file: %s uid: %d\n", path, getuid());
+        syslog(LOG_DEBUG, "Created file: '%s' uid: %d\n", path, getuid());
+
+    if (loglevel > 2)
+        syslog(LOG_DEBUG, "Shadow file: '%s'\n", path2);
 
     if(passx[0] == 0)
         {
@@ -425,6 +430,61 @@ static int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
 	if (fd == -1)
 		return -errno;
 	fi->fh = fd;
+
+    struct stat stbuf;	memset(&stbuf, 0, sizeof(stbuf));
+    int res = fstat(fi->fh, &stbuf);
+    if(res < 0)
+        {
+        if (loglevel > 2)
+            syslog(LOG_DEBUG, "Cannot stat newly created file '%s'\n", path);
+
+        goto endd;
+        }
+
+    if (loglevel > 2)
+        syslog(LOG_DEBUG, "Inode: %lud blocksize %ld \n",
+                                    stbuf.st_ino, stbuf.st_blksize);
+
+    // This block opens an Inode file for intermediate storage
+    char *ptmp2 = malloc(PATH_MAX);
+    if(ptmp2)
+        {
+        snprintf(ptmp2, PATH_MAX-1, "/%s/%s/%lud.ino",
+                                mountdata, ".inodedata", stbuf.st_ino);
+        if (loglevel > 2)
+            syslog(LOG_DEBUG, "Creating '%s'\n", ptmp2);
+
+        int old_errno = errno;
+        int fdi = open(ptmp2, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
+        if(fdi < 0)
+            {
+            if (loglevel > 2)
+                syslog(LOG_DEBUG, "Error on creating '%s' errno: %d\n", ptmp2, errno);
+            }
+        else
+            {
+            char *ptmp3 = malloc(stbuf.st_blksize);
+            if(ptmp3)
+                {
+                memset(ptmp3, '\0', stbuf.st_blksize);
+                int ww = write(fdi, ptmp3, stbuf.st_blksize);
+                if(ww < stbuf.st_blksize)
+                    {
+                if (loglevel > 2)
+                    syslog(LOG_DEBUG, "Error on writing to inode file errno: %d\n", errno);
+                    }
+
+                free(ptmp3);
+                }
+
+            close(fdi);
+            }
+        errno = old_errno;
+        free(ptmp2);
+        }
+
+    endd:
+        ;
 	return 0;
 }
 
@@ -450,6 +510,13 @@ static int xmp_open(const char *path, struct fuse_file_info *fi)
 	if (fd == -1)
 		return -errno;
 	fi->fh = fd;
+
+    struct stat stbuf;	memset(&stbuf, 0, sizeof(stbuf));
+    int res = fstat(fi->fh, &stbuf);
+
+    if (loglevel > 2)
+        syslog(LOG_DEBUG, "Inode: %lud\n", stbuf.st_ino);
+
 	return 0;
 }
 
@@ -581,6 +648,7 @@ static int xmp_lock(const char *path, struct fuse_file_info *fi, int cmd,
 	return ulockmgr_op(fi->fh, cmd, lock, &fi->lock_owner,
 			   sizeof(fi->lock_owner));
 }
+
 
 
 

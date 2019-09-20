@@ -12,6 +12,11 @@
 //        new_offset (buf % n)                total buf % n + n
 // ===----|---------------------|--------------=======
 //    |   ^ offs                ^offs + size  |
+//
+// Exception is taken when dealing with the last block. The Inode file contains a copy
+// of the last block, one that overflows the feal file length to complete
+// the buffer.
+//
 
 static int xmp_read(const char *path, char *buf, size_t size, off_t offset,
 		    struct fuse_file_info *fi)
@@ -49,6 +54,7 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset,
     size_t get = new_offset + total;
     if(get >= fsize)
         {
+        // Read in last block TODO
         get = fsize - new_offset;
         }
     else
@@ -83,7 +89,7 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset,
 }
 
 // -----------------------------------------------------------------------
-// Intercept write. Make it block size even, so encryption /decryption
+// Intercept write. Make it block size even, so encryption / decryption
 // is symmetric.
 //
 //    new_offset (buf % n)                    total (buf % n) * n
@@ -137,27 +143,25 @@ static int xmp_write(const char *path, const char *buf, size_t size,
     if (loglevel > 3)
         syslog(LOG_DEBUG, "File size from stat %ld\n", fsize);
 
-    size_t enc = size;
+    int get_patch = 0;
     size_t get = new_offset + size;
     if(get >= fsize)
         {
-        get = fsize - new_offset;
-        if(get < 0)
-            get = 0;
-        }
-    else
-        {
-        get = total;
-        enc = total;
+        get_patch = total - (get - fsize);
         }
 
     if (loglevel > 3)
             syslog(LOG_DEBUG,
-            "About to pre read: '%s' get=%ld new_offs=%ld fsize=%ld total=%ld\n",
-                                               path, get, new_offset, fsize, total);
+            "About to pre read: '%s' "
+                "get=%ld new_offs=%ld fsize=%ld patch=%d total=%ld\n",
+                       path, get, new_offset, fsize, get_patch, total);
     if(get > 0)
         {
         res = pread(fi->fh, mem, get, new_offset);
+        if(get_patch)
+            {
+            res = pread(fi->fh, mem + res, get_patch, new_offset + res);
+            }
 
     	if (res == -1)
             {
@@ -184,7 +188,7 @@ static int xmp_write(const char *path, const char *buf, size_t size,
     memcpy(mem + skip, buf, size);
 
     // Encryption / decryption by block size. Currently: 1024
-    hs_encrypt(mem, enc, passx, plen);
+    hs_encrypt(mem, total, passx, plen);
 
 	//lseek(fi->fh, oldoff, SEEK_SET);
 
@@ -209,6 +213,7 @@ static int xmp_write(const char *path, const char *buf, size_t size,
         }
 	return res;
 }
+
 
 
 

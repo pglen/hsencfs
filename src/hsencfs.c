@@ -89,6 +89,8 @@ static  char  mountpoint[PATH_MAX] ;
 static  char  mountdata[PATH_MAX] ;
 static  char  passprog[PATH_MAX] ;
 
+static  char  inodedir[PATH_MAX] ;
+
 /// We use this as a string to obfuscate the password. Do not change.
 char    progname[] = "HSENCFS";
 
@@ -581,6 +583,18 @@ int main(int argc, char *argv[])
     argv[optind]    = mountdata;
     argv[optind+1]  = mountpoint;
 
+    // Create INODE directory
+    char tmp2[PATH_MAX];
+    strncpy(tmp2, mountdata, sizeof(tmp2)); strcat(tmp2, ".inodedata");
+    if(stat(tmp2, &ss) < 0)
+        {
+        if (mkdir(tmp2, 0700) < 0)
+            {
+            fprintf(stderr,"Cannot create inode data dir: '%s'\n", mountdata);
+            exit(3);
+            }
+        }
+
     // Skip arguments that are parsed already
     int ret = fuse_main(argc - (optind), &argv[optind], &xmp_oper, NULL);
 
@@ -610,6 +624,7 @@ int main(int argc, char *argv[])
         }
     return ret;
 }
+
 
 
 
