@@ -584,16 +584,16 @@ int main(int argc, char *argv[])
     argv[optind+1]  = mountpoint;
 
     // Create INODE directory
-    char tmp2[PATH_MAX];
-    strncpy(tmp2, mountdata, sizeof(tmp2)); strcat(tmp2, ".inodedata");
-    if(stat(tmp2, &ss) < 0)
-        {
-        if (mkdir(tmp2, 0700) < 0)
-            {
-            fprintf(stderr,"Cannot create inode data dir: '%s'\n", mountdata);
-            exit(3);
-            }
-        }
+    //char tmp2[PATH_MAX];
+    //strncpy(tmp2, mountdata, sizeof(tmp2)); strcat(tmp2, ".inodedata");
+    //if(stat(tmp2, &ss) < 0)
+    //    {
+    //    if (mkdir(tmp2, 0700) < 0)
+    //        {
+    //        fprintf(stderr,"Cannot create inode data dir: '%s'\n", mountdata);
+    //        exit(3);
+    //        }
+    //    }
 
     // Skip arguments that are parsed already
     int ret = fuse_main(argc - (optind), &argv[optind], &xmp_oper, NULL);
@@ -624,6 +624,7 @@ int main(int argc, char *argv[])
         }
     return ret;
 }
+
 
 
 

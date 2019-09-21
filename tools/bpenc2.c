@@ -14,7 +14,9 @@
 #include <dirent.h>
 #include <errno.h>
 #include <syslog.h>
+
 #include <sys/time.h>
+#include <sys/stat.h>
 
 #include "bluepoint2.h"
 
@@ -65,15 +67,21 @@ int main(int argc, char *argv[])
 {
     memset(pass, 0, sizeof(pass));
 
-    if(argc < 2)
+    if(argc < 3)
         {
-        fprintf(stderr, "Usage: benc2 infile\n");
+        fprintf(stderr, "Usage: benc2 infile outfile\n");
         exit(1);
         }
 
     if(access(argv[1], F_OK) < 0)
         {
         fprintf(stderr, "File '%s' must exist and readable.\n", argv[1]);
+        exit(1);
+        }
+
+    if(access(argv[2], F_OK) >= 0)
+        {
+        fprintf(stderr, "Output file '%s' must not exist.\n", argv[2]);
         exit(1);
         }
 
@@ -86,39 +94,49 @@ int main(int argc, char *argv[])
         exit(1);
         }
 
+    struct stat stbuf;	memset(&stbuf, 0, sizeof(stbuf));
+    int res = fstat(fileno(fp), &stbuf);
+    if(res < 0)
+        {
+        fprintf(stderr, "Cannot stat '%s'.\n", argv[1]);
+        exit(1);
+        }
+
+    off_t fsize = stbuf.st_size;
+
+    FILE *fp2 = fopen(argv[2], "wb");
+    if (!fp2)
+        {
+        fprintf(stderr, "File '%s' must be writable.\n", argv[1]);
+        exit(1);
+        }
+
     while(1)
         {
         memset(buff, 0, sizeof(buff));
-        int loop, len = fread(buff, 1, sizeof(buff), fp);
+        int loop, len, len2;
+
+        len = fread(buff, 1, sizeof(buff), fp);
 
         if(len <= 0)
             break;
 
-        //hs_encrypt(buff, sizeof(buff), pass, plen);
-        hs_encrypt(buff, len, pass, plen);
+        hs_encrypt(buff, sizeof(buff), pass, plen);
+        //hs_encrypt(buff, len, pass, plen);
 
-        for (loop = 0; loop < len; loop++)
-            putchar(buff[loop]);
+        //for (loop = 0; loop < len; loop++)
+        //    putchar(buff[loop]);
+
+        len2 = fwrite(buff, 1, sizeof(buff), fp2);
 
         if(len < sizeof(buff))
             break;
         }
 
+    //ftruncate(fileno(fp2), fsize);
+
+    fclose(fp); fclose(fp2);
+
     exit(0);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

@@ -192,6 +192,29 @@ static int xmp_unlink(const char *path)
 	if (res == -1)
 		return -errno;
 
+    // Also unlink the .secret file
+    // Reassemble with dot path
+
+    char *ptmp2 = malloc(PATH_MAX);
+    if(ptmp2)
+        {
+        strcpy(ptmp2, mountdata);
+        char *endd = strrchr(path, '/');
+        if(endd)
+            {
+            strncat(ptmp2, path, endd - path);
+            strcat(ptmp2, ".");
+            strcat(ptmp2, endd + 1);
+            }
+        else
+            {
+            strcat(ptmp2, ".");
+            }
+        strcat(ptmp2, ".secret");
+        if (loglevel > 3)
+            syslog(LOG_DEBUG, "Unlinked secret file: %s\n", ptmp2);
+        unlink(ptmp2);
+        }
 	return 0;
 }
 
@@ -441,16 +464,28 @@ static int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
         goto endd;
         }
 
-    if (loglevel > 2)
-        syslog(LOG_DEBUG, "Inode: %lud blocksize %ld \n",
-                                    stbuf.st_ino, stbuf.st_blksize);
+    //if (loglevel > 2)
+    //    syslog(LOG_DEBUG, "Inode: %lud blocksize %ld \n",
+    //                                stbuf.st_ino, stbuf.st_blksize);
 
-    // This block opens an Inode file for intermediate storage
     char *ptmp2 = malloc(PATH_MAX);
     if(ptmp2)
         {
-        snprintf(ptmp2, PATH_MAX-1, "/%s/%s/%lud.ino",
-                                mountdata, ".inodedata", stbuf.st_ino);
+        // Reassemble with dot path
+        strcpy(ptmp2, mountdata);
+        char *endd = strrchr(path, '/');
+        if(endd)
+            {
+            strncat(ptmp2, path, endd - path);
+            strcat(ptmp2, ".");
+            strcat(ptmp2, endd + 1);
+            }
+        else
+            {
+            strcat(ptmp2, ".");
+            }
+        strcat(ptmp2, ".secret");
+
         if (loglevel > 2)
             syslog(LOG_DEBUG, "Creating '%s'\n", ptmp2);
 
@@ -648,6 +683,7 @@ static int xmp_lock(const char *path, struct fuse_file_info *fi, int cmd,
 	return ulockmgr_op(fi->fh, cmd, lock, &fi->lock_owner,
 			   sizeof(fi->lock_owner));
 }
+
 
 
 

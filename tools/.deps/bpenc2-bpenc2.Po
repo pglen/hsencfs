@@ -65,7 +65,8 @@ bpenc2-bpenc2.o: bpenc2.c /usr/include/stdc-predef.h /usr/include/stdio.h \
  /usr/include/asm-generic/errno.h /usr/include/asm-generic/errno-base.h \
  /usr/include/syslog.h /usr/include/x86_64-linux-gnu/sys/syslog.h \
  /usr/include/x86_64-linux-gnu/bits/syslog-path.h \
- /usr/include/x86_64-linux-gnu/sys/time.h ../bluepoint/bluepoint2.h
+ /usr/include/x86_64-linux-gnu/sys/time.h \
+ /usr/include/x86_64-linux-gnu/sys/stat.h ../bluepoint/bluepoint2.h
 
 /usr/include/stdc-predef.h:
 
@@ -230,5 +231,7 @@ bpenc2-bpenc2.o: bpenc2.c /usr/include/stdc-predef.h /usr/include/stdio.h \
 /usr/include/x86_64-linux-gnu/bits/syslog-path.h:
 
 /usr/include/x86_64-linux-gnu/sys/time.h:
+
+/usr/include/x86_64-linux-gnu/sys/stat.h:
 
 ../bluepoint/bluepoint2.h:
