@@ -104,11 +104,11 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_bpdec2_OBJECTS = bpdec2-bpdec2.$(OBJEXT)
+am_bpdec2_OBJECTS = bpdec2-bpdec2.$(OBJEXT) bpdec2-bp2com.$(OBJEXT)
 bpdec2_OBJECTS = $(am_bpdec2_OBJECTS)
 bpdec2_LINK = $(CCLD) $(bpdec2_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-am_bpenc2_OBJECTS = bpenc2-bpenc2.$(OBJEXT)
+am_bpenc2_OBJECTS = bpenc2-bpenc2.$(OBJEXT) bpenc2-bp2com.$(OBJEXT)
 bpenc2_OBJECTS = $(am_bpenc2_OBJECTS)
 bpenc2_LINK = $(CCLD) $(bpenc2_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
@@ -127,7 +127,8 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = ./$(DEPDIR)/bpdec2-bpdec2.Po \
+am__depfiles_remade = ./$(DEPDIR)/bpdec2-bp2com.Po \
+	./$(DEPDIR)/bpdec2-bpdec2.Po ./$(DEPDIR)/bpenc2-bp2com.Po \
 	./$(DEPDIR)/bpenc2-bpenc2.Po
 am__mv = mv -f
 AM_V_lt = $(am__v_lt_@AM_V@)
@@ -263,16 +264,16 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-bpdec2dir = .
-bpdec2_SOURCES = bpdec2.c
-bpdec2_LDADD = ../bluepoint/bluepoint2.o 
-bpdec2_CFLAGS = -I$(srcdir)/../bluepoint
-bpdec2_DEPENDENCIES = 
 bpenc2dir = .
-bpenc2_SOURCES = bpenc2.c
-bpenc2_LDADD = ../bluepoint/bluepoint2.o 
+bpenc2_SOURCES = bpenc2.c  bp2com.c
+bpenc2_LDADD = ../bluepoint/bluepoint2.o
 bpenc2_CFLAGS = -I$(srcdir)/../bluepoint
 bpenc2_DEPENDENCIES = 
+bpdec2dir = .
+bpdec2_SOURCES = bpdec2.c bp2com.c
+bpdec2_LDADD = ../bluepoint/bluepoint2.o
+bpdec2_CFLAGS = -I$(srcdir)/../bluepoint
+bpdec2_DEPENDENCIES = 
 all: all-am
 
 .SUFFIXES:
@@ -363,7 +364,9 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bpdec2-bp2com.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bpdec2-bpdec2.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bpenc2-bp2com.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bpenc2-bpenc2.Po@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
@@ -400,6 +403,20 @@ bpdec2-bpdec2.obj: bpdec2.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpdec2_CFLAGS) $(CFLAGS) -c -o bpdec2-bpdec2.obj `if test -f 'bpdec2.c'; then $(CYGPATH_W) 'bpdec2.c'; else $(CYGPATH_W) '$(srcdir)/bpdec2.c'; fi`
 
+bpdec2-bp2com.o: bp2com.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpdec2_CFLAGS) $(CFLAGS) -MT bpdec2-bp2com.o -MD -MP -MF $(DEPDIR)/bpdec2-bp2com.Tpo -c -o bpdec2-bp2com.o `test -f 'bp2com.c' || echo '$(srcdir)/'`bp2com.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/bpdec2-bp2com.Tpo $(DEPDIR)/bpdec2-bp2com.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='bp2com.c' object='bpdec2-bp2com.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpdec2_CFLAGS) $(CFLAGS) -c -o bpdec2-bp2com.o `test -f 'bp2com.c' || echo '$(srcdir)/'`bp2com.c
+
+bpdec2-bp2com.obj: bp2com.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpdec2_CFLAGS) $(CFLAGS) -MT bpdec2-bp2com.obj -MD -MP -MF $(DEPDIR)/bpdec2-bp2com.Tpo -c -o bpdec2-bp2com.obj `if test -f 'bp2com.c'; then $(CYGPATH_W) 'bp2com.c'; else $(CYGPATH_W) '$(srcdir)/bp2com.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/bpdec2-bp2com.Tpo $(DEPDIR)/bpdec2-bp2com.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='bp2com.c' object='bpdec2-bp2com.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpdec2_CFLAGS) $(CFLAGS) -c -o bpdec2-bp2com.obj `if test -f 'bp2com.c'; then $(CYGPATH_W) 'bp2com.c'; else $(CYGPATH_W) '$(srcdir)/bp2com.c'; fi`
+
 bpenc2-bpenc2.o: bpenc2.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpenc2_CFLAGS) $(CFLAGS) -MT bpenc2-bpenc2.o -MD -MP -MF $(DEPDIR)/bpenc2-bpenc2.Tpo -c -o bpenc2-bpenc2.o `test -f 'bpenc2.c' || echo '$(srcdir)/'`bpenc2.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/bpenc2-bpenc2.Tpo $(DEPDIR)/bpenc2-bpenc2.Po
@@ -413,6 +430,20 @@ bpenc2-bpenc2.obj: bpenc2.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='bpenc2.c' object='bpenc2-bpenc2.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpenc2_CFLAGS) $(CFLAGS) -c -o bpenc2-bpenc2.obj `if test -f 'bpenc2.c'; then $(CYGPATH_W) 'bpenc2.c'; else $(CYGPATH_W) '$(srcdir)/bpenc2.c'; fi`
+
+bpenc2-bp2com.o: bp2com.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpenc2_CFLAGS) $(CFLAGS) -MT bpenc2-bp2com.o -MD -MP -MF $(DEPDIR)/bpenc2-bp2com.Tpo -c -o bpenc2-bp2com.o `test -f 'bp2com.c' || echo '$(srcdir)/'`bp2com.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/bpenc2-bp2com.Tpo $(DEPDIR)/bpenc2-bp2com.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='bp2com.c' object='bpenc2-bp2com.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpenc2_CFLAGS) $(CFLAGS) -c -o bpenc2-bp2com.o `test -f 'bp2com.c' || echo '$(srcdir)/'`bp2com.c
+
+bpenc2-bp2com.obj: bp2com.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpenc2_CFLAGS) $(CFLAGS) -MT bpenc2-bp2com.obj -MD -MP -MF $(DEPDIR)/bpenc2-bp2com.Tpo -c -o bpenc2-bp2com.obj `if test -f 'bp2com.c'; then $(CYGPATH_W) 'bp2com.c'; else $(CYGPATH_W) '$(srcdir)/bp2com.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/bpenc2-bp2com.Tpo $(DEPDIR)/bpenc2-bp2com.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='bp2com.c' object='bpenc2-bp2com.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpenc2_CFLAGS) $(CFLAGS) -c -o bpenc2-bp2com.obj `if test -f 'bp2com.c'; then $(CYGPATH_W) 'bp2com.c'; else $(CYGPATH_W) '$(srcdir)/bp2com.c'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique
@@ -539,7 +570,9 @@ maintainer-clean-generic:
 clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
 
 distclean: distclean-am
-		-rm -f ./$(DEPDIR)/bpdec2-bpdec2.Po
+		-rm -f ./$(DEPDIR)/bpdec2-bp2com.Po
+	-rm -f ./$(DEPDIR)/bpdec2-bpdec2.Po
+	-rm -f ./$(DEPDIR)/bpenc2-bp2com.Po
 	-rm -f ./$(DEPDIR)/bpenc2-bpenc2.Po
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
@@ -586,7 +619,9 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-		-rm -f ./$(DEPDIR)/bpdec2-bpdec2.Po
+		-rm -f ./$(DEPDIR)/bpdec2-bp2com.Po
+	-rm -f ./$(DEPDIR)/bpdec2-bpdec2.Po
+	-rm -f ./$(DEPDIR)/bpenc2-bp2com.Po
 	-rm -f ./$(DEPDIR)/bpenc2-bpenc2.Po
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic

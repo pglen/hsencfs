@@ -1,7 +1,30 @@
+// Included in the HSENC project
 
-#define BLOCKSIZE 4096
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+#include <string.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <dirent.h>
+#include <errno.h>
+#include <syslog.h>
+#include <getopt.h>
 
-int bpgetpass(const char *fname)
+#include <sys/time.h>
+#include <sys/stat.h>
+
+#include "bp2com.h"
+#include "bluepoint2.h"
+
+char    progname[] = "HSENCFS";
+
+//static char     pass[256];
+static int      plen = 0;
+static char     tmp[256];
+
+
+int     bpgetpass(const char *fname, char *pass, int plenx)
 
 {
     char    *xpass = NULL; int     xlen;
@@ -22,7 +45,7 @@ int bpgetpass(const char *fname)
         }
 
     // Dup the results right away, clear it too
-    strncpy(pass, xpass, sizeof(pass));
+    strncpy(pass, xpass, plenx);
     memset(xpass, 0, xlen);
 
     // Always padd it
@@ -36,7 +59,7 @@ int bpgetpass(const char *fname)
 
 // Make backup path name. Caller must free result.
 
-char *mk_backup_path(const char *path)
+char    *mk_backup_path(const char *path)
 
 {
     char *ptmp2 = malloc(PATH_MAX);
@@ -48,7 +71,7 @@ char *mk_backup_path(const char *path)
         if(endd)
             {
             strncpy(ptmp2, path, endd - path);
-            strcat(ptmp2, ".");
+            strcat(ptmp2, "/.");
             strcat(ptmp2, endd + 1);
             }
         else
@@ -115,5 +138,6 @@ int     mk_block_file(const char *path)
     if(ptmp3) free(ptmp3);
     return(fdi);
 }
+
 
 

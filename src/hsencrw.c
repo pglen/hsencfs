@@ -5,6 +5,30 @@
 // Read write 'C' include. Extracted for eazy editing
 //
 
+char *get_tmpname(const char *path)
+
+{
+    char *ptmp2 = malloc(PATH_MAX);
+    if(ptmp2)
+        {
+        // Reassemble with dot path
+        strcpy(ptmp2, mountdata);
+        char *endd = strrchr(path, '/');
+        if(endd)
+            {
+            strncat(ptmp2, path, endd - path);
+            strcat(ptmp2, ".");
+            strcat(ptmp2, endd + 1);
+            }
+        else
+            {
+            strcat(ptmp2, ".");
+            }
+        strcat(ptmp2, ".secret");
+        }
+    return ptmp2;
+}
+
 // -----------------------------------------------------------------------
 // Intercept write. Make it block size even, so encryption / decryption
 // is symmetric.
@@ -14,8 +38,8 @@
 //    |   ^ offs                ^offs + size  |
 //
 // Exception is taken when dealing with the last block. The Inode file contains a copy
-// of the last block, one that overflows the feal file length to complete
-// the buffer.
+// of the last block, one that overflows the real file length.
+// This is to complete the last buffer.
 //
 
 static int xmp_read(const char *path, char *buf, size_t size, off_t offset,
@@ -39,6 +63,7 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset,
         return res;
         }
     memset(mem, 0, total);        // Zero it
+
     if (loglevel > 2)
         {
         syslog(LOG_DEBUG, "Before reading file: %s size=%ld offs=%ld\n",
@@ -46,29 +71,59 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset,
         syslog(LOG_DEBUG, "Size expanded: new_offs=%ld total=%ld skip=%ld\n",
                                                                new_offset, total, skip);
         }
-    // Read full block instead
-    off_t oldoff = lseek(fi->fh, 0, SEEK_SET);
-    off_t fsize   = lseek(fi->fh, 0, SEEK_END);
-    lseek(fi->fh, oldoff - skip, SEEK_SET);
 
-    size_t get = new_offset + total;
-    if(get >= fsize)
+    // Remember old place
+    off_t oldoff = lseek(fi->fh, 0, SEEK_SET);
+
+    // Estabilish file size
+    struct stat stbuf;	memset(&stbuf, 0, sizeof(stbuf));
+    res = fstat(fi->fh, &stbuf);
+    off_t fsize = stbuf.st_size;
+
+    // Read full block instead
+    size_t getall = new_offset + total;
+    if(getall >= fsize)
         {
-        // Read in last block TODO
-        get = fsize - new_offset;
+        // Read in last block from lastblock file
+        getall = fsize - new_offset;
+        //res = pread(fi->fh, mem, getall, new_offset);
+
+        char *ptmp2 =  get_tmpname(path);
+        if(ptmp2)
+            {
+            int old_errno = errno;
+            int fdi = open(ptmp2, O_RDWR, S_IRUSR | S_IWUSR);
+            if(fdi < 0)
+                {
+                if (loglevel > 2)
+                    syslog(LOG_DEBUG, "Error on opening '%s', errno: %d\n", ptmp2, errno);
+                }
+            else
+                {
+                int rrr = read(fdi, mem, HS_BLOCK);
+                if(rrr < HS_BLOCK)
+                    {
+                    if (loglevel > 2)
+                        syslog(LOG_DEBUG, "Error on reading inode file, errno: %d\n", errno);
+                    }
+                close(fdi);
+                }
+            errno = old_errno;
+            free(ptmp2);
+            }
         }
     else
         {
-        get = total;
+        getall = total;
+        res = pread(fi->fh, mem, getall, new_offset);
+        lseek(fi->fh, oldoff + size, SEEK_SET);
         }
-	res = pread(fi->fh, mem, get, new_offset);
-    lseek(fi->fh, oldoff + size, SEEK_SET);
 
     if (res == -1)
         res = -errno;
 
     // Encryption / decryption by block size. Currently: 1024
-    hs_decrypt(mem, get, passx, plen);
+    hs_decrypt(mem, HS_BLOCK, passx, plen);
 
     // Return result as requested
     memcpy(buf, mem + skip, size);
@@ -213,6 +268,7 @@ static int xmp_write(const char *path, const char *buf, size_t size,
         }
 	return res;
 }
+
 
 
 
