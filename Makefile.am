@@ -4,7 +4,7 @@
 # It will encrypt data on write, decrypt data on read.
 #
 
-SUBDIRS =  bluepoint tools docs src
+SUBDIRS =  bluepoint common tools docs src
 
 PAN_SERV=GNOME_HSENCApplet.server
 BONOBO_DIR=/usr/lib/bonobo/servers
@@ -21,6 +21,7 @@ dist_bin_SCRIPTS =                  \
 
 # Auxiliaries
 EXTRA_DIST = src/hsencrw.c src/hsencop.c
+EXTRA_DIST += common/hspass.c common/hsutils.c
 EXTRA_DIST += images/hsicon.png images/hsicon.svg images/hspadlock.png \
                     images/hspadlock.svg images/screenshot.png
 EXTRA_DIST += study
@@ -133,6 +134,10 @@ test-vars:
 	@echo  bindir=$(bindir)
 	@echo  srcdir=$(srcdir)
 	@echo  prefix=$(prefix)
+
+git:
+	git add .
+	git commit -m autocheck
 
 
 

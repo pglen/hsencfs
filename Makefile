@@ -239,12 +239,12 @@ distuninstallcheck_listfiles = find . -type f -print
 am__distuninstallcheck_listfiles = $(distuninstallcheck_listfiles) \
   | sed 's|^\./|$(prefix)/|' | grep -v '$(infodir)/dir$$'
 distcleancheck_listfiles = find . -type f -print
-ACLOCAL = aclocal-1.16
+ACLOCAL = ${SHELL} /home/peterglen/src/hsencfs/hsenc/missing aclocal-1.16
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 1
-AUTOCONF = autoconf
-AUTOHEADER = autoheader
-AUTOMAKE = automake-1.16
+AUTOCONF = ${SHELL} /home/peterglen/src/hsencfs/hsenc/missing autoconf
+AUTOHEADER = ${SHELL} /home/peterglen/src/hsencfs/hsenc/missing autoheader
+AUTOMAKE = ${SHELL} /home/peterglen/src/hsencfs/hsenc/missing automake-1.16
 AWK = mawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
@@ -269,7 +269,7 @@ LDFLAGS =
 LIBOBJS = 
 LIBS = -lulockmgr -lfuse 
 LTLIBOBJS = 
-MAKEINFO = makeinfo
+MAKEINFO = ${SHELL} /home/peterglen/src/hsencfs/hsenc/missing makeinfo
 MKDIR_P = /bin/mkdir -p
 OBJEXT = o
 PACKAGE = hsencfs
@@ -327,7 +327,7 @@ target_alias =
 top_build_prefix = 
 top_builddir = .
 top_srcdir = .
-SUBDIRS = bluepoint tools docs src
+SUBDIRS = bluepoint common tools docs src
 PAN_SERV = GNOME_HSENCApplet.server
 BONOBO_DIR = /usr/lib/bonobo/servers
 
@@ -347,8 +347,9 @@ dist_bin_SCRIPTS = \
 
 # Fake it into the distribution
 # use: ls *.py *.sh *.server SUMFILE sha*
-EXTRA_DIST = src/hsencrw.c src/hsencop.c images/hsicon.png \
-	images/hsicon.svg images/hspadlock.png images/hspadlock.svg \
+EXTRA_DIST = src/hsencrw.c src/hsencop.c common/hspass.c \
+	common/hsutils.c images/hsicon.png images/hsicon.svg \
+	images/hspadlock.png images/hspadlock.svg \
 	images/screenshot.png study checksum.sh enctest.sh gensum.sh \
 	GNOME_HSENCApplet.server.in lazy.sh pack.sh sha1.sum SUMFILE
 all: config.h
@@ -983,6 +984,10 @@ test-vars:
 	@echo  bindir=$(bindir)
 	@echo  srcdir=$(srcdir)
 	@echo  prefix=$(prefix)
+
+git:
+	git add .
+	git commit -m autocheck
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

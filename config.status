@@ -393,7 +393,7 @@ on `(hostname || uname -n) 2>/dev/null | sed 1q`
 "
 
 # Files that config.status was made for.
-config_files=" Makefile bluepoint/Makefile tools/Makefile src/Makefile docs/Makefile"
+config_files=" Makefile bluepoint/Makefile tools/Makefile common/Makefile src/Makefile docs/Makefile"
 config_headers=" config.h"
 config_commands=" depfiles"
 
@@ -551,6 +551,7 @@ do
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "bluepoint/Makefile") CONFIG_FILES="$CONFIG_FILES bluepoint/Makefile" ;;
     "tools/Makefile") CONFIG_FILES="$CONFIG_FILES tools/Makefile" ;;
+    "common/Makefile") CONFIG_FILES="$CONFIG_FILES common/Makefile" ;;
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
     "docs/Makefile") CONFIG_FILES="$CONFIG_FILES docs/Makefile" ;;
 
@@ -656,11 +657,11 @@ S["MKDIR_P"]="/bin/mkdir -p"
 S["INSTALL_STRIP_PROGRAM"]="$(install_sh) -c -s"
 S["STRIP"]=""
 S["install_sh"]="${SHELL} /home/peterglen/src/hsencfs/hsenc/install-sh"
-S["MAKEINFO"]="makeinfo"
-S["AUTOHEADER"]="autoheader"
-S["AUTOMAKE"]="automake-1.16"
-S["AUTOCONF"]="autoconf"
-S["ACLOCAL"]="aclocal-1.16"
+S["MAKEINFO"]="${SHELL} /home/peterglen/src/hsencfs/hsenc/missing makeinfo"
+S["AUTOHEADER"]="${SHELL} /home/peterglen/src/hsencfs/hsenc/missing autoheader"
+S["AUTOMAKE"]="${SHELL} /home/peterglen/src/hsencfs/hsenc/missing automake-1.16"
+S["AUTOCONF"]="${SHELL} /home/peterglen/src/hsencfs/hsenc/missing autoconf"
+S["ACLOCAL"]="${SHELL} /home/peterglen/src/hsencfs/hsenc/missing aclocal-1.16"
 S["VERSION"]="1.20"
 S["PACKAGE"]="hsencfs"
 S["CYGPATH_W"]="echo"

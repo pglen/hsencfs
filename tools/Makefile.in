@@ -104,11 +104,16 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_bpdec2_OBJECTS = bpdec2-bpdec2.$(OBJEXT) bpdec2-bp2com.$(OBJEXT)
+am__dirstamp = $(am__leading_dot)dirstamp
+am_bpdec2_OBJECTS = bpdec2-bpdec2.$(OBJEXT) bpdec2-bp2com.$(OBJEXT) \
+	../common/bpdec2-hsutils.$(OBJEXT) \
+	../common/bpdec2-hspass.$(OBJEXT)
 bpdec2_OBJECTS = $(am_bpdec2_OBJECTS)
 bpdec2_LINK = $(CCLD) $(bpdec2_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-am_bpenc2_OBJECTS = bpenc2-bpenc2.$(OBJEXT) bpenc2-bp2com.$(OBJEXT)
+am_bpenc2_OBJECTS = bpenc2-bpenc2.$(OBJEXT) bpenc2-bp2com.$(OBJEXT) \
+	../common/bpenc2-hsutils.$(OBJEXT) \
+	../common/bpenc2-hspass.$(OBJEXT)
 bpenc2_OBJECTS = $(am_bpenc2_OBJECTS)
 bpenc2_LINK = $(CCLD) $(bpenc2_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
@@ -127,9 +132,12 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = ./$(DEPDIR)/bpdec2-bp2com.Po \
-	./$(DEPDIR)/bpdec2-bpdec2.Po ./$(DEPDIR)/bpenc2-bp2com.Po \
-	./$(DEPDIR)/bpenc2-bpenc2.Po
+am__depfiles_remade = ../common/$(DEPDIR)/bpdec2-hspass.Po \
+	../common/$(DEPDIR)/bpdec2-hsutils.Po \
+	../common/$(DEPDIR)/bpenc2-hspass.Po \
+	../common/$(DEPDIR)/bpenc2-hsutils.Po \
+	./$(DEPDIR)/bpdec2-bp2com.Po ./$(DEPDIR)/bpdec2-bpdec2.Po \
+	./$(DEPDIR)/bpenc2-bp2com.Po ./$(DEPDIR)/bpenc2-bpenc2.Po
 am__mv = mv -f
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -265,14 +273,14 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 bpenc2dir = .
-bpenc2_SOURCES = bpenc2.c  bp2com.c
+bpenc2_SOURCES = bpenc2.c  bp2com.c  ../common/hsutils.c ../common/hspass.c
 bpenc2_LDADD = ../bluepoint/bluepoint2.o
-bpenc2_CFLAGS = -I$(srcdir)/../bluepoint
+bpenc2_CFLAGS = -I$(srcdir)/../bluepoint -I$(srcdir)/../common
 bpenc2_DEPENDENCIES = 
 bpdec2dir = .
-bpdec2_SOURCES = bpdec2.c bp2com.c
+bpdec2_SOURCES = bpdec2.c bp2com.c ../common/hsutils.c ../common/hspass.c
 bpdec2_LDADD = ../bluepoint/bluepoint2.o
-bpdec2_CFLAGS = -I$(srcdir)/../bluepoint
+bpdec2_CFLAGS = -I$(srcdir)/../bluepoint -I$(srcdir)/../common
 bpdec2_DEPENDENCIES = 
 all: all-am
 
@@ -349,10 +357,24 @@ uninstall-binPROGRAMS:
 
 clean-binPROGRAMS:
 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
+../common/$(am__dirstamp):
+	@$(MKDIR_P) ../common
+	@: > ../common/$(am__dirstamp)
+../common/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) ../common/$(DEPDIR)
+	@: > ../common/$(DEPDIR)/$(am__dirstamp)
+../common/bpdec2-hsutils.$(OBJEXT): ../common/$(am__dirstamp) \
+	../common/$(DEPDIR)/$(am__dirstamp)
+../common/bpdec2-hspass.$(OBJEXT): ../common/$(am__dirstamp) \
+	../common/$(DEPDIR)/$(am__dirstamp)
 
 bpdec2$(EXEEXT): $(bpdec2_OBJECTS) $(bpdec2_DEPENDENCIES) $(EXTRA_bpdec2_DEPENDENCIES) 
 	@rm -f bpdec2$(EXEEXT)
 	$(AM_V_CCLD)$(bpdec2_LINK) $(bpdec2_OBJECTS) $(bpdec2_LDADD) $(LIBS)
+../common/bpenc2-hsutils.$(OBJEXT): ../common/$(am__dirstamp) \
+	../common/$(DEPDIR)/$(am__dirstamp)
+../common/bpenc2-hspass.$(OBJEXT): ../common/$(am__dirstamp) \
+	../common/$(DEPDIR)/$(am__dirstamp)
 
 bpenc2$(EXEEXT): $(bpenc2_OBJECTS) $(bpenc2_DEPENDENCIES) $(EXTRA_bpenc2_DEPENDENCIES) 
 	@rm -f bpenc2$(EXEEXT)
@@ -360,10 +382,15 @@ bpenc2$(EXEEXT): $(bpenc2_OBJECTS) $(bpenc2_DEPENDENCIES) $(EXTRA_bpenc2_DEPENDE
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
+	-rm -f ../common/*.$(OBJEXT)
 
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@../common/$(DEPDIR)/bpdec2-hspass.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@../common/$(DEPDIR)/bpdec2-hsutils.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@../common/$(DEPDIR)/bpenc2-hspass.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@../common/$(DEPDIR)/bpenc2-hsutils.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bpdec2-bp2com.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bpdec2-bpdec2.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bpenc2-bp2com.Po@am__quote@ # am--include-marker
@@ -376,15 +403,17 @@ $(am__depfiles_remade):
 am--depfiles: $(am__depfiles_remade)
 
 .c.o:
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
+@am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ $< &&\
+@am__fastdepCC_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Po
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(COMPILE) -c -o $@ $<
 
 .c.obj:
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ `$(CYGPATH_W) '$<'`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.obj$$||'`;\
+@am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ `$(CYGPATH_W) '$<'` &&\
+@am__fastdepCC_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Po
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(COMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
@@ -417,6 +446,34 @@ bpdec2-bp2com.obj: bp2com.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpdec2_CFLAGS) $(CFLAGS) -c -o bpdec2-bp2com.obj `if test -f 'bp2com.c'; then $(CYGPATH_W) 'bp2com.c'; else $(CYGPATH_W) '$(srcdir)/bp2com.c'; fi`
 
+../common/bpdec2-hsutils.o: ../common/hsutils.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpdec2_CFLAGS) $(CFLAGS) -MT ../common/bpdec2-hsutils.o -MD -MP -MF ../common/$(DEPDIR)/bpdec2-hsutils.Tpo -c -o ../common/bpdec2-hsutils.o `test -f '../common/hsutils.c' || echo '$(srcdir)/'`../common/hsutils.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ../common/$(DEPDIR)/bpdec2-hsutils.Tpo ../common/$(DEPDIR)/bpdec2-hsutils.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='../common/hsutils.c' object='../common/bpdec2-hsutils.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpdec2_CFLAGS) $(CFLAGS) -c -o ../common/bpdec2-hsutils.o `test -f '../common/hsutils.c' || echo '$(srcdir)/'`../common/hsutils.c
+
+../common/bpdec2-hsutils.obj: ../common/hsutils.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpdec2_CFLAGS) $(CFLAGS) -MT ../common/bpdec2-hsutils.obj -MD -MP -MF ../common/$(DEPDIR)/bpdec2-hsutils.Tpo -c -o ../common/bpdec2-hsutils.obj `if test -f '../common/hsutils.c'; then $(CYGPATH_W) '../common/hsutils.c'; else $(CYGPATH_W) '$(srcdir)/../common/hsutils.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ../common/$(DEPDIR)/bpdec2-hsutils.Tpo ../common/$(DEPDIR)/bpdec2-hsutils.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='../common/hsutils.c' object='../common/bpdec2-hsutils.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpdec2_CFLAGS) $(CFLAGS) -c -o ../common/bpdec2-hsutils.obj `if test -f '../common/hsutils.c'; then $(CYGPATH_W) '../common/hsutils.c'; else $(CYGPATH_W) '$(srcdir)/../common/hsutils.c'; fi`
+
+../common/bpdec2-hspass.o: ../common/hspass.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpdec2_CFLAGS) $(CFLAGS) -MT ../common/bpdec2-hspass.o -MD -MP -MF ../common/$(DEPDIR)/bpdec2-hspass.Tpo -c -o ../common/bpdec2-hspass.o `test -f '../common/hspass.c' || echo '$(srcdir)/'`../common/hspass.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ../common/$(DEPDIR)/bpdec2-hspass.Tpo ../common/$(DEPDIR)/bpdec2-hspass.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='../common/hspass.c' object='../common/bpdec2-hspass.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpdec2_CFLAGS) $(CFLAGS) -c -o ../common/bpdec2-hspass.o `test -f '../common/hspass.c' || echo '$(srcdir)/'`../common/hspass.c
+
+../common/bpdec2-hspass.obj: ../common/hspass.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpdec2_CFLAGS) $(CFLAGS) -MT ../common/bpdec2-hspass.obj -MD -MP -MF ../common/$(DEPDIR)/bpdec2-hspass.Tpo -c -o ../common/bpdec2-hspass.obj `if test -f '../common/hspass.c'; then $(CYGPATH_W) '../common/hspass.c'; else $(CYGPATH_W) '$(srcdir)/../common/hspass.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ../common/$(DEPDIR)/bpdec2-hspass.Tpo ../common/$(DEPDIR)/bpdec2-hspass.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='../common/hspass.c' object='../common/bpdec2-hspass.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpdec2_CFLAGS) $(CFLAGS) -c -o ../common/bpdec2-hspass.obj `if test -f '../common/hspass.c'; then $(CYGPATH_W) '../common/hspass.c'; else $(CYGPATH_W) '$(srcdir)/../common/hspass.c'; fi`
+
 bpenc2-bpenc2.o: bpenc2.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpenc2_CFLAGS) $(CFLAGS) -MT bpenc2-bpenc2.o -MD -MP -MF $(DEPDIR)/bpenc2-bpenc2.Tpo -c -o bpenc2-bpenc2.o `test -f 'bpenc2.c' || echo '$(srcdir)/'`bpenc2.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/bpenc2-bpenc2.Tpo $(DEPDIR)/bpenc2-bpenc2.Po
@@ -444,6 +501,34 @@ bpenc2-bp2com.obj: bp2com.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='bp2com.c' object='bpenc2-bp2com.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpenc2_CFLAGS) $(CFLAGS) -c -o bpenc2-bp2com.obj `if test -f 'bp2com.c'; then $(CYGPATH_W) 'bp2com.c'; else $(CYGPATH_W) '$(srcdir)/bp2com.c'; fi`
+
+../common/bpenc2-hsutils.o: ../common/hsutils.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpenc2_CFLAGS) $(CFLAGS) -MT ../common/bpenc2-hsutils.o -MD -MP -MF ../common/$(DEPDIR)/bpenc2-hsutils.Tpo -c -o ../common/bpenc2-hsutils.o `test -f '../common/hsutils.c' || echo '$(srcdir)/'`../common/hsutils.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ../common/$(DEPDIR)/bpenc2-hsutils.Tpo ../common/$(DEPDIR)/bpenc2-hsutils.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='../common/hsutils.c' object='../common/bpenc2-hsutils.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpenc2_CFLAGS) $(CFLAGS) -c -o ../common/bpenc2-hsutils.o `test -f '../common/hsutils.c' || echo '$(srcdir)/'`../common/hsutils.c
+
+../common/bpenc2-hsutils.obj: ../common/hsutils.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpenc2_CFLAGS) $(CFLAGS) -MT ../common/bpenc2-hsutils.obj -MD -MP -MF ../common/$(DEPDIR)/bpenc2-hsutils.Tpo -c -o ../common/bpenc2-hsutils.obj `if test -f '../common/hsutils.c'; then $(CYGPATH_W) '../common/hsutils.c'; else $(CYGPATH_W) '$(srcdir)/../common/hsutils.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ../common/$(DEPDIR)/bpenc2-hsutils.Tpo ../common/$(DEPDIR)/bpenc2-hsutils.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='../common/hsutils.c' object='../common/bpenc2-hsutils.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpenc2_CFLAGS) $(CFLAGS) -c -o ../common/bpenc2-hsutils.obj `if test -f '../common/hsutils.c'; then $(CYGPATH_W) '../common/hsutils.c'; else $(CYGPATH_W) '$(srcdir)/../common/hsutils.c'; fi`
+
+../common/bpenc2-hspass.o: ../common/hspass.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpenc2_CFLAGS) $(CFLAGS) -MT ../common/bpenc2-hspass.o -MD -MP -MF ../common/$(DEPDIR)/bpenc2-hspass.Tpo -c -o ../common/bpenc2-hspass.o `test -f '../common/hspass.c' || echo '$(srcdir)/'`../common/hspass.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ../common/$(DEPDIR)/bpenc2-hspass.Tpo ../common/$(DEPDIR)/bpenc2-hspass.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='../common/hspass.c' object='../common/bpenc2-hspass.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpenc2_CFLAGS) $(CFLAGS) -c -o ../common/bpenc2-hspass.o `test -f '../common/hspass.c' || echo '$(srcdir)/'`../common/hspass.c
+
+../common/bpenc2-hspass.obj: ../common/hspass.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpenc2_CFLAGS) $(CFLAGS) -MT ../common/bpenc2-hspass.obj -MD -MP -MF ../common/$(DEPDIR)/bpenc2-hspass.Tpo -c -o ../common/bpenc2-hspass.obj `if test -f '../common/hspass.c'; then $(CYGPATH_W) '../common/hspass.c'; else $(CYGPATH_W) '$(srcdir)/../common/hspass.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ../common/$(DEPDIR)/bpenc2-hspass.Tpo ../common/$(DEPDIR)/bpenc2-hspass.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='../common/hspass.c' object='../common/bpenc2-hspass.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpenc2_CFLAGS) $(CFLAGS) -c -o ../common/bpenc2-hspass.obj `if test -f '../common/hspass.c'; then $(CYGPATH_W) '../common/hspass.c'; else $(CYGPATH_W) '$(srcdir)/../common/hspass.c'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique
@@ -563,6 +648,8 @@ clean-generic:
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
 	-test . = "$(srcdir)" || test -z "$(CONFIG_CLEAN_VPATH_FILES)" || rm -f $(CONFIG_CLEAN_VPATH_FILES)
+	-rm -f ../common/$(DEPDIR)/$(am__dirstamp)
+	-rm -f ../common/$(am__dirstamp)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
@@ -570,7 +657,11 @@ maintainer-clean-generic:
 clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
 
 distclean: distclean-am
-		-rm -f ./$(DEPDIR)/bpdec2-bp2com.Po
+		-rm -f ../common/$(DEPDIR)/bpdec2-hspass.Po
+	-rm -f ../common/$(DEPDIR)/bpdec2-hsutils.Po
+	-rm -f ../common/$(DEPDIR)/bpenc2-hspass.Po
+	-rm -f ../common/$(DEPDIR)/bpenc2-hsutils.Po
+	-rm -f ./$(DEPDIR)/bpdec2-bp2com.Po
 	-rm -f ./$(DEPDIR)/bpdec2-bpdec2.Po
 	-rm -f ./$(DEPDIR)/bpenc2-bp2com.Po
 	-rm -f ./$(DEPDIR)/bpenc2-bpenc2.Po
@@ -619,7 +710,11 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-		-rm -f ./$(DEPDIR)/bpdec2-bp2com.Po
+		-rm -f ../common/$(DEPDIR)/bpdec2-hspass.Po
+	-rm -f ../common/$(DEPDIR)/bpdec2-hsutils.Po
+	-rm -f ../common/$(DEPDIR)/bpenc2-hspass.Po
+	-rm -f ../common/$(DEPDIR)/bpenc2-hsutils.Po
+	-rm -f ./$(DEPDIR)/bpdec2-bp2com.Po
 	-rm -f ./$(DEPDIR)/bpdec2-bpdec2.Po
 	-rm -f ./$(DEPDIR)/bpenc2-bp2com.Po
 	-rm -f ./$(DEPDIR)/bpenc2-bpenc2.Po
@@ -660,8 +755,14 @@ uninstall-am: uninstall-binPROGRAMS
 
 
 clean:
-	@-rm -f aa bb cc *.o  > /dev/null 2>&1
-#	@-rm -f bpenc2 bpdec2
+	@-rm -f aa bb cc dd ee .*.secret *.o  > /dev/null 2>&1
+
+test:
+	@echo "hello" > aa
+	@./bpenc2 -f -p 1234 aa bb
+	@./bpdec2 -f -p 1234 bb cc
+	@echo diff should stay silent
+	@diff aa cc
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

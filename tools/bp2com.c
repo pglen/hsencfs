@@ -18,11 +18,8 @@
 #include "bluepoint2.h"
 
 char    progname[] = "HSENCFS";
-
-//static char     pass[256];
 static int      plen = 0;
 static char     tmp[256];
-
 
 int     bpgetpass(const char *fname, char *pass, int plenx)
 
@@ -138,6 +135,7 @@ int     mk_block_file(const char *path)
     if(ptmp3) free(ptmp3);
     return(fdi);
 }
+
 
 
 

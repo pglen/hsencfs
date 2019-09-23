@@ -179,7 +179,7 @@ int main(int argc, char *argv[])
         exit(1);
         }
 
-    if(access(argv[optind+1], F_OK) >= 0)
+    if(access(argv[optind+1], F_OK) >= 0 && !force)
         {
         fprintf(stderr, "Output file '%s' must not exist.\n", argv[optind+1]);
         exit(1);

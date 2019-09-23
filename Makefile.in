@@ -327,7 +327,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-SUBDIRS = bluepoint tools docs src
+SUBDIRS = bluepoint common tools docs src
 PAN_SERV = GNOME_HSENCApplet.server
 BONOBO_DIR = /usr/lib/bonobo/servers
 
@@ -347,8 +347,9 @@ dist_bin_SCRIPTS = \
 
 # Fake it into the distribution
 # use: ls *.py *.sh *.server SUMFILE sha*
-EXTRA_DIST = src/hsencrw.c src/hsencop.c images/hsicon.png \
-	images/hsicon.svg images/hspadlock.png images/hspadlock.svg \
+EXTRA_DIST = src/hsencrw.c src/hsencop.c common/hspass.c \
+	common/hsutils.c images/hsicon.png images/hsicon.svg \
+	images/hspadlock.png images/hspadlock.svg \
 	images/screenshot.png study checksum.sh enctest.sh gensum.sh \
 	GNOME_HSENCApplet.server.in lazy.sh pack.sh sha1.sum SUMFILE
 all: config.h
@@ -983,6 +984,10 @@ test-vars:
 	@echo  bindir=$(bindir)
 	@echo  srcdir=$(srcdir)
 	@echo  prefix=$(prefix)
+
+git:
+	git add .
+	git commit -m autocheck
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

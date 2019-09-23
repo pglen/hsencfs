@@ -6,7 +6,7 @@ AC_INIT([hsencfs], [1.20], [bugs@nohost.none])
 AC_CONFIG_SRCDIR([src/hsencop.c])
 #AC_CONFIG_SUBDIRS([src tools])
 AC_CONFIG_HEADERS([config.h])
-AM_INIT_AUTOMAKE
+AM_INIT_AUTOMAKE([subdir-objects])
 
 AC_PREFIX_DEFAULT(/usr/local)
 
@@ -68,10 +68,13 @@ AC_CHECK_FUNCS([clock_gettime dup2 fdatasync ftruncate getcwd getpass lchown mem
 AC_CONFIG_FILES([Makefile
                  bluepoint/Makefile
                  tools/Makefile
+                 common/Makefile
                  src/Makefile
                  docs/Makefile]
                  )
 AC_OUTPUT
+
+
 
 
 

@@ -3,15 +3,19 @@
 
 # Fuse based encrypted file system, test utilities
 
-bin_PROGRAMS =  hsencfs hsaskpass
+bin_PROGRAMS =  hsencfs
+#hsaskpass
 
 # The main program
 hsencfsdir = .
 hsencfs_CFLAGS = -D_FILE_OFFSET_BITS=64 -O2 -I$(srcdir)/bluepoint \
-            -lfuse -lulockmgr
+            -lfuse -lulockmgr -I$(srcdir)/../common
 
-hsencfs_SOURCES = hsencfs.c hsutils.c hspass.c base64.c
-hsencfs_LDADD = ../bluepoint/bluepoint2.o
+hsencfs_SOURCES = hsencfs.c base64.c ../common/hsutils.c ../common/hspass.c
+hsencfs_LDADD   = ../bluepoint/bluepoint2.o
+
+#../common/hsutils.o
+#                    ../common/hspass.o
 
 # Password helper
 hsaskpass_CFLAGS = -D_FILE_OFFSET_BITS=64 -O2 -I$(srcdir)/bluepoint
@@ -19,6 +23,8 @@ hsaskpass_CFLAGS = -D_FILE_OFFSET_BITS=64 -O2 -I$(srcdir)/bluepoint
 clean:
 	@-rm -f aa bb cc *.o  > /dev/null 2>&1
 #	@-rm -f bpenc2 bpdec2
+
+
 
 
 

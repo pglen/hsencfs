@@ -192,12 +192,12 @@ am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
 am__DIST_COMMON = $(hsencfs_TEXINFOS) $(srcdir)/Makefile.in \
 	$(top_srcdir)/mkinstalldirs TODO mdate-sh texinfo.tex
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-ACLOCAL = aclocal-1.16
+ACLOCAL = ${SHELL} /home/peterglen/src/hsencfs/hsenc/missing aclocal-1.16
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 1
-AUTOCONF = autoconf
-AUTOHEADER = autoheader
-AUTOMAKE = automake-1.16
+AUTOCONF = ${SHELL} /home/peterglen/src/hsencfs/hsenc/missing autoconf
+AUTOHEADER = ${SHELL} /home/peterglen/src/hsencfs/hsenc/missing autoheader
+AUTOMAKE = ${SHELL} /home/peterglen/src/hsencfs/hsenc/missing automake-1.16
 AWK = mawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
@@ -222,7 +222,7 @@ LDFLAGS =
 LIBOBJS = 
 LIBS = -lulockmgr -lfuse 
 LTLIBOBJS = 
-MAKEINFO = makeinfo
+MAKEINFO = ${SHELL} /home/peterglen/src/hsencfs/hsenc/missing makeinfo
 MKDIR_P = /bin/mkdir -p
 OBJEXT = o
 PACKAGE = hsencfs

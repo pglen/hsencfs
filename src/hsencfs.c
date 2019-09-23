@@ -158,6 +158,35 @@ void    closefrom(int lowfd)
     }
 }
 
+// Simple help
+
+int help()
+
+{
+    printf("\n");
+    printf("Usage: hsencfs [options] storagedir mountpoint\n");
+    printf("\n");
+    printf("Where 'storageedir' is a storage directory for data and ");
+    printf("'mountpoint' is a directory for user visible data. ");
+    printf("Use dotted name as storagedir for convenient hiding  of data names. ");
+    printf(" (ex: ~/.secretdata)\n");
+    printf("Options:        -l num      -- Use log level  (--loglevel)\n");
+    printf("                -p pass     -- Use pass (!!Warning!! cleartext pass) (--pass)\n");
+    printf("                -a program  -- Use program for asking pass (--askpass)\n");
+    printf("                -o          -- On demand pass. Ask on first access (--ondemand)\n");
+    printf("                -f          -- Force creation of storagedir/mountpoint (--force)\n");
+    printf("                -q          -- Quiet (--quiet)\n");
+    printf("                -v          -- Verbose (--verbose)\n");
+    printf("                -V          -- Print version (--version)\n");
+    printf("Log levels:      1 - start/stop;   2 - open/create\n");
+    printf("                 3 - read/write;   4 - all (noisy)\n");
+    printf("Use '--' to at the end of options for appending fuse options. ");
+    printf("For example: 'hsencfs sdata mpoint -- -o ro' for read only mount.\n");
+    printf("Typical invocation: \n");
+    printf("    hsencfs -l 2  ~/.secretdata ~/secret\n");
+}
+
+
 // Read a line from the forked program
 
 static char *getln(int fd, char *buf, size_t bufsiz)
@@ -624,6 +653,7 @@ int main(int argc, char *argv[])
         }
     return ret;
 }
+
 
 
 
