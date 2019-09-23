@@ -200,7 +200,7 @@ aad3f31cdf0e8ad0f711bf584835353c104f99a0  ./autom4te.cache/output.1
 aad3f31cdf0e8ad0f711bf584835353c104f99a0  ./autom4te.cache/output.0
 4f85093d8766c27050f4359a4811cb470673808f  ./lazy.sh
 058b9b499887b5df4bc7348e713e7566e4234039  ./mkinstalldirs
-da39a3ee5e6b4b0d3255bfef95601890afd80709  ./README
+ee52c466e3fa54dc11c1fb3d1b313ea0189fbc6d  ./README
 9e2f3457b79e9970d39315116df1000d7f355d5c  ./cycle.sh
 1ab0360af264e8333f5fa39a0cee3c0b2e7d0570  ./DISCLAIMER
 5f71f405db5598059cff817df3122232ec234908  ./enctest.sh
@@ -267,5 +267,5 @@ bddf362c21095f616b9cdaef27becce7f9fcd516  ./docs/Makefile.in
 3664b7a30d42a2f259ea1fec5c8138ac918c58a0  ./pack.sh
 3baf82268aebd818d0be2577d503cb3ecc48fb83  ./Makefile.in
 d32be65fec2059b10a14870552ee62cba3196a13  ./config.log
-75cbab5fd390c54564593790add415e6b308e425  ./README.md
+b8e37cee86fdb552eaffd0100e47e12173d6a47a  ./README.md
 af0ab3510e3023c13537468a1f9888ebd3435b18  ./configure.ac

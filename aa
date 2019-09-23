@@ -1,6 +1,3 @@
-                        Changelog
-
-
 Author: Peter Glen <peterglen99@gmail.com>
 Date:   Mon Sep 23 01:58:19 2019 -0400
 
@@ -60,11 +57,4 @@ Author: Peter Glen <peterglen@localhost.localdomain>
 Date:   Sun Sep 8 22:06:30 2019 -0400
 
     Initial
-
-pre - git
-
-Wed, May 20 2015:       Tray and Tray DB
-Tuesday, May 22 2015:   Basic Func, Cleanup
-Tuesday, May 26 2015:   On Demand Pass implemented
-
 
