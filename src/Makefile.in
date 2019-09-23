@@ -107,9 +107,10 @@ PROGRAMS = $(bin_PROGRAMS)
 am__dirstamp = $(am__leading_dot)dirstamp
 am_hsencfs_OBJECTS = hsencfs-hsencfs.$(OBJEXT) \
 	hsencfs-base64.$(OBJEXT) ../common/hsencfs-hsutils.$(OBJEXT) \
-	../common/hsencfs-hspass.$(OBJEXT)
+	../common/hsencfs-hspass.$(OBJEXT) \
+	../bluepoint/hsencfs-bluepoint2.$(OBJEXT)
 hsencfs_OBJECTS = $(am_hsencfs_OBJECTS)
-hsencfs_DEPENDENCIES = ../bluepoint/bluepoint2.o
+hsencfs_LDADD = $(LDADD)
 hsencfs_LINK = $(CCLD) $(hsencfs_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
 AM_V_P = $(am__v_P_@AM_V@)
@@ -127,7 +128,8 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = ../common/$(DEPDIR)/hsencfs-hspass.Po \
+am__depfiles_remade = ../bluepoint/$(DEPDIR)/hsencfs-bluepoint2.Po \
+	../common/$(DEPDIR)/hsencfs-hspass.Po \
 	../common/$(DEPDIR)/hsencfs-hsutils.Po \
 	./$(DEPDIR)/hsencfs-base64.Po ./$(DEPDIR)/hsencfs-hsencfs.Po
 am__mv = mv -f
@@ -271,8 +273,11 @@ hsencfsdir = .
 hsencfs_CFLAGS = -D_FILE_OFFSET_BITS=64 -O2 -I$(srcdir)/bluepoint \
             -lfuse -lulockmgr -I$(srcdir)/../common
 
-hsencfs_SOURCES = hsencfs.c base64.c ../common/hsutils.c ../common/hspass.c
-hsencfs_LDADD = ../bluepoint/bluepoint2.o
+hsencfs_SOURCES = hsencfs.c base64.c ../common/hsutils.c ../common/hspass.c \
+                        ../bluepoint/bluepoint2.c
+
+
+#hsencfs_LDADD   = ../bluepoint/bluepoint2.o
 
 #../common/hsutils.o
 #                    ../common/hspass.o
@@ -364,6 +369,15 @@ clean-binPROGRAMS:
 	../common/$(DEPDIR)/$(am__dirstamp)
 ../common/hsencfs-hspass.$(OBJEXT): ../common/$(am__dirstamp) \
 	../common/$(DEPDIR)/$(am__dirstamp)
+../bluepoint/$(am__dirstamp):
+	@$(MKDIR_P) ../bluepoint
+	@: > ../bluepoint/$(am__dirstamp)
+../bluepoint/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) ../bluepoint/$(DEPDIR)
+	@: > ../bluepoint/$(DEPDIR)/$(am__dirstamp)
+../bluepoint/hsencfs-bluepoint2.$(OBJEXT):  \
+	../bluepoint/$(am__dirstamp) \
+	../bluepoint/$(DEPDIR)/$(am__dirstamp)
 
 hsencfs$(EXEEXT): $(hsencfs_OBJECTS) $(hsencfs_DEPENDENCIES) $(EXTRA_hsencfs_DEPENDENCIES) 
 	@rm -f hsencfs$(EXEEXT)
@@ -371,11 +385,13 @@ hsencfs$(EXEEXT): $(hsencfs_OBJECTS) $(hsencfs_DEPENDENCIES) $(EXTRA_hsencfs_DEP
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
+	-rm -f ../bluepoint/*.$(OBJEXT)
 	-rm -f ../common/*.$(OBJEXT)
 
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@../bluepoint/$(DEPDIR)/hsencfs-bluepoint2.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@../common/$(DEPDIR)/hsencfs-hspass.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@../common/$(DEPDIR)/hsencfs-hsutils.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hsencfs-base64.Po@am__quote@ # am--include-marker
@@ -458,6 +474,20 @@ hsencfs-base64.obj: base64.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='../common/hspass.c' object='../common/hsencfs-hspass.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -c -o ../common/hsencfs-hspass.obj `if test -f '../common/hspass.c'; then $(CYGPATH_W) '../common/hspass.c'; else $(CYGPATH_W) '$(srcdir)/../common/hspass.c'; fi`
+
+../bluepoint/hsencfs-bluepoint2.o: ../bluepoint/bluepoint2.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -MT ../bluepoint/hsencfs-bluepoint2.o -MD -MP -MF ../bluepoint/$(DEPDIR)/hsencfs-bluepoint2.Tpo -c -o ../bluepoint/hsencfs-bluepoint2.o `test -f '../bluepoint/bluepoint2.c' || echo '$(srcdir)/'`../bluepoint/bluepoint2.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ../bluepoint/$(DEPDIR)/hsencfs-bluepoint2.Tpo ../bluepoint/$(DEPDIR)/hsencfs-bluepoint2.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='../bluepoint/bluepoint2.c' object='../bluepoint/hsencfs-bluepoint2.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -c -o ../bluepoint/hsencfs-bluepoint2.o `test -f '../bluepoint/bluepoint2.c' || echo '$(srcdir)/'`../bluepoint/bluepoint2.c
+
+../bluepoint/hsencfs-bluepoint2.obj: ../bluepoint/bluepoint2.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -MT ../bluepoint/hsencfs-bluepoint2.obj -MD -MP -MF ../bluepoint/$(DEPDIR)/hsencfs-bluepoint2.Tpo -c -o ../bluepoint/hsencfs-bluepoint2.obj `if test -f '../bluepoint/bluepoint2.c'; then $(CYGPATH_W) '../bluepoint/bluepoint2.c'; else $(CYGPATH_W) '$(srcdir)/../bluepoint/bluepoint2.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ../bluepoint/$(DEPDIR)/hsencfs-bluepoint2.Tpo ../bluepoint/$(DEPDIR)/hsencfs-bluepoint2.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='../bluepoint/bluepoint2.c' object='../bluepoint/hsencfs-bluepoint2.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -c -o ../bluepoint/hsencfs-bluepoint2.obj `if test -f '../bluepoint/bluepoint2.c'; then $(CYGPATH_W) '../bluepoint/bluepoint2.c'; else $(CYGPATH_W) '$(srcdir)/../bluepoint/bluepoint2.c'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique
@@ -577,6 +607,8 @@ clean-generic:
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
 	-test . = "$(srcdir)" || test -z "$(CONFIG_CLEAN_VPATH_FILES)" || rm -f $(CONFIG_CLEAN_VPATH_FILES)
+	-rm -f ../bluepoint/$(DEPDIR)/$(am__dirstamp)
+	-rm -f ../bluepoint/$(am__dirstamp)
 	-rm -f ../common/$(DEPDIR)/$(am__dirstamp)
 	-rm -f ../common/$(am__dirstamp)
 
@@ -586,7 +618,8 @@ maintainer-clean-generic:
 clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
 
 distclean: distclean-am
-		-rm -f ../common/$(DEPDIR)/hsencfs-hspass.Po
+		-rm -f ../bluepoint/$(DEPDIR)/hsencfs-bluepoint2.Po
+	-rm -f ../common/$(DEPDIR)/hsencfs-hspass.Po
 	-rm -f ../common/$(DEPDIR)/hsencfs-hsutils.Po
 	-rm -f ./$(DEPDIR)/hsencfs-base64.Po
 	-rm -f ./$(DEPDIR)/hsencfs-hsencfs.Po
@@ -635,7 +668,8 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-		-rm -f ../common/$(DEPDIR)/hsencfs-hspass.Po
+		-rm -f ../bluepoint/$(DEPDIR)/hsencfs-bluepoint2.Po
+	-rm -f ../common/$(DEPDIR)/hsencfs-hspass.Po
 	-rm -f ../common/$(DEPDIR)/hsencfs-hsutils.Po
 	-rm -f ./$(DEPDIR)/hsencfs-base64.Po
 	-rm -f ./$(DEPDIR)/hsencfs-hsencfs.Po

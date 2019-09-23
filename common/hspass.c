@@ -20,6 +20,7 @@
 #include <errno.h>
 #include <syslog.h>
 #include <sys/time.h>
+
 #ifdef HAVE_SETXATTR
 #include <sys/xattr.h>
 #endif
@@ -32,19 +33,23 @@
 extern char    progname[];
 extern int     loglevel;
 
-#define MARK_SIZE 1024
-
+//////////////////////////////////////////////////////////////////////////
 // Create mark file. Random block, one half is encrypted with the
 // password and saved to the other half. Checking is done by
 // decrypting the second half, comparing it to the first.
+// Long enough to have more numbers than the starts in the universe
+//
 
-static int create_markfile(char *name, char *pass, int *plen)
+int     create_markfile(char *name, char *pass, int *plen)
 
 {
     int loop, ret = 0;
     char *ttt = malloc(MARK_SIZE);
     if(!ttt)
         return -errno;
+
+    //printf("use pass '%s'\n", pass);
+
     char *ttt2 = malloc(MARK_SIZE / 2);
     if(!ttt2)
         { free(ttt); return -errno; }
@@ -65,7 +70,7 @@ static int create_markfile(char *name, char *pass, int *plen)
     if (ttt2) free(ttt2);
 
     //int fh = open(name, O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR);
-    int fh = open(name, O_CREAT | O_WRONLY, S_IRUSR);
+    int fh = open(name, O_CREAT | O_TRUNC | O_WRONLY, S_IRUSR | S_IWUSR);
     if(fh < 1)
         { if(ttt) free(ttt); return -errno;}
 
@@ -81,10 +86,12 @@ static int create_markfile(char *name, char *pass, int *plen)
 
 // See notes on create_markfile
 
-static int check_markfile(char *name, char *pass, int *plen)
+int     check_markfile(char *name, char *pass, int *plen)
 
 {
     int ret = 0;
+
+    //printf("use pass '%s'\n", pass);
 
     // Checking
     char *ttt = malloc(MARK_SIZE);
@@ -161,7 +168,7 @@ int     pass_ritual(char *mountroot, char *mountdata, char *pass, int *plen)
             return 1;
             }
         // Dup the results right away, clear it too
-        strncpy(pass, xpass, *plen);
+        strncpy(pass, xpass, xlen);
         memset(xpass, 0, xlen);
         }
 
@@ -214,7 +221,10 @@ int     pass_ritual(char *mountroot, char *mountdata, char *pass, int *plen)
             }
         ret = create_markfile(tmp2, pass, plen);
         if (ret)
-            fprintf(stderr,"Error on creating markfile.\n");
+            {
+            if(loglevel > 0)
+                syslog(LOG_DEBUG, "Error on creating markfile.\n");
+            }
         }
     else
         {
@@ -222,7 +232,7 @@ int     pass_ritual(char *mountroot, char *mountdata, char *pass, int *plen)
 
         if (ret)
             {
-            fprintf(stderr, "Invalid pass.\n");
+            //fprintf(stderr, "Invalid pass.\n");
 
             if(loglevel > 0)
                 syslog(LOG_DEBUG, "Invalid pass entered by uid: %d\n", getuid());
@@ -233,6 +243,8 @@ int     pass_ritual(char *mountroot, char *mountdata, char *pass, int *plen)
 
     return ret;
 }
+
+
 
 
 

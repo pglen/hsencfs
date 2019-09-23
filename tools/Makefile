@@ -107,14 +107,18 @@ PROGRAMS = $(bin_PROGRAMS)
 am__dirstamp = $(am__leading_dot)dirstamp
 am_bpdec2_OBJECTS = bpdec2-bpdec2.$(OBJEXT) bpdec2-bp2com.$(OBJEXT) \
 	../common/bpdec2-hsutils.$(OBJEXT) \
-	../common/bpdec2-hspass.$(OBJEXT)
+	../common/bpdec2-hspass.$(OBJEXT) \
+	../bluepoint/bpdec2-bluepoint2.$(OBJEXT)
 bpdec2_OBJECTS = $(am_bpdec2_OBJECTS)
+bpdec2_LDADD = $(LDADD)
 bpdec2_LINK = $(CCLD) $(bpdec2_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
 am_bpenc2_OBJECTS = bpenc2-bpenc2.$(OBJEXT) bpenc2-bp2com.$(OBJEXT) \
 	../common/bpenc2-hsutils.$(OBJEXT) \
-	../common/bpenc2-hspass.$(OBJEXT)
+	../common/bpenc2-hspass.$(OBJEXT) \
+	../bluepoint/bpenc2-bluepoint2.$(OBJEXT)
 bpenc2_OBJECTS = $(am_bpenc2_OBJECTS)
+bpenc2_LDADD = $(LDADD)
 bpenc2_LINK = $(CCLD) $(bpenc2_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
 AM_V_P = $(am__v_P_$(V))
@@ -132,7 +136,9 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I. -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = ../common/$(DEPDIR)/bpdec2-hspass.Po \
+am__depfiles_remade = ../bluepoint/$(DEPDIR)/bpdec2-bluepoint2.Po \
+	../bluepoint/$(DEPDIR)/bpenc2-bluepoint2.Po \
+	../common/$(DEPDIR)/bpdec2-hspass.Po \
 	../common/$(DEPDIR)/bpdec2-hsutils.Po \
 	../common/$(DEPDIR)/bpenc2-hspass.Po \
 	../common/$(DEPDIR)/bpenc2-hsutils.Po \
@@ -273,13 +279,15 @@ top_build_prefix = ../
 top_builddir = ..
 top_srcdir = ..
 bpenc2dir = .
-bpenc2_SOURCES = bpenc2.c  bp2com.c  ../common/hsutils.c ../common/hspass.c
-bpenc2_LDADD = ../bluepoint/bluepoint2.o
+bpenc2_SOURCES = bpenc2.c  bp2com.c  ../common/hsutils.c ../common/hspass.c \
+                        ../bluepoint/bluepoint2.c
+
 bpenc2_CFLAGS = -I$(srcdir)/../bluepoint -I$(srcdir)/../common
 bpenc2_DEPENDENCIES = 
 bpdec2dir = .
-bpdec2_SOURCES = bpdec2.c bp2com.c ../common/hsutils.c ../common/hspass.c
-bpdec2_LDADD = ../bluepoint/bluepoint2.o
+bpdec2_SOURCES = bpdec2.c bp2com.c ../common/hsutils.c ../common/hspass.c  \
+                        ../bluepoint/bluepoint2.c
+
 bpdec2_CFLAGS = -I$(srcdir)/../bluepoint -I$(srcdir)/../common
 bpdec2_DEPENDENCIES = 
 all: all-am
@@ -367,6 +375,15 @@ clean-binPROGRAMS:
 	../common/$(DEPDIR)/$(am__dirstamp)
 ../common/bpdec2-hspass.$(OBJEXT): ../common/$(am__dirstamp) \
 	../common/$(DEPDIR)/$(am__dirstamp)
+../bluepoint/$(am__dirstamp):
+	@$(MKDIR_P) ../bluepoint
+	@: > ../bluepoint/$(am__dirstamp)
+../bluepoint/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) ../bluepoint/$(DEPDIR)
+	@: > ../bluepoint/$(DEPDIR)/$(am__dirstamp)
+../bluepoint/bpdec2-bluepoint2.$(OBJEXT):  \
+	../bluepoint/$(am__dirstamp) \
+	../bluepoint/$(DEPDIR)/$(am__dirstamp)
 
 bpdec2$(EXEEXT): $(bpdec2_OBJECTS) $(bpdec2_DEPENDENCIES) $(EXTRA_bpdec2_DEPENDENCIES) 
 	@rm -f bpdec2$(EXEEXT)
@@ -375,6 +392,9 @@ bpdec2$(EXEEXT): $(bpdec2_OBJECTS) $(bpdec2_DEPENDENCIES) $(EXTRA_bpdec2_DEPENDE
 	../common/$(DEPDIR)/$(am__dirstamp)
 ../common/bpenc2-hspass.$(OBJEXT): ../common/$(am__dirstamp) \
 	../common/$(DEPDIR)/$(am__dirstamp)
+../bluepoint/bpenc2-bluepoint2.$(OBJEXT):  \
+	../bluepoint/$(am__dirstamp) \
+	../bluepoint/$(DEPDIR)/$(am__dirstamp)
 
 bpenc2$(EXEEXT): $(bpenc2_OBJECTS) $(bpenc2_DEPENDENCIES) $(EXTRA_bpenc2_DEPENDENCIES) 
 	@rm -f bpenc2$(EXEEXT)
@@ -382,11 +402,14 @@ bpenc2$(EXEEXT): $(bpenc2_OBJECTS) $(bpenc2_DEPENDENCIES) $(EXTRA_bpenc2_DEPENDE
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
+	-rm -f ../bluepoint/*.$(OBJEXT)
 	-rm -f ../common/*.$(OBJEXT)
 
 distclean-compile:
 	-rm -f *.tab.c
 
+include ../bluepoint/$(DEPDIR)/bpdec2-bluepoint2.Po # am--include-marker
+include ../bluepoint/$(DEPDIR)/bpenc2-bluepoint2.Po # am--include-marker
 include ../common/$(DEPDIR)/bpdec2-hspass.Po # am--include-marker
 include ../common/$(DEPDIR)/bpdec2-hsutils.Po # am--include-marker
 include ../common/$(DEPDIR)/bpenc2-hspass.Po # am--include-marker
@@ -474,6 +497,20 @@ bpdec2-bp2com.obj: bp2com.c
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpdec2_CFLAGS) $(CFLAGS) -c -o ../common/bpdec2-hspass.obj `if test -f '../common/hspass.c'; then $(CYGPATH_W) '../common/hspass.c'; else $(CYGPATH_W) '$(srcdir)/../common/hspass.c'; fi`
 
+../bluepoint/bpdec2-bluepoint2.o: ../bluepoint/bluepoint2.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpdec2_CFLAGS) $(CFLAGS) -MT ../bluepoint/bpdec2-bluepoint2.o -MD -MP -MF ../bluepoint/$(DEPDIR)/bpdec2-bluepoint2.Tpo -c -o ../bluepoint/bpdec2-bluepoint2.o `test -f '../bluepoint/bluepoint2.c' || echo '$(srcdir)/'`../bluepoint/bluepoint2.c
+	$(AM_V_at)$(am__mv) ../bluepoint/$(DEPDIR)/bpdec2-bluepoint2.Tpo ../bluepoint/$(DEPDIR)/bpdec2-bluepoint2.Po
+#	$(AM_V_CC)source='../bluepoint/bluepoint2.c' object='../bluepoint/bpdec2-bluepoint2.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpdec2_CFLAGS) $(CFLAGS) -c -o ../bluepoint/bpdec2-bluepoint2.o `test -f '../bluepoint/bluepoint2.c' || echo '$(srcdir)/'`../bluepoint/bluepoint2.c
+
+../bluepoint/bpdec2-bluepoint2.obj: ../bluepoint/bluepoint2.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpdec2_CFLAGS) $(CFLAGS) -MT ../bluepoint/bpdec2-bluepoint2.obj -MD -MP -MF ../bluepoint/$(DEPDIR)/bpdec2-bluepoint2.Tpo -c -o ../bluepoint/bpdec2-bluepoint2.obj `if test -f '../bluepoint/bluepoint2.c'; then $(CYGPATH_W) '../bluepoint/bluepoint2.c'; else $(CYGPATH_W) '$(srcdir)/../bluepoint/bluepoint2.c'; fi`
+	$(AM_V_at)$(am__mv) ../bluepoint/$(DEPDIR)/bpdec2-bluepoint2.Tpo ../bluepoint/$(DEPDIR)/bpdec2-bluepoint2.Po
+#	$(AM_V_CC)source='../bluepoint/bluepoint2.c' object='../bluepoint/bpdec2-bluepoint2.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpdec2_CFLAGS) $(CFLAGS) -c -o ../bluepoint/bpdec2-bluepoint2.obj `if test -f '../bluepoint/bluepoint2.c'; then $(CYGPATH_W) '../bluepoint/bluepoint2.c'; else $(CYGPATH_W) '$(srcdir)/../bluepoint/bluepoint2.c'; fi`
+
 bpenc2-bpenc2.o: bpenc2.c
 	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpenc2_CFLAGS) $(CFLAGS) -MT bpenc2-bpenc2.o -MD -MP -MF $(DEPDIR)/bpenc2-bpenc2.Tpo -c -o bpenc2-bpenc2.o `test -f 'bpenc2.c' || echo '$(srcdir)/'`bpenc2.c
 	$(AM_V_at)$(am__mv) $(DEPDIR)/bpenc2-bpenc2.Tpo $(DEPDIR)/bpenc2-bpenc2.Po
@@ -529,6 +566,20 @@ bpenc2-bp2com.obj: bp2com.c
 #	$(AM_V_CC)source='../common/hspass.c' object='../common/bpenc2-hspass.obj' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpenc2_CFLAGS) $(CFLAGS) -c -o ../common/bpenc2-hspass.obj `if test -f '../common/hspass.c'; then $(CYGPATH_W) '../common/hspass.c'; else $(CYGPATH_W) '$(srcdir)/../common/hspass.c'; fi`
+
+../bluepoint/bpenc2-bluepoint2.o: ../bluepoint/bluepoint2.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpenc2_CFLAGS) $(CFLAGS) -MT ../bluepoint/bpenc2-bluepoint2.o -MD -MP -MF ../bluepoint/$(DEPDIR)/bpenc2-bluepoint2.Tpo -c -o ../bluepoint/bpenc2-bluepoint2.o `test -f '../bluepoint/bluepoint2.c' || echo '$(srcdir)/'`../bluepoint/bluepoint2.c
+	$(AM_V_at)$(am__mv) ../bluepoint/$(DEPDIR)/bpenc2-bluepoint2.Tpo ../bluepoint/$(DEPDIR)/bpenc2-bluepoint2.Po
+#	$(AM_V_CC)source='../bluepoint/bluepoint2.c' object='../bluepoint/bpenc2-bluepoint2.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpenc2_CFLAGS) $(CFLAGS) -c -o ../bluepoint/bpenc2-bluepoint2.o `test -f '../bluepoint/bluepoint2.c' || echo '$(srcdir)/'`../bluepoint/bluepoint2.c
+
+../bluepoint/bpenc2-bluepoint2.obj: ../bluepoint/bluepoint2.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpenc2_CFLAGS) $(CFLAGS) -MT ../bluepoint/bpenc2-bluepoint2.obj -MD -MP -MF ../bluepoint/$(DEPDIR)/bpenc2-bluepoint2.Tpo -c -o ../bluepoint/bpenc2-bluepoint2.obj `if test -f '../bluepoint/bluepoint2.c'; then $(CYGPATH_W) '../bluepoint/bluepoint2.c'; else $(CYGPATH_W) '$(srcdir)/../bluepoint/bluepoint2.c'; fi`
+	$(AM_V_at)$(am__mv) ../bluepoint/$(DEPDIR)/bpenc2-bluepoint2.Tpo ../bluepoint/$(DEPDIR)/bpenc2-bluepoint2.Po
+#	$(AM_V_CC)source='../bluepoint/bluepoint2.c' object='../bluepoint/bpenc2-bluepoint2.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpenc2_CFLAGS) $(CFLAGS) -c -o ../bluepoint/bpenc2-bluepoint2.obj `if test -f '../bluepoint/bluepoint2.c'; then $(CYGPATH_W) '../bluepoint/bluepoint2.c'; else $(CYGPATH_W) '$(srcdir)/../bluepoint/bluepoint2.c'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique
@@ -648,6 +699,8 @@ clean-generic:
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
 	-test . = "$(srcdir)" || test -z "$(CONFIG_CLEAN_VPATH_FILES)" || rm -f $(CONFIG_CLEAN_VPATH_FILES)
+	-rm -f ../bluepoint/$(DEPDIR)/$(am__dirstamp)
+	-rm -f ../bluepoint/$(am__dirstamp)
 	-rm -f ../common/$(DEPDIR)/$(am__dirstamp)
 	-rm -f ../common/$(am__dirstamp)
 
@@ -657,7 +710,9 @@ maintainer-clean-generic:
 clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
 
 distclean: distclean-am
-		-rm -f ../common/$(DEPDIR)/bpdec2-hspass.Po
+		-rm -f ../bluepoint/$(DEPDIR)/bpdec2-bluepoint2.Po
+	-rm -f ../bluepoint/$(DEPDIR)/bpenc2-bluepoint2.Po
+	-rm -f ../common/$(DEPDIR)/bpdec2-hspass.Po
 	-rm -f ../common/$(DEPDIR)/bpdec2-hsutils.Po
 	-rm -f ../common/$(DEPDIR)/bpenc2-hspass.Po
 	-rm -f ../common/$(DEPDIR)/bpenc2-hsutils.Po
@@ -710,7 +765,9 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-		-rm -f ../common/$(DEPDIR)/bpdec2-hspass.Po
+		-rm -f ../bluepoint/$(DEPDIR)/bpdec2-bluepoint2.Po
+	-rm -f ../bluepoint/$(DEPDIR)/bpenc2-bluepoint2.Po
+	-rm -f ../common/$(DEPDIR)/bpdec2-hspass.Po
 	-rm -f ../common/$(DEPDIR)/bpdec2-hsutils.Po
 	-rm -f ../common/$(DEPDIR)/bpenc2-hspass.Po
 	-rm -f ../common/$(DEPDIR)/bpenc2-hsutils.Po

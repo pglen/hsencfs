@@ -41,23 +41,23 @@ int main(int argc, char *argv[])
 
     printf("ENCRYPTED: \n");
     printf("%s", bluepoint2_dumphex(orig, slen));
-    printf("\nEND ENCRYPTED\n");
+    printf("\nEND ENCRYPTED\n\n");
 
-    printf("HASH:\n");
+    printf("HASH:          ");
     hh = bluepoint2_hash(copy, slen);
-    printf("%lu 0x%08lx\n", hh, hh);
+    printf("%lu 0x%lx\n", hh, hh);
 
-    printf("CRYPTHASH: \n");
-    hh = bluepoint2_crypthash(copy, slen, pass, plen);
-    printf("%lu 0x%08lx\n", hh, hh);
+    printf("CRYPTHASH:     ");
+    unsigned long chh = bluepoint2_crypthash(copy, slen, pass, plen);
+    printf("%lu 0x%lx\n", chh, chh);
 
-    printf("HASH64:\n");
+    printf("HASH64:        ");
     unsigned long long int hhh = bluepoint2_hash64(copy, slen);
     printf("%llu 0x%llx\n", hhh, hhh);
 
-    printf("CRYPTHASH64: \n");
+    printf("CRYPTHASH64:   ");
     hhh = bluepoint2_crypthash64(copy, slen, pass, plen);
-    printf("%llu 0x%llx\n", hhh, hhh);
+    printf("%llu 0x%llx\n\n", hhh, hhh);
 
     char   dumped[256];
     memset(dumped, 'x', sizeof(dumped));
@@ -73,18 +73,28 @@ int main(int argc, char *argv[])
     memset(dumped2, 'y', sizeof(dumped2));
     int olen2 = sizeof(dumped2);
     bluepoint2_fromhex(dumped, olen, dumped2, &olen2);
-    if (memcmp(dumped2, orig, olen2))
-        {
-        printf("Decrypt error.");
-        }
+
     printf("FROMHEX: \n");
     //printf("'%s'", dumped2);
     printf("%s", bluepoint2_dumphex(dumped2, olen2));
     printf("\nEND FROMHEX\n");
 
-    bluepoint2_decrypt(dumped2, olen2, pass, plen);
-    printf("decrypted='%s'\n", dumped2);
+    char   dumped3[256];
+    memcpy(dumped3, dumped2,  sizeof(dumped3));
+
+    bluepoint2_decrypt(dumped3, olen2, pass, plen);
+    printf("decrypted='%s'\n", dumped3);
+
+    if (memcmp(dumped2, orig, olen2))
+        {
+        printf("\nDecrypt ERROR\n\n");
+        }
+    else
+        {
+        printf("\nDecrypt OK.\n\n");
+        }
 }
+
 
 
 

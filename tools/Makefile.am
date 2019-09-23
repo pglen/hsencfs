@@ -6,14 +6,17 @@
 bin_PROGRAMS =  bpdec2 bpenc2
 
 bpenc2dir = .
-bpenc2_SOURCES  = bpenc2.c  bp2com.c  ../common/hsutils.c ../common/hspass.c
-bpenc2_LDADD    = ../bluepoint/bluepoint2.o
+bpenc2_SOURCES  = bpenc2.c  bp2com.c  ../common/hsutils.c ../common/hspass.c \
+                        ../bluepoint/bluepoint2.c
+
 bpenc2_CFLAGS   =  -I$(srcdir)/../bluepoint -I$(srcdir)/../common
 bpenc2_DEPENDENCIES =
 
 bpdec2dir = .
-bpdec2_SOURCES  = bpdec2.c bp2com.c ../common/hsutils.c ../common/hspass.c
-bpdec2_LDADD    = ../bluepoint/bluepoint2.o
+bpdec2_SOURCES  = bpdec2.c bp2com.c ../common/hsutils.c ../common/hspass.c  \
+                        ../bluepoint/bluepoint2.c
+
+
 bpdec2_CFLAGS   =  -I$(srcdir)/../bluepoint -I$(srcdir)/../common
 bpdec2_DEPENDENCIES =
 
@@ -26,6 +29,7 @@ test:
 	@./bpdec2 -f -p 1234 bb cc
 	@echo diff should stay silent
 	@diff aa cc
+
 
 
 

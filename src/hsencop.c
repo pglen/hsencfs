@@ -475,7 +475,7 @@ static int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
             syslog(LOG_DEBUG, "Creating '%s'\n", ptmp2);
 
         int old_errno = errno;
-        int fdi = open(ptmp2, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
+        int fdi = open(ptmp2, O_RDWR | O_CREAT | O_TRUNC , S_IRUSR | S_IWUSR);
         if(fdi < 0)
             {
             if (loglevel > 2)
@@ -493,10 +493,8 @@ static int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
                     if (loglevel > 2)
                         syslog(LOG_DEBUG, "Error on writing to inode file errno: %d\n", errno);
                     }
-
                 free(ptmp3);
                 }
-
             close(fdi);
             }
         errno = old_errno;
@@ -534,8 +532,8 @@ static int xmp_open(const char *path, struct fuse_file_info *fi)
     struct stat stbuf;	memset(&stbuf, 0, sizeof(stbuf));
     int res = fstat(fi->fh, &stbuf);
 
-    if (loglevel > 2)
-        syslog(LOG_DEBUG, "Inode: %lud\n", stbuf.st_ino);
+    //if (loglevel > 2)
+    //    syslog(LOG_DEBUG, "Inode: %lud\n", stbuf.st_ino);
 
 	return 0;
 }

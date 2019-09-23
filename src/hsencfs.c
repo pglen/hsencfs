@@ -608,6 +608,8 @@ int main(int argc, char *argv[])
             printf("Mounting .. %s\n", mountpoint);
         }
 
+    //syslog(LOG_DEBUG, "pass from: len=%d '%s'\n", plen, passx);
+
     // Write back expanded paths
     argv[optind]    = mountdata;
     argv[optind+1]  = mountpoint;
@@ -653,6 +655,7 @@ int main(int argc, char *argv[])
         }
     return ret;
 }
+
 
 
 

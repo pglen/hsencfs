@@ -66,8 +66,9 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset,
 
     if (loglevel > 2)
         {
-        syslog(LOG_DEBUG, "Before reading file: %s size=%ld offs=%ld\n",
-                                                    path, size, offset);
+        syslog(LOG_DEBUG, "Before reading file: %s size=%ld offs=%ld size=%ld\n",
+                                                    path, size, offset, size);
+
         syslog(LOG_DEBUG, "Size expanded: new_offs=%ld total=%ld skip=%ld\n",
                                                                new_offset, total, skip);
         }
@@ -80,56 +81,84 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset,
     res = fstat(fi->fh, &stbuf);
     off_t fsize = stbuf.st_size;
 
-    // Read full block instead
+    // Always read a full block
     size_t getall = new_offset + total;
     if(getall >= fsize)
         {
         // Read in last block from lastblock file
-        getall = fsize - new_offset;
-        //res = pread(fi->fh, mem, getall, new_offset);
-
-        char *ptmp2 =  get_tmpname(path);
-        if(ptmp2)
+        char *bbuff = malloc(HS_BLOCK);
+        if(!bbuff)
             {
-            int old_errno = errno;
-            int fdi = open(ptmp2, O_RDWR, S_IRUSR | S_IWUSR);
-            if(fdi < 0)
+            syslog(LOG_DEBUG, "Cannot allocate memory for final block '%s'\n", path);
+            goto endd;
+            }
+        memset(bbuff, '\0', HS_BLOCK);
+        getall = fsize - new_offset;
+        char *ptmp2 =  get_tmpname(path);
+        if(!ptmp2)
+            {
+            syslog(LOG_DEBUG, "Cannot allocate memory for file name '%s'\n", path);
+            goto endd;
+            }
+        if (loglevel > 2)
+            syslog(LOG_DEBUG, "Opening block file '%s'\n", ptmp2);
+
+        int old_errno = errno;
+        int fdi = open(ptmp2, O_RDWR);
+        if(fdi < 0)
+            {
+            if (loglevel > 2)
+                syslog(LOG_DEBUG, "Error on opening block file '%s', errno: %d\n", ptmp2, errno);
+            goto endd;
+            }
+        else
+            {
+            int rrr = read(fdi, bbuff, HS_BLOCK);
+            if(rrr < HS_BLOCK)
                 {
                 if (loglevel > 2)
-                    syslog(LOG_DEBUG, "Error on opening '%s', errno: %d\n", ptmp2, errno);
+                    syslog(LOG_DEBUG, "Error on reading block file, errno: %d\n", errno);
                 }
-            else
-                {
-                int rrr = read(fdi, mem, HS_BLOCK);
-                if(rrr < HS_BLOCK)
-                    {
-                    if (loglevel > 2)
-                        syslog(LOG_DEBUG, "Error on reading inode file, errno: %d\n", errno);
-                    }
-                close(fdi);
-                }
-            errno = old_errno;
-            free(ptmp2);
+            close(fdi);
             }
+        errno = old_errno;
+
+        if (loglevel > 2)
+            syslog(LOG_DEBUG, "Read block file, '%s'\n",
+                                     bluepoint2_dumphex(bbuff, 100));
+
+        hs_decrypt(bbuff, HS_BLOCK, passx, plen);
+
+        if (loglevel > 2)
+            syslog(LOG_DEBUG, "Reading block file, '%s'\n", bluepoint2_dumphex(bbuff, 11));
+
+        memcpy(buf, bbuff + skip, size);
+
+        free(ptmp2);
+
+        //hs_decrypt(bbuff, HS_BLOCK, "pass", 4);
+        free(bbuff);
         }
     else
         {
         getall = total;
         res = pread(fi->fh, mem, getall, new_offset);
         lseek(fi->fh, oldoff + size, SEEK_SET);
+
+        // Encryption / decryption by block size
+        hs_decrypt(mem, HS_BLOCK, passx, plen);
+
+        // Return result as requested
+        memcpy(buf, mem + skip, size);
+
+        if (res == -1)
+            res = -errno;
         }
-
-    if (res == -1)
-        res = -errno;
-
-    // Encryption / decryption by block size. Currently: 1024
-    hs_decrypt(mem, HS_BLOCK, passx, plen);
-
-    // Return result as requested
-    memcpy(buf, mem + skip, size);
 
     if (loglevel > 2)
         syslog(LOG_DEBUG, "Read in data: %s size %d\n", path, res);
+
+  endd:
 
     // Do not leave data behind
     if (mem)
@@ -268,6 +297,7 @@ static int xmp_write(const char *path, const char *buf, size_t size,
         }
 	return res;
 }
+
 
 
 

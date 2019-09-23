@@ -7,7 +7,6 @@
 extern char    progname[];
 
 int     bpgetpass(const char *fname, char *pass, int plenx);
-
 char    *mk_backup_path(const char *path);
 int     mk_block_file(const char *path);
 

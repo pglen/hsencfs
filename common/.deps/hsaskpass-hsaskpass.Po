@@ -59,7 +59,7 @@ hsaskpass-hsaskpass.o: hsaskpass.c /usr/include/stdc-predef.h \
  /usr/include/x86_64-linux-gnu/bits/confname.h \
  /usr/include/x86_64-linux-gnu/bits/getopt_posix.h \
  /usr/include/x86_64-linux-gnu/bits/getopt_core.h \
- /usr/include/x86_64-linux-gnu/bits/unistd.h
+ /usr/include/x86_64-linux-gnu/bits/unistd.h hsutils.h
 
 /usr/include/stdc-predef.h:
 
@@ -194,3 +194,5 @@ hsaskpass-hsaskpass.o: hsaskpass.c /usr/include/stdc-predef.h \
 /usr/include/x86_64-linux-gnu/bits/getopt_core.h:
 
 /usr/include/x86_64-linux-gnu/bits/unistd.h:
+
+hsutils.h:

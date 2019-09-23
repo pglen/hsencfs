@@ -85,6 +85,9 @@ int main(int argc, char *argv[])
     int cc, digit_optind = 0, loop, loop2;
     struct stat ss; struct timespec ts;
 
+    bluepoint2_set_verbose(1);
+    bluepoint2_set_functrace(1);
+
     // Parse command line
    	while (1)
         {
@@ -171,6 +174,7 @@ int main(int argc, char *argv[])
 
     if (optind >= argc - 1)
         {
+        printf("Not enough arguments.\n");
         help();
         exit(1);
         }
@@ -257,7 +261,7 @@ int main(int argc, char *argv[])
             curr = 4096;
             }
         len2 = fwrite(buff, 1, curr, fp2);
-        if(len2 < sizeof(curr))
+        if(len2 < curr)
             {
             printf("Cannot write file\n");
             break;
@@ -269,6 +273,8 @@ int main(int argc, char *argv[])
 
     exit(0);
 }
+
+
 
 
 

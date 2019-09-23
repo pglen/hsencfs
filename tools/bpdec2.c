@@ -66,7 +66,19 @@ static struct option long_options[] =
 void help()
 
 {
-    printf("Help here\n");
+    //printf("Help here\n");
+
+    printf("\n");
+    printf("Usage: bpdec2 [options] infile outfile\n");
+    printf("\n");
+    printf("Options:        -l num      -- Use log level  (--loglevel)\n");
+    printf("                -p pass     -- Use pass (!!Warning!! cleartext pass) (--pass)\n");
+    printf("                -f          -- Force overwrite target (--force)\n");
+    printf("                -q          -- Quiet (--quiet)\n");
+    printf("                -v          -- Verbose (--verbose)\n");
+    printf("                -V          -- Print version (--version)\n");
+    printf("\n");
+
 }
 
 // -----------------------------------------------------------------------
@@ -78,6 +90,9 @@ int main(int argc, char *argv[])
 
     int cc, digit_optind = 0, loop, loop2;
     struct stat ss; struct timespec ts;
+
+    bluepoint2_set_verbose(1);
+    bluepoint2_set_functrace(1);
 
     // Parse command line
    	while (1)
@@ -169,7 +184,8 @@ int main(int argc, char *argv[])
 
     if (optind >= argc - 1)
         {
-        fprintf(stderr, "Usage: bpdec2 infile outfile\n");
+        printf("Not enough arguments.\n");
+        help();
         exit(1);
         }
 

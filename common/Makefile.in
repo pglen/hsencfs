@@ -103,10 +103,12 @@ CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 PROGRAMS = $(noinst_PROGRAMS)
+am__dirstamp = $(am__leading_dot)dirstamp
 am_hsaskpass_OBJECTS = hsaskpass-hsaskpass.$(OBJEXT) \
-	hsaskpass-hsutils.$(OBJEXT) hsaskpass-hspass.$(OBJEXT)
+	hsaskpass-hsutils.$(OBJEXT) hsaskpass-hspass.$(OBJEXT) \
+	../bluepoint/hsaskpass-bluepoint2.$(OBJEXT)
 hsaskpass_OBJECTS = $(am_hsaskpass_OBJECTS)
-hsaskpass_DEPENDENCIES = ../bluepoint/bluepoint2.o
+hsaskpass_LDADD = $(LDADD)
 hsaskpass_LINK = $(CCLD) $(hsaskpass_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
 AM_V_P = $(am__v_P_@AM_V@)
@@ -124,7 +126,8 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = ./$(DEPDIR)/hsaskpass-hsaskpass.Po \
+am__depfiles_remade = ../bluepoint/$(DEPDIR)/hsaskpass-bluepoint2.Po \
+	./$(DEPDIR)/hsaskpass-hsaskpass.Po \
 	./$(DEPDIR)/hsaskpass-hspass.Po \
 	./$(DEPDIR)/hsaskpass-hsutils.Po
 am__mv = mv -f
@@ -266,8 +269,8 @@ EXTRA_DIST = hsutils.c  hspass.c
 # Password helper
 hsaskpassdir = .
 hsaskpass_CFLAGS = -D_FILE_OFFSET_BITS=64 -O2 -I$(srcdir)/bluepoin
-hsaskpass_LDADD = ../bluepoint/bluepoint2.o
-hsaskpass_SOURCES = hsaskpass.c hsutils.c hspass.c
+#hsaskpass_LDADD    = ../bluepoint/bluepoint2.o
+hsaskpass_SOURCES = hsaskpass.c hsutils.c hspass.c ../bluepoint/bluepoint2.c
 all: all-am
 
 .SUFFIXES:
@@ -304,6 +307,15 @@ $(am__aclocal_m4_deps):
 
 clean-noinstPROGRAMS:
 	-test -z "$(noinst_PROGRAMS)" || rm -f $(noinst_PROGRAMS)
+../bluepoint/$(am__dirstamp):
+	@$(MKDIR_P) ../bluepoint
+	@: > ../bluepoint/$(am__dirstamp)
+../bluepoint/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) ../bluepoint/$(DEPDIR)
+	@: > ../bluepoint/$(DEPDIR)/$(am__dirstamp)
+../bluepoint/hsaskpass-bluepoint2.$(OBJEXT):  \
+	../bluepoint/$(am__dirstamp) \
+	../bluepoint/$(DEPDIR)/$(am__dirstamp)
 
 hsaskpass$(EXEEXT): $(hsaskpass_OBJECTS) $(hsaskpass_DEPENDENCIES) $(EXTRA_hsaskpass_DEPENDENCIES) 
 	@rm -f hsaskpass$(EXEEXT)
@@ -311,10 +323,12 @@ hsaskpass$(EXEEXT): $(hsaskpass_OBJECTS) $(hsaskpass_DEPENDENCIES) $(EXTRA_hsask
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
+	-rm -f ../bluepoint/*.$(OBJEXT)
 
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@../bluepoint/$(DEPDIR)/hsaskpass-bluepoint2.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hsaskpass-hsaskpass.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hsaskpass-hspass.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hsaskpass-hsutils.Po@am__quote@ # am--include-marker
@@ -382,6 +396,20 @@ hsaskpass-hspass.obj: hspass.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='hspass.c' object='hsaskpass-hspass.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -c -o hsaskpass-hspass.obj `if test -f 'hspass.c'; then $(CYGPATH_W) 'hspass.c'; else $(CYGPATH_W) '$(srcdir)/hspass.c'; fi`
+
+../bluepoint/hsaskpass-bluepoint2.o: ../bluepoint/bluepoint2.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -MT ../bluepoint/hsaskpass-bluepoint2.o -MD -MP -MF ../bluepoint/$(DEPDIR)/hsaskpass-bluepoint2.Tpo -c -o ../bluepoint/hsaskpass-bluepoint2.o `test -f '../bluepoint/bluepoint2.c' || echo '$(srcdir)/'`../bluepoint/bluepoint2.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ../bluepoint/$(DEPDIR)/hsaskpass-bluepoint2.Tpo ../bluepoint/$(DEPDIR)/hsaskpass-bluepoint2.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='../bluepoint/bluepoint2.c' object='../bluepoint/hsaskpass-bluepoint2.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -c -o ../bluepoint/hsaskpass-bluepoint2.o `test -f '../bluepoint/bluepoint2.c' || echo '$(srcdir)/'`../bluepoint/bluepoint2.c
+
+../bluepoint/hsaskpass-bluepoint2.obj: ../bluepoint/bluepoint2.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -MT ../bluepoint/hsaskpass-bluepoint2.obj -MD -MP -MF ../bluepoint/$(DEPDIR)/hsaskpass-bluepoint2.Tpo -c -o ../bluepoint/hsaskpass-bluepoint2.obj `if test -f '../bluepoint/bluepoint2.c'; then $(CYGPATH_W) '../bluepoint/bluepoint2.c'; else $(CYGPATH_W) '$(srcdir)/../bluepoint/bluepoint2.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ../bluepoint/$(DEPDIR)/hsaskpass-bluepoint2.Tpo ../bluepoint/$(DEPDIR)/hsaskpass-bluepoint2.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='../bluepoint/bluepoint2.c' object='../bluepoint/hsaskpass-bluepoint2.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -c -o ../bluepoint/hsaskpass-bluepoint2.obj `if test -f '../bluepoint/bluepoint2.c'; then $(CYGPATH_W) '../bluepoint/bluepoint2.c'; else $(CYGPATH_W) '$(srcdir)/../bluepoint/bluepoint2.c'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique
@@ -498,6 +526,8 @@ clean-generic:
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
 	-test . = "$(srcdir)" || test -z "$(CONFIG_CLEAN_VPATH_FILES)" || rm -f $(CONFIG_CLEAN_VPATH_FILES)
+	-rm -f ../bluepoint/$(DEPDIR)/$(am__dirstamp)
+	-rm -f ../bluepoint/$(am__dirstamp)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
@@ -505,7 +535,8 @@ maintainer-clean-generic:
 clean-am: clean-generic clean-noinstPROGRAMS mostlyclean-am
 
 distclean: distclean-am
-		-rm -f ./$(DEPDIR)/hsaskpass-hsaskpass.Po
+		-rm -f ../bluepoint/$(DEPDIR)/hsaskpass-bluepoint2.Po
+	-rm -f ./$(DEPDIR)/hsaskpass-hsaskpass.Po
 	-rm -f ./$(DEPDIR)/hsaskpass-hspass.Po
 	-rm -f ./$(DEPDIR)/hsaskpass-hsutils.Po
 	-rm -f Makefile
@@ -553,7 +584,8 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-		-rm -f ./$(DEPDIR)/hsaskpass-hsaskpass.Po
+		-rm -f ../bluepoint/$(DEPDIR)/hsaskpass-bluepoint2.Po
+	-rm -f ./$(DEPDIR)/hsaskpass-hsaskpass.Po
 	-rm -f ./$(DEPDIR)/hsaskpass-hspass.Po
 	-rm -f ./$(DEPDIR)/hsaskpass-hsutils.Po
 	-rm -f Makefile
