@@ -91,8 +91,8 @@ int main(int argc, char *argv[])
     int cc, digit_optind = 0, loop, loop2;
     struct stat ss; struct timespec ts;
 
-    bluepoint2_set_verbose(1);
-    bluepoint2_set_functrace(1);
+    //bluepoint2_set_verbose(1);
+    //bluepoint2_set_functrace(1);
 
     // Parse command line
    	while (1)
@@ -207,7 +207,7 @@ int main(int argc, char *argv[])
         }
     else
         {
-        bpgetpass(argv[optind], pass, sizeof(pass));
+        bpgetpass(argv[optind], pass, &plen);
         }
 
     FILE *fp = fopen(argv[optind], "rb");

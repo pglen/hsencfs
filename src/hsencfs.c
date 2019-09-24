@@ -608,7 +608,7 @@ int main(int argc, char *argv[])
             printf("Mounting .. %s\n", mountpoint);
         }
 
-    //syslog(LOG_DEBUG, "pass from: len=%d '%s'\n", plen, passx);
+    syslog(LOG_DEBUG, "hsencfs pass from: len=%d '%s'\n", plen, passx);
 
     // Write back expanded paths
     argv[optind]    = mountdata;

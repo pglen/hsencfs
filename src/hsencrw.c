@@ -66,9 +66,11 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset,
 
     if (loglevel > 2)
         {
-        syslog(LOG_DEBUG, "Before reading file: %s size=%ld offs=%ld size=%ld\n",
-                                                    path, size, offset, size);
-
+        syslog(LOG_DEBUG, "Before reading file: '%s' size=%ld offs=%ld\n",
+                                                                    path, size, offset);
+        }
+    if (loglevel > 3)
+        {
         syslog(LOG_DEBUG, "Size expanded: new_offs=%ld total=%ld skip=%ld\n",
                                                                new_offset, total, skip);
         }
@@ -83,7 +85,7 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset,
 
     // Always read a full block
     size_t getall = new_offset + total;
-    if(getall >= fsize)
+    if(getall > fsize)
         {
         // Read in last block from lastblock file
         char *bbuff = malloc(HS_BLOCK);
@@ -100,10 +102,11 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset,
             syslog(LOG_DEBUG, "Cannot allocate memory for file name '%s'\n", path);
             goto endd;
             }
+
         if (loglevel > 2)
             syslog(LOG_DEBUG, "Opening block file '%s'\n", ptmp2);
 
-        int old_errno = errno;
+        int rrr = 0, old_errno = errno;
         int fdi = open(ptmp2, O_RDWR);
         if(fdi < 0)
             {
@@ -130,14 +133,17 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset,
         hs_decrypt(bbuff, HS_BLOCK, passx, plen);
 
         if (loglevel > 2)
-            syslog(LOG_DEBUG, "Reading block file, '%s'\n", bluepoint2_dumphex(bbuff, 11));
+            syslog(LOG_DEBUG, "Reading block file, %.*s '%s'\n", 8, bbuff,
+                                            bluepoint2_dumphex(bbuff, 11));
 
-        memcpy(buf, bbuff + skip, size);
-
+        res = fsize - new_offset;
+        memcpy(buf, bbuff + skip, res);
         free(ptmp2);
 
         //hs_decrypt(bbuff, HS_BLOCK, "pass", 4);
         free(bbuff);
+
+        lseek(fi->fh, oldoff + res, SEEK_SET);
         }
     else
         {
@@ -156,7 +162,7 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset,
         }
 
     if (loglevel > 2)
-        syslog(LOG_DEBUG, "Read in data: %s size %d\n", path, res);
+        syslog(LOG_DEBUG, "Read in data: '%s' size %d\n", path, res);
 
   endd:
 
@@ -246,7 +252,6 @@ static int xmp_write(const char *path, const char *buf, size_t size,
             {
             res = pread(fi->fh, mem + res, get_patch, new_offset + res);
             }
-
     	if (res == -1)
             {
             // We throw this away, as the buffer is zeroed out
@@ -291,7 +296,7 @@ static int xmp_write(const char *path, const char *buf, size_t size,
         {
         // Encrypt it: This is a fake encryption of the dangling memory.
         // Just to confuse the debugger
-        hs_decrypt(mem, get > 0, "passpass", 8);
+        hs_decrypt(mem, total, "passpass", 8);
         memset(mem, 0, total);        // Zero it
         free(mem);
         }

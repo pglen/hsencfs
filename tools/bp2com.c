@@ -18,10 +18,9 @@
 #include "bluepoint2.h"
 
 char    progname[] = "HSENCFS";
-static int      plen = 0;
 static char     tmp[256];
 
-int     bpgetpass(const char *fname, char *pass, int plenx)
+int     bpgetpass(const char *fname, char *pass, int *plenx)
 
 {
     char    *xpass = NULL; int     xlen;
@@ -42,7 +41,7 @@ int     bpgetpass(const char *fname, char *pass, int plenx)
         }
 
     // Dup the results right away, clear it too
-    strncpy(pass, xpass, plenx);
+    strcpy(pass, xpass);
     memset(xpass, 0, xlen);
 
     // Always padd it
@@ -50,8 +49,8 @@ int     bpgetpass(const char *fname, char *pass, int plenx)
         strncat(pass, "x", sizeof(pass)-1);
 
     // Encrypt the results right away
-    plen = strlen(pass);
-    bluepoint2_encrypt(pass, plen, progname, strlen(progname));
+    bluepoint2_encrypt(pass, xlen, progname, strlen(progname));
+    *plenx = xlen;
 }
 
 // Make backup path name. Caller must free result.
@@ -135,6 +134,7 @@ int     mk_block_file(const char *path)
     if(ptmp3) free(ptmp3);
     return(fdi);
 }
+
 
 
 

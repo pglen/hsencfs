@@ -168,7 +168,8 @@ int     pass_ritual(char *mountroot, char *mountdata, char *pass, int *plen)
             return 1;
             }
         // Dup the results right away, clear it too
-        strncpy(pass, xpass, xlen);
+        *plen = xlen;
+        strcpy(pass, xpass);
         memset(xpass, 0, xlen);
         }
 
@@ -177,7 +178,8 @@ int     pass_ritual(char *mountroot, char *mountdata, char *pass, int *plen)
         strncat(pass, "x", sizeof(pass));
 
     // Encrypt the results right away
-    *plen = strlen(pass);
+    //*plen = strlen(pass);
+
     bluepoint2_encrypt(pass, *plen, progname, strlen(progname));
 
     //printpass(pass, *plen);
