@@ -988,6 +988,7 @@ test-vars:
 git:
 	git add .
 	git commit -m autocheck
+	git push
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
