@@ -143,13 +143,22 @@ int main(int argc, char *argv[])
                     fprintf(stderr, "%s Error: multiple passes on command line.\n", argv[0]);
                     exit(1);
                     }
+                plen = strlen(optarg);
+                if(plen > sizeof(passx))
+                    {
+                    printf("Pass too long\n");
+                    exit(1);
+                    }
                 strncpy(passx, optarg, sizeof(passx));
-                plen = strlen(passx);
+
                 // Randomize optarg
                 for(loop = 0; loop < plen; loop++)
                     {
                     ((char*)optarg)[loop] = rand() % 0x80;
                     }
+
+                bluepoint2_encrypt(passx, plen, progname, strlen(progname));
+
                 if(verbose)
                     printf("Pass provided on command line.\n");
                 break;
@@ -302,6 +311,7 @@ int main(int argc, char *argv[])
 
     exit(0);
 }
+
 
 
 

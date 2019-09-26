@@ -42,7 +42,7 @@ static  char    passx[MAXPASSLEN];
 static  int     plen = sizeof(passx);
 static  char    decoy[MAXPASSLEN];
 static  int     plen2 = sizeof(decoy);
-static char     pass[256];
+static char     pass[MAXPASSLEN];
 
 static struct option long_options[] =
     {
@@ -137,8 +137,13 @@ int main(int argc, char *argv[])
                     fprintf(stderr, "%s Error: multiple passes on command line.\n", argv[0]);
                     exit(1);
                     }
+                plen = strlen(optarg);
+                if(plen > sizeof(passx))
+                    {
+                    printf("Pass too long\n");
+                    exit(1);
+                    }
                 strncpy(passx, optarg, sizeof(passx));
-                plen = strlen(passx);
                 // Randomize optarg
                 for(loop = 0; loop < plen; loop++)
                     {
@@ -146,6 +151,12 @@ int main(int argc, char *argv[])
                     }
                 if(verbose)
                     printf("Pass provided on command line.\n");
+
+                //if(loglevel > 2)
+                //    printf("Pass on command line %d '%s'.\n", plen, passx);
+
+                bluepoint2_encrypt(passx, plen, progname, strlen(progname));
+
                 break;
 
            case 'q':
@@ -275,6 +286,7 @@ int main(int argc, char *argv[])
 
     exit(0);
 }
+
 
 
 

@@ -1,5 +1,9 @@
 #!/bin/bash
-fusermount -u ~/secret
+aa=`mount | grep secret`
+if [ "$aa" != "" ] ; then
+    fusermount -u ~/secret
+fi
+
 
 
 

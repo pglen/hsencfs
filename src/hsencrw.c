@@ -5,28 +5,68 @@
 // Read write 'C' include. Extracted for eazy editing
 //
 
-char *get_tmpname(const char *path)
+char    *read_sideblock(const char *path)
 
 {
-    char *ptmp2 = malloc(PATH_MAX);
-    if(ptmp2)
+    // Read in last block from lastblock file
+    char *bbuff = malloc(HS_BLOCK);
+    if(!bbuff)
         {
-        // Reassemble with dot path
-        strcpy(ptmp2, mountdata);
-        char *endd = strrchr(path, '/');
-        if(endd)
-            {
-            strncat(ptmp2, path, endd - path);
-            strcat(ptmp2, ".");
-            strcat(ptmp2, endd + 1);
-            }
-        else
-            {
-            strcat(ptmp2, ".");
-            }
-        strcat(ptmp2, ".secret");
+        syslog(LOG_DEBUG, "Cannot allocate memory for final block '%s'\n", path);
+        goto endd;
         }
-    return ptmp2;
+    memset(bbuff, '\0', HS_BLOCK);
+    char *ptmp2 =  get_sidename(path);
+    if(!ptmp2)
+        {
+        if(bbuff)
+            {
+            free(bbuff);
+            bbuff = NULL;
+            }
+        syslog(LOG_DEBUG, "Cannot allocate memory for file name '%s'\n", path);
+        goto endd;
+        }
+
+    if (loglevel > 2)
+        syslog(LOG_DEBUG, "Opening block file '%s'\n", ptmp2);
+
+    int rrr = 0, old_errno = errno;
+    int fdi = open(ptmp2, O_RDWR);
+    if(fdi < 0)
+        {
+        if (loglevel > 2)
+            syslog(LOG_DEBUG, "Error on opening block file '%s', errno: %d\n", ptmp2, errno);
+
+        errno = old_errno;
+        goto endd;
+        }
+    else
+        {
+        int rrr = read(fdi, bbuff, HS_BLOCK);
+        if(rrr < HS_BLOCK)
+            {
+            if (loglevel > 2)
+                syslog(LOG_DEBUG, "Error on reading block file, errno: %d\n", errno);
+            }
+        close(fdi);
+        }
+    errno = old_errno;
+
+    //if (loglevel > 2)
+    //    syslog(LOG_DEBUG, "Read block file, '%s'\n",
+    //                             bluepoint2_dumphex(bbuff, 100));
+
+    if (loglevel > 3)
+        syslog(LOG_DEBUG, "Block file, '%s'\n", bluepoint2_dumphex(bbuff, 11));
+
+    hs_decrypt(bbuff, HS_BLOCK, passx, plen);
+
+    if (loglevel > 2)
+        syslog(LOG_DEBUG, "Reading block file, %.*s\n", 8, bbuff);
+
+  endd:
+    return bbuff;
 }
 
 // -----------------------------------------------------------------------
@@ -42,8 +82,8 @@ char *get_tmpname(const char *path)
 // This is to complete the last buffer.
 //
 
-static int xmp_read(const char *path, char *buf, size_t size, off_t offset,
-		    struct fuse_file_info *fi)
+static int xmp_read(const char *path, char *buf, size_t size, off_t offset, struct fuse_file_info *fi)
+
 {
 	int res;
 
@@ -87,62 +127,17 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset,
     size_t getall = new_offset + total;
     if(getall > fsize)
         {
-        // Read in last block from lastblock file
-        char *bbuff = malloc(HS_BLOCK);
+        //getall = fsize - new_offset;
+        char *bbuff = read_sideblock(path);
         if(!bbuff)
             {
-            syslog(LOG_DEBUG, "Cannot allocate memory for final block '%s'\n", path);
             goto endd;
             }
-        memset(bbuff, '\0', HS_BLOCK);
-        getall = fsize - new_offset;
-        char *ptmp2 =  get_tmpname(path);
-        if(!ptmp2)
-            {
-            syslog(LOG_DEBUG, "Cannot allocate memory for file name '%s'\n", path);
-            goto endd;
-            }
-
-        if (loglevel > 2)
-            syslog(LOG_DEBUG, "Opening block file '%s'\n", ptmp2);
-
-        int rrr = 0, old_errno = errno;
-        int fdi = open(ptmp2, O_RDWR);
-        if(fdi < 0)
-            {
-            if (loglevel > 2)
-                syslog(LOG_DEBUG, "Error on opening block file '%s', errno: %d\n", ptmp2, errno);
-            goto endd;
-            }
-        else
-            {
-            int rrr = read(fdi, bbuff, HS_BLOCK);
-            if(rrr < HS_BLOCK)
-                {
-                if (loglevel > 2)
-                    syslog(LOG_DEBUG, "Error on reading block file, errno: %d\n", errno);
-                }
-            close(fdi);
-            }
-        errno = old_errno;
-
-        if (loglevel > 2)
-            syslog(LOG_DEBUG, "Read block file, '%s'\n",
-                                     bluepoint2_dumphex(bbuff, 100));
-
-        hs_decrypt(bbuff, HS_BLOCK, passx, plen);
-
-        if (loglevel > 2)
-            syslog(LOG_DEBUG, "Reading block file, %.*s '%s'\n", 8, bbuff,
-                                            bluepoint2_dumphex(bbuff, 11));
-
         res = fsize - new_offset;
         memcpy(buf, bbuff + skip, res);
-        free(ptmp2);
 
         //hs_decrypt(bbuff, HS_BLOCK, "pass", 4);
         free(bbuff);
-
         lseek(fi->fh, oldoff + res, SEEK_SET);
         }
     else
@@ -187,8 +182,7 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset,
 //    |   ^ offs                ^offs + size  |
 
 
-static int xmp_write(const char *path, const char *buf, size_t size,
-		     off_t offset, struct fuse_file_info *fi)
+static int xmp_write(const char *path, const char *buf, size_t size, off_t offset, struct fuse_file_info *fi)
 {
 	int res, loop;
 
@@ -229,22 +223,83 @@ static int xmp_write(const char *path, const char *buf, size_t size,
     struct stat stbuf;	memset(&stbuf, 0, sizeof(stbuf));
     res = fstat(fi->fh, &stbuf);
     off_t fsize = stbuf.st_size;
+    off_t getall = 0;
 
     if (loglevel > 3)
         syslog(LOG_DEBUG, "File size from stat %ld\n", fsize);
 
     int get_patch = 0;
     size_t get = new_offset + size;
+
     if(get >= fsize)
         {
-        get_patch = total - (get - fsize);
-        }
+        //get_patch = total - (get - fsize);
+        // Read in last block from lastblock file
+        char *bbuff = malloc(HS_BLOCK);
+        if(!bbuff)
+            {
+            syslog(LOG_DEBUG, "Cannot allocate memory for final block '%s'\n", path);
+            goto endd;
+            }
+        memset(bbuff, '\0', HS_BLOCK);
+        getall = fsize - new_offset;
+        char *ptmp2 =  get_sidename(path);
+        if(!ptmp2)
+            {
+            syslog(LOG_DEBUG, "Cannot allocate memory for file name '%s'\n", path);
+            goto endd;
+            }
 
-    if (loglevel > 3)
+        if (loglevel > 2)
+            syslog(LOG_DEBUG, "Opening block file '%s'\n", ptmp2);
+
+        int rrr = 0, old_errno = errno;
+        int fdi = open(ptmp2, O_RDWR);
+        if(fdi < 0)
+            {
+            if (loglevel > 2)
+                syslog(LOG_DEBUG, "Error on opening block file '%s', errno: %d\n", ptmp2, errno);
+            goto endd;
+            }
+        else
+            {
+            int rrr = read(fdi, bbuff, HS_BLOCK);
+            if(rrr < HS_BLOCK)
+                {
+                if (loglevel > 2)
+                    syslog(LOG_DEBUG, "Error on reading block file, errno: %d\n", errno);
+                }
+            close(fdi);
+            }
+        errno = old_errno;
+
+        if (loglevel > 2)
+            syslog(LOG_DEBUG, "Read block file, '%s'\n",
+                                     bluepoint2_dumphex(bbuff, 100));
+
+        hs_decrypt(bbuff, HS_BLOCK, passx, plen);
+
+        if (loglevel > 2)
+            syslog(LOG_DEBUG, "Reading block file, %.*s '%s'\n", 8, bbuff,
+                                            bluepoint2_dumphex(bbuff, 11));
+
+        res = fsize - new_offset;
+        //memcpy(buf, bbuff + skip, res);
+        free(ptmp2);
+
+        //hs_decrypt(bbuff, HS_BLOCK, "pass", 4);
+        free(bbuff);
+
+        lseek(fi->fh, oldoff + res, SEEK_SET);
+        }
+    else
+        {
+        if (loglevel > 3)
             syslog(LOG_DEBUG,
             "About to pre read: '%s' "
                 "get=%ld new_offs=%ld fsize=%ld patch=%d total=%ld\n",
                        path, get, new_offset, fsize, get_patch, total);
+
     if(get > 0)
         {
         res = pread(fi->fh, mem, get, new_offset);
@@ -269,25 +324,26 @@ static int xmp_write(const char *path, const char *buf, size_t size,
         // patch
         }
 
-    if (loglevel > 2)
-        syslog(LOG_DEBUG,
-            "Writing file: %s size=%ld offs=%ld skip=%ld total=%ld\n",
-                                              path, size, offset, skip, total);
+        if (loglevel > 2)
+            syslog(LOG_DEBUG,
+                "Writing file: %s size=%ld offs=%ld skip=%ld total=%ld\n",
+                                                  path, size, offset, skip, total);
+        memcpy(mem + skip, buf, size);
 
-    memcpy(mem + skip, buf, size);
+        // Encryption / decryption by block size. Currently: 1024
+        hs_encrypt(mem, total, passx, plen);
 
-    // Encryption / decryption by block size. Currently: 1024
-    hs_encrypt(mem, total, passx, plen);
+    	//lseek(fi->fh, oldoff, SEEK_SET);
 
-	//lseek(fi->fh, oldoff, SEEK_SET);
-
-    res = pwrite(fi->fh, mem + skip, size, offset);
-	if (res == -1)
-        {
-        syslog(LOG_DEBUG, "Error on writing file: %s res %d errno %d\n", path, res, errno);
-		res = -errno;
+        res = pwrite(fi->fh, mem + skip, size, offset);
+    	if (res == -1)
+            {
+            syslog(LOG_DEBUG, "Error on writing file: %s res %d errno %d\n", path, res, errno);
+    		res = -errno;
+            }
         }
 
+   endd:
     if (loglevel > 3)
         syslog(LOG_DEBUG, "Written out file: %s res %d\n", path, res);
 
@@ -302,6 +358,7 @@ static int xmp_write(const char *path, const char *buf, size_t size,
         }
 	return res;
 }
+
 
 
 

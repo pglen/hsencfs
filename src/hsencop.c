@@ -468,7 +468,7 @@ static int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
     //    syslog(LOG_DEBUG, "Inode: %lud blocksize %ld \n",
     //                                stbuf.st_ino, stbuf.st_blksize);
 
-    char *ptmp2 = get_tmpname(path);
+    char *ptmp2 = get_sidename(path);
     if(ptmp2)
         {
         if (loglevel > 2)
@@ -666,6 +666,7 @@ static int xmp_lock(const char *path, struct fuse_file_info *fi, int cmd,
 	return ulockmgr_op(fi->fh, cmd, lock, &fi->lock_owner,
 			   sizeof(fi->lock_owner));
 }
+
 
 
 
