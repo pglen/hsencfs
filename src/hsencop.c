@@ -513,8 +513,8 @@ static int xmp_open(const char *path, struct fuse_file_info *fi)
     char  path2[PATH_MAX] ;
     strcpy(path2, mountdata); strcat(path2, path);
 
-    if (loglevel > 1)
-        syslog(LOG_DEBUG, "Opened file: %s uid: %d\n", path, getuid());
+    //if (loglevel > 1)
+    //    syslog(LOG_DEBUG, "Opened file: %s uid: %d\n", path, getuid());
 
     if(passx[0] == 0)
         {
@@ -559,8 +559,8 @@ static int xmp_flush(const char *path, struct fuse_file_info *fi)
 {
 	int res;
 
-    if (loglevel > 3)
-        syslog(LOG_DEBUG, "Flushed file: %s uid: %d\n", path, getuid());
+    //if (loglevel > 3)
+    //    syslog(LOG_DEBUG, "Flushed file: %s uid: %d\n", path, getuid());
 
 	(void) path;
 	/* This is called from every close on an open file, so call the
@@ -580,8 +580,8 @@ static int xmp_flush(const char *path, struct fuse_file_info *fi)
 static int xmp_release(const char *path, struct fuse_file_info *fi)
 {
 
-    if (loglevel > 3)
-        syslog(LOG_DEBUG, "Released file: %s uid: %d\n", path, getuid());
+    //if (loglevel > 3)
+    //    syslog(LOG_DEBUG, "Released file: %s uid: %d\n", path, getuid());
 
 	(void) path;
 	close(fi->fh);
@@ -666,6 +666,7 @@ static int xmp_lock(const char *path, struct fuse_file_info *fi, int cmd,
 	return ulockmgr_op(fi->fh, cmd, lock, &fi->lock_owner,
 			   sizeof(fi->lock_owner));
 }
+
 
 
 

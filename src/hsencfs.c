@@ -118,9 +118,11 @@ char *get_sidename(const char *path)
     return ptmp2;
 }
 
-
+// -----------------------------------------------------------------------
 // Get the extracted sources:
 
+#include "hsencsb.c"
+#include "hsencrr.c"                // Separated to read / write
 #include "hsencrw.c"
 #include "hsencop.c"
 
@@ -682,10 +684,5 @@ int main(int argc, char *argv[])
     return ret;
 }
 
-
-
-
-
-
-
+// EOF
 
