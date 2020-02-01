@@ -136,16 +136,13 @@ test-vars:
 	@echo  prefix=$(prefix)
 
 git:
+	make clean
 	git add .
 	git commit -m autocheck
 	git push
 
-
-
-
-
-
-
+#clean-local:
+#	rm -f *.old
 
 
 

@@ -131,11 +131,8 @@ configure:3744: $? = 0
 configure:3741: gcc -c conftest.c -o conftest2.o
 configure:3744: $? = 0
 configure:3756: result: yes
-configure:3776: checking whether make supports the include directive
-configure:3791: make -f confmf.GNU && cat confinc.out
-this is the am__doit target
-configure:3794: $? = 0
-configure:3813: result: yes (GNU style)
+configure:3784: checking for style of include used by make
+configure:3812: result: GNU
 configure:3838: checking dependency style of gcc
 configure:3949: result: gcc3
 configure:3964: checking whether make sets $(MAKE)
@@ -993,18 +990,6 @@ config.status:888: creating docs/Makefile
 config.status:888: creating config.h
 config.status:1069: config.h is unchanged
 config.status:1117: executing depfiles commands
-config.status:1194: cd bluepoint       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
-make: Nothing to be done for 'am--depfiles'.
-config.status:1199: $? = 0
-config.status:1194: cd tools       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
-make: Nothing to be done for 'am--depfiles'.
-config.status:1199: $? = 0
-config.status:1194: cd common       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
-make: Nothing to be done for 'am--depfiles'.
-config.status:1199: $? = 0
-config.status:1194: cd src       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
-make: Nothing to be done for 'am--depfiles'.
-config.status:1199: $? = 0
 
 ## ---------------- ##
 ## Cache variables. ##
@@ -1096,7 +1081,7 @@ am_cv_prog_cc_c_o=yes
 ## Output variables. ##
 ## ----------------- ##
 
-ACLOCAL='${SHELL} /home/peterglen/pgsrc/hsenc/hsenc/missing aclocal-1.16'
+ACLOCAL='${SHELL} /home/peterglen/pgsrc/hsenc/hsenc/missing aclocal-1.15'
 AMDEPBACKSLASH='\'
 AMDEP_FALSE='#'
 AMDEP_TRUE=''
@@ -1107,7 +1092,7 @@ AM_DEFAULT_VERBOSITY='1'
 AM_V='$(V)'
 AUTOCONF='${SHELL} /home/peterglen/pgsrc/hsenc/hsenc/missing autoconf'
 AUTOHEADER='${SHELL} /home/peterglen/pgsrc/hsenc/hsenc/missing autoheader'
-AUTOMAKE='${SHELL} /home/peterglen/pgsrc/hsenc/hsenc/missing automake-1.16'
+AUTOMAKE='${SHELL} /home/peterglen/pgsrc/hsenc/hsenc/missing automake-1.15'
 AWK='gawk'
 CC='gcc'
 CCDEPMODE='depmode=gcc3'
