@@ -27,13 +27,14 @@
 
 static int xmp_write(const char *path, const char *buf, size_t size, off_t offset, struct fuse_file_info *fi)
 {
-	int res = 0, loop;
-
-    // Nothing to do
-    if(size == 0)
-        {
+	int res = 0, loop = 0;
+    if(size == 0) {  // Nothing to do
         goto endd;
         }
+     // Save current file parameters
+    off_t oldoff = lseek(fi->fh, 0, SEEK_SET);
+    off_t fsize = get_fsize(fi->fh);
+
     // Pre-calculate stuff
     size_t new_beg = (offset / HS_BLOCK) * HS_BLOCK;
     size_t opsize  = offset + size;
@@ -42,14 +43,18 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
         {
         new_end += HS_BLOCK;
         }
-    size_t total = new_end - new_beg;
-    off_t  skip   = offset - new_beg;
 
+    //if(new_end > fsize)
+    //    {
+    //    new_end =  (fsize / HS_BLOCK) * HS_BLOCK;
+    //    }
+
+    size_t total = new_end - new_beg;
+    off_t  skip  = offset - new_beg;
     if (loglevel > 3)
         syslog(LOG_DEBUG,
                 "About to write: '%s' offset=%ld size=%ld new_beg=%ld total=%ld\n",
                                          path, offset, size, new_beg, total);
-
     // Scratch pad for the whole lot
     void *mem =  malloc(total);
     if (mem == NULL)
@@ -61,19 +66,15 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
         res = -ENOMEM;
         goto endd;
         }
-    memset(mem, 0, total);        // Zero it
 
-    // Save current file parameters
-    off_t oldoff = lseek(fi->fh, 0, SEEK_SET);
-    struct stat stbuf;	memset(&stbuf, 0, sizeof(stbuf));
-    res = fstat(fi->fh, &stbuf);
-    off_t fsize = stbuf.st_size;
+    memset(mem, 0, total);              // Zero it
 
     if (loglevel > 3)
         syslog(LOG_DEBUG, "File size from stat %ld\n", fsize);
 
     // Read / Decrypt / Patch / Encrypt / Write
 
+    //if(new_beg + total > fsize)
     if(new_end > fsize)
         {
         // Assemble buffer from pre and post
@@ -178,6 +179,8 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
         }
 	return res;
 }
+
+
 
 
 

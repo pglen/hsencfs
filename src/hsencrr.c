@@ -13,16 +13,6 @@
 //      Patch required data back.
 //
 
-// Estabilish file size
-
-static  off_t get_fsize(int fh)
-
-{
-    struct stat stbuf;	memset(&stbuf, 0, sizeof(stbuf));
-    fstat(fh, &stbuf);
-    return stbuf.st_size;
-}
-
 // -----------------------------------------------------------------------
 // Intercept read. Make it block size even, so encryption / decryption
 // is symmetric.
@@ -61,13 +51,6 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset, stru
         {
         new_end = (fsize / HS_BLOCK) * HS_BLOCK;
         }
-
-    //if(get_end % HS_BLOCK != 0)
-    //    {
-    //    if(new_end + HS_BLOCK  < fsize) {
-    //        new_end += HS_BLOCK;
-    //        }
-    //    }
 
     char *mem =  malloc(total);
     if (mem == NULL)

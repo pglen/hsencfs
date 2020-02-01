@@ -6,9 +6,10 @@ automake
 echo "Executing autoreconf ..."
 autoreconf
 echo "Executing configure ..."
-./configure >/dev/null
+./configure #>/dev/null
 echo "Executing make ..."
 make
+
 
 
 

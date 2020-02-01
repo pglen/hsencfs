@@ -133,10 +133,21 @@ static  int     write_sideblock(const char *path, char *bbuff, int len)
     //    syslog(LOG_DEBUG, "Block file, '%s'\n", bluepoint2_dumphex(bbuff, 11));
 
     if (loglevel > 2)
-        syslog(LOG_DEBUG, "Written block file, %.*s\n", 8, bbuff);
+        syslog(LOG_DEBUG, "Written block file, '%s'\n", bluepoint2_dumphex(bbuff, 16));
 
   endd:
     return ret;
 }
 
+// Estabilish file size
+
+static  off_t get_fsize(int fh)
+
+{
+    struct stat stbuf;	memset(&stbuf, 0, sizeof(stbuf));
+    fstat(fh, &stbuf);
+    return stbuf.st_size;
+}
+
 // EOF
+

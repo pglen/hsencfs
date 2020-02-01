@@ -178,12 +178,12 @@ CTAGS = ctags
 am__DIST_COMMON = $(srcdir)/Makefile.in $(top_srcdir)/depcomp \
 	$(top_srcdir)/mkinstalldirs
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-ACLOCAL = ${SHELL} /home/peterglen/pgsrc/hsenc/hsenc/missing aclocal-1.16
+ACLOCAL = ${SHELL} /home/peterglen/src/hsencfs/hsenc/missing aclocal-1.16
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 1
-AUTOCONF = ${SHELL} /home/peterglen/pgsrc/hsenc/hsenc/missing autoconf
-AUTOHEADER = ${SHELL} /home/peterglen/pgsrc/hsenc/hsenc/missing autoheader
-AUTOMAKE = ${SHELL} /home/peterglen/pgsrc/hsenc/hsenc/missing automake-1.16
+AUTOCONF = ${SHELL} /home/peterglen/src/hsencfs/hsenc/missing autoconf
+AUTOHEADER = ${SHELL} /home/peterglen/src/hsencfs/hsenc/missing autoheader
+AUTOMAKE = ${SHELL} /home/peterglen/src/hsencfs/hsenc/missing automake-1.16
 AWK = mawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
@@ -196,9 +196,9 @@ DEPDIR = .deps
 ECHO_C = 
 ECHO_N = -n
 ECHO_T = 
-EGREP = /usr/bin/grep -E
+EGREP = /bin/grep -E
 EXEEXT = 
-GREP = /usr/bin/grep
+GREP = /bin/grep
 INSTALL = /usr/bin/install -c
 INSTALL_DATA = ${INSTALL} -m 644
 INSTALL_PROGRAM = ${INSTALL}
@@ -208,8 +208,8 @@ LDFLAGS =
 LIBOBJS = 
 LIBS = -lulockmgr -lfuse 
 LTLIBOBJS = 
-MAKEINFO = ${SHELL} /home/peterglen/pgsrc/hsenc/hsenc/missing makeinfo
-MKDIR_P = /usr/bin/mkdir -p
+MAKEINFO = ${SHELL} /home/peterglen/src/hsencfs/hsenc/missing makeinfo
+MKDIR_P = /bin/mkdir -p
 OBJEXT = o
 PACKAGE = hsencfs
 PACKAGE_BUGREPORT = bugs@nohost.none
@@ -223,10 +223,10 @@ SET_MAKE =
 SHELL = /bin/bash
 STRIP = 
 VERSION = 1.20
-abs_builddir = /home/peterglen/pgsrc/hsenc/hsenc/src
-abs_srcdir = /home/peterglen/pgsrc/hsenc/hsenc/src
-abs_top_builddir = /home/peterglen/pgsrc/hsenc/hsenc
-abs_top_srcdir = /home/peterglen/pgsrc/hsenc/hsenc
+abs_builddir = /home/peterglen/src/hsencfs/hsenc/src
+abs_srcdir = /home/peterglen/src/hsencfs/hsenc/src
+abs_top_builddir = /home/peterglen/src/hsencfs/hsenc
+abs_top_srcdir = /home/peterglen/src/hsencfs/hsenc
 ac_ct_CC = gcc
 am__include = include
 am__leading_dot = .
@@ -245,7 +245,7 @@ host_alias =
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /home/peterglen/pgsrc/hsenc/hsenc/install-sh
+install_sh = ${SHELL} /home/peterglen/src/hsencfs/hsenc/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -563,156 +563,21 @@ distdir-am: $(DISTFILES)
 	    if test -d "$(distdir)/$$file"; then \
 	      find "$(distdir)/$$file" -type d ! -perm -700 -exec chmod u+rwx {} \;; \
 	    fi; \
-	    if test -d $(srcdir)/$$file && test $$d != $(srcdir); then \
-	      cp -fpR $(srcdir)/$$file "$(distdir)$$dir" || exit 1; \
-	      find "$(distdir)/$$file" -type d ! -perm -700 -exec chmod u+rwx {} \;; \
-	    fi; \
-	    cp -fpR $$d/$$file "$(distdir)$$dir" || exit 1; \
-	  else \
-	    test -f "$(distdir)/$$file" \
-	    || cp -p $$d/$$file "$(distdir)/$$file" \
-	    || exit 1; \
-	  fi; \
-	done
-check-am: all-am
-check: check-am
-all-am: Makefile $(PROGRAMS)
-installdirs:
-	for dir in "$(DESTDIR)$(bindir)"; do \
-	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
-	done
-install: install-am
-install-exec: install-exec-am
-install-data: install-data-am
-uninstall: uninstall-am
+	  ³<ÉÚƒz“&}ƒX8£F-1ùD£5¬9·—‰Za\UˆÙ%P]ŠÎĞLÑí)·/ô,…D i±ÈÀtcna/¦´3¯7ç•‚“Èü[àK§&&7Ğ?=ö{Ş_½Å;¿0h÷&yĞßmûs‹_i‚ìR2RÉäş,¢h‘0ˆ°´9Ù4„œ÷¦z0#X°h)6„B¸¹à
+Œåºìş1™Eø«lú?{ÀŒƒ%™ı´·2ƒV	;¡¿k,ñÛ¿ŸÒØM«î‚PPô¹û¦I'‘Ş±¿Nø,W-7,"4¼3jyêxšèfßL;Æ+ÔZh©DÀÊ–‰YğQšàÚAx7ÅIRN€öC×æ-èK-˜|Sß¬n%9%-7¹à¨JU‡³½p'Œ‹¾}SÔÑh¢w7mĞ8xÅ–¹rçG)¼±Äv–x4åñÖ™®Ü’ñÙ¡ì´c´Ãô•}Ê>K›/‚–Áˆ‚ûl1±s¤´¤Ğ|Áòeì×ÅÄvSè³ıô¿UJ]xn»z$¸¤ÂsCø]O:C]q‡¨$M)Íiè¦j¸{¬%èºá|Ü%3)™´ï/˜Ğz’éâ¦ˆÃšş€ÂşŒDòN	bÀ—ä‰¬ï¶×¶|°õ(9˜Ö=8Â«hŠ¡<İpM„ú}>rS‚S)zõIc.™Í=Câ%Iú–üµ©%9óÓŒÙêŞş\Ğ„+Üj,%H¥T¨²ÇS
+hMq¿¾°¡Ÿ?(ì’}ƒX8£F-1ùD£5¬9·—‰Za\UˆÙ%P]ŠÎĞLÑí)·/ô,…D i±ÈÀtcna/¦´3¯7ç•‚“Èü[àK§&&7Ğ?=ö{Ş_½Å;¿0h÷&yĞßmûs‹_i‚ìR2RÉäş,¢h‘0ˆ°´9Ù4„œ÷¦z0#X°h)6„B¸¹à
+Œåºìş1™Eø«lú?{=†„ğ¯|FkrFá³õÈrÖ™Ô}^Ö  Á,Ë-Û.[]@»ƒuÚ¾ W‰Qèkè¾€jT:m‚Qà¾V€>Z(ãqT8ÀÊ–‰YğQšàÚAx7ÅIRN€öC×æ-èK-˜|Sß¬n%9%-7JK½×á¯Páğ‰•×¢§]	ãşßt\q9ş6¼ÏƒÏÒÎ;“®Së$_:æ†àø
+ òz“Ú¿p>F\-éÒ[ñ=×% Ú“;«ƒÛkg]wÀx¿ïå 0œ_rFÏó\¦ŒØ¾^ÖC:¢4İº×¼#ğÃL
 
-install-am: all-am
-	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
-
-installcheck: installcheck-am
-install-strip:
-	if test -z '$(STRIP)'; then \
-	  $(MAKE) $(AM_MAKEFLAGS) INSTALL_PROGRAM="$(INSTALL_STRIP_PROGRAM)" \
-	    install_sh_PROGRAM="$(INSTALL_STRIP_PROGRAM)" INSTALL_STRIP_FLAG=-s \
-	      install; \
-	else \
-	  $(MAKE) $(AM_MAKEFLAGS) INSTALL_PROGRAM="$(INSTALL_STRIP_PROGRAM)" \
-	    install_sh_PROGRAM="$(INSTALL_STRIP_PROGRAM)" INSTALL_STRIP_FLAG=-s \
-	    "INSTALL_PROGRAM_ENV=STRIPPROG='$(STRIP)'" install; \
-	fi
-mostlyclean-generic:
-
-clean-generic:
-
-distclean-generic:
-	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
-	-test . = "$(srcdir)" || test -z "$(CONFIG_CLEAN_VPATH_FILES)" || rm -f $(CONFIG_CLEAN_VPATH_FILES)
-	-rm -f ../bluepoint/$(DEPDIR)/$(am__dirstamp)
-	-rm -f ../bluepoint/$(am__dirstamp)
-	-rm -f ../common/$(DEPDIR)/$(am__dirstamp)
-	-rm -f ../common/$(am__dirstamp)
-
-maintainer-clean-generic:
-	@echo "This command is intended for maintainers to use"
-	@echo "it deletes files that may require special tools to rebuild."
-clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
-
-distclean: distclean-am
-		-rm -f ../bluepoint/$(DEPDIR)/hsencfs-bluepoint2.Po
-	-rm -f ../common/$(DEPDIR)/hsencfs-hspass.Po
-	-rm -f ../common/$(DEPDIR)/hsencfs-hsutils.Po
-	-rm -f ./$(DEPDIR)/hsencfs-base64.Po
-	-rm -f ./$(DEPDIR)/hsencfs-hsencfs.Po
-	-rm -f Makefile
-distclean-am: clean-am distclean-compile distclean-generic \
-	distclean-tags
-
-dvi: dvi-am
-
-dvi-am:
-
-html: html-am
-
-html-am:
-
-info: info-am
-
-info-am:
-
-install-data-am:
-
-install-dvi: install-dvi-am
-
-install-dvi-am:
-
-install-exec-am: install-binPROGRAMS
-
-install-html: install-html-am
-
-install-html-am:
-
-install-info: install-info-am
-
-install-info-am:
-
-install-man:
-
-install-pdf: install-pdf-am
-
-install-pdf-am:
-
-install-ps: install-ps-am
-
-install-ps-am:
-
-installcheck-am:
-
-maintainer-clean: maintainer-clean-am
-		-rm -f ../bluepoint/$(DEPDIR)/hsencfs-bluepoint2.Po
-	-rm -f ../common/$(DEPDIR)/hsencfs-hspass.Po
-	-rm -f ../common/$(DEPDIR)/hsencfs-hsutils.Po
-	-rm -f ./$(DEPDIR)/hsencfs-base64.Po
-	-rm -f ./$(DEPDIR)/hsencfs-hsencfs.Po
-	-rm -f Makefile
-maintainer-clean-am: distclean-am maintainer-clean-generic
-
-mostlyclean: mostlyclean-am
-
-mostlyclean-am: mostlyclean-compile mostlyclean-generic
-
-pdf: pdf-am
-
-pdf-am:
-
-ps: ps-am
-
-ps-am:
-
-uninstall-am: uninstall-binPROGRAMS
-
-.MAKE: install-am install-strip
-
-.PHONY: CTAGS GTAGS TAGS all all-am am--depfiles check check-am clean \
-	clean-binPROGRAMS clean-generic cscopelist-am ctags ctags-am \
-	distclean distclean-compile distclean-generic distclean-tags \
-	distdir dvi dvi-am html html-am info info-am install \
-	install-am install-binPROGRAMS install-data install-data-am \
-	install-dvi install-dvi-am install-exec install-exec-am \
-	install-html install-html-am install-info install-info-am \
-	install-man install-pdf install-pdf-am install-ps \
-	install-ps-am install-strip installcheck installcheck-am \
-	installdirs maintainer-clean maintainer-clean-generic \
-	mostlyclean mostlyclean-compile mostlyclean-generic pdf pdf-am \
-	ps ps-am tags tags-am uninstall uninstall-am \
-	uninstall-binPROGRAMS
-
-.PRECIOUS: Makefile
-
-
-clean:
-	@-rm -f aa bb cc *.o  > /dev/null 2>&1
-#	@-rm -f bpenc2 bpdec2
-
-# Tell versions [3.59,3.63) of GNU make to not export all variables.
-# Otherwise a system limit (for SysV at least) may be exceeded.
-.NOEXPORT:
+K2ûeµ5ÀGF;÷,ëzµ¢R×ÖÓîv_3Uüä5ÇHŞwl©èõ)¶Ó=q%óÕS¯ƒÌ‹ŸbâB1ªÇ®‹ä‰¬[Ñ4øùaÈS¸:{KƒÙZêí;¸¦±òtf+5hÂ2™GPv=úf½¸¾¯é°Şs«ææ#¹3h'½\µUhC~hhšÁØ]gª?ïâîêÎq†YàÑ¢k¯†cc¶×Óf *ÑÇœZC™•T¾í='á	²ª³'â^×İÌTäè˜©·uG§åz„¿šn‹pK$ú
+ÿ>‹¯/½ªlLØ&kê}ÂúûŞÏ`=7"Öl_F`¥9å¶Ópß~Z8-(­¤vIˆ&êE¬LYÛ*Ö(I@ş¦¢[ë2®Í|€æŸL.£“^î	¢ñ+}È¤IºU"LRaÕÛãQÁ:ğF1˜ÉIuÇ€øıÏy`l¡À?²ßf‡_Â©m€&n7Ûe¸	Ÿ`¹¤‚ê©ºca{£;ílpŠè]OÕà¯l^¶újù¦×BXo-<™Vÿºş2í(5˜|Sß¬n%9%-7¹à¨JU‡³½p'Œ‹¾}SÔÑh¢w7mĞ8xÅ–¹rçG)¼±Äv–x4åñÖ™®Ü’ñÙ¡ì´c´Ãô•}Ê>K›/‚–Áˆ‚ûl1±s¤´¤Ğ|Áòeì×ÅÄvSè³ıô¿UJ]xn»z$¸¤ÂsCø]O:C]q‡¨$M)Íiè¦j¸{¬%èºá|Ü%3)™´ï/˜Ğz’éâ¦ˆÃšş€ÂşŒDòN	bÀ—ä‰¬ï¶×¶|°õ(9˜Ö=8Â«hŠ¡<İpM„ú}>rS‚S)zõIc.™Í=Câ%Iú–üµ©%9óÓŒÙêŞş\Ğ„+Üj,%H¥T¨²ÇS
+hMq¿¾°¡Ÿ?(ì’}ƒX8£F-1ùD£5¬9·—‰Za\UˆÙ%P]ŠÎĞLÑí)·/ô,…D i±ÈÀtcna/¦´3¯7ç•‚“Èü[àK§&&7Ğ?=ö{Ş_½Å;¿0h÷&yĞßmûs‹_i‚ìR2RÉäş,¢h‘0ˆ°´9Ù4„œ÷¦z0#X°h)6„B¸¹à
+Œåºìş1™Eø«lú?{=†„ğ¯|FkrFá³õÈrÖ™Ô}^Ö%É2z»ˆ¸ÁõËÖ»Ú¾ W‰Qèkè¾€jT:m‚Qà¾V€>Z(ãqT8ÀÊ–‰YğQšàÚAx7ÅIRN€öC×æ-èK-˜|Sß¬n%9%-7¹à¨JU‡³½p'Œ‹¾}SÔÑh¢w7ãÑf´6+éËØñkä_jÄ
+‚“/%1y<òbjç›°ÇötuëuÕYÍB<¶_&iŒ;7õùÀ­ú…Øi#¿¤	¬“<c5ÇĞ9ÒU®²ôqFD©6¼HV-€[Hş(MRÉ¸Ö7°¤®õ¡åÍ€*ân=»,ÕÛÃ£g,\–&Yó“-‚­>Õ ­éºŒc|hTÿ#{Ä‡R$ë¾"ÅXiJÑ§æp±€õ!(zÑ=9óş/qìûÛğ=9«yg# P Ùs5qá/ùÄÔ±=Ö6!Ø1b†RÁ¢Ü$#¢¿¦—¿*çîÒaİÆù`³N‚ÿûïµ@ >¼<J¹®h ñĞ6B‹Uà2VC…¢ëx f%á7Jæ”–÷ŠÓĞ&c;Ã6Ÿ1QËj«”ëe[òap"Y$Ï~xmEé†r<)iF³œ¶›‰èèxğb–ó2G<ÿõ>	[–Í2µÀé¯O¬È"Î!˜ì‰‡î•"sßò…Ò«“vûü1jOÓ5¦Ï‡ÎşU«’1ÍÃ¢•kæl£9 …Å$û=}j™Ù^ ìúéñv«¯(i§7 ":
+ÙWNDBÊ½G-‚nÓ1Û‹¬uß­¯‚>¨Äl*0ÙOK,&÷ƒœÚÒÈ­Í-S0Á·mä[¨¡FUä¹² ¶“ë‘µÛ#e¥cÑ2œ†àş–ÑõPŠğÉI±&’å¨ÆwÒg›ÜvGuÊ—ÌFƒ!ŒÑEş	s£À|c½­¹ :Kkä_jÄ
+‚“/%1y<òbjç›°ÇötuëuÕYÍB<¶_&iŒ;7õùÀ­ú…Øi#¿¤	¬“<c5ÇĞ9ÒU®²ôqFD©6¼HV-€[Hş(MRÉ¸Ö7°¤®õ¡åÍ€*ân=»,ÕÛÃ£g,\–&Yó“-‚­>Õ ­éºŒc|hTÿ#{Ä‡R$ë¾"ÅXi¬–›®É™lÛ\ÿu¤¥^åKÙÿÆ”V¤šˆ5(ä“2ì²÷TşæË]Gí*£İ!óŒÒ5Ø›v§é/´Ş%{`¦)´£WîÒaİÆù`³N‚ÿûïµ@ >¼<J¹®h ñĞ6B‹Uà2VC…¢ëx f%·=É'ä+ßI`WÄœö!¶sŒkP»
+7&sì£»vµ÷óYûv!9‚\Óœúy€¨›q5ëS¶wÎP:$µVÀ±sy²*"„f´ªÎ°™ö£C-§HÓ~û1”Ô‹	ñçèLÑ‰ÏzÂQ/?£°Ä‘„<‰bÁ9•ô¾©^šĞ{Aå–%Óú×o·é&¡Åk¾İ+…:È­l‚îPıüpÿ=4Ö"6ME/¸S]Ë¦Ã‘ø!šua5{ÌÚ"é>¨ÄÌbXZì‰­ÆºáÀÓÓÑµaå	D?MOÏ½èÛ¬O7%sbF”Z3ù\ƒĞËŠæØ`z©£>\#+0ê˜ô/]d#r?·;[Ù/w§kİt%Î5Àäo=˜…¿+oÊS€§bÏY9{J]ê7†‡(şM”S^MÙ—i%‡lL
+Ó™¢Æ¿yÀ°Ö:N¯ø­—u,ş©LÄÆ "×ZÑŞOJ¼6J=ˆ]ÃPæL•Z( ¢äÌ’TfœVÄ¢:ùü!éØjò…{ï¡ÊĞáFV{<¾øWVEKÚğ^r³¯>*n¯¦¤X¿¢‰aYÁÜ_ğËîW›ãÃÆx Ôv!`Xi¸·$óQDÅĞ^èşËQÇfxŞC;}.L"’%QW+äæœœ·Úw\kyaö\]¶~,2²FS<¨:·„ãl¿Kü{Üêî×fp"}¨ß}r’Ó×G‡ÉP/ÙªB‹Uà2VC…¢ëx f%á7Jæ”–÷ŠÓĞ&c;Ã6Ÿ1QËj«”ëe[òap"Y$Ï~xmEé†r<)iF³œ¶›‰èèxğb–ó2G<ÿõ>	[–Í2µÀé¯O¬È"Î!˜ì‰‡î•"sßò…Ò«“vûü1jOÓ5¦Ï‡ÎşU«’1ÍÃ¢•kæl£9 …Å$û=}j™Ù^ ìúéñv«¯(i§7 ":
+ÙWNDBÊ½G-‚nÓ1Û‹¬uß­¯‚>¨Äl*0ÙOK,&÷ƒœÚÒÈ­Í-S0Á·mä[¨¡FUä¹² ¶“ë‘µÛ#e¥cÑ2œ†àş–ÑõPŠğÉI±&’å¨ÆwÒg›ÜvGuÊ—ÌFƒ!ŒÑEş	s£À|c½­¹ :Kkä_jÄ
+‚“/%1y<òbjç›°ÇötuëuÕYÍB<¶_&iŒ;7õùÀ­ú…Øi#¿¤	¬“<c5ÇĞ9ÒU®²ôqFD©6¼HV-€[Hş(MRÉ¸Ö7°¤®õ¡åÍ€*ân=»,ÕÛÃ£g,\–&Yó“-‚­>Õ ­éºŒc|hTÿ#{Ä‡R$ë¾"ÅXi¬–›®É™lÛ\ÿu¤¥^åKÙÿ7
+ßÄÂ›ç)/&ì|ß2TşæË]Gí*£İ!óŒÒ5Ø›v§é/´Ş%{`¦)´£WîÒaİÆù`³N‚ÿûïµ@ >¼<J¹®h ñĞ6B‹U

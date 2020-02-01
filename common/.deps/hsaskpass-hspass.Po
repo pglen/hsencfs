@@ -1,7 +1,7 @@
 hsaskpass-hspass.o: hspass.c /usr/include/stdc-predef.h ../config.h \
  /usr/include/fuse.h /usr/include/fuse/fuse.h \
  /usr/include/fuse/fuse_common.h /usr/include/fuse/fuse_opt.h \
- /usr/lib/gcc/x86_64-linux-gnu/8/include/stdint.h /usr/include/stdint.h \
+ /usr/lib/gcc/x86_64-linux-gnu/9/include/stdint.h /usr/include/stdint.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/x86_64-linux-gnu/sys/cdefs.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
@@ -20,7 +20,7 @@ hsaskpass-hspass.o: hspass.c /usr/include/stdc-predef.h ../config.h \
  /usr/include/x86_64-linux-gnu/bits/types/clockid_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/time_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/timer_t.h \
- /usr/lib/gcc/x86_64-linux-gnu/8/include/stddef.h /usr/include/endian.h \
+ /usr/lib/gcc/x86_64-linux-gnu/9/include/stddef.h /usr/include/endian.h \
  /usr/include/x86_64-linux-gnu/bits/endian.h \
  /usr/include/x86_64-linux-gnu/bits/byteswap.h \
  /usr/include/x86_64-linux-gnu/bits/uintn-identity.h \
@@ -46,13 +46,16 @@ hsaskpass-hspass.o: hspass.c /usr/include/stdc-predef.h ../config.h \
  /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
  /usr/include/utime.h /usr/include/x86_64-linux-gnu/sys/stat.h \
- /usr/include/x86_64-linux-gnu/bits/statx.h \
+ /usr/lib/gcc/x86_64-linux-gnu/9/include-fixed/bits/statx.h \
+ /usr/include/x86_64-linux-gnu/bits/statx-generic.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_statx_timestamp.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_statx.h \
  /usr/include/x86_64-linux-gnu/sys/statvfs.h \
  /usr/include/x86_64-linux-gnu/bits/statvfs.h \
  /usr/include/x86_64-linux-gnu/sys/uio.h \
  /usr/include/x86_64-linux-gnu/bits/uio_lim.h \
  /usr/include/x86_64-linux-gnu/bits/uio-ext.h /usr/include/ulockmgr.h \
- /usr/include/stdio.h /usr/lib/gcc/x86_64-linux-gnu/8/include/stdarg.h \
+ /usr/include/stdio.h /usr/lib/gcc/x86_64-linux-gnu/9/include/stdarg.h \
  /usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/__fpos64_t.h \
@@ -79,11 +82,13 @@ hsaskpass-hspass.o: hspass.c /usr/include/stdc-predef.h ../config.h \
  /usr/include/x86_64-linux-gnu/bits/confname.h \
  /usr/include/x86_64-linux-gnu/bits/getopt_posix.h \
  /usr/include/x86_64-linux-gnu/bits/getopt_core.h \
- /usr/include/x86_64-linux-gnu/bits/unistd.h /usr/include/dirent.h \
+ /usr/include/x86_64-linux-gnu/bits/unistd.h \
+ /usr/include/x86_64-linux-gnu/bits/unistd_ext.h /usr/include/dirent.h \
  /usr/include/x86_64-linux-gnu/bits/dirent.h \
  /usr/include/x86_64-linux-gnu/bits/posix1_lim.h \
  /usr/include/x86_64-linux-gnu/bits/local_lim.h \
- /usr/include/linux/limits.h /usr/include/errno.h \
+ /usr/include/linux/limits.h \
+ /usr/include/x86_64-linux-gnu/bits/dirent_ext.h /usr/include/errno.h \
  /usr/include/x86_64-linux-gnu/bits/errno.h /usr/include/linux/errno.h \
  /usr/include/x86_64-linux-gnu/asm/errno.h \
  /usr/include/asm-generic/errno.h /usr/include/asm-generic/errno-base.h \
@@ -107,7 +112,7 @@ hsaskpass-hspass.o: hspass.c /usr/include/stdc-predef.h ../config.h \
 
 /usr/include/fuse/fuse_opt.h:
 
-/usr/lib/gcc/x86_64-linux-gnu/8/include/stdint.h:
+/usr/lib/gcc/x86_64-linux-gnu/9/include/stdint.h:
 
 /usr/include/stdint.h:
 
@@ -149,7 +154,7 @@ hsaskpass-hspass.o: hspass.c /usr/include/stdc-predef.h ../config.h \
 
 /usr/include/x86_64-linux-gnu/bits/types/timer_t.h:
 
-/usr/lib/gcc/x86_64-linux-gnu/8/include/stddef.h:
+/usr/lib/gcc/x86_64-linux-gnu/9/include/stddef.h:
 
 /usr/include/endian.h:
 
@@ -211,7 +216,13 @@ hsaskpass-hspass.o: hspass.c /usr/include/stdc-predef.h ../config.h \
 
 /usr/include/x86_64-linux-gnu/sys/stat.h:
 
-/usr/include/x86_64-linux-gnu/bits/statx.h:
+/usr/lib/gcc/x86_64-linux-gnu/9/include-fixed/bits/statx.h:
+
+/usr/include/x86_64-linux-gnu/bits/statx-generic.h:
+
+/usr/include/x86_64-linux-gnu/bits/types/struct_statx_timestamp.h:
+
+/usr/include/x86_64-linux-gnu/bits/types/struct_statx.h:
 
 /usr/include/x86_64-linux-gnu/sys/statvfs.h:
 
@@ -227,7 +238,7 @@ hsaskpass-hspass.o: hspass.c /usr/include/stdc-predef.h ../config.h \
 
 /usr/include/stdio.h:
 
-/usr/lib/gcc/x86_64-linux-gnu/8/include/stdarg.h:
+/usr/lib/gcc/x86_64-linux-gnu/9/include/stdarg.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h:
 
@@ -291,6 +302,8 @@ hsaskpass-hspass.o: hspass.c /usr/include/stdc-predef.h ../config.h \
 
 /usr/include/x86_64-linux-gnu/bits/unistd.h:
 
+/usr/include/x86_64-linux-gnu/bits/unistd_ext.h:
+
 /usr/include/dirent.h:
 
 /usr/include/x86_64-linux-gnu/bits/dirent.h:
@@ -300,6 +313,8 @@ hsaskpass-hspass.o: hspass.c /usr/include/stdc-predef.h ../config.h \
 /usr/include/x86_64-linux-gnu/bits/local_lim.h:
 
 /usr/include/linux/limits.h:
+
+/usr/include/x86_64-linux-gnu/bits/dirent_ext.h:
 
 /usr/include/errno.h:
 
