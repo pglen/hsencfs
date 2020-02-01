@@ -4,11 +4,11 @@
  * High security encryption file system. We make use of the API offered by
  * the fuse subsystem to intercept file operations.
  *
- * The interception is done between mountdata and mountpoint. Copying data
- * to mountpoint ends up encrypted in mountdata. Copying data from mountpoint
- * is sourced from mountdata and decrypted. See "hsencrw.c".
+ * The interception is done between mountsecret and mountpoint. Copying data
+ * to mountpoint ends up encrypted in mountsecret. Copying data from mountpoint
+ * is sourced from mountsecret and decrypted. See "hsencrw.c".
  *
- * Use a dotted file for mountdata (like .data or .secretdata)
+ * Use a dotted file for mountsecret (like .data or .secretdata)
  *
  * One additional useful feature is auditing. Reports file access by user ID.
  * The report is sent to syslog. (use the -l option to turn on log)
@@ -86,7 +86,8 @@ static  int     plen2 = sizeof(decoy);
 // Main directories for data / encryption
 
 static  char  mountpoint[PATH_MAX] ;
-static  char  mountdata[PATH_MAX] ;
+static  char  mountsecret[PATH_MAX] ;
+static  char  tmpsecret[PATH_MAX] ;
 static  char  passprog[PATH_MAX] ;
 
 static  char  inodedir[PATH_MAX] ;
@@ -101,7 +102,7 @@ char *get_sidename(const char *path)
     if(ptmp2)
         {
         // Reassemble with dot path
-        strcpy(ptmp2, mountdata);
+        strcpy(ptmp2, mountsecret);
         char *endd = strrchr(path, '/');
         if(endd)
             {
@@ -192,29 +193,30 @@ int help()
 
 {
     printf("\n");
-    printf("Usage: hsencfs [options] storagedir mountpoint\n");
+    printf("Usage: hsencfs [options] MountPoint [StorageDir] \n");
     printf("\n");
-    printf("Where 'storagedir' is a storage directory for data and ");
-    printf("'mountpoint' is a directory for user visible data. ");
-    printf("Use dotted name as storagedir for convenient hiding  of data names. ");
-    printf(" (ex: ~/.secret)\n");
-    printf("Options:        -l num      -- Use log level  (--loglevel)\n");
-    printf("                -p pass     -- Use pass (!!Warning!! cleartext pass) (--pass)\n");
-    printf("                -a program  -- Use program for asking pass (--askpass)\n");
-    printf("                -o          -- On demand pass. Ask on first access (--ondemand)\n");
-    printf("                -f          -- Force creation of storagedir/mountpoint (--force)\n");
-    printf("                -q          -- Quiet (--quiet)\n");
-    printf("                -v          -- Verbose (--verbose)\n");
-    printf("                -V          -- Print version (--version)\n");
+    printf("MountPoint is a directory for user visible data.\n");
+    printf("StorageDir is a storage directory for encrypted data.\n");
+    printf("Use dotted name as 'storagedir' for convenient hiding of data names.\n");
+    printf("Options:        -l num     -- Use log level. Default: None (--loglevel)\n");
+    printf("                -p pass    -- Use pass. Note: cleartext pass.(--pass)\n");
+    printf("                -a program -- Use program for asking pass. (--askpass)\n");
+    printf("                -o         -- On demand pass. Ask on first access. (--ondemand)\n");
+    printf("                -f         -- Force creation of storagedir/mountpoint. (--force)\n");
+    printf("                -q         -- Quiet. (--quiet)\n");
+    printf("                -v         -- Verbose. (--verbose)\n");
+    printf("                -V         -- Print hsencfs version. (--version)\n\n");
+
     printf("Log levels:      1 - start/stop;   2 - open/create\n");
     printf("                 3 - read/write;   4 - all (noisy)\n");
-    printf("Use '--' to at the end of options for appending fuse options. ");
-    printf("For example: 'hsencfs sdata mpoint -- -o ro' for read only mount.\n");
+    printf("Use '--' to at the end of options for appending fuse options.\n");
+    printf("For example: 'hsencfs secretdata mountpoint -- -o ro' for read only mount.\n");
     printf("Typical invocation: (note the leading dot)\n");
-    printf("    hsencfs -l 2  ~/.secret ~/secret\n");
+    printf("    hsencfs  ~/.secrets ~/secrets\n\n");
+
 }
 
-
+// -----------------------------------------------------------------------
 // Read a line from the forked program
 
 static char *getln(int fd, char *buf, size_t bufsiz)
@@ -314,26 +316,73 @@ static struct option long_options[] =
         {0,             0,  0,   0}
     };
 
-int main(int argc, char *argv[])
+//////////////////////////////////////////////////////////////////////////
+
+int     test_mountpoint(char *ppp, char *mpdir, char *msg)
+
+{
+    int ret = 0; struct stat sss;
+
+    //printf("test_mountpoint() ppp='%s'\n", ppp);
+
+    if(strlen(ppp) == 0)
+        {
+        fprintf(stderr,"Must specify %s directory.\n", msg);
+        //help();
+        exit(2);
+        }
+
+    // Resolve relative path
+    expandpath(ppp, mpdir, PATH_MAX);
+
+    //printf("test_mountpoint() mpdir='%s'\n", mpdir);
+
+    if (mpdir[strlen(mpdir)-1] != '/')
+        strcat(mpdir, "/");
+
+    if (access(mpdir, R_OK) < 0)
+        {
+        if(!quiet)
+            printf("Cannot access %s dir: '%s'\n", msg, mpdir);
+
+        if (force)
+            {
+            if(verbose && !quiet)
+                printf("Forcing directory creation.\n");
+
+            if(!quiet)
+                printf("Creating %s dir: '%s'\n", msg, mpdir);
+
+            if (mkdir(mpdir, 0744) < 0)
+                {
+                fprintf(stderr,"Cannot create mount point dir: '%s'\n", mpdir);
+                exit(3);
+                }
+            }
+        else
+            {
+            exit(2);
+            }
+
+        stat(mpdir, &sss);
+        if(!S_ISDIR(sss.st_mode))
+            {
+            fprintf(stderr,"%s must be a directory: '%s'\n", msg, mpdir);
+            exit(2);
+            }
+        }
+    return ret;
+}
+
+// ----------------------------------------------------------------------
+// Parse command line
+
+void    parse_comline(int argc, char *argv[])
 
 {
     int cc, digit_optind = 0, loop, loop2;
-    struct stat ss; struct timespec ts;
 
-    clock_gettime(CLOCK_REALTIME, &ts);
-    umask(0);
-
-    memset(mountpoint,  0, sizeof(mountpoint));
-    memset(mountdata,   0, sizeof(mountdata));
-    memset(passprog,    0, sizeof(passprog));
-    memset(passx,       0, sizeof(passx));
-    memset(decoy,       0, sizeof(decoy));
-
-    // Just for development. DO NOT USE!
-    //strcpy(passx, "1234"); //plen = strlen(passx);
-
-    // Parse command line
-   	while (1)
+    while (1)
         {
         int this_option_optind = optind ? optind : 1;
         int option_index = -1;
@@ -419,115 +468,107 @@ int main(int argc, char *argv[])
                printf ("?? getopt returned character code 0%o (%c) ??\n", cc, cc);
         }
     }
+}
 
-    // Al least two arguments for md mp
-    if (optind >= argc - 1)
+// -----------------------------------------------------------------------
+// Main entry point
+
+int     main(int argc, char *argv[])
+
+{
+    struct timespec ts;
+    struct stat ss; char *msptr = NULL;
+
+    clock_gettime(CLOCK_REALTIME, &ts);
+    umask(0);
+
+    memset(mountpoint,  0, sizeof(mountpoint));
+    memset(mountsecret,   0, sizeof(mountsecret));
+    memset(tmpsecret,   0, sizeof(tmpsecret));
+    memset(passprog,    0, sizeof(passprog));
+    memset(passx,       0, sizeof(passx));
+    memset(decoy,       0, sizeof(decoy));
+
+    // Just for development. DO NOT USE!
+    //strcpy(passx, "1234"); //plen = strlen(passx);
+
+    parse_comline(argc, argv);
+
+    // Al least one arguments for md mp
+    if (optind >= argc)
         {
         printf("Use: %s -h (or --help) for more information.\n", argv[0]);
 		exit(1);
         }
 
-    // Resolve relative paths
-    expandpath(argv[optind], mountdata, sizeof(mountdata));
-    if(strlen(mountdata) == 0)
-        {
-        fprintf(stderr,"Must specify mount data directory.");
-        help(); exit(2);
-        }
-    expandpath(argv[optind+1], mountpoint, sizeof(mountpoint));
-    if(strlen(mountdata) == 0)
-        {
-        fprintf(stderr,"Must specify mount data directory.");
-        help();  exit(2);
-        }
-    if (mountdata[strlen(mountdata)-1] != '/')
-        strcat(mountdata, "/");
+    //printf("optind=%d argc=%d\n", optind, argc);
 
-    if (mountpoint[strlen(mountpoint)-1] != '/')
-        strcat(mountpoint, "/");
+    // 1.) Test for mount point
+    test_mountpoint(argv[optind], mountpoint, "mount point");
+
+    // 2.) Test for optional mount secret
+    if (optind <= argc - 2)
+        {
+        msptr =  argv[optind+1];
+        }
+    else
+        {
+        // Optional data path
+        msptr = tmpsecret;
+        int cnt = 0, cnt2 = 0; char *pch, *temp;
+        //char *ptr1, *ptr2;
+
+        // strtok needs different string in successive calls
+        char *ddd = strdup(mountpoint);
+        pch = strtok(ddd, "/");
+        while ( (temp = strtok (NULL, "/") ) != NULL)
+            cnt++;
+        free(ddd);
+
+        //printf("cnt %d\n", cnt);
+
+        char *eee = strdup(mountpoint);
+        pch = strtok(eee, "/");
+        strcat(tmpsecret, "/"); strcat(tmpsecret, pch);
+        //printf("tokenx '%s'\n", pch);
+
+        while ( (temp = strtok(NULL, "/") ) != NULL)
+          {
+            cnt2++;
+            //printf("token %d  '%s'\n", cnt2, temp);
+            if(strcmp(temp, "."))
+                {
+                strcat(tmpsecret, "/");
+                if(cnt2 == cnt)
+                    strcat(tmpsecret, ".");
+                strcat(tmpsecret, temp);
+                }
+            }
+        free(eee);
+        }
+
+    //printf("msptr '%s'\n", msptr);
+    test_mountpoint(msptr, mountsecret, "mount secret");
+    //printf("mp '%s' sd '%s'\n",  mountpoint, mountsecret);
 
     // Make sure mroot and mdata exists, and are directories
-
-    // 1.) Test for data dir
-    if (access(mountdata, R_OK) < 0)
-        {
-        if(!quiet)
-            printf("Cannot access mount data dir: '%s'\n", mountdata);
-
-        if (force)
-            {
-            if(verbose && !quiet)
-                printf("Forcing directory creation.\n");
-
-            if(!quiet)
-                printf("Creating mount data dir: '%s'\n", mountdata);
-
-            if (mkdir(mountdata, 0700) < 0)
-                {
-                fprintf(stderr,"Cannot create mount data dir: '%s'\n", mountdata);
-                exit(3);
-                }
-            }
-        else
-            {
-            exit(2);
-            }
-        }
-    stat(mountdata, &ss);
-    if(!S_ISDIR(ss.st_mode))
-        {
-        fprintf(stderr,"Mount data must be a directory: '%s'\n", mountdata);
-        exit(2);
-        }
-
-    // 2.) Test for mount point
-    if (access(mountpoint, R_OK) < 0)
-        {
-        if(!quiet)
-            printf("Cannot access mount point dir: '%s'\n", mountpoint);
-
-        if (force)
-            {
-            if(verbose && !quiet)
-                printf("Forcing directory creation.\n");
-
-            if(!quiet)
-                printf("Creating mount point dir: '%s'\n", mountpoint);
-
-            if (mkdir(mountpoint, 0744) < 0)
-                {
-                fprintf(stderr,"Cannot create mount point dir: '%s'\n", mountpoint);
-                exit(3);
-                }
-            }
-        else
-            {
-            exit(2);
-            }
-        }
-
-    stat(mountpoint, &ss);
-    if(!S_ISDIR(ss.st_mode))
-        {
-        fprintf(stderr,"Mount Point must be a directory: '%s'\n", mountpoint);
-        exit(2);
-        }
-
     if (verbose && !quiet)
         {
-        printf("Mount data dir: '%s'\n", mountdata);
-        printf("Mount Point dir: '%s'\n", mountpoint);
+        printf("Mount  Point dir: '%s'\n", mountpoint);
+        printf("Mount Secret dir: '%s'\n", mountsecret);
         }
+
+    exit(0);
 
     // Make sure they are not nested:
     // These tests are not fool proof, added to TODO
-    char *match  = strstr(mountpoint, mountdata);
+    char *match  = strstr(mountpoint, mountsecret);
     if(match)
         {
         fprintf(stderr,"Mount Point must not be nested in Mount Data.\n");
         exit(6);
         }
-    char *match2 = strstr(mountdata, mountpoint);
+    char *match2 = strstr(mountsecret, mountpoint);
      if(match2)
         {
         fprintf(stderr,"Mount Data must not be nested in Mount Point.\n");
@@ -566,7 +607,7 @@ int main(int argc, char *argv[])
     if(loglevel > 0)
         {
         syslog(LOG_DEBUG, "Started with %s\n", mountpoint);
-        syslog(LOG_DEBUG, "Using data %s\n", mountdata);
+        syslog(LOG_DEBUG, "Using data %s\n", mountsecret);
         }
 
     // Note: if you transform the file with a different block size
@@ -619,11 +660,11 @@ int main(int argc, char *argv[])
                 }
             }
         // Will ask for pass if not filled
-        if(pass_ritual(mountpoint, mountdata, passx, &plen))
+        if(pass_ritual(mountpoint, mountsecret, passx, &plen))
             {
             fprintf(stderr,"Invalid pass.\n");
             syslog(LOG_AUTH, "Authentication error on mounting by %d '%s' -> '%s'",
-                                getuid(), mountdata, mountpoint);
+                                getuid(), mountsecret, mountpoint);
             exit(5);
             }
         }
@@ -639,17 +680,17 @@ int main(int argc, char *argv[])
     syslog(LOG_DEBUG, "hsencfs pass from: len=%d '%s'\n", plen, passx);
 
     // Write back expanded paths
-    argv[optind]    = mountdata;
+    argv[optind]    = mountsecret;
     argv[optind+1]  = mountpoint;
 
     // Create INODE directory
     //char tmp2[PATH_MAX];
-    //strncpy(tmp2, mountdata, sizeof(tmp2)); strcat(tmp2, ".inodedata");
+    //strncpy(tmp2, mountsecret, sizeof(tmp2)); strcat(tmp2, ".inodedata");
     //if(stat(tmp2, &ss) < 0)
     //    {
     //    if (mkdir(tmp2, 0700) < 0)
     //        {
-    //        fprintf(stderr,"Cannot create inode data dir: '%s'\n", mountdata);
+    //        fprintf(stderr,"Cannot create inode data dir: '%s'\n", mountsecret);
     //        exit(3);
     //        }
     //    }
@@ -669,22 +710,19 @@ int main(int argc, char *argv[])
         printf("Mount returned with '%d'\n", ret);
 
         syslog(LOG_AUTH, "Cannot mount, attempt by %d '%s' -> '%s'",
-                                         getuid(), mountdata, mountpoint);
+                                         getuid(), mountsecret, mountpoint);
         }
     else
         {
         if(loglevel > 0)
-            syslog(LOG_DEBUG, "Mounted '%s' -> '%s'", mountdata, mountpoint);
+            syslog(LOG_DEBUG, "Mounted '%s' -> '%s'", mountsecret, mountpoint);
 
         printf("Mounted by uid %d -> %s\n", getuid(), mountpoint);
 
         syslog(LOG_AUTH, "Mounted by %d '%s' -> '%s'",
-                                 getuid(), mountdata, mountpoint);
+                                 getuid(), mountsecret, mountpoint);
         }
     return ret;
 }
 
 // EOF
-
-
-

@@ -12,7 +12,7 @@ static int xmp_getattr(const char *path, struct stat *stbuf)
 	int res;
 
     char  path2[PATH_MAX] ;
-    strcpy(path2, mountdata); strcat(path2, path);
+    strcpy(path2, mountsecret); strcat(path2, path);
 
 	res = lstat(path2, stbuf);
 	if (res == -1)
@@ -40,7 +40,7 @@ static int xmp_access(const char *path, int mask)
 	int res;
 
     char  path2[PATH_MAX] ;
-    strcpy(path2, mountdata); strcat(path2, path);
+    strcpy(path2, mountsecret); strcat(path2, path);
 
     if (loglevel > 3)
         syslog(LOG_DEBUG, "Get access, file: %s uid: %d\n", path, getuid());
@@ -57,7 +57,7 @@ static int xmp_readlink(const char *path, char *buf, size_t size)
 	int res;
 
 	char  path2[PATH_MAX] ;
-    strcpy(path2, mountdata); strcat(path2, path);
+    strcpy(path2, mountsecret); strcat(path2, path);
 
     res = readlink(path2, buf, size - 1);
 	if (res == -1)
@@ -81,7 +81,7 @@ static int xmp_opendir(const char *path, struct fuse_file_info *fi)
 		return -ENOMEM;
 
     char  path2[PATH_MAX] ;
-    strcpy(path2, mountdata); strcat(path2, path);
+    strcpy(path2, mountsecret); strcat(path2, path);
 
 	d->dp = opendir(path2);
 	if (d->dp == NULL) {
@@ -148,7 +148,7 @@ static int xmp_mknod(const char *path, mode_t mode, dev_t rdev)
 	int res;
 
     char  path2[PATH_MAX] ;
-    strcpy(path2, mountdata); strcat(path2, path);
+    strcpy(path2, mountsecret); strcat(path2, path);
 
 
 	if (S_ISFIFO(mode))
@@ -166,7 +166,7 @@ static int xmp_mkdir(const char *path, mode_t mode)
 	int res;
 
     char  path2[PATH_MAX] ;
-    strcpy(path2, mountdata); strcat(path2, path);
+    strcpy(path2, mountsecret); strcat(path2, path);
 
     if (loglevel > 3)
         syslog(LOG_DEBUG, "Mkdir dir: %s uid: %d\n", path, getuid());
@@ -183,7 +183,7 @@ static int xmp_unlink(const char *path)
 	int res;
 
     char  path2[PATH_MAX] ;
-    strcpy(path2, mountdata); strcat(path2, path);
+    strcpy(path2, mountsecret); strcat(path2, path);
 
     if (loglevel > 3)
         syslog(LOG_DEBUG, "Unlinked file: %s uid: %d\n", path, getuid());
@@ -198,7 +198,7 @@ static int xmp_unlink(const char *path)
     char *ptmp2 = malloc(PATH_MAX);
     if(ptmp2)
         {
-        strcpy(ptmp2, mountdata);
+        strcpy(ptmp2, mountsecret);
         char *endd = strrchr(path, '/');
         if(endd)
             {
@@ -223,7 +223,7 @@ static int xmp_rmdir(const char *path)
 	int res;
 
     char  path2[PATH_MAX] ;
-    strcpy(path2, mountdata); strcat(path2, path);
+    strcpy(path2, mountsecret); strcat(path2, path);
 
     if (loglevel > 3)
         syslog(LOG_DEBUG, "Removed dir: %s uid: %d\n", path, getuid());
@@ -246,10 +246,10 @@ static int xmp_symlink(const char *from, const char *to)
     return -ENOSYS;
 
     char  path2[PATH_MAX] ;
-    strcpy(path2, mountdata); strcat(path2, from);
+    strcpy(path2, mountsecret); strcat(path2, from);
 
     char  path3[PATH_MAX] ;
-    strcpy(path3, mountdata); strcat(path3, to);
+    strcpy(path3, mountsecret); strcat(path3, to);
 
     //if (loglevel > 1)
     //    syslog(LOG_DEBUG, "Symlink file: %s -> %s\n", path, path3);
@@ -267,10 +267,10 @@ static int xmp_rename(const char *from, const char *to)
 	int res;
 
     char  path2[PATH_MAX] ;
-    strcpy(path2, mountdata); strcat(path2, from);
+    strcpy(path2, mountsecret); strcat(path2, from);
 
     char  path3[PATH_MAX] ;
-    strcpy(path3, mountdata); strcat(path3, to);
+    strcpy(path3, mountsecret); strcat(path3, to);
 
     if (loglevel > 3)
         syslog(LOG_DEBUG, "Renamed file: %s to %s uid: %d\n", from, to, getuid());
@@ -293,10 +293,10 @@ static int xmp_link(const char *from, const char *to)
     return -ENOSYS;
 
     char  path2[PATH_MAX] ;
-    strcpy(path2, mountdata); strcat(path2, from);
+    strcpy(path2, mountsecret); strcat(path2, from);
 
     char  path3[PATH_MAX] ;
-    strcpy(path3, mountdata); strcat(path3, to);
+    strcpy(path3, mountsecret); strcat(path3, to);
 
 	//res = link(path2, path3);
 	res = link(from, to);
@@ -311,7 +311,7 @@ static int xmp_chmod(const char *path, mode_t mode)
 	int res;
 
     char  path2[PATH_MAX] ;
-    strcpy(path2, mountdata); strcat(path2, path);
+    strcpy(path2, mountsecret); strcat(path2, path);
 
     if (loglevel > 3)
         syslog(LOG_DEBUG, "Chmod file: %s uid: %d mode: %d\n", path, getuid(), mode);
@@ -328,7 +328,7 @@ static int xmp_chown(const char *path, uid_t uid, gid_t gid)
 	int res;
 
     char  path2[PATH_MAX] ;
-    strcpy(path2, mountdata); strcat(path2, path);
+    strcpy(path2, mountsecret); strcat(path2, path);
 
     if (loglevel > 3)
         syslog(LOG_DEBUG, "Chown file: %s uid: %d touid: %d togid %d\n",
@@ -346,7 +346,7 @@ static int xmp_truncate(const char *path, off_t size)
 	int res;
 
     char  path2[PATH_MAX] ;
-    strcpy(path2, mountdata); strcat(path2, path);
+    strcpy(path2, mountsecret); strcat(path2, path);
 
     if (loglevel > 3)
         syslog(LOG_DEBUG, "Truncated file: %s uid: %d\n", path, getuid());
@@ -386,7 +386,7 @@ static int xmp_utimens(const char *path, const struct timespec ts[2])
 	tv[1].tv_usec = ts[1].tv_nsec / 1000;
 
     char  path2[PATH_MAX] ;
-    strcpy(path2, mountdata); strcat(path2, path);
+    strcpy(path2, mountsecret); strcat(path2, path);
 
 	res = utimes(path2, tv);
 	if (res == -1)
@@ -417,7 +417,7 @@ int     openpass(const char *path)
 
     strncpy(passx, res, sizeof(passx));
 
-    if(pass_ritual(mountpoint, mountdata, passx, &plen))
+    if(pass_ritual(mountpoint, mountsecret, passx, &plen))
         {
         // Force new pass prompt
         memset(passx, 0, sizeof(passx));
@@ -433,7 +433,7 @@ static int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
 	int fd;
 
     char  path2[PATH_MAX] ;
-    strcpy(path2, mountdata); strcat(path2, path);
+    strcpy(path2, mountsecret); strcat(path2, path);
 
     if (loglevel > 1)
         syslog(LOG_DEBUG, "Created file: '%s' uid: %d\n", path, getuid());
@@ -511,7 +511,7 @@ static int xmp_open(const char *path, struct fuse_file_info *fi)
 	int fd;
 
     char  path2[PATH_MAX] ;
-    strcpy(path2, mountdata); strcat(path2, path);
+    strcpy(path2, mountsecret); strcat(path2, path);
 
     //if (loglevel > 1)
     //    syslog(LOG_DEBUG, "Opened file: %s uid: %d\n", path, getuid());
@@ -543,7 +543,7 @@ static int xmp_statfs(const char *path, struct statvfs *stbuf)
 	int res;
 
     char  path2[PATH_MAX] ;
-    strcpy(path2, mountdata); strcat(path2, path);
+    strcpy(path2, mountsecret); strcat(path2, path);
 
     if (loglevel > 3)
         syslog(LOG_DEBUG, "Stat file: %s uid: %d\n", path, getuid());
@@ -615,7 +615,7 @@ static int xmp_setxattr(const char *path, const char *name, const char *value,
 			size_t size, int flags)
 {
     char  path2[PATH_MAX] ;
-    strcpy(path2, mountdata); strcat(path2, path);
+    strcpy(path2, mountsecret); strcat(path2, path);
 
 	int res = lsetxattr(path2, name, value, size, flags);
 	if (res == -1)
@@ -627,7 +627,7 @@ static int xmp_getxattr(const char *path, const char *name, char *value,
 			size_t size)
 {
     char  path2[PATH_MAX] ;
-    strcpy(path2, mountdata); strcat(path2, path);
+    strcpy(path2, mountsecret); strcat(path2, path);
 
 	int res = lgetxattr(path2, name, value, size);
 	if (res == -1)
@@ -638,7 +638,7 @@ static int xmp_getxattr(const char *path, const char *name, char *value,
 static int xmp_listxattr(const char *path, char *list, size_t size)
 {
     char  path2[PATH_MAX] ;
-    strcpy(path2, mountdata); strcat(path2, path);
+    strcpy(path2, mountsecret); strcat(path2, path);
 
 	int res = llistxattr(path3, list, size);
 	if (res == -1)
@@ -649,7 +649,7 @@ static int xmp_listxattr(const char *path, char *list, size_t size)
 static int xmp_removexattr(const char *path, const char *name)
 {
     char  path2[PATH_MAX] ;
-    strcpy(path2, mountdata); strcat(path2, path);
+    strcpy(path2, mountsecret); strcat(path2, path);
 
 	int res = lremovexattr(path2, name);
 	if (res == -1)
@@ -666,6 +666,7 @@ static int xmp_lock(const char *path, struct fuse_file_info *fi, int cmd,
 	return ulockmgr_op(fi->fh, cmd, lock, &fi->lock_owner,
 			   sizeof(fi->lock_owner));
 }
+
 
 
 
