@@ -19,10 +19,10 @@
  *
  *  To use it:
  *
- *       hsenc [-f] ~/.secretdata ~/secrets
+ *       hsenc [-f] ~/.secrets ~/secrets
  *
  *  Command above will expose the ~/secrets directory. It is sourced from the
- *  backing directory ~/.secretdata
+ *  backing directory ~/.secrets
  */
 
 #define FUSE_USE_VERSION 26
@@ -73,7 +73,7 @@ static  int     ondemand = 0;
 int     loglevel = 0;
 
 // Maintain internal count
-static  char    version[] = "1.17";
+static  char    version[] = "1.18";
 
 // The decoy employed occasionally to stop spyers
 // from figuring out where it is stored
@@ -194,10 +194,10 @@ int help()
     printf("\n");
     printf("Usage: hsencfs [options] storagedir mountpoint\n");
     printf("\n");
-    printf("Where 'storageedir' is a storage directory for data and ");
+    printf("Where 'storagedir' is a storage directory for data and ");
     printf("'mountpoint' is a directory for user visible data. ");
     printf("Use dotted name as storagedir for convenient hiding  of data names. ");
-    printf(" (ex: ~/.secretdata)\n");
+    printf(" (ex: ~/.secret)\n");
     printf("Options:        -l num      -- Use log level  (--loglevel)\n");
     printf("                -p pass     -- Use pass (!!Warning!! cleartext pass) (--pass)\n");
     printf("                -a program  -- Use program for asking pass (--askpass)\n");
@@ -210,8 +210,8 @@ int help()
     printf("                 3 - read/write;   4 - all (noisy)\n");
     printf("Use '--' to at the end of options for appending fuse options. ");
     printf("For example: 'hsencfs sdata mpoint -- -o ro' for read only mount.\n");
-    printf("Typical invocation: \n");
-    printf("    hsencfs -l 2  ~/.secretdata ~/secret\n");
+    printf("Typical invocation: (note the leading dot)\n");
+    printf("    hsencfs -l 2  ~/.secret ~/secret\n");
 }
 
 
@@ -685,4 +685,6 @@ int main(int argc, char *argv[])
 }
 
 // EOF
+
+
 
