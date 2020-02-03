@@ -86,7 +86,7 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset, stru
         if(!bbuff)
             {
             if (loglevel > 2)
-                syslog(LOG_DEBUG, "Cannot alloc for sideblock\n");
+                syslog(LOG_DEBUG, "Cannot alloc for sideblock.\n");
             goto endd;
             }
 
@@ -94,7 +94,7 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset, stru
         if(ret < 0)
             {
             if (loglevel > 2)
-                syslog(LOG_DEBUG, "Cannot read sideblock data\n");
+                syslog(LOG_DEBUG, "Cannot read sideblock data.\n");
             }
         else
             {
@@ -102,8 +102,8 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset, stru
             }
 
         if (loglevel > 2)
-            syslog(LOG_DEBUG, "Got sideblock file: '%s'\n",
-                                    bluepoint2_dumphex(bbuff, 16));
+            syslog(LOG_DEBUG, "Got sideblock: '%s'\n",
+                                    bluepoint2_dumphex(bbuff, 8));
 
         // Read in last sideblock data
         size_t dlen = new_end - new_offset;
@@ -112,6 +112,7 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset, stru
             // No sideblock needed
             goto endd;
             }
+
         int res2 = pread(fi->fh, mem, dlen, new_offset);
         if (res2 <= 0 )
             {

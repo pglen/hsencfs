@@ -96,30 +96,6 @@ static  char  inodedir[PATH_MAX] ;
 char    progname[] = "HSENCFS";
 int     pg_debug = 0;
 
-char *get_sidename(const char *path)
-
-{
-    char *ptmp2 = malloc(PATH_MAX);
-    if(ptmp2)
-        {
-        // Reassemble with dot path
-        strcpy(ptmp2, mountsecret);
-        char *endd = strrchr(path, '/');
-        if(endd)
-            {
-            strncat(ptmp2, path, endd - path);
-            strcat(ptmp2, ".");
-            strcat(ptmp2, endd + 1);
-            }
-        else
-            {
-            strcat(ptmp2, ".");
-            }
-        strcat(ptmp2, ".secret");
-        }
-    return ptmp2;
-}
-
 // -----------------------------------------------------------------------
 // Get the extracted sources:
 
@@ -766,4 +742,5 @@ int     main(int argc, char *argv[])
 }
 
 // EOF
+
 

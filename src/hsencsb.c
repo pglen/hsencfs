@@ -10,6 +10,55 @@
 //      If last block, gather data from sideblock, patch it in.
 //
 
+char    *get_sidename(const char *path)
+
+{
+    char *ptmp2 = malloc(PATH_MAX);
+    if(!ptmp2)
+        {
+        syslog(LOG_DEBUG, "Cannot allocate memory for sideblock filename '%s'\n", path);
+        goto endd;
+        }
+
+    syslog(LOG_DEBUG, "Generate sidename '%s'\n", path);
+
+    int cnt = 0, cnt2 = 0; char *pch, *temp;
+    char *ddd = strdup(path);
+    pch = strtok(ddd, "/");
+    while ( (temp = strtok (NULL, "/") ) != NULL)
+        cnt++;
+    free(ddd);
+
+    char *eee = strdup(path);
+    strcpy(ptmp2, mountsecret);
+    pch = strtok(eee, "/");
+    if(cnt2 == cnt)
+        strcat(ptmp2, ".");
+    strcat(ptmp2, pch);
+    syslog(LOG_DEBUG, "sb tokenx '%s'\n", pch);
+
+    while ( (temp = strtok(NULL, "/") ) != NULL)
+        {
+        cnt2++;
+        syslog(LOG_DEBUG, "sb token %d  '%s'\n", cnt2, temp);
+        if(strcmp(temp, "."))
+            {
+            strcat(ptmp2, "/");
+            if(cnt2 == cnt)
+                strcat(ptmp2, ".");
+            strcat(ptmp2, temp);
+            }
+        }
+    free(eee);
+    strcat(ptmp2, ".dat");
+
+    if (loglevel > 3)
+         syslog(LOG_DEBUG, "Got sidename '%s'\n", ptmp2);
+
+   endd:
+    return ptmp2;
+}
+
 static  int    read_sideblock(const char *path, char **pbuff, int len)
 
 {
@@ -67,7 +116,7 @@ static  int    read_sideblock(const char *path, char **pbuff, int len)
     errno = old_errno;
 
     if (loglevel > 3)
-        syslog(LOG_DEBUG, "Got sideblock file, '%s'\n", bluepoint2_dumphex(*pbuff, 16));
+        syslog(LOG_DEBUG, "Got sideblock:, '%s'\n", bluepoint2_dumphex(*pbuff, 8));
 
   endd2:
     free(ptmp2);
@@ -130,34 +179,6 @@ static  int     write_sideblock(const char *path, char *bbuff, int len)
   endd:
     return ret;
 }
-
-#if 0
-static  int    kill_sideblock(const char *path)
-{
-    int ret = 0;
-    char *ptmp2 =  get_sidename(path);
-
-    //if (loglevel > 2)
-    //    syslog(LOG_DEBUG, "Killing sideblock for '%s'\n", path);
-
-    if(!ptmp2)
-        {
-        syslog(LOG_DEBUG, "Cannot alloc memory for sideblock file name '%s'\n", path);
-        goto endd;
-        }
-
-    if (loglevel > 2)
-        syslog(LOG_DEBUG, "Killed sideblock file '%s'\n", ptmp2);
-
-   ret = truncate(ptmp2, 0);
-
-   endd:
-    free(ptmp2);
-
-   endd2:
-    return 0;
-}
-#endif
 
 static  int    create_sideblock(const char *path)
 

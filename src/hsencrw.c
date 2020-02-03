@@ -59,8 +59,8 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
     off_t  skip  = offset - new_beg;
     if (loglevel > 3)
         syslog(LOG_DEBUG,
-                "About to write: '%s' offset=%ld size=%ld new_beg=%ld total=%ld\n",
-                                         path, offset, size, new_beg, total);
+                "About to write: '%s' offset=%ld size=%ld new_beg=%ld total=%ld skip=%ld\n",
+                                         path, offset, size, new_beg, total, skip);
     // Scratch pad for the whole lot
     void *mem =  malloc(total);
     if (mem == NULL)
@@ -75,7 +75,7 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
 
     memset(mem, 0, total);              // Zero it
 
-    if (loglevel > 3)
+    if (loglevel > 4)
         syslog(LOG_DEBUG, "File size from stat is: %ld\n", fsize);
 
     // Read / Decrypt / Patch / Encrypt / Write
@@ -87,7 +87,8 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
     //         |-------------|---|---------|
     //         |mem     slack|   |sideblock|
 
-    if(new_end >= fsize)
+    // Always read sb
+    //if(new_end >= fsize)
         {
         // Assemble buffer from pre and post
         char *bbuff = NULL;
@@ -110,8 +111,8 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
 
         // Assemble
         size_t decr =  ((total / HS_BLOCK) - 1) * HS_BLOCK;
-        //if (loglevel > 2)
-        //     syslog(LOG_DEBUG, "Patch: total=%ld decr=%ld\n", total, decr);
+        if (loglevel > 2)
+             syslog(LOG_DEBUG, "Patch: total=%ld decr=%ld\n", total, decr);
 
         memcpy(mem + decr, bbuff,  HS_BLOCK);
         free(bbuff);
@@ -126,40 +127,38 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
                     "Pre read: ret=%d slack=%ld new_beg=%ld\n", ret, slack, new_beg);
             if(ret != slack)
                 {
-                if (loglevel > 2)
-                    syslog(LOG_DEBUG, "Cannot pre read data. ret=%d errno=%d\n", ret, errno);
+                syslog(LOG_DEBUG, "**** Cannot pre read data. ret=%d errno=%d\n", ret, errno);
                 res = -errno;
                 }
             }
         }
+    #if 0
     else
         {
         if (loglevel > 3)
             syslog(LOG_DEBUG,
-            "About to pre read: new_beg=%ld fsize=%ld total=%ld\n",
+                "About to pre read: new_beg=%ld fsize=%ld total=%ld\n",
                                         new_beg, fsize, total);
 
         res = pread(fi->fh, mem, total, new_beg);
-
     	if (res == -1)
             {
             // We throw this away, as the buffer is zeroed out
-            if (loglevel > 3)
-                syslog(LOG_DEBUG,
-                    "Write: Cannot pre read for encryption %s size=%ld total=%ld offs=%ld\n",
+            syslog(LOG_DEBUG,
+                    "**** Write: Cannot pre read for encryption %s size=%ld total=%ld offs=%ld\n",
                                    path, size, total, offset);
-            errno = 0;
-            res = 0;
-            goto endd;
+            //errno = 0;
+            //res = 0;
+            //goto endd;
             }
         if (res < total)
             {
-            if (loglevel > 3)
-                syslog(LOG_DEBUG,
-                    "Write: Short pre-read  %s size=%ld total=%ld offs=%ld\n",
+            syslog(LOG_DEBUG,
+                    "**** Write: Short pre-read  %s size=%ld total=%ld offs=%ld\n",
                                    path, size, total, offset);
             }
         }
+    #endif
 
     // Buffer now in, complete
     hs_decrypt(mem, total, passx, plen);
@@ -187,12 +186,12 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
     // Reflect new file position
     lseek(fi->fh, oldoff + size, SEEK_SET);
 
-    if(new_end >= fsize)
+    //if(new_end >= fsize)
         {
         // Write sideblock back out
         size_t decr =  ((total / HS_BLOCK) - 1) * HS_BLOCK;
-        //if (loglevel > 2)
-        //     syslog(LOG_DEBUG, "Patch2: total=%ld decr=%ld\n", total, decr);
+        if (loglevel > 2)
+             syslog(LOG_DEBUG, "Patch2: total=%ld decr=%ld\n", total, decr);
 
         int ret2 = write_sideblock(path, mem + decr, HS_BLOCK);
         if(ret2 < 0)
@@ -207,8 +206,6 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
         syslog(LOG_DEBUG, "Written out file: %s res %d\n", path, res);
 
    endd:
-           ;
-
     // Do not leave data behind
     if (mem)
         {

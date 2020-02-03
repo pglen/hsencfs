@@ -76,12 +76,19 @@ struct xmp_dirp {
 static int xmp_opendir(const char *path, struct fuse_file_info *fi)
 {
 	int res;
+
+    if (loglevel > 3)
+        {
+        syslog(LOG_DEBUG, "xmp_opendir='%s'\n", path);
+        }
+
 	struct xmp_dirp *d = malloc(sizeof(struct xmp_dirp));
 	if (d == NULL)
 		return -ENOMEM;
 
     char  path2[PATH_MAX] ;
     strcpy(path2, mountsecret); strcat(path2, path);
+
 
 	d->dp = opendir(path2);
 	if (d->dp == NULL) {
@@ -97,10 +104,14 @@ static int xmp_opendir(const char *path, struct fuse_file_info *fi)
 }
 
 
-static int xmp_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
-		       off_t offset, struct fuse_file_info *fi)
+static int xmp_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offset, struct fuse_file_info *fi)
 {
 	struct xmp_dirp *d = get_dirp(fi);
+
+    if (loglevel > 3)
+        {
+        syslog(LOG_DEBUG, "xmp_readdir='%s'\n", path);
+        }
 
 	(void) path;
 	if (offset != d->offset) {
@@ -118,18 +129,32 @@ static int xmp_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
 				break;
 		}
 
-		memset(&st, 0, sizeof(st));
-		st.st_ino = d->entry->d_ino;
-		st.st_mode = d->entry->d_type << 12;
-		nextoff = telldir(d->dp);
-
-		if (filler(buf, d->entry->d_name, &st, nextoff))
-			break;
-
-		d->entry = NULL;
-		d->offset = nextoff;
+        memset(&st, 0, sizeof(st));
+    	st.st_ino = d->entry->d_ino;
+    	st.st_mode = d->entry->d_type << 12;
+    	nextoff = telldir(d->dp);
+        if(d->entry)
+            {
+            //syslog(LOG_DEBUG, "gotdirent '%s'\n", d->entry->d_name);
+            // Hide hidden files from main list
+            if(d->entry->d_name[0] == '.')
+                {
+            	d->entry = NULL;
+            	d->offset = nextoff;
+                continue;
+                }
+            }
+    	if (filler(buf, d->entry->d_name, &st, nextoff))
+            {
+            break;
+            }
+    	d->entry = NULL;
+    	d->offset = nextoff;
 	}
+    if (loglevel > 3)
+        {
 
+        }
 	return 0;
 }
 
@@ -194,25 +219,14 @@ static int xmp_unlink(const char *path)
     // Also unlink the .secret file
     // Reassemble with dot path
 
-    char *ptmp2 = malloc(PATH_MAX);
+    char *ptmp2 = get_sidename(path);
     if(ptmp2)
         {
-        strcpy(ptmp2, mountsecret);
-        char *endd = strrchr(path, '/');
-        if(endd)
-            {
-            strncat(ptmp2, path, endd - path);
-            strcat(ptmp2, ".");
-            strcat(ptmp2, endd + 1);
-            }
-        else
-            {
-            strcat(ptmp2, ".");
-            }
-        strcat(ptmp2, ".secret");
         if (loglevel > 3)
             syslog(LOG_DEBUG, "Unlinked secret file: %s\n", ptmp2);
+
         unlink(ptmp2);
+        free(ptmp2);
         }
 	return 0;
 }
@@ -351,7 +365,7 @@ static int xmp_truncate(const char *path, off_t size)
         syslog(LOG_DEBUG, "Truncated file: %s uid: %d\n", path, getuid());
 
     // Kill sideblock too
-    //create_sideblock(path);
+    create_sideblock(path);
 
 	res = truncate(path2, size);
 	if (res == -1)
@@ -435,6 +449,18 @@ static int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
 {
 	int fd;
 
+    char *eee = strrchr(path, '.');
+    syslog(LOG_DEBUG, "eee '%s'\n", eee);
+
+    if(eee)
+        {
+        if(eee[0] == '.')
+            {
+            //syslog(LOG_DEBUG, "Cannot create hidden file here '%s'\n", path);
+            return -EACCES;
+            }
+        }
+
     char  path2[PATH_MAX] ;
     strcpy(path2, mountsecret); strcat(path2, path);
 
@@ -443,6 +469,7 @@ static int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
 
     if (loglevel > 2)
         syslog(LOG_DEBUG, "Shadow file: '%s'\n", path2);
+
 
     if(passx[0] == 0)
         {
