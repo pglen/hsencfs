@@ -91,7 +91,7 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset, stru
             }
 
         //
-        if(ret <= 0)
+        if(ret < 0)
             {
             if (loglevel > 2)
                 syslog(LOG_DEBUG, "Cannot read sideblock data\n");
@@ -168,6 +168,7 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset, stru
 
 
 // EOF
+
 
 
 

@@ -150,7 +150,6 @@ static int xmp_mknod(const char *path, mode_t mode, dev_t rdev)
     char  path2[PATH_MAX] ;
     strcpy(path2, mountsecret); strcat(path2, path);
 
-
 	if (S_ISFIFO(mode))
 		res = mkfifo(path2, mode);
 	else
@@ -352,7 +351,7 @@ static int xmp_truncate(const char *path, off_t size)
         syslog(LOG_DEBUG, "Truncated file: %s uid: %d\n", path, getuid());
 
     // Kill sideblock too
-    kill_sideblock(path2);
+    //create_sideblock(path);
 
 	res = truncate(path2, size);
 	if (res == -1)
@@ -440,7 +439,7 @@ static int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
     strcpy(path2, mountsecret); strcat(path2, path);
 
     if (loglevel > 1)
-        syslog(LOG_DEBUG, "Created file: '%s' uid: %d\n", path, getuid());
+        syslog(LOG_DEBUG, "Created file: '%s' uid: %d mode: %x\n", path, getuid(), mode);
 
     if (loglevel > 2)
         syslog(LOG_DEBUG, "Shadow file: '%s'\n", path2);
@@ -472,38 +471,7 @@ static int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
     //    syslog(LOG_DEBUG, "Inode: %lud blocksize %ld \n",
     //                                stbuf.st_ino, stbuf.st_blksize);
 
-    char *ptmp2 = get_sidename(path);
-    if(ptmp2)
-        {
-        if (loglevel > 2)
-            syslog(LOG_DEBUG, "Creating '%s'\n", ptmp2);
-
-        int old_errno = errno;
-        int fdi = open(ptmp2, O_RDWR | O_CREAT | O_TRUNC , S_IRUSR | S_IWUSR);
-        if(fdi < 0)
-            {
-            if (loglevel > 2)
-                syslog(LOG_DEBUG, "Error on creating '%s' errno: %d\n", ptmp2, errno);
-            }
-        else
-            {
-            char *ptmp3 = malloc(stbuf.st_blksize);
-            if(ptmp3)
-                {
-                memset(ptmp3, '\0', stbuf.st_blksize);
-                int ww = write(fdi, ptmp3, stbuf.st_blksize);
-                if(ww < stbuf.st_blksize)
-                    {
-                    if (loglevel > 2)
-                        syslog(LOG_DEBUG, "Error on writing to inode file errno: %d\n", errno);
-                    }
-                free(ptmp3);
-                }
-            close(fdi);
-            }
-        errno = old_errno;
-        free(ptmp2);
-        }
+    create_sideblock(path);
 
     endd:
         ;
@@ -517,8 +485,9 @@ static int xmp_open(const char *path, struct fuse_file_info *fi)
     char  path2[PATH_MAX] ;
     strcpy(path2, mountsecret); strcat(path2, path);
 
-    //if (loglevel > 1)
-    //    syslog(LOG_DEBUG, "Opened file: %s uid: %d\n", path, getuid());
+    if (loglevel > 1)
+        syslog(LOG_DEBUG, "Opened file: %s uid: %d mode: %x\n",
+                                                path, getuid(),fi->flags);
 
     if(passx[0] == 0)
         {
@@ -528,14 +497,17 @@ static int xmp_open(const char *path, struct fuse_file_info *fi)
         if (ret)
             return -EACCES;
         }
-	fd = open(path2, fi->flags);
+
+	//fd = open(path2, fi->flags | O_RDWR);
+    fd = open(path2, O_RDWR);
+
 	if (fd == -1)
 		return -errno;
 	fi->fh = fd;
 
-    struct stat stbuf;	memset(&stbuf, 0, sizeof(stbuf));
-    int res = fstat(fi->fh, &stbuf);
-
+    //struct stat stbuf;	memset(&stbuf, 0, sizeof(stbuf));
+    //int res = fstat(fi->fh, &stbuf);
+    //
     //if (loglevel > 2)
     //    syslog(LOG_DEBUG, "Inode: %lud\n", stbuf.st_ino);
 
@@ -670,6 +642,7 @@ static int xmp_lock(const char *path, struct fuse_file_info *fi, int cmd,
 	return ulockmgr_op(fi->fh, cmd, lock, &fi->lock_owner,
 			   sizeof(fi->lock_owner));
 }
+
 
 
 

@@ -48,30 +48,23 @@ static  int    read_sideblock(const char *path, char **pbuff, int len)
         if (loglevel > 2)
             syslog(LOG_DEBUG, "Error on opening sideblock file '%s', errno: %d\n", ptmp2, errno);
 
-        ret = -ENOENT;
-        errno = old_errno;
-        goto endd2;
+        //ret = -ENOENT;
+        //errno = old_errno;
+        //goto endd2;
         }
     else
         {
         ret = read(fdi, *pbuff, len);
-        if(ret < len)
+        if(ret && ret < len)        // We ignore empty file
             {
             if (loglevel > 2)
                 syslog(LOG_DEBUG, "Error on reading sideblock file, errno: %d\n", errno);
 
-            ret = -EFAULT;
+            //ret = -EFAULT;
             }
         close(fdi);
         }
     errno = old_errno;
-
-    //if (loglevel > 2)
-    //    syslog(LOG_DEBUG, "Read block file, '%s'\n",
-    //                             bluepoint2_dumphex(bbuff, 100));
-
-    //if (loglevel > 2)
-    //    syslog(LOG_DEBUG, "Reading block file, %.*s\n", 8, *pbuff);
 
     if (loglevel > 3)
         syslog(LOG_DEBUG, "Got sideblock file, '%s'\n", bluepoint2_dumphex(*pbuff, 16));
@@ -128,10 +121,7 @@ static  int     write_sideblock(const char *path, char *bbuff, int len)
         }
     errno = old_errno;
 
-    //if (loglevel > 3)
-    //    syslog(LOG_DEBUG, "Block file, '%s'\n", bluepoint2_dumphex(bbuff, 11));
-
-    if (loglevel > 2)
+    if (loglevel > 4)
         syslog(LOG_DEBUG, "Written sideblock file, '%s'\n", bluepoint2_dumphex(bbuff, 16));
 
    endd2:
@@ -141,16 +131,23 @@ static  int     write_sideblock(const char *path, char *bbuff, int len)
     return ret;
 }
 
+#if 0
 static  int    kill_sideblock(const char *path)
-
 {
     int ret = 0;
     char *ptmp2 =  get_sidename(path);
+
+    //if (loglevel > 2)
+    //    syslog(LOG_DEBUG, "Killing sideblock for '%s'\n", path);
+
     if(!ptmp2)
         {
         syslog(LOG_DEBUG, "Cannot alloc memory for sideblock file name '%s'\n", path);
         goto endd;
         }
+
+    if (loglevel > 2)
+        syslog(LOG_DEBUG, "Killed sideblock file '%s'\n", ptmp2);
 
    ret = truncate(ptmp2, 0);
 
@@ -158,6 +155,48 @@ static  int    kill_sideblock(const char *path)
     free(ptmp2);
 
    endd2:
+    return 0;
+}
+#endif
+
+static  int    create_sideblock(const char *path)
+
+{
+    char *ptmp2 = get_sidename(path);
+    if(ptmp2)
+        {
+        if (loglevel > 2)
+            syslog(LOG_DEBUG, "Creating new sideblock '%s'\n", ptmp2);
+
+        int old_errno = errno;
+        int fdi = open(ptmp2, O_RDWR | O_CREAT | O_TRUNC , S_IRUSR | S_IWUSR);
+        if(fdi < 0)
+            {
+            if (loglevel > 2)
+                syslog(LOG_DEBUG, "Error on creating '%s' errno: %d\n", ptmp2, errno);
+            }
+        else
+            {
+            int blksize = HS_BLOCK;
+            //int blksize = stbuf.st_blksize;
+
+            char *ptmp3 = malloc(blksize);
+            if(ptmp3)
+                {
+                memset(ptmp3, '\0', blksize);
+                int ww = write(fdi, ptmp3, blksize);
+                if(ww < blksize)
+                    {
+                    if (loglevel > 2)
+                        syslog(LOG_DEBUG, "Error on writing to sideblock errno: %d\n", errno);
+                    }
+                free(ptmp3);
+                }
+            close(fdi);
+            }
+        errno = old_errno;
+        free(ptmp2);
+        }
     return 0;
 }
 
@@ -172,5 +211,4 @@ static  off_t get_fsize(int fh)
 }
 
 // EOF
-
 

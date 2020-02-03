@@ -87,7 +87,7 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
     //         |-------------|---|---------|
     //         |mem     slack|   |sideblock|
 
-    if(new_end > fsize)
+    if(new_end >= fsize)
         {
         // Assemble buffer from pre and post
         char *bbuff = NULL;
@@ -100,7 +100,7 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
             res = -errno;
             goto endd;
             }
-        if(ret != HS_BLOCK)
+        if(ret && ret != HS_BLOCK)
             {
             if (loglevel > 2)
                 syslog(LOG_DEBUG, "Cannot read sideblock.\n");
@@ -110,8 +110,9 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
 
         // Assemble
         size_t decr =  ((total / HS_BLOCK) - 1) * HS_BLOCK;
-        if (loglevel > 2)
-             syslog(LOG_DEBUG, "Patch: total=%ld decr=%ld\n", total, decr);
+        //if (loglevel > 2)
+        //     syslog(LOG_DEBUG, "Patch: total=%ld decr=%ld\n", total, decr);
+
         memcpy(mem + decr, bbuff,  HS_BLOCK);
         free(bbuff);
 
@@ -126,7 +127,7 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
             if(ret != slack)
                 {
                 if (loglevel > 2)
-                    syslog(LOG_DEBUG, "Cannot pre read data.\n");
+                    syslog(LOG_DEBUG, "Cannot pre read data. ret=%d errno=%d\n", ret, errno);
                 res = -errno;
                 }
             }
@@ -176,7 +177,7 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
 
     // Write it back out
     res = pwrite(fi->fh, mem + skip, size, offset);
-	if (res == -1)
+	if (res < 0)
         {
         syslog(LOG_DEBUG, "Error on writing file: %s res %d errno %d\n", path, res, errno);
 		res = -errno;
@@ -190,8 +191,8 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
         {
         // Write sideblock back out
         size_t decr =  ((total / HS_BLOCK) - 1) * HS_BLOCK;
-        if (loglevel > 2)
-             syslog(LOG_DEBUG, "Patch2: total=%ld decr=%ld\n", total, decr);
+        //if (loglevel > 2)
+        //     syslog(LOG_DEBUG, "Patch2: total=%ld decr=%ld\n", total, decr);
 
         int ret2 = write_sideblock(path, mem + decr, HS_BLOCK);
         if(ret2 < 0)
@@ -224,3 +225,4 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
 
 
 // EOF
+
