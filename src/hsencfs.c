@@ -214,7 +214,6 @@ int help()
     printf("For example: 'hsencfs secretdata mountpoint -- -o ro' for read only mount.\n");
     printf("Typical invocation: (note the leading dot)\n");
     printf("    hsencfs  ~/secrets ~/.secrets\n\n");
-
 }
 
 // -----------------------------------------------------------------------
@@ -712,8 +711,8 @@ int     main(int argc, char *argv[])
         }
 
     // Disable / Uncomment this when done
-    syslog(LOG_DEBUG, "hsencfs pass from: len=%d '%s'\n", plen,
-                                bluepoint2_dumphex(passx, plen));
+    //syslog(LOG_DEBUG, "hsencfs pass from: len=%d '%s'\n", plen,
+    //                            bluepoint2_dumphex(passx, plen));
 
     // Write back expanded paths
     char *argv2[3];

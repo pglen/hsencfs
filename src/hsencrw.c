@@ -55,11 +55,6 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
         new_end += HS_BLOCK;
         }
 
-    //if(new_end > fsize)
-    //    {
-    //    new_end =  (fsize / HS_BLOCK) * HS_BLOCK;
-    //    }
-
     size_t total = new_end - new_beg;
     off_t  skip  = offset - new_beg;
     if (loglevel > 3)
@@ -81,11 +76,17 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
     memset(mem, 0, total);              // Zero it
 
     if (loglevel > 3)
-        syslog(LOG_DEBUG, "File size from stat %ld\n", fsize);
+        syslog(LOG_DEBUG, "File size from stat is: %ld\n", fsize);
 
     // Read / Decrypt / Patch / Encrypt / Write
+    // -------------------------------------------------------------------
+    //                       | fsize
+    //         |new_beg      |             |new_end
+    // ===-----|--|----------|====|===========
+    //         |  ^offs      |    ^offs + size
+    //         |-------------|---|---------|
+    //         |mem     slack|   |sideblock|
 
-    //if(new_beg + total > fsize)
     if(new_end > fsize)
         {
         // Assemble buffer from pre and post
@@ -94,22 +95,48 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
         if(!bbuff)
             {
             if (loglevel > 2)
-                syslog(LOG_DEBUG, "Cannot get sideblock.\n");
-            res = 0;
+                syslog(LOG_DEBUG, "Cannot get sideblock memory.\n");
+            //res = 0;
+            res = -errno;
             goto endd;
             }
+        if(ret != HS_BLOCK)
+            {
+            if (loglevel > 2)
+                syslog(LOG_DEBUG, "Cannot read sideblock.\n");
+            res = -errno;
+            goto endd;
+            }
+
         // Assemble
-        off_t slack = fsize - new_beg;
-        res = pread(fi->fh, mem, slack, new_beg);
-        memcpy(mem + slack, bbuff,  HS_BLOCK);
+        size_t decr =  ((total / HS_BLOCK) - 1) * HS_BLOCK;
+        if (loglevel > 2)
+             syslog(LOG_DEBUG, "Patch: total=%ld decr=%ld\n", total, decr);
+        memcpy(mem + decr, bbuff,  HS_BLOCK);
         free(bbuff);
+
+        // Get original
+        off_t slack = fsize - new_beg;
+        if(slack)
+            {
+            int ret = pread(fi->fh, mem, slack, new_beg);
+            if (loglevel > 2)
+                syslog(LOG_DEBUG,
+                    "Pre read: ret=%d slack=%ld new_beg=%ld\n", ret, slack, new_beg);
+            if(ret != slack)
+                {
+                if (loglevel > 2)
+                    syslog(LOG_DEBUG, "Cannot pre read data.\n");
+                res = -errno;
+                }
+            }
         }
     else
         {
         if (loglevel > 3)
             syslog(LOG_DEBUG,
-            "About to pre read: '%s' new_beg=%ld fsize=%ld total=%ld\n",
-                                        path, new_beg, fsize, total);
+            "About to pre read: new_beg=%ld fsize=%ld total=%ld\n",
+                                        new_beg, fsize, total);
 
         res = pread(fi->fh, mem, total, new_beg);
 
@@ -162,10 +189,14 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
     if(new_end >= fsize)
         {
         // Write sideblock back out
-        int ret2 = write_sideblock(path, mem + fsize - HS_BLOCK, HS_BLOCK);
+        size_t decr =  ((total / HS_BLOCK) - 1) * HS_BLOCK;
+        if (loglevel > 2)
+             syslog(LOG_DEBUG, "Patch2: total=%ld decr=%ld\n", total, decr);
+
+        int ret2 = write_sideblock(path, mem + decr, HS_BLOCK);
         if(ret2 < 0)
             {
-            syslog(LOG_DEBUG, "Error on sideblock name %d\n", errno);
+            syslog(LOG_DEBUG, "Error on sideblock write %d\n", errno);
     		res = -errno;
             goto endd;
             }

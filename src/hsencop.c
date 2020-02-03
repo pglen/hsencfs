@@ -351,6 +351,9 @@ static int xmp_truncate(const char *path, off_t size)
     if (loglevel > 3)
         syslog(LOG_DEBUG, "Truncated file: %s uid: %d\n", path, getuid());
 
+    // Kill sideblock too
+    kill_sideblock(path2);
+
 	res = truncate(path2, size);
 	if (res == -1)
 		return -errno;
@@ -667,6 +670,7 @@ static int xmp_lock(const char *path, struct fuse_file_info *fi, int cmd,
 	return ulockmgr_op(fi->fh, cmd, lock, &fi->lock_owner,
 			   sizeof(fi->lock_owner));
 }
+
 
 
 

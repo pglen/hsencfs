@@ -50,7 +50,7 @@ static  int    read_sideblock(const char *path, char **pbuff, int len)
 
         ret = -ENOENT;
         errno = old_errno;
-        goto endd;
+        goto endd2;
         }
     else
         {
@@ -73,8 +73,11 @@ static  int    read_sideblock(const char *path, char **pbuff, int len)
     //if (loglevel > 2)
     //    syslog(LOG_DEBUG, "Reading block file, %.*s\n", 8, *pbuff);
 
-    //if (loglevel > 3)
-    //    syslog(LOG_DEBUG, "Block file, '%s'\n", bluepoint2_dumphex(*pbuff, 8));
+    if (loglevel > 3)
+        syslog(LOG_DEBUG, "Got sideblock file, '%s'\n", bluepoint2_dumphex(*pbuff, 16));
+
+  endd2:
+    free(ptmp2);
 
   endd:
     return ret;
@@ -109,7 +112,7 @@ static  int     write_sideblock(const char *path, char *bbuff, int len)
 
         ret = -errno;
         errno = old_errno;
-        goto endd;
+        goto endd2;
         }
     else
         {
@@ -125,18 +128,37 @@ static  int     write_sideblock(const char *path, char *bbuff, int len)
         }
     errno = old_errno;
 
-    //if (loglevel > 2)
-    //    syslog(LOG_DEBUG, "Read block file, '%s'\n",
-    //                             bluepoint2_dumphex(bbuff, 100));
-
     //if (loglevel > 3)
     //    syslog(LOG_DEBUG, "Block file, '%s'\n", bluepoint2_dumphex(bbuff, 11));
 
     if (loglevel > 2)
         syslog(LOG_DEBUG, "Written sideblock file, '%s'\n", bluepoint2_dumphex(bbuff, 16));
 
+   endd2:
+    free(ptmp2);
+
   endd:
     return ret;
+}
+
+static  int    kill_sideblock(const char *path)
+
+{
+    int ret = 0;
+    char *ptmp2 =  get_sidename(path);
+    if(!ptmp2)
+        {
+        syslog(LOG_DEBUG, "Cannot alloc memory for sideblock file name '%s'\n", path);
+        goto endd;
+        }
+
+   ret = truncate(ptmp2, 0);
+
+   endd:
+    free(ptmp2);
+
+   endd2:
+    return 0;
 }
 
 // Estabilish file size
