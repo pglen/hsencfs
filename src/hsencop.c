@@ -417,13 +417,14 @@ int     openpass(const char *path)
 
     strncpy(passx, res, sizeof(passx));
 
-    if(pass_ritual(mountpoint, mountsecret, passx, &plen))
+    int ret2 = pass_ritual(mountpoint, mountsecret, passx, &plen);
+    if(ret2)
         {
         // Force new pass prompt
         memset(passx, 0, sizeof(passx));
         if (loglevel > 1)
             syslog(LOG_DEBUG, "Invalid pass for %s uid: %d\n", path, getuid());
-        return 1;
+        return ret2;
         }
     return ret;
 }

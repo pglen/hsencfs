@@ -94,7 +94,7 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset, stru
         if(ret <= 0)
             {
             if (loglevel > 2)
-                syslog(LOG_DEBUG, "Cannot read sideblock\n");
+                syslog(LOG_DEBUG, "Cannot read sideblock data\n");
             }
         else
             {
@@ -102,15 +102,22 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset, stru
             }
 
         if (loglevel > 2)
-            syslog(LOG_DEBUG, "Got sideblock file: '%s'\n", bluepoint2_dumphex(bbuff, 16));
+            syslog(LOG_DEBUG, "Got sideblock file: '%s'\n",
+                                    bluepoint2_dumphex(bbuff, 16));
 
-        // Read in data
+        // Read in last sideblock data
         size_t dlen = new_end - new_offset;
+        if(dlen == 0)
+            {
+            // No sideblock needed
+            goto endd;
+            }
         int res2 = pread(fi->fh, mem, dlen, new_offset);
         if (res2 <= 0 )
             {
             if (loglevel > 2)
-                syslog(LOG_DEBUG, "Cannot read enc data\n");
+                syslog(LOG_DEBUG, "Cannot read enc data len=%ld offs=%ld\n",
+                dlen, new_offset);
             goto endd;
             }
         hs_decrypt(mem, dlen, passx, plen);
@@ -139,7 +146,7 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset, stru
     // Copy out newly decoded buffer
     memcpy(buf, mem + skip, size);
 
-    // Restore old position + size
+    // Restore old position + size, increment
     lseek(fi->fh, oldoff + res, SEEK_SET);
 
     if (loglevel > 2)
@@ -161,5 +168,6 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset, stru
 
 
 // EOF
+
 
 

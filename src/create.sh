@@ -1,3 +1,4 @@
 #!/bin/bash
-./hsencfs -f -l 4 -p 1234 ~/.secrets ~/secrets
+./hsencfs -v -f -l 4 -p 1234 ~/secrets ~/.secrets
+
 

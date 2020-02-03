@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
 
     printf("FROMHEX: \n");
     //printf("'%s'", dumped2);
-    printf("%s", bluepoint2_dumphex(dumped2, olen2));
+    printf("'%s'", bluepoint2_dumphex(dumped2, olen2));
     printf("\nEND FROMHEX\n");
 
     char   dumped3[256];
@@ -94,6 +94,7 @@ int main(int argc, char *argv[])
         printf("\nDecrypt OK.\n\n");
         }
 }
+
 
 
 

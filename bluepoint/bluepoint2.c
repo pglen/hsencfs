@@ -480,7 +480,8 @@ char    *bluepoint2_dumphex(char *str, int len)
 
     for (loop = 0; loop < len; loop++)
         {
-        pos += sprintf(buff + pos, "-%02x", ( unsigned char)str[loop]);
+        //pos += sprintf(buff + pos, "-%02x", ( unsigned char)str[loop]);
+        pos += sprintf(buff + pos, "%02x", ( unsigned char)str[loop]);
 
         if(pos >= (sizeof(buff) - 8))
             {
@@ -617,6 +618,7 @@ char    *bluepoint2_fromhex(char *str, int len, char *out, int *olen)
 }
 
 // EOF
+
 
 
 

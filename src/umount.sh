@@ -1,8 +1,12 @@
 #!/bin/bash
+
+. ./vars.sh
+
 aa=`mount | grep secrets`
 if [ "$aa" != "" ] ; then
-    fusermount -u ~/secrets
+    fusermount -u $DROOT
 fi
+
 
 
 

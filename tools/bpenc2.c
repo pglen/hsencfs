@@ -190,6 +190,9 @@ int main(int argc, char *argv[])
         exit(1);
         }
 
+    if(verbose)
+        printf("Infile: '%s' Outfile: '%s'\n", argv[optind], argv[optind+1]);
+
     if(access(argv[optind], F_OK) < 0)
         {
         fprintf(stderr, "File '%s' must exist and must be readable.\n", argv[optind]);
@@ -231,7 +234,7 @@ int main(int argc, char *argv[])
     FILE *fp2 = fopen(argv[optind+1], "wb");
     if (!fp2)
         {
-        fprintf(stderr, "File '%s' must be writable.\n", argv[optind]);
+        fprintf(stderr, "File '%s' must be writable.\n", argv[optind+1]);
         exit(1);
         }
 
@@ -286,6 +289,7 @@ int main(int argc, char *argv[])
 
     exit(0);
 }
+
 
 
 

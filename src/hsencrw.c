@@ -6,7 +6,7 @@
 //
 // Here is the task:
 //
-//      Intercept read / write. Expand boundaries to match encryption
+//      Intercept  write. Expand boundaries to match encryption
 //      block boundaries.
 //      If last block, gather data from sideblock, patch it in.
 //      Decrypt / Encrypt.
@@ -27,11 +27,21 @@
 
 
 static int xmp_write(const char *path, const char *buf, size_t size, off_t offset, struct fuse_file_info *fi)
+
 {
 	int res = 0, loop = 0;
     if(size == 0) {  // Nothing to do
         goto endd;
         }
+
+    // Where does this go?
+    //printf("Hello\n");
+
+    if (loglevel > 3)
+        syslog(LOG_DEBUG,
+                "xmp_write(): name '%s' size=%ld offset=%ld",
+                                         path, size, offset);
+
      // Save current file parameters
     off_t oldoff = lseek(fi->fh, 0, SEEK_SET);
     off_t fsize = get_fsize(fi->fh);
@@ -182,18 +192,4 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// EOF

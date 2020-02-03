@@ -15,7 +15,7 @@
 @SET_MAKE@
 
 # ------------------------------------------------------------------------
-# Bluepoint encryption for HSENCFS 
+# Bluepoint encryption for HSENCFS
 # (High Security Encrypted File system)
 
 VPATH = @srcdir@
@@ -255,9 +255,9 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 EXTRA_DIST = bluepoint.c bluepoint.h hs_crypt.c
 test_blue2dir = .
-test_blue2_SOURCES = bluepoint2.c test_blue2.c bluepoint2.h bluemac.h 
+test_blue2_SOURCES = bluepoint2.c test_blue2.c bluepoint2.h bluemac.h
 block_blue2dir = .
-block_blue2_SOURCES = bluepoint2.c block_blue2.c bluepoint2.h bluemac.h 
+block_blue2_SOURCES = bluepoint2.c block_blue2.c bluepoint2.h bluemac.h
 all: all-am
 
 .SUFFIXES:
@@ -531,6 +531,9 @@ uninstall-am:
 
 .PRECIOUS: Makefile
 
+
+test:
+	./test_blue2
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

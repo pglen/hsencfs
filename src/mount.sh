@@ -1,3 +1,13 @@
 #!/bin/bash
-./hsencfs  -l 4 -p 1234 ~/.secrets ~/secrets
+
+. ./vars.sh
+
+./hsencfs -q -l 4 -p $PASS $DROOT
+RET=$?
+if [ "$RET" != "0" ] ; then
+    echo hsencfs returned $RET
+fi
+
+
+
 

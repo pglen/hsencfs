@@ -162,10 +162,10 @@ int     pass_ritual(char *mountroot, char *mountdata, char *pass, int *plen)
         xlen = strlen(xpass);
         if(xlen == 0)
             {
-            fprintf(stderr, "Aborted.\n");
+            //fprintf(stderr, "Aborted.\n");
             if(loglevel > 0)
                syslog(LOG_DEBUG, "Aborted pass entry by uid: %d\n", getuid());
-            return 1;
+            return 2;
             }
         // Dup the results right away, clear it too
         *plen = xlen;
@@ -192,7 +192,7 @@ int     pass_ritual(char *mountroot, char *mountdata, char *pass, int *plen)
         if(pask)
             {
             sprintf(tmp,    "\n"
-                            "This is a new mount with no password set.\n"
+                            "This is a new mount with no password set previously.\n"
                             "\n"
                             "Please re-enter HSENCFS pass: ");
 
@@ -200,7 +200,8 @@ int     pass_ritual(char *mountroot, char *mountdata, char *pass, int *plen)
             xlen2 = strlen(xpass2);
             if(xlen2 == 0)
                 {
-                fprintf(stderr, "Aborted.\n");
+                //fprintf(stderr, "Aborted.\n");
+                ret = 2;
                 return ret;
                 }
             // Always padd it
@@ -235,7 +236,6 @@ int     pass_ritual(char *mountroot, char *mountdata, char *pass, int *plen)
         if (ret)
             {
             //fprintf(stderr, "Invalid pass.\n");
-
             if(loglevel > 0)
                 syslog(LOG_DEBUG, "Invalid pass entered by uid: %d\n", getuid());
             }
@@ -245,6 +245,7 @@ int     pass_ritual(char *mountroot, char *mountdata, char *pass, int *plen)
 
     return ret;
 }
+
 
 
 

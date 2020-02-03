@@ -19,7 +19,7 @@
  *
  *  To use it:
  *
- *       hsenc [-f] ~/.secrets ~/secrets
+ *       hsenc [-f] ~/secrets  ~/.secrets
  *
  *  Command above will expose the ~/secrets directory. It is sourced from the
  *  backing directory ~/.secrets
@@ -94,6 +94,7 @@ static  char  inodedir[PATH_MAX] ;
 
 /// We use this as a string to obfuscate the password. Do not change.
 char    progname[] = "HSENCFS";
+int     pg_debug = 0;
 
 char *get_sidename(const char *path)
 
@@ -197,22 +198,22 @@ int help()
     printf("\n");
     printf("MountPoint is a directory for user visible data.\n");
     printf("StorageDir is a storage directory for encrypted data.\n");
-    printf("Use dotted name as 'storagedir' for convenient hiding of data names.\n");
-    printf("Options:        -l num     -- Use log level. Default: None (--loglevel)\n");
-    printf("                -p pass    -- Use pass. Note: cleartext pass.(--pass)\n");
-    printf("                -a program -- Use program for asking pass. (--askpass)\n");
-    printf("                -o         -- On demand pass. Ask on first access. (--ondemand)\n");
-    printf("                -f         -- Force creation of storagedir/mountpoint. (--force)\n");
-    printf("                -q         -- Quiet. (--quiet)\n");
-    printf("                -v         -- Verbose. (--verbose)\n");
-    printf("                -V         -- Print hsencfs version. (--version)\n\n");
-
-    printf("Log levels:      1 - start/stop;   2 - open/create\n");
-    printf("                 3 - read/write;   4 - all (noisy)\n");
+    printf("Use dotted name as 'storagedir' for convenient hiding of data file names.\n");
+    printf("Options:        -v       -- Verbose. (--verbose)\n");
+    printf("                -p pass  -- Use pass. Note: cleartext pass.(--pass)\n");
+    printf("                -a prog  -- Use program to askin pass. (--askpass)\n");
+    printf("                -o       -- On demand pass. Ask on first access. (--ondemand)\n");
+    printf("                -f       -- Force creation of storagedir/mountpoint. (--force)\n");
+    printf("                -q       -- Quiet, minimal diagnostics printed (--quiet)\n");
+    printf("                -V       -- Print hsencfs version. (--version)\n");
+    printf("                -d level -- Debug level 0 ... 10 Default: 0 (--debug)\n");
+    printf("                -l level -- Log to syslog. Default: None (--loglevel)\n");
+    printf("Log levels:      1 - start/stop;   2 - open/create     3 - read/write;\n");
+    printf("                 4 - all (noisy);  5 - show internals \n\n");
     printf("Use '--' to at the end of options for appending fuse options.\n");
     printf("For example: 'hsencfs secretdata mountpoint -- -o ro' for read only mount.\n");
     printf("Typical invocation: (note the leading dot)\n");
-    printf("    hsencfs  ~/.secrets ~/secrets\n\n");
+    printf("    hsencfs  ~/secrets ~/.secrets\n\n");
 
 }
 
@@ -306,7 +307,7 @@ static struct option long_options[] =
     {
         {"loglevel",    1,  0,  'l'},
         {"help",        0,  0,  'h'},
-        {"pass",        0,  0,  'p'},
+        {"pass",        1,  0,  'p'},
         {"quiet",       0,  0,  'g'},
         {"force",       0,  0,  'f'},
         {"verbose",     0,  0,  'v'},
@@ -381,37 +382,53 @@ void    parse_comline(int argc, char *argv[])
 
 {
     int cc, digit_optind = 0, loop, loop2;
+    char *opts = "a:fhl:p:oqvVd:";
+    //opterr = 0;
 
     while (1)
         {
         int this_option_optind = optind ? optind : 1;
         int option_index = -1;
 
-    	cc = getopt_long(argc, argv, "a:fhl:p:oqvV",
+    	cc = getopt_long(argc, argv, opts,
                          long_options, &option_index);
-        if (cc == -1)
-            break;
 
-        //printf("cc %d cc %c arg %x\n", cc, cc, optarg);
-        //if(option_index >= 0)
-        //    {
-        //    printf ("long option '%s' idx: %d val %d ",
-        //              long_options[option_index].name,
-        //              option_index,
-        //                long_options[option_index].val);
-        //    if (optarg)
-        //           printf (" with arg %s", optarg);
-        //    printf("\n");
-        //    }
+        if(pg_debug > 5)
+            {
+            printf("parse: cc=%c (%d) ", cc, cc);
+
+            if (optarg)
+                printf (" with arg '%s'", optarg);
+
+            if(option_index >= 0)
+                {
+                printf ("\n   -- long option '%s' idx: %d val '%c' ",
+                          long_options[option_index].name,
+                                option_index, long_options[option_index].val);
+                }
+            printf("\n");
+            }
+
+        if (cc == -1)
+            {
+            //printf("option bailed\n");
+            break;
+            }
 
         int ret = 0, loop = 0;
 
         switch (cc)
            {
            case 'a':
-                if(verbose)
-                    printf("Getting pass from program: '%s'\n", optarg);
                 strncpy(passprog, optarg, MAXPASSLEN);
+                if(verbose)
+                    printf("Getting pass from program: '%s'\n", passprog);
+                break;
+
+           case 'd':
+                pg_debug = atoi(optarg);
+                if(verbose)
+                    printf("Setting debug level: '%d'\n", pg_debug);
                 break;
 
             case 'f':
@@ -421,7 +438,7 @@ void    parse_comline(int argc, char *argv[])
            case 'l':
                loglevel = atoi(optarg);
                 if(verbose)
-                    printf("Log Level: %d\n", loglevel);
+                    printf("Setting log Level: %d\n", loglevel);
                break;
 
            case 'p':
@@ -439,6 +456,10 @@ void    parse_comline(int argc, char *argv[])
                     }
                 if(verbose)
                     printf("Pass provided on command line.\n");
+
+                //if(pg_debug > 5)
+                //    printf("Pass '%s' provided on command line.\n", passx);
+
                 break;
 
            case 'q':
@@ -455,17 +476,25 @@ void    parse_comline(int argc, char *argv[])
 
            case 'V':
                printf("%s Version: %s\n", argv[0], version);
+               //printf("FUSE Version: %d\n", get_fuse_version);
                exit(0);
                break;
 
-           case 'h': case '?':
+           case 'h':
                 if(verbose)
                     printf("Showing help.\n");
                help(); exit(0);
                break;
 
+           case '?':
+                //fprintf(stderr, "%s Error: invalid option on command line.\n",
+                //                    argv[0]);
+                exit(1);
+                break;
+
            default:
                printf ("?? getopt returned character code 0%o (%c) ??\n", cc, cc);
+
         }
     }
 }
@@ -558,10 +587,8 @@ int     main(int argc, char *argv[])
         printf("Mount Secret dir: '%s'\n", mountsecret);
         }
 
-    exit(0);
-
     // Make sure they are not nested:
-    // These tests are not fool proof, added to TODO
+    //   Note: these tests are not fool proof, added to TODO
     char *match  = strstr(mountpoint, mountsecret);
     if(match)
         {
@@ -600,7 +627,8 @@ int     main(int argc, char *argv[])
     if(bb > 2)
         {
         //printf("%s\n", dir->d_name);
-        fprintf(stderr,"Mount Point directory not empty, '%s' mounted already.\n", mountpoint);
+        fprintf(stderr,"Mount Point: '%s\n", mountpoint);
+        fprintf(stderr,"Mount failed. Reason: directory not empty or mounted already.\n");
         exit(5);
         }
 
@@ -660,28 +688,40 @@ int     main(int argc, char *argv[])
                 }
             }
         // Will ask for pass if not filled
-        if(pass_ritual(mountpoint, mountsecret, passx, &plen))
+        int ret2 = pass_ritual(mountpoint, mountsecret, passx, &plen);
+        if(ret2)
             {
-            fprintf(stderr,"Invalid pass.\n");
+            // Catch abort message
+            if(ret2 == 2)
+                fprintf(stderr, "Aborted.\n");
+            else
+                fprintf(stderr,"Invalid pass.\n");
+
             syslog(LOG_AUTH, "Authentication error on mounting by %d '%s' -> '%s'",
                                 getuid(), mountsecret, mountpoint);
-            exit(5);
+            exit(6);
             }
         }
 
     if(!quiet)
         {
         if(ondemand)
-            printf("Mounting ... with on-demand password.\n");
+            printf("Mounting: '%s' with on-demand password.\n", mountpoint);
         else
-            printf("Mounting .. %s\n", mountpoint);
+            printf("Mounting: '%s'\n", mountpoint);
         }
 
-    syslog(LOG_DEBUG, "hsencfs pass from: len=%d '%s'\n", plen, passx);
+    // Disable / Uncomment this when done
+    syslog(LOG_DEBUG, "hsencfs pass from: len=%d '%s'\n", plen,
+                                bluepoint2_dumphex(passx, plen));
 
     // Write back expanded paths
-    argv[optind]    = mountsecret;
-    argv[optind+1]  = mountpoint;
+    char *argv2[3];
+    argv2[0]  = mountsecret;    argv2[1]  = mountpoint;
+    argv2[2]  = NULL;
+
+    if(verbose)
+        printf("Mount parms '%s' '%s'\n", mountsecret,  mountpoint);
 
     // Create INODE directory
     //char tmp2[PATH_MAX];
@@ -696,7 +736,8 @@ int     main(int argc, char *argv[])
     //    }
 
     // Skip arguments that are parsed already
-    int ret = fuse_main(argc - (optind), &argv[optind], &xmp_oper, NULL);
+    // Synthesize new array
+    int ret = fuse_main(2, argv2, &xmp_oper, NULL);
 
     // FUSE MAIN terminates ...
 
@@ -707,22 +748,23 @@ int     main(int argc, char *argv[])
             syslog(LOG_DEBUG, "Mount returned with '%d'", ret);
 
         printf("Mounted by uid %d -> %s\n", getuid(), mountpoint);
-        printf("Mount returned with '%d'\n", ret);
+        printf("Mount returned with '%d' errno=%d\n", ret, errno);
 
-        syslog(LOG_AUTH, "Cannot mount, attempt by %d '%s' -> '%s'",
+        syslog(LOG_AUTH, "Cannot mount, attempt by user %d '%s' -> '%s'",
                                          getuid(), mountsecret, mountpoint);
         }
     else
         {
         if(loglevel > 0)
-            syslog(LOG_DEBUG, "Mounted '%s' -> '%s'", mountsecret, mountpoint);
+            syslog(LOG_DEBUG, "Mounted '%s' data -> (%s)", mountpoint, mountsecret);
 
         printf("Mounted by uid %d -> %s\n", getuid(), mountpoint);
 
-        syslog(LOG_AUTH, "Mounted by %d '%s' -> '%s'",
-                                 getuid(), mountsecret, mountpoint);
+        syslog(LOG_AUTH, "Mounted  '%s' by %d data -> (%s)",
+                                 mountpoint, getuid(), mountsecret);
         }
     return ret;
 }
 
 // EOF
+
