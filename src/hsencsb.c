@@ -6,7 +6,7 @@
 //
 
 //
-// Read / Write the
+// Read / Write the data coming from the user.
 //      If last block, gather data from sideblock, patch it in.
 //
 
@@ -20,7 +20,7 @@ char    *get_sidename(const char *path)
         goto endd;
         }
 
-    syslog(LOG_DEBUG, "Generate sidename '%s'\n", path);
+    //syslog(LOG_DEBUG, "Generate sidename '%s'\n", path);
 
     int cnt = 0, cnt2 = 0; char *pch, *temp;
     char *ddd = strdup(path);
@@ -35,12 +35,12 @@ char    *get_sidename(const char *path)
     if(cnt2 == cnt)
         strcat(ptmp2, ".");
     strcat(ptmp2, pch);
-    syslog(LOG_DEBUG, "sb tokenx '%s'\n", pch);
+    //syslog(LOG_DEBUG, "sb tokenx '%s'\n", pch);
 
     while ( (temp = strtok(NULL, "/") ) != NULL)
         {
         cnt2++;
-        syslog(LOG_DEBUG, "sb token %d  '%s'\n", cnt2, temp);
+        //syslog(LOG_DEBUG, "sb token %d  '%s'\n", cnt2, temp);
         if(strcmp(temp, "."))
             {
             strcat(ptmp2, "/");
@@ -50,7 +50,7 @@ char    *get_sidename(const char *path)
             }
         }
     free(eee);
-    strcat(ptmp2, ".dat");
+    strcat(ptmp2, myext);
 
     if (loglevel > 3)
          syslog(LOG_DEBUG, "Got sidename '%s'\n", ptmp2);
@@ -221,6 +221,33 @@ static  int    create_sideblock(const char *path)
     return 0;
 }
 
+// Check if it is our internal file
+
+int     is_our_file(const char *path, int fname_only)
+
+{
+    int ret = FALSE;
+    char *eee = "/.";
+    if(fname_only == FALSE)
+        {
+        eee = strrchr(path, '/');
+        }
+    char *nnn = strrchr(path, '.');
+
+    // Determine if it is our data file, deny access
+    if(eee && nnn)
+        {
+        if(eee[1] == '.' && strncmp(nnn, myext, sizeof(myext) - 1) == 0 )
+            {
+            ret = TRUE;
+            }
+
+        if (loglevel > 4)
+            syslog(LOG_DEBUG, "is_our_file: eee '%s' nnn '%s' ret=%d\n", eee, nnn, ret);
+        }
+    return ret;
+}
+
 // Estabilish file size
 
 static  off_t get_fsize(int fh)
@@ -232,4 +259,5 @@ static  off_t get_fsize(int fh)
 }
 
 // EOF
+
 

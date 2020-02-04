@@ -54,6 +54,7 @@ int     bpgetpass(const char *fname, char *pass, int *plenx)
 }
 
 // Make backup path name. Caller must free result.
+// Same process as hsenc uses.
 
 char    *mk_backup_path(const char *path)
 
@@ -75,7 +76,7 @@ char    *mk_backup_path(const char *path)
             strcpy(ptmp2, ".");
             strcat(ptmp2, path);
             }
-        strcat(ptmp2, ".secret");
+        strcat(ptmp2, ".datx");
         }
     return ptmp2;
 }
@@ -134,6 +135,7 @@ int     mk_block_file(const char *path)
     if(ptmp3) free(ptmp3);
     return(fdi);
 }
+
 
 
 

@@ -30,6 +30,8 @@
 #include "hsutils.h"
 #include "../bluepoint/bluepoint2.h"
 
+const char *passfname = ".passdata.datx";
+
 extern char    progname[];
 extern int     loglevel;
 
@@ -186,7 +188,7 @@ int     pass_ritual(char *mountroot, char *mountdata, char *pass, int *plen)
 
     // Check it against saved pass, warn if creating new mount
     char tmp2[PATH_MAX];
-    strncpy(tmp2, mountdata, sizeof(tmp)); strcat(tmp2, ".passdata");
+    strncpy(tmp2, mountdata, sizeof(tmp)); strcat(tmp2, passfname);
     if(stat(tmp2, &ss) < 0)
         {
         if(pask)
@@ -245,6 +247,7 @@ int     pass_ritual(char *mountroot, char *mountdata, char *pass, int *plen)
 
     return ret;
 }
+
 
 
 

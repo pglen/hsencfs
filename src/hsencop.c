@@ -77,10 +77,10 @@ static int xmp_opendir(const char *path, struct fuse_file_info *fi)
 {
 	int res;
 
-    if (loglevel > 3)
-        {
-        syslog(LOG_DEBUG, "xmp_opendir='%s'\n", path);
-        }
+    //if (loglevel > 3)
+    //    {
+    //    syslog(LOG_DEBUG, "xmp_opendir='%s'\n", path);
+    //    }
 
 	struct xmp_dirp *d = malloc(sizeof(struct xmp_dirp));
 	if (d == NULL)
@@ -108,10 +108,10 @@ static int xmp_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_
 {
 	struct xmp_dirp *d = get_dirp(fi);
 
-    if (loglevel > 3)
-        {
-        syslog(LOG_DEBUG, "xmp_readdir='%s'\n", path);
-        }
+    //if (loglevel > 3)
+    //    {
+    //    syslog(LOG_DEBUG, "xmp_readdir='%s'\n", path);
+    //    }
 
 	(void) path;
 	if (offset != d->offset) {
@@ -136,9 +136,10 @@ static int xmp_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_
         if(d->entry)
             {
             //syslog(LOG_DEBUG, "gotdirent '%s'\n", d->entry->d_name);
-            // Hide hidden files from main list
-            if(d->entry->d_name[0] == '.')
+            // Hide our files from main list
+            if(is_our_file(d->entry->d_name, TRUE))
                 {
+                //syslog(LOG_DEBUG, "List skipping: '%s'\n", d->entry->d_name);
             	d->entry = NULL;
             	d->offset = nextoff;
                 continue;
@@ -206,11 +207,17 @@ static int xmp_unlink(const char *path)
 {
 	int res;
 
+    if(is_our_file(path, FALSE))
+        {
+        syslog(LOG_DEBUG, "No deletion of myfiles allowed: '%s'\n", path);
+        return -EACCES;
+        }
+
     char  path2[PATH_MAX] ;
     strcpy(path2, mountsecret); strcat(path2, path);
 
     if (loglevel > 3)
-        syslog(LOG_DEBUG, "Unlinked file: %s uid: %d\n", path, getuid());
+        syslog(LOG_DEBUG, "Unlinking file: %s uid: %d\n", path, getuid());
 
 	res = unlink(path2);
 	if (res == -1)
@@ -358,6 +365,12 @@ static int xmp_truncate(const char *path, off_t size)
 {
 	int res;
 
+    if(is_our_file(path, FALSE))
+        {
+        syslog(LOG_DEBUG, "No trancation of myfiles allowed: '%s'\n", path);
+        return -EACCES;
+        }
+
     char  path2[PATH_MAX] ;
     strcpy(path2, mountsecret); strcat(path2, path);
 
@@ -449,16 +462,10 @@ static int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
 {
 	int fd;
 
-    char *eee = strrchr(path, '.');
-    syslog(LOG_DEBUG, "eee '%s'\n", eee);
-
-    if(eee)
+    if(is_our_file(path, FALSE))
         {
-        if(eee[0] == '.')
-            {
-            //syslog(LOG_DEBUG, "Cannot create hidden file here '%s'\n", path);
-            return -EACCES;
-            }
+        syslog(LOG_DEBUG, "No operation of myfiles allowed: '%s'\n", path);
+        return -EACCES;
         }
 
     char  path2[PATH_MAX] ;
@@ -469,7 +476,6 @@ static int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
 
     if (loglevel > 2)
         syslog(LOG_DEBUG, "Shadow file: '%s'\n", path2);
-
 
     if(passx[0] == 0)
         {
@@ -509,13 +515,18 @@ static int xmp_open(const char *path, struct fuse_file_info *fi)
 {
 	int fd;
 
+    if(is_our_file(path, FALSE))
+        {
+        syslog(LOG_DEBUG, "No operation on myfiles allowed: '%s'\n", path);
+        return -EACCES;
+        }
+
     char  path2[PATH_MAX] ;
     strcpy(path2, mountsecret); strcat(path2, path);
 
     if (loglevel > 1)
         syslog(LOG_DEBUG, "Opened file: %s uid: %d mode: %x\n",
                                                 path, getuid(),fi->flags);
-
     if(passx[0] == 0)
         {
         if (loglevel > 3)
@@ -669,6 +680,7 @@ static int xmp_lock(const char *path, struct fuse_file_info *fi, int cmd,
 	return ulockmgr_op(fi->fh, cmd, lock, &fi->lock_owner,
 			   sizeof(fi->lock_owner));
 }
+
 
 
 

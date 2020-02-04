@@ -96,6 +96,11 @@ static  char  inodedir[PATH_MAX] ;
 char    progname[] = "HSENCFS";
 int     pg_debug = 0;
 
+#define FALSE (0==1)
+#define TRUE  (0==0)
+
+static char *myext = ".datx";
+
 // -----------------------------------------------------------------------
 // Get the extracted sources:
 
@@ -742,5 +747,6 @@ int     main(int argc, char *argv[])
 }
 
 // EOF
+
 
 
