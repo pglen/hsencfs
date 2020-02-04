@@ -141,8 +141,9 @@ git:
 	git commit -m autocheck
 	git push
 
-#clean-local:
-#	rm -f *.old
+#clean:
+#	@-rm -f *.old
+
 
 
 

@@ -15,6 +15,9 @@ block_blue2_SOURCES  = bluepoint2.c block_blue2.c bluepoint2.h bluemac.h
 test:
 	./test_blue2
 
+clean:
+	@-rm -f *.o
+
 
 
 
