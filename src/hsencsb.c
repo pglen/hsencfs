@@ -16,7 +16,8 @@ char    *get_sidename(const char *path)
     char *ptmp2 = malloc(PATH_MAX);
     if(!ptmp2)
         {
-        syslog(LOG_DEBUG, "Cannot allocate memory for sideblock filename '%s'\n", path);
+        if (loglevel > 0)
+            syslog(LOG_DEBUG, "Cannot allocate memory for sideblock filename '%s'\n", path);
         goto endd;
         }
 
@@ -52,8 +53,8 @@ char    *get_sidename(const char *path)
     free(eee);
     strcat(ptmp2, myext);
 
-    if (loglevel > 3)
-         syslog(LOG_DEBUG, "Got sidename '%s'\n", ptmp2);
+    //if (loglevel > 3)
+    //     syslog(LOG_DEBUG, "Got sidename '%s'\n", ptmp2);
 
    endd:
     return ptmp2;
@@ -67,7 +68,8 @@ static  int    read_sideblock(const char *path, char **pbuff, int len)
     *pbuff = malloc(len);
     if(!*pbuff)
         {
-        syslog(LOG_DEBUG, "Cannot allocate memory for sideblock '%s'\n", path);
+        if (loglevel > 0)
+           syslog(LOG_DEBUG, "Cannot allocate memory for sideblock '%s'\n", path);
         ret = -ENOMEM;
         goto endd;
         }
@@ -83,18 +85,19 @@ static  int    read_sideblock(const char *path, char **pbuff, int len)
             free(*pbuff);
             *pbuff = NULL;
             }
-        syslog(LOG_DEBUG, "Cannot allocate memory for sideblock file name '%s'\n", path);
+        if (loglevel > 0)
+            syslog(LOG_DEBUG, "Cannot allocate memory for sideblock file name '%s'\n", path);
         goto endd;
         }
 
-    if (loglevel > 2)
-        syslog(LOG_DEBUG, "Opening sideblock file '%s'\n", ptmp2);
+    //if (loglevel > 2)
+    //    syslog(LOG_DEBUG, "Opening sideblock file '%s'\n", ptmp2);
 
     int old_errno = errno;
     int fdi = open(ptmp2, O_RDWR);
     if(fdi < 0)
         {
-        if (loglevel > 2)
+        if (loglevel > 0)
             syslog(LOG_DEBUG, "Error on opening sideblock file '%s', errno: %d\n", ptmp2, errno);
 
         //ret = -ENOENT;
@@ -115,8 +118,8 @@ static  int    read_sideblock(const char *path, char **pbuff, int len)
         }
     errno = old_errno;
 
-    if (loglevel > 3)
-        syslog(LOG_DEBUG, "Got sideblock:, '%s'\n", bluepoint2_dumphex(*pbuff, 8));
+    //if (loglevel > 3)
+    //    syslog(LOG_DEBUG, "Got sideblock:, '%s'\n", bluepoint2_dumphex(*pbuff, 8));
 
   endd2:
     free(ptmp2);
@@ -138,18 +141,19 @@ static  int     write_sideblock(const char *path, char *bbuff, int len)
     char *ptmp2 =  get_sidename(path);
     if(!ptmp2)
         {
-        syslog(LOG_DEBUG, "Cannot allocate memory for file name '%s'\n", path);
+        if (loglevel > 0)
+            syslog(LOG_DEBUG, "Cannot allocate memory for file name '%s'\n", path);
         goto endd;
         }
 
-    if (loglevel > 2)
-        syslog(LOG_DEBUG, "Writing sideblock file '%s'\n", ptmp2);
+    //if (loglevel > 2)
+    //    syslog(LOG_DEBUG, "Writing sideblock file '%s'\n", ptmp2);
 
     int rrr = 0, old_errno = errno;
     int fdi = open(ptmp2, O_RDWR);
     if(fdi < 0)
         {
-        if (loglevel > 2)
+        if (loglevel > 0)
             syslog(LOG_DEBUG, "Error on creating sideblock file '%s', errno: %d\n", ptmp2, errno);
 
         ret = -errno;
@@ -170,8 +174,8 @@ static  int     write_sideblock(const char *path, char *bbuff, int len)
         }
     errno = old_errno;
 
-    if (loglevel > 4)
-        syslog(LOG_DEBUG, "Written sideblock file, '%s'\n", bluepoint2_dumphex(bbuff, 16));
+    //if (loglevel > 4)
+    //    syslog(LOG_DEBUG, "Written sideblock file, '%s'\n", bluepoint2_dumphex(bbuff, 16));
 
    endd2:
     free(ptmp2);
@@ -186,8 +190,8 @@ static  int    create_sideblock(const char *path)
     char *ptmp2 = get_sidename(path);
     if(ptmp2)
         {
-        if (loglevel > 2)
-            syslog(LOG_DEBUG, "Creating new sideblock '%s'\n", ptmp2);
+        if (loglevel > 4)
+            syslog(LOG_DEBUG, "New sb '%s'\n", ptmp2);
 
         int old_errno = errno;
         int fdi = open(ptmp2, O_RDWR | O_CREAT | O_TRUNC , S_IRUSR | S_IWUSR);
@@ -195,18 +199,21 @@ static  int    create_sideblock(const char *path)
             {
             if (loglevel > 2)
                 syslog(LOG_DEBUG, "Error on creating '%s' errno: %d\n", ptmp2, errno);
+
+            // Not sure what to do ... error?
             }
         else
             {
-            int blksize = HS_BLOCK;
-            //int blksize = stbuf.st_blksize;
-
-            char *ptmp3 = malloc(blksize);
+            char *ptmp3 = malloc(HS_BLOCK);
             if(ptmp3)
                 {
-                memset(ptmp3, '\0', blksize);
-                int ww = write(fdi, ptmp3, blksize);
-                if(ww < blksize)
+                memset(ptmp3, '\0', HS_BLOCK);
+
+                // The initial sideblock contains what?
+                //hs_encrypt(ptmp3, HS_BLOCK, passx, plen);
+
+                int ww = write(fdi, ptmp3, HS_BLOCK);
+                if(ww < HS_BLOCK)
                     {
                     if (loglevel > 2)
                         syslog(LOG_DEBUG, "Error on writing to sideblock errno: %d\n", errno);
@@ -221,9 +228,10 @@ static  int    create_sideblock(const char *path)
     return 0;
 }
 
+// -----------------------------------------------------------------------
 // Check if it is our internal file
 
-int     is_our_file(const char *path, int fname_only)
+static  int     is_our_file(const char *path, int fname_only)
 
 {
     int ret = FALSE;
@@ -242,15 +250,15 @@ int     is_our_file(const char *path, int fname_only)
             ret = TRUE;
             }
 
-        if (loglevel > 4)
-            syslog(LOG_DEBUG, "is_our_file: eee '%s' nnn '%s' ret=%d\n", eee, nnn, ret);
+        //if (loglevel > 4)
+        //    syslog(LOG_DEBUG, "is_our_file: eee '%s' nnn '%s' ret=%d\n", eee, nnn, ret);
         }
     return ret;
 }
 
 // Estabilish file size
 
-static  off_t get_fsize(int fh)
+static off_t    get_fsize(int fh)
 
 {
     struct stat stbuf;	memset(&stbuf, 0, sizeof(stbuf));
@@ -258,6 +266,72 @@ static  off_t get_fsize(int fh)
     return stbuf.st_size;
 }
 
+// -----------------------------------------------------------------------
+// Encrypt (double decrypt) it: This is a fake encryption of the
+// dangling memory, Just to confuse the would be decoder
+
+static  void  kill_buff(void *bbuff, int xlen)
+
+{
+    // Do not leave data behind
+    if (bbuff)
+        {
+        #if 1
+        // Just to confuse the would be debugger
+        if(rand() % 2 == 0)
+            hs_decrypt(bbuff, xlen, "passpass", 8);
+        else
+            hs_decrypt(bbuff, xlen, "pass", 4);
+
+        // No data left behind
+        memset(bbuff, 0, xlen);        // Zero it
+        #endif
+
+        free(bbuff);
+        }
+}
+
+// -----------------------------------------------------------------------
+// Go through pass ritual on demand
+
+static  int     openpass(const char *path)
+
+{
+    char tmp[MAXPASSLEN];
+    int ret = 0;
+
+    if(passprog[0] == 0)
+        {
+        if (loglevel > 1)
+            syslog(LOG_DEBUG, "No pass program specified: %s uid: %d\n", path, getuid());
+        return 1;
+        }
+    char *res = hs_askpass(passprog, tmp, MAXPASSLEN);
+    if (res == NULL || strlen(res) == 0)
+        {
+        if (loglevel > 1)
+            syslog(LOG_DEBUG, "Cannot get pass for %s uid: %d\n", path, getuid());
+        return 1;
+        }
+
+    strncpy(passx, res, sizeof(passx));
+
+    int ret2 = pass_ritual(mountpoint, mountsecret, passx, &plen);
+    if(ret2)
+        {
+        // Force new pass prompt
+        memset(passx, 0, sizeof(passx));
+        if (loglevel > 1)
+            syslog(LOG_DEBUG, "Invalid pass for %s uid: %d\n", path, getuid());
+        return ret2;
+        }
+    return ret;
+}
+
 // EOF
+
+
+
+
 
 

@@ -210,6 +210,7 @@ static int xmp_unlink(const char *path)
     if(is_our_file(path, FALSE))
         {
         syslog(LOG_DEBUG, "No deletion of myfiles allowed: '%s'\n", path);
+        errno = EACCES;
         return -EACCES;
         }
 
@@ -367,7 +368,9 @@ static int xmp_truncate(const char *path, off_t size)
 
     if(is_our_file(path, FALSE))
         {
-        syslog(LOG_DEBUG, "No trancation of myfiles allowed: '%s'\n", path);
+        if(loglevel > 0)
+            syslog(LOG_DEBUG, "No trancation of myfiles allowed: '%s'\n", path);
+        errno = EACCES;
         return -EACCES;
         }
 
@@ -395,7 +398,10 @@ static int xmp_ftruncate(const char *path, off_t size,
 	(void) path;
 
     if (loglevel > 3)
-        syslog(LOG_DEBUG, "Truncated file: %s uid: %d\n", path, getuid());
+        syslog(LOG_DEBUG, "FTruncated file: %s uid: %d\n", path, getuid());
+
+    // Kill sideblock too
+    create_sideblock(path);
 
 	res = ftruncate(fi->fh, size);
 	if (res == -1)
@@ -424,39 +430,6 @@ static int xmp_utimens(const char *path, const struct timespec ts[2])
 	return 0;
 }
 
-int     openpass(const char *path)
-
-{
-    char tmp[MAXPASSLEN];
-    int ret = 0;
-
-    if(passprog[0] == 0)
-        {
-        if (loglevel > 1)
-            syslog(LOG_DEBUG, "No pass program specified: %s uid: %d\n", path, getuid());
-        return 1;
-        }
-    char *res = hs_askpass(passprog, tmp, MAXPASSLEN);
-    if (res == NULL || strlen(res) == 0)
-        {
-        if (loglevel > 1)
-            syslog(LOG_DEBUG, "Cannot get pass for %s uid: %d\n", path, getuid());
-        return 1;
-        }
-
-    strncpy(passx, res, sizeof(passx));
-
-    int ret2 = pass_ritual(mountpoint, mountsecret, passx, &plen);
-    if(ret2)
-        {
-        // Force new pass prompt
-        memset(passx, 0, sizeof(passx));
-        if (loglevel > 1)
-            syslog(LOG_DEBUG, "Invalid pass for %s uid: %d\n", path, getuid());
-        return ret2;
-        }
-    return ret;
-}
 
 static int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
 {
@@ -465,6 +438,7 @@ static int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
     if(is_our_file(path, FALSE))
         {
         syslog(LOG_DEBUG, "No operation of myfiles allowed: '%s'\n", path);
+        errno = EACCES;
         return -EACCES;
         }
 
@@ -483,9 +457,16 @@ static int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
             syslog(LOG_DEBUG, "Empty pass on create file: %s uid: %d\n", path, getuid());
         int ret = openpass(path);
         if (ret)
+            {
+            errno = EACCES;
             return -EACCES;
+            }
         }
-	fd = open(path2, fi->flags, mode);
+
+	fd = open(path2, fi->flags, S_IRUSR | S_IWUSR |  S_IRGRP);
+                        //(mode && ~S_IXOTH) | S_IRUSR | S_IWUSR |  S_IRGRP  );
+	//fd = open(path2, fi->flags, mode);
+
 	if (fd == -1)
 		return -errno;
 	fi->fh = fd;
@@ -515,11 +496,12 @@ static int xmp_open(const char *path, struct fuse_file_info *fi)
 {
 	int fd;
 
-    if(is_our_file(path, FALSE))
-        {
-        syslog(LOG_DEBUG, "No operation on myfiles allowed: '%s'\n", path);
-        return -EACCES;
-        }
+    // Needed by the decrypt command line util
+    //if(is_our_file(path, FALSE))
+    //    {
+    //    syslog(LOG_DEBUG, "No operation on myfiles allowed: '%s'\n", path);
+    //    return -EACCES;
+    //    }
 
     char  path2[PATH_MAX] ;
     strcpy(path2, mountsecret); strcat(path2, path);
@@ -533,7 +515,10 @@ static int xmp_open(const char *path, struct fuse_file_info *fi)
             syslog(LOG_DEBUG, "Empty pass on open file: %s uid: %d\n", path, getuid());
         int ret = openpass(path);
         if (ret)
+            {
+            errno = EACCES;
             return -EACCES;
+            }
         }
 
 	//fd = open(path2, fi->flags | O_RDWR);
@@ -594,8 +579,8 @@ static int xmp_flush(const char *path, struct fuse_file_info *fi)
 static int xmp_release(const char *path, struct fuse_file_info *fi)
 {
 
-    //if (loglevel > 3)
-    //    syslog(LOG_DEBUG, "Released file: %s uid: %d\n", path, getuid());
+    if (loglevel > 3)
+        syslog(LOG_DEBUG, "Released: '%s' uid: %d\n", path, getuid());
 
 	(void) path;
 	close(fi->fh);
@@ -680,6 +665,10 @@ static int xmp_lock(const char *path, struct fuse_file_info *fi, int cmd,
 	return ulockmgr_op(fi->fh, cmd, lock, &fi->lock_owner,
 			   sizeof(fi->lock_owner));
 }
+
+
+
+
 
 
 

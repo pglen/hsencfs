@@ -604,9 +604,13 @@ uninstall-am:
 .PRECIOUS: Makefile
 
 
+#clean-local:
+#	@-rm -f aa bb cc *.o  > /dev/null 2>&1
+#	@-rm -f bpenc2 bpdec2
+
 clean:
 	@-rm -f aa bb cc *.o  > /dev/null 2>&1
-#	@-rm -f bpenc2 bpdec2
+	@-rm -f bpenc2 bpdec2
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

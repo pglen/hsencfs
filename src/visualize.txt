@@ -1,0 +1,19 @@
+
+        // ----- Visualize what is going on ------------------------------
+        // Intervals have space next to it, points touch bars
+        // Intervals have no undescore in name; Note: fsize is both point
+        // and interval.
+        //
+        //         [             total             ]
+        //         |new_beg                        |new_end
+        //         | skip |            |fsize      |
+        // ===-----|------|------------|===============
+        //         |      |offset   op_end|        |
+        //                |   size        |        |
+        //         |--------------|----------------|
+        //         |mem           |   sideblock    |
+        //         |    predat    |
+        // see also visualize.txt
+
+
+

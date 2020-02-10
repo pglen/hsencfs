@@ -3,17 +3,44 @@
 . ./vars.sh
 
 aa=`mount | grep secrets`
+
 if [ "$aa" == "" ] ; then
     echo mount secrets first
     exit 0
 fi
 
-#dd if=test/aa5000.txt of=~/secrets/$TESTFILE5 bs=2048
-#diff -s ~/secrets/$TESTFILE5 test/aa5000.txt
+# Bash function to assemble names
 
-dd if=test/aa4096.txt of=~/secrets/aaa4096.txt bs=202
-diff -s ~/secrets/aaa4096.txt test/aa4096.txt
+write_file()
 
+{
+    dd  of=~/secrets/a$1 if=test/$1 bs=$2 2>/dev/null
+    #echo -n "bs=$2 "
+    diff -qs test/$1 ~/secrets/a$1; ERR=$?
+
+    #ls -l test/$1 ~/secrets/a$1
+    if [ "$ERR" != "0" ] ; then
+         echo -e "$RED  ***** Error: $ERR $NC"
+    fi
+}
+
+#write_file "aa4096.txt" 4096
+#write_file "aa8192.txt" 4096
+#write_file "aa300.txt" 4096
+#write_file "aa5000.txt" 4096
+#write_file "aa9000.txt" 4096
+#
+#write_file "aa4096.txt" 40
+#write_file "aa8192.txt" 41
+write_file "aa300.txt"  200
+#write_file "aa5000.txt" 80
+#write_file "aa9000.txt" 12
+#
+#write_file "aa4096.txt" 409
+#write_file "aa8192.txt" 412
+#write_file "aa300.txt"  23
+#write_file "aa5000.txt" 8000
+#write_file "aa9000.txt" 406
 
 
 

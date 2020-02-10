@@ -8,7 +8,7 @@ bin_PROGRAMS =  hsencfs
 
 # The main program
 hsencfsdir = .
-hsencfs_CFLAGS = -D_FILE_OFFSET_BITS=64 -O2 -I$(srcdir)/bluepoint \
+hsencfs_CFLAGS = -g -D_FILE_OFFSET_BITS=64 -O2 -I$(srcdir)/bluepoint \
             -lfuse -lulockmgr -I$(srcdir)/../common
 
 hsencfs_SOURCES = hsencfs.c base64.c ../common/hsutils.c ../common/hspass.c \
@@ -21,10 +21,13 @@ hsencfs_SOURCES = hsencfs.c base64.c ../common/hsutils.c ../common/hspass.c \
 # Password helper
 hsaskpass_CFLAGS = -D_FILE_OFFSET_BITS=64 -O2 -I$(srcdir)/bluepoint
 
-clean:
-	@-rm -f aa bb cc *.o  > /dev/null 2>&1
+clean-local:
+	@-rm -f aa bb cc
+	@-rm -f *.obj
 
-#	@-rm -f bpenc2 bpdec2
+# > /dev/null 2>&1
+
+
 
 
 

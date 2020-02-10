@@ -4,7 +4,7 @@
 # It will encrypt data on write, decrypt data on read.
 #
 
-SUBDIRS =  bluepoint common tools docs src
+SUBDIRS =  docs tools bluepoint common src
 
 PAN_SERV=GNOME_HSENCApplet.server
 BONOBO_DIR=/usr/lib/bonobo/servers
@@ -47,11 +47,16 @@ check:
 	@-fusermount -u ~/testsecrets
 	@-rm -rf ~/testsecrets ~/.testdata
 
-clean-local:
-	@-chmod -R u+w src/hsencfs-*   > /dev/null 2>&1
-	@-rm -rf src/hsencfs-*.rpm     > /dev/null 2>&1
-	@-rm -rf src/hsencfs-*.tar.gz  > /dev/null 2>&1
-	@-rm -f $(PAN_SERV)
+#clean-local:
+#	@-chmod -R u+w src/hsencfs-*   > /dev/null 2>&1
+#	@-rm -rf src/hsencfs-*.rpm     > /dev/null 2>&1
+#	@-rm -rf src/hsencfs-*.tar.gz  > /dev/null 2>&1
+#	@-rm -f $(PAN_SERV)
+
+#	@-chmod -R u+w src/hsencfs-*   > /dev/null 2>&1
+#	@-rm -rf src/hsencfs-*.rpm     > /dev/null 2>&1
+#	@-rm -rf src/hsencfs-*.tar.gz  > /dev/null 2>&1
+#	@-rm -f $(PAN_SERV)
 
 # We are forcing this to go to /usr/lib as panel will look for it there
 # 1.) Generate correct .server file for current bin 2.) Put it in bonobo lib dir
@@ -143,6 +148,7 @@ git:
 
 #clean:
 #	@-rm -f *.old
+
 
 
 

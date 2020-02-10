@@ -1,7 +1,22 @@
-                            Announcement
+                README
+
+
+
+Uesful trick to see the logs in a separate file.
+
+Edit (Create) /etc/rsyslog/rsyslog.d/10-custom.conf
+with the following contents:
+
+if $programname == 'HSENCFS' then {
+        /var/log/hsencfs.log
+        ~
+}
+
+
+Announcement
 
  The source code copied out to the ecrypted directory does NOT compile in that
-directory correctly. 
+directory correctly.
 
 This means the file access intercept is not random clean,
 as GCC acesses object files by chunk.
@@ -13,5 +28,6 @@ as GCC acesses object files by chunk.
 accomodate that.
 
 Peter
+
 
 

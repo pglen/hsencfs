@@ -171,7 +171,7 @@ void    closefrom(int lowfd)
 
 // Simple help
 
-int help()
+int     help()
 
 {
     printf("\n");
@@ -200,7 +200,7 @@ int help()
 // -----------------------------------------------------------------------
 // Read a line from the forked program
 
-static char *getln(int fd, char *buf, size_t bufsiz)
+static char     *getln(int fd, char *buf, size_t bufsiz)
 
 {
     size_t left = bufsiz;
@@ -323,9 +323,6 @@ int     test_mountpoint(char *ppp, char *mpdir, char *msg)
 
     if (access(mpdir, R_OK) < 0)
         {
-        if(!quiet)
-            printf("Cannot access %s dir: '%s'\n", msg, mpdir);
-
         if (force)
             {
             if(verbose && !quiet)
@@ -342,6 +339,7 @@ int     test_mountpoint(char *ppp, char *mpdir, char *msg)
             }
         else
             {
+            printf("Cannot access %s dir: '%s'\n", msg, mpdir);
             exit(2);
             }
 
@@ -583,8 +581,11 @@ int     main(int argc, char *argv[])
         }
 
     // --------------------------------------------------------------------
-    // Primitive debug facility. Use tail -f hsenc.log to monitor this file
-    // from a separate terminal. We mostly used the log facility.
+    // Primitive debug facility. Use tail -f /var/log/hsencfs.log to
+    // monitor this file (dependent on your setup it might be the
+    // file /var/log/syslog)
+    // We mostly use this log facility, but one can monitor from a
+    // separate terminal.
 
     openlog("HSENCFS",  LOG_PID,  LOG_DAEMON);
 
@@ -595,6 +596,8 @@ int     main(int argc, char *argv[])
         fprintf(stderr,"Cannnot open Mount Point directory\n");
         exit(5);
         }
+
+    // See how many files are in there ...
     int bb = 0;
     for (int aa = 0; aa < 3; aa++)
         {

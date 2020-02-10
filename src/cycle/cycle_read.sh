@@ -2,18 +2,53 @@
 
 . ./vars.sh
 
-TESTFILE=aa5000.txt
-TESTFILE2=aaa5000.txt
-TESTFILE3=aaaa5000.txt
+# Error descriptions (to aid testing)
+# if aa300 is bad .. side buffer issue
+# if aa4096 is bad .. block alignment issue
+# if aa5000 is bad .. final block + sidebuffer issue
 
-if [ ! -f ~/secrets/$TESTFILE2 ] ; then
-    echo mount secrets first
+aa=`mount | grep secrets`
+if [ "$aa" == "" ] ; then
+    echo mount secrets first2
     exit 0
 fi
 
-dd  if=~/secrets/$TESTFILE2 of=test/$TESTFILE3 ibs=13
-diff -s test/$TESTFILE test/$TESTFILE3
+# Bash function ot assemble names
 
+read_file()
+{
+    dd  if=~/secrets/a$1 of=test/aa$1 bs=$2 2>/dev/null
+    echo -n "bs=$2 "
+    diff -qs test/$1 test/aa$1; ERR=$?
+
+    #ls -l test/$1 test/aa$1
+    if [ "$ERR" != "0" ] ; then
+         echo -e "$RED  ***** Error: $ERR $NC"
+    else
+         #echo -en "$GREEN OK $NC"
+         echo -n ""
+    fi
+}
+
+# Create test cases for read:
+
+read_file "aa4096.txt" 4096
+read_file "aa8192.txt" 4096
+read_file "aa300.txt" 4096
+read_file "aa5000.txt" 4096
+read_file "aa9000.txt" 4096
+
+read_file "aa4096.txt" 40
+read_file "aa8192.txt" 41
+read_file "aa300.txt"  23
+read_file "aa5000.txt" 80
+read_file "aa9000.txt" 12
+
+read_file "aa4096.txt" 409
+read_file "aa8192.txt" 412
+read_file "aa300.txt"  23
+read_file "aa5000.txt" 8000
+read_file "aa9000.txt" 406
 
 
 

@@ -15,9 +15,15 @@ hsaskpass_CFLAGS = -D_FILE_OFFSET_BITS=64 -O2 -I$(srcdir)/bluepoin
 #hsaskpass_LDADD    = ../bluepoint/bluepoint2.o
 hsaskpass_SOURCES = hsaskpass.c hsutils.c hspass.c ../bluepoint/bluepoint2.c
 
+#clean-local:
+#	@-rm -f aa bb cc *.o  > /dev/null 2>&1
+#	@-rm -f bpenc2 bpdec2
+
 clean:
 	@-rm -f aa bb cc *.o  > /dev/null 2>&1
-#	@-rm -f bpenc2 bpdec2
+	@-rm -f bpenc2 bpdec2
+
+
 
 
 

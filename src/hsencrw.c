@@ -13,6 +13,21 @@
 //      Patch required data back.
 //
 
+// Shorthands to make code compacter. Notice: { block enclosed }
+
+#define EVAL_MEM_GO(memmsg, enddx)                                      \
+         { if (loglevel > 0)                                            \
+                syslog(LOG_DEBUG, "Cannot get %s memory.\n", memmsg);   \
+            res = -ENOMEM;                                              \
+            goto enddx; }
+
+#define EVAL_READ_GO(msgm, xlen, enddx)                                 \
+          { if (loglevel > 0)                                           \
+                syslog(LOG_DEBUG, "Cannot read %s, len=%d\n",           \
+                                msgm, xlen);                            \
+            res = -errno;                                               \
+            goto enddx; }
+
 // -----------------------------------------------------------------------
 // Intercept write. Make it block size even, so encryption / decryption
 // is symmetric. Below, help with variable names.
@@ -22,7 +37,7 @@
 //    |   .   .   .   .   .   .   .   .   .   |
 // ===-------|--------------|---------------------============
 //           ^ offs         ^offs + size    | - lastbuff - |
-//    | skip |    opsize    |
+//    | skip |    opend    |
 //
 
 
@@ -30,196 +45,176 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
 
 {
 	int res = 0, loop = 0;
-    if(size == 0) {  // Nothing to do
-        goto endd;
+    if(size == 0) {
+        if (loglevel > 3)
+            syslog(LOG_DEBUG, "zero write on '%s'\n", path);
+        return 0;
         }
-
-    // Where does this go?
-    //printf("Hello\n");
 
     if (loglevel > 3)
         syslog(LOG_DEBUG,
-                "xmp_write(): name '%s' size=%ld offset=%ld",
-                                         path, size, offset);
+                " *** xmp_write(): name '%s'\n", path);
 
-     // Save current file parameters
-    off_t oldoff = lseek(fi->fh, 0, SEEK_SET);
+    // Save current file parameters, as the FS sees it
+    //off_t oldoff = lseek(fi->fh, 0, SEEK_SET);
     off_t fsize = get_fsize(fi->fh);
 
     // Pre-calculate stuff
+    size_t op_end  = offset + size;
     size_t new_beg = (offset / HS_BLOCK) * HS_BLOCK;
-    size_t opsize  = offset + size;
-    size_t new_end = (opsize / HS_BLOCK) * HS_BLOCK;
-    if((opsize % HS_BLOCK) > 0)
-        {
+    size_t new_end = (op_end / HS_BLOCK) * HS_BLOCK;
+    if((op_end % HS_BLOCK) > 0)
         new_end += HS_BLOCK;
+
+    size_t  total = new_end - new_beg;
+    size_t  skip  = offset - new_beg;
+    size_t  predat =  total - HS_BLOCK;
+
+    if (loglevel > 3)
+        {
+        syslog(LOG_DEBUG,
+            "Prep wr:  offset=%ld size=%ld\n",
+                                         offset, size);
+        syslog(LOG_DEBUG,
+            "Prep wr2: new_beg=%ld total=%ld skip=%ld\n",
+                                         new_beg, total, skip);
+        syslog(LOG_DEBUG,
+            "Prep wr3: fsize=%ld\n", fsize);
         }
 
-    size_t total = new_end - new_beg;
-    off_t  skip  = offset - new_beg;
-    if (loglevel > 3)
-        syslog(LOG_DEBUG,
-                "About to write: '%s' offset=%ld size=%ld new_beg=%ld total=%ld skip=%ld\n",
-                                         path, offset, size, new_beg, total, skip);
     // Scratch pad for the whole lot
     void *mem =  malloc(total);
     if (mem == NULL)
-        {
-     	if (loglevel > 2)
-            {
-            syslog(LOG_DEBUG, "Cannot allocate memory %ld", total);
-            }
-        res = -ENOMEM;
-        goto endd;
-        }
+        EVAL_MEM_GO("main block", endd);
 
-    memset(mem, 0, total);              // Zero it
+    memset(mem, 0, total);                  // Zero it
 
     if (loglevel > 4)
-        syslog(LOG_DEBUG, "File size from stat is: %ld\n", fsize);
+        syslog(LOG_DEBUG, "File size fsize=%ld\n", fsize);
 
-    // Read / Decrypt / Patch / Encrypt / Write
-    // -------------------------------------------------------------------
-    //                       | fsize
-    //         |new_beg      |             |new_end
-    // ===-----|--|----------|====|===========
-    //         |  ^offs      |    ^offs + size
-    //         |-------------|---|---------|
-    //         |mem     slack|   |sideblock|
+    // Do it: Read / Decrypt / Patch / Encrypt / Write
 
-    // Always read sb
-    //if(new_end >= fsize)
+    // Close to end: Sideblock is needed
+    if(new_end >= fsize)
         {
-        // Assemble buffer from pre and post
         char *bbuff = NULL;
+        // Assemble buffer from pre and post
         int ret = read_sideblock(path, &bbuff, HS_BLOCK);
         if(!bbuff)
-            {
-            if (loglevel > 2)
-                syslog(LOG_DEBUG, "Cannot get sideblock memory.\n");
-            //res = 0;
-            res = -errno;
-            goto endd;
-            }
+            EVAL_MEM_GO("sideblock", endd);
         if(ret && ret != HS_BLOCK)
-            {
-            if (loglevel > 2)
-                syslog(LOG_DEBUG, "Cannot read sideblock.\n");
-            res = -errno;
-            goto endd;
-            }
+            EVAL_READ_GO("sideblock", HS_BLOCK, endd);
 
-        // Assemble
-        size_t decr =  ((total / HS_BLOCK) - 1) * HS_BLOCK;
-        if (loglevel > 2)
-             syslog(LOG_DEBUG, "Patch: total=%ld decr=%ld\n", total, decr);
+        //if (loglevel > 3)
+        //    syslog(LOG_DEBUG, "Got sideblock: '%s'\n",
+        //                            bluepoint2_dumphex(bbuff, 8));
 
-        memcpy(mem + decr, bbuff,  HS_BLOCK);
-        free(bbuff);
+        // ----- Visualize what is going on ------------------------------
+        // Intervals have space next to it, points touch bars
+        // Intervals have no undescore in name; Note: fsize is both point
+        // and interval.
+        //
+        //         [             total             ]
+        //         |new_beg                        |new_end
+        //         | skip |            |fsize      |
+        // ===-----|------|------------|===============
+        //         |      |offset   op_end|        |
+        //                |   size        |        |
+        //         |--------------|----------------|
+        //         |mem           |   sideblock    |
+        //         |    predat    |
+        // see also visualize.txt
+
+        // Patch in sb data
+        memcpy(mem + predat, bbuff, HS_BLOCK);
+        kill_buff(bbuff, HS_BLOCK);
 
         // Get original
-        off_t slack = fsize - new_beg;
-        if(slack)
+        int ret3 = pread(fi->fh, mem, fsize - new_beg, new_beg);
+        if (loglevel > 2)
+            syslog(LOG_DEBUG,
+                "Pre read: ret=%d  new_beg=%ld\n", ret3, new_beg);
+
+        if(ret3 < 0)
             {
-            int ret = pread(fi->fh, mem, slack, new_beg);
-            if (loglevel > 2)
-                syslog(LOG_DEBUG,
-                    "Pre read: ret=%d slack=%ld new_beg=%ld\n", ret, slack, new_beg);
-            if(ret != slack)
-                {
-                syslog(LOG_DEBUG, "**** Cannot pre read data. ret=%d errno=%d\n", ret, errno);
-                res = -errno;
-                }
+            if (loglevel > 0)
+                syslog(LOG_DEBUG, "Cannot pre read data. ret=%d errno=%d\n", ret, errno);
+            res = -errno;
+            goto endd;
             }
         }
-    #if 0
     else
         {
-        if (loglevel > 3)
-            syslog(LOG_DEBUG,
-                "About to pre read: new_beg=%ld fsize=%ld total=%ld\n",
-                                        new_beg, fsize, total);
+        int ret4 = pread(fi->fh, mem, total, new_beg);
 
-        res = pread(fi->fh, mem, total, new_beg);
-    	if (res == -1)
-            {
-            // We throw this away, as the buffer is zeroed out
+        if (loglevel > 2)
             syslog(LOG_DEBUG,
-                    "**** Write: Cannot pre read for encryption %s size=%ld total=%ld offs=%ld\n",
-                                   path, size, total, offset);
-            //errno = 0;
-            //res = 0;
-            //goto endd;
-            }
-        if (res < total)
-            {
-            syslog(LOG_DEBUG,
-                    "**** Write: Short pre-read  %s size=%ld total=%ld offs=%ld\n",
-                                   path, size, total, offset);
-            }
+                "Read full block: ret4=%d new_beg=%ld\n", ret4, new_beg);
         }
-    #endif
 
-    // Buffer now in, complete
+    // Buffer now in, complete; decrypt it
     hs_decrypt(mem, total, passx, plen);
-    lseek(fi->fh, oldoff, SEEK_SET);
 
     if (loglevel > 2)
         syslog(LOG_DEBUG,
-            "Writing file: %s size=%ld offs=%ld skip=%ld total=%ld\n",
-                                              path, size, offset, skip, total);
-    // Grab new data
+            "Writing: size=%ld offs=%ld skip=%ld\n",
+                                               size, offset, skip);
+    // Grab the new data
     memcpy(mem + skip, buf, size);
 
-    // Encryption / decryption by block size.
+    // Encryption / Decryption by block size.
     hs_encrypt(mem, total, passx, plen);
 
     // Write it back out
     res = pwrite(fi->fh, mem + skip, size, offset);
 	if (res < 0)
         {
-        syslog(LOG_DEBUG, "Error on writing file: %s res %d errno %d\n", path, res, errno);
+        if (loglevel > 0)
+            syslog(LOG_DEBUG, "Error on writing file: %s res %d errno %d\n", path, res, errno);
+
 		res = -errno;
         goto endd;
         }
 
-    // Reflect new file position
-    lseek(fi->fh, oldoff + size, SEEK_SET);
+    if (loglevel > 3)
+        syslog(LOG_DEBUG, "Written: res %d bytes\n", res);
 
-    //if(new_end >= fsize)
+    if(new_end >= fsize)
         {
         // Write sideblock back out
-        size_t decr =  ((total / HS_BLOCK) - 1) * HS_BLOCK;
-        if (loglevel > 2)
-             syslog(LOG_DEBUG, "Patch2: total=%ld decr=%ld\n", total, decr);
+        //if (loglevel > 3)
+        //    syslog(LOG_DEBUG, "Write sideblock: '%s'\n",
+        //                            bluepoint2_dumphex(mem + predat, 8));
 
-        int ret2 = write_sideblock(path, mem + decr, HS_BLOCK);
+        int ret2 = write_sideblock(path, mem + predat, HS_BLOCK);
         if(ret2 < 0)
             {
-            syslog(LOG_DEBUG, "Error on sideblock write %d\n", errno);
+            if (loglevel > 0)
+                syslog(LOG_DEBUG, "Error on sideblock write %d\n", errno);
+
     		res = -errno;
             goto endd;
             }
         }
 
-    if (loglevel > 3)
-        syslog(LOG_DEBUG, "Written out file: %s res %d\n", path, res);
+    // Reflect new file position
+    //lseek(fi->fh, oldoff + res, SEEK_SET);
 
    endd:
     // Do not leave data behind
     if (mem)
         {
-        // Crypt it: This is a fake encryption of the dangling memory.
-        // Just to confuse the debugger
+        // Just to confuse the would be debugger
         if(rand() % 2 == 0)
             hs_decrypt(mem, total, "passpass", 8);
-        else
-            memset(mem, 0, total);        // Zero it
-        free(mem);
+
+        kill_buff(mem, total);
         }
 	return res;
 }
 
-
 // EOF
+
+
+
 

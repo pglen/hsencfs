@@ -327,7 +327,7 @@ target_alias =
 top_build_prefix = 
 top_builddir = .
 top_srcdir = .
-SUBDIRS = bluepoint common tools docs src
+SUBDIRS = docs tools bluepoint common src
 PAN_SERV = GNOME_HSENCApplet.server
 BONOBO_DIR = /usr/lib/bonobo/servers
 
@@ -795,7 +795,7 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-recursive
 
-clean-am: clean-generic clean-local mostlyclean-am
+clean-am: clean-generic mostlyclean-am
 
 distclean: distclean-recursive
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
@@ -867,9 +867,9 @@ uninstall-am: uninstall-dist_binSCRIPTS uninstall-dist_docDATA \
 
 .PHONY: $(am__recursive_targets) CTAGS GTAGS TAGS all all-am \
 	am--refresh check check-am clean clean-cscope clean-generic \
-	clean-local cscope cscopelist-am ctags ctags-am dist dist-all \
-	dist-bzip2 dist-gzip dist-lzip dist-shar dist-tarZ dist-xz \
-	dist-zip distcheck distclean distclean-generic distclean-hdr \
+	cscope cscopelist-am ctags ctags-am dist dist-all dist-bzip2 \
+	dist-gzip dist-lzip dist-shar dist-tarZ dist-xz dist-zip \
+	distcheck distclean distclean-generic distclean-hdr \
 	distclean-tags distcleancheck distdir distuninstallcheck dvi \
 	dvi-am html html-am info info-am install install-am \
 	install-data install-data-am install-data-local \
@@ -894,11 +894,16 @@ check:
 	@-fusermount -u ~/testsecrets
 	@-rm -rf ~/testsecrets ~/.testdata
 
-clean-local:
-	@-chmod -R u+w src/hsencfs-*   > /dev/null 2>&1
-	@-rm -rf src/hsencfs-*.rpm     > /dev/null 2>&1
-	@-rm -rf src/hsencfs-*.tar.gz  > /dev/null 2>&1
-	@-rm -f $(PAN_SERV)
+#clean-local:
+#	@-chmod -R u+w src/hsencfs-*   > /dev/null 2>&1
+#	@-rm -rf src/hsencfs-*.rpm     > /dev/null 2>&1
+#	@-rm -rf src/hsencfs-*.tar.gz  > /dev/null 2>&1
+#	@-rm -f $(PAN_SERV)
+
+#	@-chmod -R u+w src/hsencfs-*   > /dev/null 2>&1
+#	@-rm -rf src/hsencfs-*.rpm     > /dev/null 2>&1
+#	@-rm -rf src/hsencfs-*.tar.gz  > /dev/null 2>&1
+#	@-rm -f $(PAN_SERV)
 
 # We are forcing this to go to /usr/lib as panel will look for it there
 # 1.) Generate correct .server file for current bin 2.) Put it in bonobo lib dir
