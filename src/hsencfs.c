@@ -56,6 +56,8 @@
 
 #include "hsutils.h"
 #include "base64.h"
+
+#include "../bluepoint/hs_crypt.h"
 #include "../bluepoint/bluepoint2.h"
 
 #define MAXPASSLEN 512
@@ -750,6 +752,7 @@ int     main(int argc, char *argv[])
 }
 
 // EOF
+
 
 
 

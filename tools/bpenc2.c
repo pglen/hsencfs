@@ -19,6 +19,7 @@
 #include <sys/time.h>
 #include <sys/stat.h>
 
+#include "hs_crypt.h"
 #include "bp2com.h"
 #include "bluepoint2.h"
 
@@ -289,6 +290,7 @@ int main(int argc, char *argv[])
 
     exit(0);
 }
+
 
 
 

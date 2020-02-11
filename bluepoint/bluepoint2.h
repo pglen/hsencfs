@@ -62,14 +62,8 @@ int     bluepoint2_set_debug(int flag);
 
 int     bluepoint2_set_rounds(int xrounds);
 
-// High security block encryption
-
-#define HS_BLOCK 4096
-
-void hs_encrypt(void *mem, int size2, void *pass, int plen);
-void hs_decrypt(void *mem, int size2, void *pass, int plen);
-
 // EOF
+
 
 
 

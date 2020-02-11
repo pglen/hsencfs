@@ -1,10 +1,14 @@
+// -----------------------------------------------------------------------
+//
+// HSENCFS (High Security EnCrypting File System)
+//
 
 #include "hs_crypt.h"
 
 // -----------------------------------------------------------------------
 // HS crypt block loop. Extracted for the hsencfs project.
 
-void hs_encrypt(void *mem, int size2, void *pass, int plen)
+void hs_encrypt_org(void *mem, int size2, void *pass, int plen)
 
 {
     int loop; char *pmem = (char*)mem;
@@ -17,7 +21,7 @@ void hs_encrypt(void *mem, int size2, void *pass, int plen)
         }
 }
 
-void hs_decrypt(void *mem, int size2, void *pass, int plen)
+void hs_decrypt_org(void *mem, int size2, void *pass, int plen)
 
 {
     int loop; char *pmem = (char*)mem;
@@ -30,9 +34,38 @@ void hs_decrypt(void *mem, int size2, void *pass, int plen)
         }
 }
 
+#ifdef FAKE
 
+// Just an XOR of the buffer to troubleshoot the interceptor
 
+void hs_encrypt_fake(void *mem, int size2, void *pass, int plen)
 
+{
+    char *cmem = (char *)mem, *cpass = (char *) pass;
+
+    for(int aa = 0; aa < size2; aa++)
+        {
+        cmem[aa] = cmem[aa] ^ 2;
+        cmem[aa] = cmem[aa] ^ cpass[aa % plen];
+        cmem[aa] = cmem[aa] ^ (aa % 200);
+        }
+}
+
+void hs_decrypt_fake(void *mem, int size2, void *pass, int plen)
+
+{
+    char *cmem = (char *)mem, *cpass = (char *) pass;
+    for(int aa = 0; aa < size2; aa++)
+        {
+        cmem[aa] = cmem[aa] ^ (aa % 200);
+        cmem[aa] = cmem[aa] ^ cpass[aa % plen];
+        cmem[aa] = cmem[aa] ^ 2;
+        }
+}
+
+#endif
+
+// EOF
 
 
 
