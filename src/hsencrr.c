@@ -81,7 +81,7 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset, stru
         }
 
     // Close to end of file
-    if(end_offset > fsize)
+    if(end_offset >= fsize)
         {
         if (loglevel > 3)
             {
@@ -147,11 +147,13 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset, stru
         }
 
     // Encryption / decryption by block size
-    char *cmem = (char*)mem;
-    for (int aa = 0; aa < total; aa += HS_BLOCK)
-        {
-        hs_decrypt(cmem + aa, HS_BLOCK, passx, plen);
-        }
+    //char *cmem = (char*)mem;
+    //for (int aa = 0; aa < total; aa += HS_BLOCK)
+    //    {
+    //    hs_decrypt(cmem + aa, HS_BLOCK, passx, plen);
+    //    }
+
+    hs_decrypt(mem, total, passx, plen);
 
     // Copy out newly decoded buffer
     memcpy(buf, mem + skip, size);

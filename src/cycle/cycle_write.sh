@@ -30,7 +30,7 @@ write_file "aa300.txt" 4096
 write_file "aa5000.txt" 4096
 write_file "aa9000.txt" 4096
 
-write_file "aa4096.txt" 40
+write_file "aa4096.txt"  2000
 write_file "aa8192.txt" 41
 write_file "aa300.txt"  200
 write_file "aa5000.txt" 80
@@ -41,6 +41,8 @@ write_file "aa8192.txt" 412
 write_file "aa300.txt"  23
 write_file "aa5000.txt" 8000
 write_file "aa9000.txt" 406
+
+
 
 
 

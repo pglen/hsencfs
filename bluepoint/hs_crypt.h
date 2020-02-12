@@ -12,8 +12,7 @@
 #endif
 
 // This is used for testing ONLY
-// NO NO
-#define FAKE
+// NO NO  define FAKE
 
 #ifdef FAKE
 
@@ -35,4 +34,5 @@ void hs_encrypt_fake(void *mem, int size2, void *pass, int plen);
 void hs_decrypt_fake(void *mem, int size2, void *pass, int plen);
 
 // EOF
+
 

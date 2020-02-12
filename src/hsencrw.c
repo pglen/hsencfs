@@ -59,6 +59,22 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
     //off_t oldoff = lseek(fi->fh, 0, SEEK_SET);
     off_t fsize = get_fsize(fi->fh);
 
+    // ----- Visualize what is going on ------------------------------
+    // Intervals have space next to it, points touch bars
+    // Intervals have no undescore in name; Note: fsize is both point
+    // and interval.
+    //
+    //         [             total             ]
+    //         |new_beg                        |new_end
+    //         | skip |            |fsize      |
+    // ===-----|------|------------|===============
+    //         |      |offset   op_end|        |
+    //                |   size        |        |
+    //         |--------------|----------------|
+    //         |mem           |   sideblock    |
+    //         |    predat    |
+    // see also visualize.txt
+
     // Pre-calculate stuff
     size_t op_end  = offset + size;
     size_t new_beg = (offset / HS_BLOCK) * HS_BLOCK;
@@ -95,7 +111,7 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
     // Do it: Read / Decrypt / Patch / Encrypt / Write
 
     // Close to end: Sideblock is needed
-    if(new_end >= fsize)
+    if(new_end > fsize)
         {
         char *bbuff = NULL;
         // Assemble buffer from pre and post
@@ -109,28 +125,12 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
         //    syslog(LOG_DEBUG, "Got sideblock: '%s'\n",
         //                            bluepoint2_dumphex(bbuff, 8));
 
-        // ----- Visualize what is going on ------------------------------
-        // Intervals have space next to it, points touch bars
-        // Intervals have no undescore in name; Note: fsize is both point
-        // and interval.
-        //
-        //         [             total             ]
-        //         |new_beg                        |new_end
-        //         | skip |            |fsize      |
-        // ===-----|------|------------|===============
-        //         |      |offset   op_end|        |
-        //                |   size        |        |
-        //         |--------------|----------------|
-        //         |mem           |   sideblock    |
-        //         |    predat    |
-        // see also visualize.txt
-
         // Patch in sb data
         memcpy(mem + predat, bbuff, HS_BLOCK);
         kill_buff(bbuff, HS_BLOCK);
 
         // Get original
-        int ret3 = pread(fi->fh, mem, fsize - new_beg, new_beg);
+        int ret3 = pread(fi->fh, mem, skip + size, new_beg);
         if (loglevel > 2)
             syslog(LOG_DEBUG,
                 "Pre read: ret=%d  new_beg=%ld\n", ret3, new_beg);
@@ -162,11 +162,11 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
     // Grab the new data
     memcpy(mem + skip, buf, size);
 
-    // Encryption / Decryption by block size.
+    // Encryption / decryption by block size
     hs_encrypt(mem, total, passx, plen);
 
-    // Write it back out
-    res = pwrite(fi->fh, mem + skip, size, offset);
+    // Write it back out, all that changed
+    int res2 = pwrite(fi->fh, mem, skip + size, new_beg);
 	if (res < 0)
         {
         if (loglevel > 0)
@@ -175,6 +175,7 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
 		res = -errno;
         goto endd;
         }
+    res = res2 - skip;
 
     if (loglevel > 3)
         syslog(LOG_DEBUG, "Written: res %d bytes\n", res);
@@ -214,6 +215,9 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
 }
 
 // EOF
+
+
+
 
 
 

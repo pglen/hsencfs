@@ -4,6 +4,7 @@
 //
 
 #include "hs_crypt.h"
+#include <syslog.h>
 
 // -----------------------------------------------------------------------
 // HS crypt block loop. Extracted for the hsencfs project.
@@ -16,6 +17,9 @@ void hs_encrypt_org(void *mem, int size2, void *pass, int plen)
     for(loop = 0; loop < size2; loop += HS_BLOCK)
         {
         int block = MIN(HS_BLOCK, size2 - loop);
+
+        //syslog(LOG_DEBUG,"hs_encrypt_org block=%d", block);
+
         bluepoint2_encrypt(pmem, block, pass, plen);
         pmem += HS_BLOCK;
         }
@@ -29,6 +33,9 @@ void hs_decrypt_org(void *mem, int size2, void *pass, int plen)
     for(loop = 0; loop < size2; loop += HS_BLOCK)
         {
         int block = MIN(HS_BLOCK, size2 - loop);
+
+        //syslog(LOG_DEBUG,"hs_decrypt_org block=%d", block);
+
         bluepoint2_decrypt(pmem, block, pass, plen);
         pmem += HS_BLOCK;
         }
@@ -43,11 +50,20 @@ void hs_encrypt_fake(void *mem, int size2, void *pass, int plen)
 {
     char *cmem = (char *)mem, *cpass = (char *) pass;
 
-    for(int aa = 0; aa < size2; aa++)
+    //syslog(LOG_DEBUG,"hs_encrypt_fake size2=%d", size2);
+
+    for(int loop = 0; loop <= size2; loop += HS_BLOCK)
         {
-        cmem[aa] = cmem[aa] ^ 2;
-        cmem[aa] = cmem[aa] ^ cpass[aa % plen];
-        cmem[aa] = cmem[aa] ^ (aa % 200);
+        int block = MIN(HS_BLOCK, size2 - loop);
+
+        //syslog(LOG_DEBUG,"hs_encrypt_fake block=%d", block);
+
+        for(int aa = 0; aa < block; aa++)
+            {
+            cmem[loop + aa] = cmem[loop + aa] ^ 2;
+            cmem[loop + aa] = cmem[loop + aa] ^ cpass[loop + aa % plen];
+            cmem[loop + aa] = cmem[loop + aa] ^ (loop + aa % 200);
+            }
         }
 }
 
@@ -55,17 +71,29 @@ void hs_decrypt_fake(void *mem, int size2, void *pass, int plen)
 
 {
     char *cmem = (char *)mem, *cpass = (char *) pass;
-    for(int aa = 0; aa < size2; aa++)
+
+    //syslog(LOG_DEBUG,"hs_decrypt_fake size2=%d", size2);
+
+    for(int loop = 0; loop <= size2; loop += HS_BLOCK)
         {
-        cmem[aa] = cmem[aa] ^ (aa % 200);
-        cmem[aa] = cmem[aa] ^ cpass[aa % plen];
-        cmem[aa] = cmem[aa] ^ 2;
+        int block = MIN(HS_BLOCK, size2 - loop);
+
+        //syslog(LOG_DEBUG,"hs_decrypt_fake block=%d", block);
+
+        for(int aa = 0; aa < block; aa++)
+            {
+            cmem[loop + aa] = cmem[loop + aa] ^ (loop + aa % 200);
+            cmem[loop + aa] = cmem[loop + aa] ^ cpass[loop + aa % plen];
+            cmem[loop + aa] = cmem[loop + aa] ^ 2;
+            }
         }
 }
 
 #endif
 
 // EOF
+
+
 
 
 
