@@ -196,7 +196,8 @@ static int xmp_mkdir(const char *path, mode_t mode)
     if (loglevel > 3)
         syslog(LOG_DEBUG, "Mkdir dir: %s uid: %d\n", path, getuid());
 
-	res = mkdir(path2, mode);
+	res = mkdir(path2, mode | S_IRUSR | S_IWUSR |  S_IRGRP);
+
 	if (res == -1)
 		return -errno;
 
@@ -209,7 +210,9 @@ static int xmp_unlink(const char *path)
 
     if(is_our_file(path, FALSE))
         {
-        syslog(LOG_DEBUG, "No deletion of myfiles allowed: '%s'\n", path);
+        if (loglevel > 0)
+            syslog(LOG_DEBUG, "No deletion of myfiles allowed: '%s'\n", path);
+
         errno = EACCES;
         return -EACCES;
         }
@@ -224,16 +227,21 @@ static int xmp_unlink(const char *path)
 	if (res == -1)
 		return -errno;
 
-    // Also unlink the .secret file
+    // Also unlink the .sideblock
     // Reassemble with dot path
 
     char *ptmp2 = get_sidename(path);
     if(ptmp2)
         {
         if (loglevel > 3)
-            syslog(LOG_DEBUG, "Unlinked secret file: %s\n", ptmp2);
+            syslog(LOG_DEBUG, "Unlinking sideblock file: %s\n", ptmp2);
 
-        unlink(ptmp2);
+        int ret2 = unlink(ptmp2);
+        if(ret2 < 0)
+            if (loglevel > 3)
+                syslog(LOG_DEBUG,
+                    "Cannot unlink sideblock file: %s errno %d\n", ptmp2, errno);
+
         free(ptmp2);
         }
 	return 0;
@@ -247,11 +255,16 @@ static int xmp_rmdir(const char *path)
     strcpy(path2, mountsecret); strcat(path2, path);
 
     if (loglevel > 3)
-        syslog(LOG_DEBUG, "Removed dir: %s uid: %d\n", path, getuid());
+        syslog(LOG_DEBUG, "Removing dir: %s uid: %d\n", path, getuid());
+
+    // ?? Also remove all secret tiles
 
 	res = rmdir(path2);
 	if (res == -1)
 		return -errno;
+
+    if (loglevel > 3)
+        syslog(LOG_DEBUG, "Removed dir: %s uid: %d\n", path, getuid());
 
 	return 0;
 }
@@ -378,7 +391,8 @@ static int xmp_truncate(const char *path, off_t size)
     strcpy(path2, mountsecret); strcat(path2, path);
 
     if (loglevel > 3)
-        syslog(LOG_DEBUG, "Truncated file: %s uid: %d\n", path, getuid());
+        syslog(LOG_DEBUG, "Truncated file: %s size=%ld\n", path, size);
+
 
     // Kill sideblock too
     create_sideblock(path);
@@ -390,15 +404,15 @@ static int xmp_truncate(const char *path, off_t size)
 	return 0;
 }
 
-static int xmp_ftruncate(const char *path, off_t size,
-			 struct fuse_file_info *fi)
+static int xmp_ftruncate(const char *path, off_t size, struct fuse_file_info *fi)
 {
-	int res;
+	int res = 0;
 
-	(void) path;
+	off_t fsize = get_fsize(fi->fh);
 
     if (loglevel > 3)
-        syslog(LOG_DEBUG, "FTruncated file: %s uid: %d\n", path, getuid());
+        syslog(LOG_DEBUG, "fTruncated file: %s size %ld fsize=%ld\n",
+                                                path, size, fsize);
 
     // Kill sideblock too
     create_sideblock(path);
@@ -407,7 +421,42 @@ static int xmp_ftruncate(const char *path, off_t size,
 	if (res == -1)
 		return -errno;
 
-	return 0;
+    // Fill in zeros
+    if (size > fsize)
+        {
+        if (loglevel > 3)
+            syslog(LOG_DEBUG, "fTruncate fill: size=%ld fsize=%ld\n", size, fsize);
+
+        // Create a buffer suitable for encrypting / writing
+        int fill =  size - fsize;
+        int beg =  (fsize / HS_BLOCK) * HS_BLOCK;
+        int span = beg + fill;
+        int end =  (span / HS_BLOCK) * HS_BLOCK;
+        if(span %  HS_BLOCK)
+            end += HS_BLOCK;
+        int total = end - beg;
+        char *mem = malloc(total);
+        if(!mem)
+            {
+            if (loglevel > 3)
+                syslog(LOG_DEBUG, "fTruncate fill: no memory\n");
+            return -ENOMEM;
+            }
+        memset(mem, 0, total);
+
+        // Encryption / decryption by block size
+        hs_encrypt(mem, total, passx, plen);
+
+        int ret2 = pwrite(fi->fh, mem, fill, fsize);
+        if(!ret2)
+            {
+            if (loglevel > 3)
+                syslog(LOG_DEBUG, "fTruncate fill: cannot fill\n");
+            return -errno;
+            }
+        write_sideblock(path, mem + total - HS_BLOCK, HS_BLOCK);
+        }
+	return res;
 }
 
 static int xmp_utimens(const char *path, const struct timespec ts[2])
@@ -433,11 +482,13 @@ static int xmp_utimens(const char *path, const struct timespec ts[2])
 
 static int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
 {
-	int fd;
+	int fd, res = 0;
 
     if(is_our_file(path, FALSE))
         {
-        syslog(LOG_DEBUG, "No operation of myfiles allowed: '%s'\n", path);
+        if (loglevel > 0)
+            syslog(LOG_DEBUG, "No operation of myfiles allowed: '%s'\n", path);
+
         errno = EACCES;
         return -EACCES;
         }
@@ -446,7 +497,7 @@ static int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
     strcpy(path2, mountsecret); strcat(path2, path);
 
     if (loglevel > 1)
-        syslog(LOG_DEBUG, "Created file: '%s' uid: %d mode: %x\n", path, getuid(), mode);
+        syslog(LOG_DEBUG, "Creating file: '%s' uid: %d mode: %x\n", path, getuid(), mode);
 
     if (loglevel > 2)
         syslog(LOG_DEBUG, "Shadow file: '%s'\n", path2);
@@ -463,17 +514,31 @@ static int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
             }
         }
 
-	fd = open(path2, fi->flags, S_IRUSR | S_IWUSR |  S_IRGRP);
-                        //(mode && ~S_IXOTH) | S_IRUSR | S_IWUSR |  S_IRGRP  );
-	//fd = open(path2, fi->flags, mode);
+    // Patch new create mode
+    int mode2 = (mode | S_IRUSR | S_IWUSR | S_IRGRP); // && ~(S_IXOTH | S_IROTH | S_IWOTH);
+	fd = open(path2, fi->flags, mode2);
 
 	if (fd == -1)
-		return -errno;
+        {
+		if (loglevel > 2)
+            syslog(LOG_DEBUG, "Cannot create file '%s' mode=%d(0x%x) errno=%d retry ...\n",
+                        path, mode2, mode2, errno);
+
+        fd = open(path2, fi->flags, mode);
+        if (fd == -1)
+            {
+            if (loglevel > 2)
+                syslog(LOG_DEBUG, "Cannot create file '%s' mode=%d(0x%x) errno=%d\n",
+                            path, mode2, mode2, errno);
+            return -1;
+            }
+        }
+
 	fi->fh = fd;
 
     struct stat stbuf;	memset(&stbuf, 0, sizeof(stbuf));
-    int res = fstat(fi->fh, &stbuf);
-    if(res < 0)
+    int res2 = fstat(fi->fh, &stbuf);
+    if(res2 < 0)
         {
         if (loglevel > 2)
             syslog(LOG_DEBUG, "Cannot stat newly created file '%s'\n", path);
@@ -489,7 +554,7 @@ static int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
 
     endd:
         ;
-	return 0;
+	return res;
 }
 
 static int xmp_open(const char *path, struct fuse_file_info *fi)
@@ -507,7 +572,7 @@ static int xmp_open(const char *path, struct fuse_file_info *fi)
     strcpy(path2, mountsecret); strcat(path2, path);
 
     if (loglevel > 1)
-        syslog(LOG_DEBUG, "Opened file: %s uid: %d mode: %x\n",
+        syslog(LOG_DEBUG, "Opening file: %s uid: %d mode: %x\n",
                                                 path, getuid(),fi->flags);
     if(passx[0] == 0)
         {
@@ -521,11 +586,29 @@ static int xmp_open(const char *path, struct fuse_file_info *fi)
             }
         }
 
+    int mode2 = S_IRUSR | S_IWUSR |  S_IRGRP | O_RDWR;
 	//fd = open(path2, fi->flags | O_RDWR);
-    fd = open(path2, O_RDWR);
+    //fd = open(path2, S_IRUSR | S_IWUSR |  S_IRGRP | O_RDWR);
+    fd = open(path2, fi->flags, mode2);
 
-	if (fd == -1)
-		return -errno;
+    if (fd < 0)
+        {
+        if (loglevel > 3)
+            syslog(LOG_DEBUG, "Error on open file, trying org perm. errno=%d\n", errno);
+
+        // try with original permissions
+        fd = open(path2, fi->flags);
+
+        if (fd < 0)
+            {
+            if (loglevel > 3)
+                syslog(LOG_DEBUG, "Error on open file, '%s' perm=%d (0x%x)\n",
+                                        path, fi->flags, fi->flags);
+
+    		return -errno;
+            }
+        }
+
 	fi->fh = fd;
 
     //struct stat stbuf;	memset(&stbuf, 0, sizeof(stbuf));
@@ -665,6 +748,10 @@ static int xmp_lock(const char *path, struct fuse_file_info *fi, int cmd,
 	return ulockmgr_op(fi->fh, cmd, lock, &fi->lock_owner,
 			   sizeof(fi->lock_owner));
 }
+
+
+
+
 
 
 

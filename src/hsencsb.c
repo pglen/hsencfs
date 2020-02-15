@@ -165,7 +165,7 @@ static  int     write_sideblock(const char *path, char *bbuff, int len)
         int rrr = write(fdi, bbuff, len);
         if(rrr < len)
             {
-            if (loglevel > 2)
+            if (loglevel > 0)
                 syslog(LOG_DEBUG, "Error on writing sideblock file, errno: %d\n", errno);
 
             ret = -errno;
@@ -190,15 +190,15 @@ static  int    create_sideblock(const char *path)
     char *ptmp2 = get_sidename(path);
     if(ptmp2)
         {
-        if (loglevel > 4)
-            syslog(LOG_DEBUG, "New sb '%s'\n", ptmp2);
+        //if (loglevel > 4)
+        //    syslog(LOG_DEBUG, "New sb '%s'\n", ptmp2);
 
         int old_errno = errno;
         int fdi = open(ptmp2, O_RDWR | O_CREAT | O_TRUNC , S_IRUSR | S_IWUSR);
         if(fdi < 0)
             {
             if (loglevel > 2)
-                syslog(LOG_DEBUG, "Error on creating '%s' errno: %d\n", ptmp2, errno);
+                syslog(LOG_DEBUG, "Error on creating sideblock '%s' errno: %d\n", ptmp2, errno);
 
             // Not sure what to do ... error?
             }
@@ -329,6 +329,8 @@ static  int     openpass(const char *path)
 }
 
 // EOF
+
+
 
 
 

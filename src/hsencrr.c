@@ -75,9 +75,9 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset, stru
         syslog(LOG_DEBUG,
             "Read par: new_offs=%ld end_offset=%ld\n",
                                             beg_offset, end_offset);
-        syslog(LOG_DEBUG,
-            "Read par2: total=%ld skip=%ld\n",
-                                            total, skip);
+        //syslog(LOG_DEBUG,
+        //    "Read par2: total=%ld skip=%ld\n",
+        //                                    total, skip);
         }
 
     // Close to end of file
@@ -85,7 +85,7 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset, stru
         {
         if (loglevel > 3)
             {
-            syslog(LOG_DEBUG, "fsize=%ld\n", fsize);
+            syslog(LOG_DEBUG, "offs=%ld size=%ld fsize=%ld\n", offset, size, fsize);
             }
 
         // Last block, load it
@@ -106,9 +106,9 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset, stru
             // Still could be good, an buffer is all zeros
             }
 
-        if (loglevel > 2)
-            syslog(LOG_DEBUG, "Got sideblock: '%s'\n",
-                                    bluepoint2_dumphex(bbuff, 8));
+        //if (loglevel > 2)
+        //    syslog(LOG_DEBUG, "Got sideblock: '%s'\n",
+        //                            bluepoint2_dumphex(bbuff, 8));
 
         // Foundation is the sideblock data, copy it in
 
@@ -175,6 +175,7 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset, stru
 }
 
 // EOF
+
 
 
 

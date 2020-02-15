@@ -55,6 +55,13 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
         syslog(LOG_DEBUG,
                 " *** xmp_write(): name '%s'\n", path);
 
+    // Change file handle to reflect read / write
+    //int ret3 = fchmod(fi->fh, S_IRUSR | S_IWUSR |  S_IRGRP);
+    //if (retls3 < 0)
+    //    if (loglevel > 0)
+    //    syslog(LOG_DEBUG,
+    //            " Cannot change mode on write '%s'\n", path);
+
     // Save current file parameters, as the FS sees it
     //off_t oldoff = lseek(fi->fh, 0, SEEK_SET);
     off_t fsize = get_fsize(fi->fh);
@@ -89,13 +96,13 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
     if (loglevel > 3)
         {
         syslog(LOG_DEBUG,
-            "Prep wr:  offset=%ld size=%ld\n",
-                                         offset, size);
-        syslog(LOG_DEBUG,
-            "Prep wr2: new_beg=%ld total=%ld skip=%ld\n",
-                                         new_beg, total, skip);
-        syslog(LOG_DEBUG,
-            "Prep wr3: fsize=%ld\n", fsize);
+            "Prep wr:  offset=%ld size=%ld fsize=%ld\n",
+                                         offset, size, fsize);
+        //syslog(LOG_DEBUG,
+        //    "Prep wr2: new_beg=%ld total=%ld skip=%ld\n",
+        //                                 new_beg, total, skip);
+        //syslog(LOG_DEBUG,
+        //    "Prep wr3: fsize=%ld\n", fsize);
         }
 
     // Scratch pad for the whole lot
@@ -105,14 +112,15 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
 
     memset(mem, 0, total);                  // Zero it
 
-    if (loglevel > 4)
-        syslog(LOG_DEBUG, "File size fsize=%ld\n", fsize);
+    //if (loglevel > 4)
+    //    syslog(LOG_DEBUG, "File size fsize=%ld\n", fsize);
 
     // Do it: Read / Decrypt / Patch / Encrypt / Write
 
     // Close to end: Sideblock is needed
     if(new_end > fsize)
         {
+
         char *bbuff = NULL;
         // Assemble buffer from pre and post
         int ret = read_sideblock(path, &bbuff, HS_BLOCK);
@@ -138,9 +146,9 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
         if(ret3 < 0)
             {
             if (loglevel > 0)
-                syslog(LOG_DEBUG, "Cannot pre read data. ret=%d errno=%d\n", ret, errno);
-            res = -errno;
-            goto endd;
+                syslog(LOG_DEBUG, "Cannot pre read data. ret3=%d errno=%d\n", ret, errno);
+            //res = -errno;
+            //goto endd;
             }
         }
     else
@@ -215,10 +223,4 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
 }
 
 // EOF
-
-
-
-
-
-
 
