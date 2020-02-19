@@ -1,5 +1,15 @@
-                        Changelog
+                   Changelog
 
+Author: peter <peterglen99@gmail.com>
+Date:   Wed Feb 19 15:43:24 2020 -0500
+
+    sw_to_fuse3
+
+commit 1ce66e0ea17d8257d372c99637c7275b68c04343 (tag: fuse3)
+Author: peter <peterglen99@gmail.com>
+Date:   Sat Feb 15 10:27:06 2020 -0500
+
+    autocheck
 
 Author: Peter Glen <peterglen99@gmail.com>
 Date:   Mon Sep 23 01:58:19 2019 -0400
@@ -66,5 +76,6 @@ pre - git
 Wed, May 20 2015:       Tray and Tray DB
 Tuesday, May 22 2015:   Basic Func, Cleanup
 Tuesday, May 26 2015:   On Demand Pass implemented
+
 
 

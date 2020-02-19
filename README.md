@@ -15,14 +15,17 @@ by time and user ID. The report is sent to syslog. The log is sent to facility
 
  To use it (as a simple example):
 
-      hsencfs  -l 2 ~/.secretdata ~/secrets
+      hsencfs  ~/secrets
 
  Will ask for password, and password creation confirmation if started on
 a new mount. The above command exposes the ~/secrets directory with the
-backing data directory in ~/.secretdata.
-For added convenience, use a dotted (hidden) file for mountdata.
+backing data directory in ~/.secrets
 
-(example: ~/.my_secret_data or ~/.data or ~/.secrets) (note the leading dot)
+For added convenience, one may specify a dotted (hidden) file for mountdata.
+
+      hsencfs  ~/secrets ~/.secrets
+
+(in this example the storage dir becomes: ~/.secrets  (note the leading dot)
 
  You may un-mount your secret directory with the normal umount(8) utility
 or the fusermount -u option. After un-mounting, the mounted data is not
@@ -35,7 +38,7 @@ accessible, and the encrypted data is not legible until it is mounted again.
 
  HSENCFS does not manage passwords. The password becomes the encryption key,
 and the key is used to encrypt the file system access. If the password / key
-is lost, the data cannot be recovered.
+is lost, the data cannot be recovered. Seriousely, lost.
 
  As the password becomes the key, it is possible to achieve long key lengths
 by entering a long password. Short key lengths are replicated to standard
@@ -56,7 +59,7 @@ An example of on-demand command line:
 
         hsencfs -o -a 'which hsaskpass.py` .mydata mysecret
 
-Note the 'which' utility, HSENCFS needs absolute path.
+Note the 'which' utility, as HSENCFS needs absolute path.
 
 ## Safety, Security, Feeding and Care
 
@@ -65,12 +68,7 @@ and withstood the test of time. The backing files in the data directory
 preserve their original names, size, and access times. The only dependence
 they need is the original password. This means they can be safely copied from
 the backing directory for transport (like email) or backup. Please note
-that HSENCFS relies on the file system having block size 4096 (multiple of 1024)
-This is the case with most modern systems, so it does not present an issue. If the
-block size is not 4096, HSENCFS will operate fine, but the data may not be
-portable across systems with different block sizes. The internal block size
-of HSENCFS is 1024, which makes it operate across a large number of systems.
-(to date, no system was incompatible)
+that HSENCFS having block size 4096, and will handle data accoringly.
 
 ### The data directory:
 
@@ -99,21 +97,22 @@ password on decrypt. These utilities are provided as recovery tools only.
 
  Files can be copied out from the backing data directory. They stay encrypted
 when copied directly out of the data directory. This is useful for backup /
-replication / archiving / transport etc ...
+replication / archiving / transport etc ... make sure you copy them with hidden
+(.dot) files included. Use: shopt -s dotglob before copy.
 
-## Go to the Cloud.
+## Going to the Cloud.
 
  The backing data directory can reside on any valid file system, including
 a cloud drive. HSENCFS will encrypt data automatically before it sees
 the transport layer, and decrypt data after the transport layer delivered it.
 
-This allows secure remote storage without data ever leaving the local
+  This allows secure remote storage without data ever leaving the local
 context without encryption.
 
 ## The Mountpoint directory:
 
  When the mountpoint is mounted, data is encrypted / decrypted on the fly.
-FUSE will warn you if the mount directory is not empty on mount. It is
+HSENCFS will warn you if the mount directory is not empty on mount. It is
 usually undesirable to mount over data. You may force the mount, see FUSE
 options for details.
 
@@ -149,7 +148,7 @@ The mounts created from the system tray are visible from the command line,
 but the mounts created on the command line are not visible in the system
 tray. (added protection)
 
- Upon install, the System Panel needs to rescan for the list of Applets for
+ Upon panel install, the System Panel needs to rescan for the list of Applets for
 the HSENCFS applet to show up. This can be achieved by adding an arbitrary
 Applet to the panel, and then removing it. After the panel add / remove cycle,
 the HSENCFS applet will show up.
@@ -162,5 +161,6 @@ or the whole system.
 Please send a message to the author. (see SourceForge page)
 
 // EOF
+
 
 
