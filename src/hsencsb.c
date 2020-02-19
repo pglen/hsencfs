@@ -209,6 +209,9 @@ static  int    create_sideblock(const char *path)
                 {
                 memset(ptmp3, '\0', HS_BLOCK);
 
+                // This way, the first decode is zeros
+                hs_encrypt(ptmp3, HS_BLOCK, passx, plen);
+
                 // The initial sideblock contains what?
                 //hs_encrypt(ptmp3, HS_BLOCK, passx, plen);
 
@@ -329,6 +332,7 @@ static  int     openpass(const char *path)
 }
 
 // EOF
+
 
 
 

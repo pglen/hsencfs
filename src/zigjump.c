@@ -25,19 +25,34 @@ int     main(int argc, char *argv[])
     //printf("Zigzag read test\n");
 
     if(argc < 3)
-        errexit("Not enough arguments.");
+        errexit("Not enough arguments. Use: zigjump infile outfile");
 
     int fp_in = open(argv[1], O_RDWR);
     if(fp_in < 0)
-        errexit("no in file");
+        errexit("no in file"); //, argv[1]);
 
     int fp_out = open(argv[2], O_RDWR | O_CREAT | O_TRUNC,  S_IRWXU);
     if(fp_out < 0)
-        errexit("no out file");
+        errexit("no out file"); //, argv[2]);
 
+    lseek(fp_in, sizeof(buff), SEEK_SET);
+
+    int ret5 = lseek(fp_out, 0, SEEK_SET);
+    int ret6 = read(fp_out, buff, sizeof(buff)-18);
+    int ret7 = lseek(fp_out, sizeof(buff) -18, SEEK_SET);
+
+    int ret2 = write(fp_out, buff, 18);
+    printf("ret5=%d ret6=%d ret7=%d ret2=%d\n", ret5, ret6, ret7, ret2);
+
+    exit(0);
+
+    int hhh = 200;
     while(1)
         {
-        int ret = read(fp_in, buff, sizeof(buff) / 10);
+        lseek(fp_in, -hhh, SEEK_CUR);
+        lseek(fp_out, -hhh, SEEK_CUR);
+
+        int ret = read(fp_in, buff, hhh / 2);
         if(ret < 0)
             {
             errexit("Cannot read");
@@ -47,18 +62,13 @@ int     main(int argc, char *argv[])
             {
             errexit("Cannot write");
             }
-        if(ret < sizeof(buff) / 10)
+        if(ret < hhh / 2)
             {
             break;
             }
-        int rrr = lseek(fp_in, -110, SEEK_CUR);
-        printf("%d ", rrr);
-
-        lseek(fp_out, -110, SEEK_CUR);
         }
     close(fp_in);
     close(fp_out);
-
 }
 
 

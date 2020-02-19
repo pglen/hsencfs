@@ -176,7 +176,7 @@ CC = gcc
 CCDEPMODE = depmode=gcc3
 CFLAGS = 
 CPP = gcc -E
-CPPFLAGS =   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=26 -D__STDC_FORMAT_MACROS
+CPPFLAGS = -I/usr/local/include/fuse3/  -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -D__STDC_FORMAT_MACROS
 CYGPATH_W = echo
 DEFS = -DHAVE_CONFIG_H
 DEPDIR = .deps
@@ -193,7 +193,7 @@ INSTALL_SCRIPT = ${INSTALL}
 INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
 LDFLAGS =   
 LIBOBJS = 
-LIBS = -lulockmgr -lfuse 
+LIBS = -lulockmgr 
 LTLIBOBJS = 
 MAKEINFO = ${SHELL} /home/peterglen/pgsrc/hsenc/hsenc/missing makeinfo
 MKDIR_P = /bin/mkdir -p

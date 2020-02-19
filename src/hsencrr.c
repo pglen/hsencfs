@@ -103,7 +103,7 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset, stru
             {
             if (loglevel > 2)
                 syslog(LOG_DEBUG, "Cannot read sideblock data.\n");
-            // Still could be good, an buffer is all zeros
+            // Still could be good, buffer is all zeros
             }
 
         //if (loglevel > 2)
@@ -136,6 +136,12 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset, stru
         if (loglevel > 2)
             syslog(LOG_DEBUG, "Read in from file res2=%ld\n", res2);
 
+        // No read, extend
+        //if(res2 == 0)
+        //    {
+        //    res2 = pwrite(fi->fh, mem + skip, skip + size, beg_offset);
+        //    }
+
         // Cheat ... we know we got that much
         res = res2;
         }
@@ -160,6 +166,7 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset, stru
 
     // Set FP to old position + size
     //lseek(fi->fh, oldoff + res, SEEK_SET);
+    lseek(fi->fh, offset + res, SEEK_SET);
 
     if (loglevel > 2)
         syslog(LOG_DEBUG, "Read in data: '%s' size %d\n", path, res);
@@ -175,6 +182,8 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset, stru
 }
 
 // EOF
+
+
 
 
 

@@ -35,9 +35,24 @@ int     main(int argc, char *argv[])
     if(fp_out < 0)
         errexit("no out file");
 
+    int ret = lseek(fp_in, 1000, SEEK_SET);
+    if(ret < 0)
+            {
+            errexit("Cannot seek in");
+            }
+    ret = ftruncate(fp_out, 1000);
+    if(ret < 0)
+            {
+            errexit("Cannot truncate");
+            }
+    ret = lseek(fp_out, 1000, SEEK_SET);
+    if(ret < 1000)
+            {
+            errexit("Cannot seek out");
+            }
     while(1)
         {
-        int ret = read(fp_in, buff, sizeof(buff) / 10);
+        int ret = read(fp_in, buff, sizeof(buff));
         if(ret < 0)
             {
             errexit("Cannot read");
@@ -47,20 +62,15 @@ int     main(int argc, char *argv[])
             {
             errexit("Cannot write");
             }
-        if(ret < sizeof(buff) / 10)
+        if(ret < sizeof(buff))
             {
             break;
             }
-        int rrr = lseek(fp_in, -110, SEEK_CUR);
-        printf("%d ", rrr);
-
-        lseek(fp_out, -110, SEEK_CUR);
         }
     close(fp_in);
     close(fp_out);
 
 }
-
 
 
 

@@ -7,7 +7,17 @@ static inline struct xmp_dirp *get_dirp(struct fuse_file_info *fi)
 	return (struct xmp_dirp *) (uintptr_t) fi->fh;
 }
 
-static int xmp_getattr(const char *path, struct stat *stbuf)
+static int xmp_lseek(const char *path,  off_t off, int whence, struct fuse_file_info *fi)
+{
+    if (loglevel > 3)
+        {
+        syslog(LOG_DEBUG, "xmp_lseek='%s' off=%ld whence=%d\n", path, off, whence);
+        }
+
+    return lseek(fi->fh, off, whence);
+}
+
+static int xmp_getattr(const char *path, struct stat *stbuf, struct fuse_file_info *fi)
 {
 	int res;
 
@@ -46,8 +56,13 @@ static int xmp_access(const char *path, int mask)
         syslog(LOG_DEBUG, "Get access, file: %s uid: %d\n", path, getuid());
 
 	res = access(path2, mask);
+
 	if (res == -1)
-		return -errno;
+        {
+        if (loglevel > 3)
+            syslog(LOG_DEBUG, "Cannot access file: %s uid: %d\n", path, getuid());
+		//return -errno;
+        }
 
 	return 0;
 }
@@ -104,7 +119,7 @@ static int xmp_opendir(const char *path, struct fuse_file_info *fi)
 }
 
 
-static int xmp_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offset, struct fuse_file_info *fi)
+static int xmp_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offset, struct fuse_file_info *fi, enum fuse_readdir_flags ff)
 {
 	struct xmp_dirp *d = get_dirp(fi);
 
@@ -145,7 +160,8 @@ static int xmp_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_
                 continue;
                 }
             }
-    	if (filler(buf, d->entry->d_name, &st, nextoff))
+
+    	if (filler(buf, d->entry->d_name, &st, nextoff, FUSE_FILL_DIR_PLUS))
             {
             break;
             }
@@ -296,7 +312,7 @@ static int xmp_symlink(const char *from, const char *to)
 	return 0;
 }
 
-static int xmp_rename(const char *from, const char *to)
+static int xmp_rename(const char *from, const char *to, unsigned int flags)
 {
 	int res;
 
@@ -340,7 +356,7 @@ static int xmp_link(const char *from, const char *to)
 	return 0;
 }
 
-static int xmp_chmod(const char *path, mode_t mode)
+static int xmp_chmod(const char *path, mode_t mode, struct fuse_file_info *fi)
 {
 	int res;
 
@@ -357,7 +373,7 @@ static int xmp_chmod(const char *path, mode_t mode)
 	return 0;
 }
 
-static int xmp_chown(const char *path, uid_t uid, gid_t gid)
+static int xmp_chown(const char *path, uid_t uid, gid_t gid, struct fuse_file_info *fi)
 {
 	int res;
 
@@ -375,7 +391,7 @@ static int xmp_chown(const char *path, uid_t uid, gid_t gid)
 	return 0;
 }
 
-static int xmp_truncate(const char *path, off_t size)
+static int xmp_truncate(const char *path, off_t size, struct fuse_file_info *fi)
 {
 	int res;
 
@@ -459,7 +475,7 @@ static int xmp_ftruncate(const char *path, off_t size, struct fuse_file_info *fi
 	return res;
 }
 
-static int xmp_utimens(const char *path, const struct timespec ts[2])
+static int xmp_utimens(const char *path, const struct timespec ts[2], struct fuse_file_info *fi)
 {
 	int res;
 	struct timeval tv[2];
@@ -641,8 +657,8 @@ static int xmp_flush(const char *path, struct fuse_file_info *fi)
 {
 	int res;
 
-    //if (loglevel > 3)
-    //    syslog(LOG_DEBUG, "Flushed file: %s uid: %d\n", path, getuid());
+    if (loglevel > 3)
+        syslog(LOG_DEBUG, "Flushing file: %s uid: %d\n", path, getuid());
 
 	(void) path;
 	/* This is called from every close on an open file, so call the
@@ -651,22 +667,51 @@ static int xmp_flush(const char *path, struct fuse_file_info *fi)
 	   close the file.  This is important if used on a network
 	   filesystem like NFS which flush the data/metadata on close() */
 
-	res = close(dup(fi->fh));
+    // try until error
+    for (int aa = 0; aa < 10; aa++)
+        {
+        res = syncfs(fi->fh);
+        if (res < 0)
+            break;
+        }
 
-	if (res == -1)
-		return -errno;
+    res = 0;
+
+    //res = close(dup(fi->fh));
+	//if (res == -1)
+	//	return -errno;
+
+    if (loglevel > 3)
+        syslog(LOG_DEBUG, "Flushed file: %s fh: %ld\n", path, fi->fh);
 
 	return 0;
 }
 
 static int xmp_release(const char *path, struct fuse_file_info *fi)
+
 {
+    int res;
 
     if (loglevel > 3)
-        syslog(LOG_DEBUG, "Released: '%s' uid: %d\n", path, getuid());
+        syslog(LOG_DEBUG, "Releasing: '%s' fh: %ld\n", path, fi->fh);
+
+    // try until error
+    for (int aa = 0; aa < 3; aa++)
+        {
+        res = syncfs(fi->fh);
+        if (res < 0)
+            break;
+        }
+
+    //usleep(10000);
 
 	(void) path;
 	close(fi->fh);
+
+    //usleep(10000);
+
+    if (loglevel > 3)
+        syslog(LOG_DEBUG, "Released: '%s' fh: %ld\n", path, fi->fh);
 
 	return 0;
 }
@@ -684,7 +729,9 @@ static int xmp_fsync(const char *path, int isdatasync,
 		res = fdatasync(fi->fh);
 	else
 #endif
-		res = fsync(fi->fh);
+
+    res = fsync(fi->fh);
+
 	if (res == -1)
 		return -errno;
 
@@ -748,6 +795,9 @@ static int xmp_lock(const char *path, struct fuse_file_info *fi, int cmd,
 	return ulockmgr_op(fi->fh, cmd, lock, &fi->lock_owner,
 			   sizeof(fi->lock_owner));
 }
+
+
+
 
 
 

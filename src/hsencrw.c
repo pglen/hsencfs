@@ -40,7 +40,6 @@
 //    | skip |    opend    |
 //
 
-
 static int xmp_write(const char *path, const char *buf, size_t size, off_t offset, struct fuse_file_info *fi)
 
 {
@@ -118,9 +117,8 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
     // Do it: Read / Decrypt / Patch / Encrypt / Write
 
     // Close to end: Sideblock is needed
-    if(new_end > fsize)
+    if(new_end >= fsize)
         {
-
         char *bbuff = NULL;
         // Assemble buffer from pre and post
         int ret = read_sideblock(path, &bbuff, HS_BLOCK);
@@ -150,6 +148,14 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
             //res = -errno;
             //goto endd;
             }
+        else if(ret3 < skip + size)
+            {
+            if (loglevel > 0)
+                syslog(LOG_DEBUG, "Pre write data. len=%ld\n", skip + size);
+
+            // Expand file
+            int ret4 = pwrite(fi->fh, mem, skip + size, new_beg);
+            }
         }
     else
         {
@@ -175,7 +181,7 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
 
     // Write it back out, all that changed
     int res2 = pwrite(fi->fh, mem, skip + size, new_beg);
-	if (res < 0)
+	if (res2 < 0)
         {
         if (loglevel > 0)
             syslog(LOG_DEBUG, "Error on writing file: %s res %d errno %d\n", path, res, errno);
@@ -208,6 +214,7 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
 
     // Reflect new file position
     //lseek(fi->fh, oldoff + res, SEEK_SET);
+    lseek(fi->fh, offset + res, SEEK_SET);
 
    endd:
     // Do not leave data behind
@@ -223,4 +230,6 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
 }
 
 // EOF
+
+
 

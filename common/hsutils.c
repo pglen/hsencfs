@@ -3,7 +3,7 @@
  *  the fuse subsystem to intercept file operations.
  */
 
-#define FUSE_USE_VERSION 26
+//#define FUSE_USE_VERSION 26
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -54,6 +54,7 @@ void    expandpath(const char *inp, char *outp, int maxlen)
         strcpy(outp, tmp_path);  strcat(outp, "/"); strcat(outp, inp);
         }
 }
+
 
 
 

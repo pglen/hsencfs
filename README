@@ -1,7 +1,5 @@
                 README
 
-
-
 Uesful trick to see the logs in a separate file.
 
 Edit (Create) /etc/rsyslog/rsyslog.d/10-custom.conf
@@ -11,6 +9,31 @@ if $programname == 'HSENCFS' then {
         /var/log/hsencfs.log
         ~
 }
+
+To copy every file including hidden ones (starting with a dot) use:
+
+shopt -s dotglob
+
+
+Assuming the following setup:
+
+~/secrets       for the encrypted directory
+~/.secrets      for the supporting data directory
+
+One can copy plain files out:
+
+1.) mount directory with hsencfs
+2.) copy as usual
+
+   example:  hsencfs ~/secret
+
+One can copy encrypted files out:
+
+1.) the directory does not have to be bounted
+2.) enable copying all files; use: shopt -s dotglob
+2.) copy as usual
+
+   example:  cp -a  ~/.secret/*  target_dir
 
 
 Announcement
@@ -28,6 +51,4 @@ as GCC acesses object files by chunk.
 accomodate that.
 
 Peter
-
-
 

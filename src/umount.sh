@@ -4,8 +4,9 @@
 
 aa=`mount | grep secrets`
 if [ "$aa" != "" ] ; then
-    fusermount -u $DROOT
+    fusermount3 -u $DROOT
 fi
+
 
 
 

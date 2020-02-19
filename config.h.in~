@@ -30,6 +30,9 @@
 /* Define to 1 if you have the `lchown' function. */
 #undef HAVE_LCHOWN
 
+/* Define to 1 if you have the `fuse' library (-lfuse). */
+#undef HAVE_LIBFUSE
+
 /* Define to 1 if you have the `ulockmgr' library (-lulockmgr). */
 #undef HAVE_LIBULOCKMGR
 

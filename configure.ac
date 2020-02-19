@@ -15,10 +15,22 @@ AC_PROG_AWK
 AC_PROG_CC
 AC_PROG_MAKE_SET
 
-FUSEFLAGS="-D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=26"
+FUSEFLAGS="-D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33"
+
 CPPFLAGS="$CPPFLAGS $USER_INCLUDES $FUSEFLAGS -D__STDC_FORMAT_MACROS"
+
+# -I/usr/local/include/fuse3"
+
 CXXFLAGS="$CXXFLAGS $PTHREAD_CFLAGS $USER_INCLUDES"
 LDFLAGS="$LDFLAGS $PTHREAD_LIBS $USER_LDFLAGS"
+
+AC_CHECK_LIB(fuse_ino64, fuse_new, [FUSE_LIBS="-lfuse_ino64"],
+    [ AC_CHECK_LIB(fuse3,fuse_new, [FUSE_LIBS="-lfuse3"],
+        [AC_MSG_ERROR([
+            Can't find libfuse.a - install FUSE or add the search path to LDFLAGS
+            and rerun configure, eg:
+            export LDFLAGS=-L/usr/local/lib ])],)
+    ],)
 
 AC_CHECK_HEADER(fuse.h,,
     [AC_MSG_ERROR([
@@ -26,16 +38,9 @@ AC_CHECK_HEADER(fuse.h,,
         rerun configure, eg:
         export CPPFLAGS=-I/usr/local/include ])])
 
-AC_CHECK_LIB(fuse_ino64,fuse_new, [FUSE_LIBS="-lfuse_ino64"],
-    [ AC_CHECK_LIB(fuse,fuse_new, [FUSE_LIBS="-lfuse"],
-        [AC_MSG_ERROR([
-            Can't find libfuse.a - install FUSE or add the search path to LDFLAGS
-            and rerun configure, eg:
-            export LDFLAGS=-L/usr/local/lib ])],)
-    ],)
 
 # Checks for libraries.
-AC_CHECK_LIB([fuse], [fuse_main])
+#AC_CHECK_LIB([fuse], [fuse_main])
 # FIXME: Replace `main' with a function in `-lulockmgr':
 AC_CHECK_LIB([ulockmgr], [main])
 
@@ -73,6 +78,10 @@ AC_CONFIG_FILES([Makefile
                  docs/Makefile]
                  )
 AC_OUTPUT
+
+
+
+
 
 
 

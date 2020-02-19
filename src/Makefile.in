@@ -110,7 +110,7 @@ am_hsencfs_OBJECTS = hsencfs-hsencfs.$(OBJEXT) \
 	../common/hsencfs-hspass.$(OBJEXT) \
 	../bluepoint/hsencfs-bluepoint2.$(OBJEXT)
 hsencfs_OBJECTS = $(am_hsencfs_OBJECTS)
-hsencfs_LDADD = $(LDADD)
+hsencfs_DEPENDENCIES =
 hsencfs_LINK = $(CCLD) $(hsencfs_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
 AM_V_P = $(am__v_P_@AM_V@)
@@ -267,15 +267,12 @@ top_srcdir = @top_srcdir@
 # The main program
 hsencfsdir = .
 hsencfs_CFLAGS = -g -D_FILE_OFFSET_BITS=64 -O2 -I$(srcdir)/bluepoint \
-            -lfuse -lulockmgr -I$(srcdir)/../common
+            -I$(srcdir)/../common
 
 hsencfs_SOURCES = hsencfs.c base64.c ../common/hsutils.c ../common/hspass.c \
                         ../bluepoint/bluepoint2.c
 
-
-#hsencfs_LDADD   = ../bluepoint/bluepoint2.o
-#../common/hsutils.o
-#                    ../common/hspass.o
+hsencfs_LDADD = -lulockmgr -lfuse3
 
 # Password helper
 hsaskpass_CFLAGS = -D_FILE_OFFSET_BITS=64 -O2 -I$(srcdir)/bluepoint
@@ -693,7 +690,11 @@ clean-local:
 	@-rm -f aa bb cc
 	@-rm -f *.obj
 
-# > /dev/null 2>&1
+# Help
+
+test-local:
+	@./cycle/cycle_read.sh
+	@./cycle/cycle_write.sh
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

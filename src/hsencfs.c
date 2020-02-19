@@ -25,7 +25,7 @@
  *  backing directory ~/.secrets
  */
 
-#define FUSE_USE_VERSION 26
+//#define FUSE_USE_VERSION 34
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -113,7 +113,7 @@ static char *myext = ".datx";
 
 static struct fuse_operations xmp_oper = {
 	.getattr	= xmp_getattr,
-	.fgetattr	= xmp_fgetattr,
+	//.fgetattr	= xmp_fgetattr,
 	.access		= xmp_access,
 	.readlink	= xmp_readlink,
 	.opendir	= xmp_opendir,
@@ -129,7 +129,7 @@ static struct fuse_operations xmp_oper = {
 	.chmod		= xmp_chmod,
 	.chown		= xmp_chown,
 	.truncate	= xmp_truncate,
-	.ftruncate	= xmp_ftruncate,
+	//.ftruncate	= xmp_ftruncate,
 	.utimens	= xmp_utimens,
 	.create		= xmp_create,
 	.open		= xmp_open,
@@ -146,8 +146,9 @@ static struct fuse_operations xmp_oper = {
 	.removexattr	= xmp_removexattr,
 #endif
 	.lock		= xmp_lock,
+	//.lseek  	= xmp_lseek,
 
-	.flag_nullpath_ok = 1,
+	//.flag_nullpath_ok = 1,
 };
 
 // Use /proc/self/fd directory to close fd-s
@@ -701,9 +702,9 @@ int     main(int argc, char *argv[])
     //                            bluepoint2_dumphex(passx, plen));
 
     // Write back expanded paths
-    char *argv2[3];
-    argv2[0]  = mountsecret;    argv2[1]  = mountpoint;
-    argv2[2]  = NULL;
+    char *argv2[4];
+    argv2[0]  = "hsencfs";      argv2[1]  = mountpoint;
+    argv2[2]  = mountsecret;    argv2[3]  = NULL;
 
     if(verbose)
         printf("Mount parms '%s' '%s'\n", mountsecret,  mountpoint);
@@ -722,7 +723,19 @@ int     main(int argc, char *argv[])
 
     // Skip arguments that are parsed already
     // Synthesize new array
+    //int ret = fuse_main(2, argv2, &xmp_oper, NULL);
+
     int ret = fuse_main(2, argv2, &xmp_oper, NULL);
+
+    # if 0
+    // Write back expanded paths
+    char *argv3[2];
+    argv3[0]  = " ";  argv3[1]  = NULL;
+    struct fuse_args fa; fa.argc = 1; fa.argv = argv3; fa.allocated = 0;
+    struct fuse *fuse_op = fuse_new(&fa, &xmp_oper, sizeof(xmp_oper), NULL);
+    printf("Fuse op %p\n", fuse_op);
+    int ret = fuse_mount(fuse_op, mountpoint);
+    #endif
 
     // FUSE MAIN terminates ...
 
@@ -752,7 +765,4 @@ int     main(int argc, char *argv[])
 }
 
 // EOF
-
-
-
 
