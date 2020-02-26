@@ -62,7 +62,7 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
     //            " Cannot change mode on write '%s'\n", path);
 
     // Save current file parameters, as the FS sees it
-    //off_t oldoff = lseek(fi->fh, 0, SEEK_SET);
+    //off_t oldoff = lseek(fi->fh, 0, SEEK_CUR);
     off_t fsize = get_fsize(fi->fh);
 
     // ----- Visualize what is going on ------------------------------
@@ -116,24 +116,44 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
 
     // Do it: Read / Decrypt / Patch / Encrypt / Write
 
+    sideblock *psb = NULL;
+
     // Close to end: Sideblock is needed
-    if(new_end >= fsize)
+    if(new_end > fsize)
         {
-        char *bbuff = NULL;
+        // Read in last block from lastblock file
+        psb =  malloc(sizeof(sideblock));
+        if(psb == NULL)
+            {
+            if (loglevel > 0)
+               syslog(LOG_DEBUG, "Cannot allocate memory for sideblock '%s'\n", path);
+
+            res = -ENOMEM;
+            goto endd;
+            }
+        memset(psb, '\0', sizeof(sideblock));
+        psb->magic =  HSENCFS_MAGIC;
+
+        // Last block, load it
+        int ret = read_sideblock(path, psb);
+        if(ret < 0)
+            {
+            if (loglevel > 2)
+                syslog(LOG_DEBUG, "Cannot read sideblock data.\n");
+            // Still could be good, buffer is all zeros
+            }
+
+        //hs_encrypt(mem, HS_BLOCK, passx, plen);
+
         // Assemble buffer from pre and post
-        int ret = read_sideblock(path, &bbuff, HS_BLOCK);
-        if(!bbuff)
-            EVAL_MEM_GO("sideblock", endd);
-        if(ret && ret != HS_BLOCK)
-            EVAL_READ_GO("sideblock", HS_BLOCK, endd);
 
         //if (loglevel > 3)
         //    syslog(LOG_DEBUG, "Got sideblock: '%s'\n",
         //                            bluepoint2_dumphex(bbuff, 8));
 
         // Patch in sb data
-        memcpy(mem + predat, bbuff, HS_BLOCK);
-        kill_buff(bbuff, HS_BLOCK);
+        memcpy(mem + predat, psb->buff, HS_BLOCK);
+        kill_buff(psb, sizeof(sideblock));
 
         // Get original
         int ret3 = pread(fi->fh, mem, skip + size, new_beg);
@@ -144,17 +164,20 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
         if(ret3 < 0)
             {
             if (loglevel > 0)
-                syslog(LOG_DEBUG, "Cannot pre read data. ret3=%d errno=%d\n", ret, errno);
+                syslog(LOG_DEBUG, "Cannot pre read data. ret3=%d errno=%d\n", ret3, errno);
+
+            // New ending ... kill sideblock
+            //create_sideblock(path);
+
             //res = -errno;
             //goto endd;
             }
         else if(ret3 < skip + size)
             {
-            if (loglevel > 0)
-                syslog(LOG_DEBUG, "Pre write data. len=%ld\n", skip + size);
-
+            //if (loglevel > 0)
+            //    syslog(LOG_DEBUG, "Pre write data. len=%ld\n", skip + size);
             // Expand file
-            int ret4 = pwrite(fi->fh, mem, skip + size, new_beg);
+            //int ret4 = pwrite(fi->fh, mem, skip + size, new_beg);
             }
         }
     else
@@ -169,10 +192,17 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
     // Buffer now in, complete; decrypt it
     hs_decrypt(mem, total, passx, plen);
 
+    //if (loglevel > 2)
+    //    syslog(LOG_DEBUG, "decrypt len=%ld '%s'",  total,
+    //                            bluepoint2_dumphex(mem, 16));
+    //if (loglevel > 2)
+    //    syslog(LOG_DEBUG, "decrypt end '%s'",
+    //                bluepoint2_dumphex(mem + HS_BLOCK - 16, 16));
+
     if (loglevel > 2)
         syslog(LOG_DEBUG,
             "Writing: size=%ld offs=%ld skip=%ld\n",
-                                               size, offset, skip);
+                                            size, offset, skip);
     // Grab the new data
     memcpy(mem + skip, buf, size);
 
@@ -180,12 +210,11 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
     hs_encrypt(mem, total, passx, plen);
 
     // Write it back out, all that changed
-    int res2 = pwrite(fi->fh, mem, skip + size, new_beg);
+    int res2 = pwrite(fi->fh, mem, size+skip, new_beg);
 	if (res2 < 0)
         {
         if (loglevel > 0)
             syslog(LOG_DEBUG, "Error on writing file: %s res %d errno %d\n", path, res, errno);
-
 		res = -errno;
         goto endd;
         }
@@ -197,11 +226,13 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
     if(new_end >= fsize)
         {
         // Write sideblock back out
-        //if (loglevel > 3)
-        //    syslog(LOG_DEBUG, "Write sideblock: '%s'\n",
-        //                            bluepoint2_dumphex(mem + predat, 8));
+        if (loglevel > 3)
+            syslog(LOG_DEBUG, "Write sideblock: new_beg=%ld '%s'\n", new_beg,
+                                    bluepoint2_dumphex(mem + predat, 8));
 
-        int ret2 = write_sideblock(path, mem + predat, HS_BLOCK);
+        memcpy(psb->buff, mem + predat, HS_BLOCK);
+        int ret2 = write_sideblock(path, psb);
+
         if(ret2 < 0)
             {
             if (loglevel > 0)
@@ -213,23 +244,25 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
         }
 
     // Reflect new file position
-    //lseek(fi->fh, oldoff + res, SEEK_SET);
     lseek(fi->fh, offset + res, SEEK_SET);
 
    endd:
     // Do not leave data behind
     if (mem)
         {
-        // Just to confuse the would be debugger
-        if(rand() % 2 == 0)
-            hs_decrypt(mem, total, "passpass", 8);
-
         kill_buff(mem, total);
+        }
+    if(psb)
+        {
+        kill_buff(psb, sizeof(sideblock));
         }
 	return res;
 }
 
 // EOF
+
+
+
 
 
 

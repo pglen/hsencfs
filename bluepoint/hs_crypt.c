@@ -6,6 +6,8 @@
 #include "hs_crypt.h"
 #include <syslog.h>
 
+#ifndef FAKE
+
 // -----------------------------------------------------------------------
 // HS crypt block loop. Extracted for the hsencfs project.
 
@@ -41,7 +43,9 @@ void hs_decrypt_org(void *mem, int size2, void *pass, int plen)
         }
 }
 
-#ifdef FAKE
+#else
+
+#warning "Fake encryption"
 
 // Just an XOR of the buffer to troubleshoot the interceptor
 
@@ -52,7 +56,7 @@ void hs_encrypt_fake(void *mem, int size2, void *pass, int plen)
 
     //syslog(LOG_DEBUG,"hs_encrypt_fake size2=%d", size2);
 
-    for(int loop = 0; loop <= size2; loop += HS_BLOCK)
+    for(int loop = 0; loop < size2; loop += HS_BLOCK)
         {
         int block = MIN(HS_BLOCK, size2 - loop);
 
@@ -60,9 +64,9 @@ void hs_encrypt_fake(void *mem, int size2, void *pass, int plen)
 
         for(int aa = 0; aa < block; aa++)
             {
-            cmem[loop + aa] = cmem[loop + aa] ^ 2;
-            cmem[loop + aa] = cmem[loop + aa] ^ cpass[loop + aa % plen];
-            cmem[loop + aa] = cmem[loop + aa] ^ (loop + aa % 200);
+            cmem[loop + aa] = cmem[loop + aa] ^ 0x80;
+            //cmem[loop + aa] = cmem[loop + aa] ^ cpass[loop + aa % plen];
+            //cmem[loop + aa] = cmem[loop + aa] ^ (loop + aa % 200);
             }
         }
 }
@@ -74,7 +78,7 @@ void hs_decrypt_fake(void *mem, int size2, void *pass, int plen)
 
     //syslog(LOG_DEBUG,"hs_decrypt_fake size2=%d", size2);
 
-    for(int loop = 0; loop <= size2; loop += HS_BLOCK)
+    for(int loop = 0; loop < size2; loop += HS_BLOCK)
         {
         int block = MIN(HS_BLOCK, size2 - loop);
 
@@ -82,9 +86,9 @@ void hs_decrypt_fake(void *mem, int size2, void *pass, int plen)
 
         for(int aa = 0; aa < block; aa++)
             {
-            cmem[loop + aa] = cmem[loop + aa] ^ (loop + aa % 200);
-            cmem[loop + aa] = cmem[loop + aa] ^ cpass[loop + aa % plen];
-            cmem[loop + aa] = cmem[loop + aa] ^ 2;
+            //cmem[loop + aa] = cmem[loop + aa] ^ (loop + aa % 200);
+            //cmem[loop + aa] = cmem[loop + aa] ^ cpass[loop + aa % plen];
+            cmem[loop + aa] = cmem[loop + aa] ^ 0x80;
             }
         }
 }
@@ -92,6 +96,7 @@ void hs_decrypt_fake(void *mem, int size2, void *pass, int plen)
 #endif
 
 // EOF
+
 
 
 

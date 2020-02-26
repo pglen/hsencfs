@@ -76,6 +76,8 @@ void help()
 
 }
 
+sideblock sb;
+
 // -----------------------------------------------------------------------
 
 int main(int argc, char *argv[])
@@ -85,6 +87,9 @@ int main(int argc, char *argv[])
 
     int cc, digit_optind = 0, loop, loop2;
     struct stat ss; struct timespec ts;
+
+    memset(&sb, '\0', sizeof(sb));
+    sb.magic =  HSENCFS_MAGIC;
 
     //bluepoint2_set_verbose(1);
     //bluepoint2_set_functrace(1);
@@ -271,7 +276,9 @@ int main(int argc, char *argv[])
         if(prog + 4096 > fsize)
             {
             curr = fsize - prog;
-            fwrite(buff, 1, sizeof(buff), fp3);
+            //fwrite(buff, 1, sizeof(buff), fp3);
+            memcpy(sb.buff,  buff, sizeof(buff));
+            fwrite(&sb, 1, sizeof(sideblock), fp3);
             }
         else
             {
@@ -290,6 +297,7 @@ int main(int argc, char *argv[])
 
     exit(0);
 }
+
 
 
 

@@ -21,18 +21,25 @@
 
 #define     hs_encrypt  hs_encrypt_fake
 #define     hs_decrypt  hs_decrypt_fake
-#else
-#define     hs_encrypt  hs_encrypt_org
-#define     hs_decrypt  hs_decrypt_org
-
-#endif
-
-void hs_encrypt_org(void *mem, int size2, void *pass, int plen);
-void hs_decrypt_org(void *mem, int size2, void *pass, int plen);
 
 void hs_encrypt_fake(void *mem, int size2, void *pass, int plen);
 void hs_decrypt_fake(void *mem, int size2, void *pass, int plen);
 
+#else
+
+// Deploy the real encryption
+
+#define     hs_encrypt  hs_encrypt_org
+#define     hs_decrypt  hs_decrypt_org
+
+void hs_encrypt_org(void *mem, int size2, void *pass, int plen);
+void hs_decrypt_org(void *mem, int size2, void *pass, int plen);
+
+#endif
+
+
 // EOF
+
+
 
 

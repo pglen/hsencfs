@@ -88,17 +88,24 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset, stru
             syslog(LOG_DEBUG, "offs=%ld size=%ld fsize=%ld\n", offset, size, fsize);
             }
 
-        // Last block, load it
-        // Always read full blocks from sideblock
-        char *bbuff = NULL;
-        int ret = read_sideblock(path, &bbuff, HS_BLOCK);
-        if(!bbuff)
+        // Read in last block from lastblock file
+        sideblock *psb =  malloc(sizeof(sideblock));
+        if(psb == NULL)
             {
-            if (loglevel > 2)
-                syslog(LOG_DEBUG, "Cannot alloc for sideblock.\n");
-            errno = -ENOMEM;
+            if (loglevel > 0)
+               syslog(LOG_DEBUG, "Cannot allocate memory for sideblock '%s'\n", path);
+
+            res = -errno;
             goto endd;
             }
+
+        memset(psb, '\0', sizeof(sideblock));
+        psb->magic =  HSENCFS_MAGIC;
+
+        //hs_encrypt(mem, HS_BLOCK, passx, plen);
+
+        // Last block, load it
+        int ret = read_sideblock(path, psb);
         if(ret < 0)
             {
             if (loglevel > 2)
@@ -110,13 +117,13 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset, stru
         //    syslog(LOG_DEBUG, "Got sideblock: '%s'\n",
         //                            bluepoint2_dumphex(bbuff, 8));
 
-        // Foundation is the sideblock data, copy it in
-
         if (loglevel > 2)
             syslog(LOG_DEBUG, "Patching in last block last=%ld\n", last);
 
-        memcpy(mem + last, bbuff, HS_BLOCK);
-        kill_buff(bbuff, HS_BLOCK);
+        // Foundation is the sideblock data, copy it in
+        memcpy(mem + last, psb->buff, HS_BLOCK);
+
+        kill_buff(psb, sizeof(sideblock));
 
         // Add in data from file
         if (loglevel > 2)
@@ -182,11 +189,4 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset, stru
 }
 
 // EOF
-
-
-
-
-
-
-
 

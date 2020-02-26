@@ -146,7 +146,7 @@ static struct fuse_operations xmp_oper = {
 	.removexattr	= xmp_removexattr,
 #endif
 	.lock		= xmp_lock,
-	//.lseek  	= xmp_lseek,
+	.lseek  	= xmp_lseek,
 
 	//.flag_nullpath_ok = 1,
 };
@@ -622,6 +622,7 @@ int     main(int argc, char *argv[])
         {
         syslog(LOG_DEBUG, "Started with %s\n", mountpoint);
         syslog(LOG_DEBUG, "Using data %s\n", mountsecret);
+        syslog(LOG_DEBUG, "Started by uid=%d\n", getuid());
         }
 
     // Note: if you transform the file with a different block size
@@ -743,7 +744,10 @@ int     main(int argc, char *argv[])
     if(ret)
         {
         if(loglevel > 0)
-            syslog(LOG_DEBUG, "Mount returned with '%d'", ret);
+            {
+            syslog(LOG_DEBUG, "Mount err '%s'", mountpoint);
+            syslog(LOG_DEBUG, "Mount returned with %d errno=%d", ret, errno);
+            }
 
         printf("Mounted by uid %d -> %s\n", getuid(), mountpoint);
         printf("Mount returned with '%d' errno=%d\n", ret, errno);
@@ -754,12 +758,15 @@ int     main(int argc, char *argv[])
     else
         {
         if(loglevel > 0)
-            syslog(LOG_DEBUG, "Mounted '%s' data -> (%s)", mountpoint, mountsecret);
+            {
+            syslog(LOG_DEBUG, "unMnt '%s'", mountpoint);
+            syslog(LOG_DEBUG, "unMntSec '%s'", mountsecret);
+            syslog(LOG_DEBUG, "ended by uid=%d ", getuid());
+            }
 
-        printf("Mounted by uid %d -> %s\n", getuid(), mountpoint);
-
-        syslog(LOG_AUTH, "Mounted  '%s' by %d data -> (%s)",
-                                 mountpoint, getuid(), mountsecret);
+        //printf("unMounted '%s'\n", mountpoint);
+        //syslog(LOG_AUTH, "unMounted  '%s' by %d", mountpoint, getuid());
+        //, mountsecret);
         }
     return ret;
 }

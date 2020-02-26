@@ -14,6 +14,7 @@
 #include <sys/time.h>
 #include <sys/stat.h>
 
+#include "hs_crypt.h"
 #include "bp2com.h"
 #include "bluepoint2.h"
 
@@ -135,6 +136,7 @@ int     mk_block_file(const char *path)
     if(ptmp3) free(ptmp3);
     return(fdi);
 }
+
 
 
 

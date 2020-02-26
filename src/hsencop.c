@@ -7,7 +7,7 @@ static inline struct xmp_dirp *get_dirp(struct fuse_file_info *fi)
 	return (struct xmp_dirp *) (uintptr_t) fi->fh;
 }
 
-static int xmp_lseek(const char *path,  off_t off, int whence, struct fuse_file_info *fi)
+static off_t xmp_lseek(const char *path,  off_t off, int whence, struct fuse_file_info *fi)
 {
     if (loglevel > 3)
         {
@@ -52,8 +52,8 @@ static int xmp_access(const char *path, int mask)
     char  path2[PATH_MAX] ;
     strcpy(path2, mountsecret); strcat(path2, path);
 
-    if (loglevel > 3)
-        syslog(LOG_DEBUG, "Get access, file: %s uid: %d\n", path, getuid());
+    //if (loglevel > 3)
+    //    syslog(LOG_DEBUG, "Get access, file: %s uid: %d\n", path, getuid());
 
 	res = access(path2, mask);
 
@@ -470,7 +470,7 @@ static int xmp_ftruncate(const char *path, off_t size, struct fuse_file_info *fi
                 syslog(LOG_DEBUG, "fTruncate fill: cannot fill\n");
             return -errno;
             }
-        write_sideblock(path, mem + total - HS_BLOCK, HS_BLOCK);
+        //write_sideblock(path, mem + total - HS_BLOCK, HS_BLOCK);
         }
 	return res;
 }
@@ -657,8 +657,8 @@ static int xmp_flush(const char *path, struct fuse_file_info *fi)
 {
 	int res;
 
-    if (loglevel > 3)
-        syslog(LOG_DEBUG, "Flushing file: %s uid: %d\n", path, getuid());
+    //if (loglevel > 3)
+    //    syslog(LOG_DEBUG, "Flushing file: %s uid: %d\n", path, getuid());
 
 	(void) path;
 	/* This is called from every close on an open file, so call the
@@ -668,20 +668,20 @@ static int xmp_flush(const char *path, struct fuse_file_info *fi)
 	   filesystem like NFS which flush the data/metadata on close() */
 
     // try until error
-    for (int aa = 0; aa < 10; aa++)
-        {
-        res = syncfs(fi->fh);
-        if (res < 0)
-            break;
-        }
+    //for (int aa = 0; aa < 10; aa++)
+    //    {
+    //    res = syncfs(fi->fh);
+    //    if (res < 0)
+    //        break;
+    //    }
+    //
+    //res = 0;
 
-    res = 0;
+    res = close(dup(fi->fh));
+	if (res == -1)
+		return -errno;
 
-    //res = close(dup(fi->fh));
-	//if (res == -1)
-	//	return -errno;
-
-    if (loglevel > 3)
+    if (loglevel > 4)
         syslog(LOG_DEBUG, "Flushed file: %s fh: %ld\n", path, fi->fh);
 
 	return 0;
@@ -692,8 +692,8 @@ static int xmp_release(const char *path, struct fuse_file_info *fi)
 {
     int res;
 
-    if (loglevel > 3)
-        syslog(LOG_DEBUG, "Releasing: '%s' fh: %ld\n", path, fi->fh);
+    //if (loglevel > 3)
+    //    syslog(LOG_DEBUG, "Releasing: '%s' fh: %ld\n", path, fi->fh);
 
     // try until error
     for (int aa = 0; aa < 3; aa++)
@@ -710,7 +710,7 @@ static int xmp_release(const char *path, struct fuse_file_info *fi)
 
     //usleep(10000);
 
-    if (loglevel > 3)
+    if (loglevel > 4)
         syslog(LOG_DEBUG, "Released: '%s' fh: %ld\n", path, fi->fh);
 
 	return 0;
@@ -795,6 +795,9 @@ static int xmp_lock(const char *path, struct fuse_file_info *fi, int cmd,
 	return ulockmgr_op(fi->fh, cmd, lock, &fi->lock_owner,
 			   sizeof(fi->lock_owner));
 }
+
+
+
 
 
 

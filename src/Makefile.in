@@ -693,6 +693,7 @@ clean-local:
 # Help
 
 test-local:
+	@./create/create_all.sh
 	@./cycle/cycle_read.sh
 	@./cycle/cycle_write.sh
 

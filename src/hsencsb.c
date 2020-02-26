@@ -10,6 +10,20 @@
 //      If last block, gather data from sideblock, patch it in.
 //
 
+#define  HSENCFS_MAGIC 0x34231278
+
+typedef struct _sideblock
+
+{
+    int  magic;
+    int  serial;
+    int  misc;
+    //char name[PATH_MAX];
+    char buff[HS_BLOCK];
+
+} sideblock;
+
+
 char    *get_sidename(const char *path)
 
 {
@@ -60,33 +74,28 @@ char    *get_sidename(const char *path)
     return ptmp2;
 }
 
-static  int    read_sideblock(const char *path, char **pbuff, int len)
+// ----------------------------------------------------------------------
+// Always read full blocks from sideblock
+
+static  int    read_sideblock(const char *path, sideblock *psb)
 
 {
     int ret = 0;
-    // Read in last block from lastblock file
-    *pbuff = malloc(len);
-    if(!*pbuff)
+
+    if(psb->magic !=  HSENCFS_MAGIC)
         {
         if (loglevel > 0)
-           syslog(LOG_DEBUG, "Cannot allocate memory for sideblock '%s'\n", path);
-        ret = -ENOMEM;
+            syslog(LOG_DEBUG, "Bad magic on sizeblock read '%s'\n", path);
+        ret = -1;
         goto endd;
         }
-    memset(*pbuff, '\0', HS_BLOCK);
-    //hs_encrypt(mem, HS_BLOCK, passx, plen);
-
     char *ptmp2 =  get_sidename(path);
     if(!ptmp2)
         {
-        if(*pbuff)
-            {
-            ret = -ENOMEM;
-            free(*pbuff);
-            *pbuff = NULL;
-            }
         if (loglevel > 0)
             syslog(LOG_DEBUG, "Cannot allocate memory for sideblock file name '%s'\n", path);
+
+        ret = -ENOMEM;
         goto endd;
         }
 
@@ -100,18 +109,17 @@ static  int    read_sideblock(const char *path, char **pbuff, int len)
         if (loglevel > 0)
             syslog(LOG_DEBUG, "Error on opening sideblock file '%s', errno: %d\n", ptmp2, errno);
 
-        //ret = -ENOENT;
+        ret = -ENOENT;
         //errno = old_errno;
-        //goto endd2;
+        goto endd2;
         }
     else
         {
-        ret = read(fdi, *pbuff, len);
-        if(ret && ret < len)        // We ignore empty file
+        ret = read(fdi, psb, sizeof(sideblock));
+        if(ret && ret < sizeof(sideblock))        // We ignore empty file
             {
             if (loglevel > 2)
                 syslog(LOG_DEBUG, "Error on reading sideblock file, errno: %d\n", errno);
-
             //ret = -EFAULT;
             }
         close(fdi);
@@ -128,15 +136,18 @@ static  int    read_sideblock(const char *path, char **pbuff, int len)
     return ret;
 }
 
+//////////////////////////////////////////////////////////////////////////
 //
 // Read / Write the
 //      If last block, gather data from sideblock, patch it in.
 //
 
-static  int     write_sideblock(const char *path, char *bbuff, int len)
+static  int     write_sideblock(const char *path, sideblock *psb)
 
 {
     int ret = 0;
+
+    return 0;
 
     char *ptmp2 =  get_sidename(path);
     if(!ptmp2)
@@ -160,18 +171,16 @@ static  int     write_sideblock(const char *path, char *bbuff, int len)
         errno = old_errno;
         goto endd2;
         }
-    else
+    rrr = write(fdi, psb, sizeof(sideblock));
+    if(rrr < sizeof(sideblock))
         {
-        int rrr = write(fdi, bbuff, len);
-        if(rrr < len)
-            {
-            if (loglevel > 0)
-                syslog(LOG_DEBUG, "Error on writing sideblock file, errno: %d\n", errno);
+        if (loglevel > 0)
+            syslog(LOG_DEBUG, "Error on writing sideblock file, errno: %d\n", errno);
 
-            ret = -errno;
-            }
-        close(fdi);
+        //ret = -errno;
         }
+    close(fdi);
+
     errno = old_errno;
 
     //if (loglevel > 4)
@@ -187,48 +196,55 @@ static  int     write_sideblock(const char *path, char *bbuff, int len)
 static  int    create_sideblock(const char *path)
 
 {
+    int ret = 0;
+
     char *ptmp2 = get_sidename(path);
-    if(ptmp2)
+    if(!ptmp2)
         {
-        //if (loglevel > 4)
-        //    syslog(LOG_DEBUG, "New sb '%s'\n", ptmp2);
-
-        int old_errno = errno;
-        int fdi = open(ptmp2, O_RDWR | O_CREAT | O_TRUNC , S_IRUSR | S_IWUSR);
-        if(fdi < 0)
-            {
-            if (loglevel > 2)
-                syslog(LOG_DEBUG, "Error on creating sideblock '%s' errno: %d\n", ptmp2, errno);
-
-            // Not sure what to do ... error?
-            }
-        else
-            {
-            char *ptmp3 = malloc(HS_BLOCK);
-            if(ptmp3)
-                {
-                memset(ptmp3, '\0', HS_BLOCK);
-
-                // This way, the first decode is zeros
-                hs_encrypt(ptmp3, HS_BLOCK, passx, plen);
-
-                // The initial sideblock contains what?
-                //hs_encrypt(ptmp3, HS_BLOCK, passx, plen);
-
-                int ww = write(fdi, ptmp3, HS_BLOCK);
-                if(ww < HS_BLOCK)
-                    {
-                    if (loglevel > 2)
-                        syslog(LOG_DEBUG, "Error on writing to sideblock errno: %d\n", errno);
-                    }
-                free(ptmp3);
-                }
-            close(fdi);
-            }
-        errno = old_errno;
-        free(ptmp2);
+        if (loglevel > 0)
+            syslog(LOG_DEBUG, "Canot allocate sideblock memory.");
+        ret = -ENOMEM;
+        goto endd;
         }
-    return 0;
+    sideblock *psb =  malloc(sizeof(sideblock));
+    if(psb == NULL)
+        {
+        if (loglevel > 0)
+            syslog(LOG_DEBUG, "Error on alloc sideblock\n");
+        ret = -errno;
+        goto endd2;
+        }
+    memset(psb, '\0', sizeof(sideblock));
+    psb->magic =  HSENCFS_MAGIC;
+
+    int old_errno = errno;
+    int fdi = open(ptmp2, O_RDWR | O_CREAT | O_TRUNC , S_IRUSR | S_IWUSR);
+    if(fdi < 0)
+        {
+        if (loglevel > 2)
+            syslog(LOG_DEBUG, "Error on creating sideblock '%s' errno: %d\n", ptmp2, errno);
+
+        // Not sure what to do ... error?
+        ret = -errno;
+        goto endd3;
+        }
+    int ww = write(fdi, psb, sizeof(sideblock));
+    if(ww < sizeof(sideblock))
+        {
+        if (loglevel > 2)
+            syslog(LOG_DEBUG, "Error on writing to sideblock errno: %d\n", errno);
+        }
+    close(fdi);
+    errno = old_errno;
+
+  endd3:
+    free(psb);
+
+  endd2:
+    free(ptmp2);
+
+   endd:
+    return ret;
 }
 
 // -----------------------------------------------------------------------
@@ -332,6 +348,9 @@ static  int     openpass(const char *path)
 }
 
 // EOF
+
+
+
 
 
 
