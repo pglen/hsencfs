@@ -20,6 +20,7 @@ typedef struct _sideblock
     int  misc;
     //char name[PATH_MAX];
     char buff[HS_BLOCK];
+    int  misc2;
 
 } sideblock;
 
@@ -147,8 +148,6 @@ static  int     write_sideblock(const char *path, sideblock *psb)
 {
     int ret = 0;
 
-    return 0;
-
     char *ptmp2 =  get_sidename(path);
     if(!ptmp2)
         {
@@ -157,8 +156,8 @@ static  int     write_sideblock(const char *path, sideblock *psb)
         goto endd;
         }
 
-    //if (loglevel > 2)
-    //    syslog(LOG_DEBUG, "Writing sideblock file '%s'\n", ptmp2);
+    if (loglevel > 2)
+        syslog(LOG_DEBUG, "Writing sideblock file '%s'\n", ptmp2);
 
     int rrr = 0, old_errno = errno;
     int fdi = open(ptmp2, O_RDWR);
@@ -181,6 +180,9 @@ static  int     write_sideblock(const char *path, sideblock *psb)
         }
     close(fdi);
 
+    //if (loglevel > 2)
+    //    syslog(LOG_DEBUG, "Writing sideblock file2 '%s'\n", ptmp2);
+
     errno = old_errno;
 
     //if (loglevel > 4)
@@ -188,6 +190,9 @@ static  int     write_sideblock(const char *path, sideblock *psb)
 
    endd2:
     free(ptmp2);
+
+    if (loglevel > 2)
+        syslog(LOG_DEBUG, "Writing sideblock file3 '%s'\n", ptmp2);
 
   endd:
     return ret;
@@ -348,6 +353,7 @@ static  int     openpass(const char *path)
 }
 
 // EOF
+
 
 
 

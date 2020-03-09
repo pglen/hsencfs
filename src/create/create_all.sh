@@ -15,10 +15,12 @@ create_file()
 rm test/*
 
 create_file 300
+create_file 3000
 create_file 4096
 create_file 5000
 create_file 8192
 create_file 9000
+
 
 
 

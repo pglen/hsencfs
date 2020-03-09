@@ -27,21 +27,23 @@ write_file()
 }
 
 write_file "aa4096.txt" 4096
-#write_file "aa8192.txt" 4096
-#write_file "aa300.txt" 4096
-#write_file "aa5000.txt" 4096
-#write_file "aa9000.txt" 4096
-#
-#write_file "aa4096.txt"  2000
-#write_file "aa8192.txt" 4000
-#write_file "aa300.txt"  200
-#write_file "aa5000.txt" 800
-#write_file "aa9000.txt" 300
-#
-#write_file "aa4096.txt" 345
-#write_file "aa8192.txt" 255
-#write_file "aa300.txt"  230
-#write_file "aa5000.txt" 800
-#write_file "aa9000.txt" 406
-#
+write_file "aa8192.txt" 4096
+write_file "aa300.txt" 4096
+write_file "aa5000.txt" 4096
+write_file "aa9000.txt" 4096
+
+write_file "aa4096.txt"  2000
+write_file "aa8192.txt" 4000
+write_file "aa300.txt"  200
+write_file  "aa3000.txt"  1200
+write_file "aa5000.txt" 800
+write_file "aa9000.txt" 300
+
+write_file "aa4096.txt" 345
+write_file "aa8192.txt" 255
+write_file "aa300.txt"  230
+write_file "aa5000.txt" 800
+write_file "aa9000.txt" 406
+
+
 

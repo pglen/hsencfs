@@ -67,8 +67,8 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
 
     // ----- Visualize what is going on ------------------------------
     // Intervals have space next to it, points touch bars
-    // Intervals have no undescore in name; Note: fsize is both point
-    // and interval.
+    // Intervals have no undescore in name;
+    // Note: fsize is both point and interval.
     //
     //         [             total             ]
     //         |new_beg                        |new_end
@@ -152,11 +152,11 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
         //                            bluepoint2_dumphex(bbuff, 8));
 
         // Patch in sb data
-        memcpy(mem + predat, psb->buff, HS_BLOCK);
-        kill_buff(psb, sizeof(sideblock));
+        memcpy(mem, psb->buff, HS_BLOCK);
+        //kill_buff(psb, sizeof(sideblock));
 
         // Get original
-        int ret3 = pread(fi->fh, mem, skip + size, new_beg);
+        int ret3 = pread(fi->fh, mem + skip, size, new_beg + skip);
         if (loglevel > 2)
             syslog(LOG_DEBUG,
                 "Pre read: ret=%d  new_beg=%ld\n", ret3, new_beg);
@@ -223,16 +223,19 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
     if (loglevel > 3)
         syslog(LOG_DEBUG, "Written: res %d bytes\n", res);
 
-    if(new_end >= fsize)
+    if(new_end > fsize)
         {
         // Write sideblock back out
         if (loglevel > 3)
-            syslog(LOG_DEBUG, "Write sideblock: new_beg=%ld '%s'\n", new_beg,
-                                    bluepoint2_dumphex(mem + predat, 8));
+            syslog(LOG_DEBUG,
+                        "Write sideblock: new_beg=%ld predat=%ld total=%ld\n",
+                                                      new_beg, predat, total);
+        if (loglevel > 4)
+            syslog(LOG_DEBUG, "Sideblock: '%s'\n",
+                                            bluepoint2_dumphex(mem + predat, 8));
 
         memcpy(psb->buff, mem + predat, HS_BLOCK);
         int ret2 = write_sideblock(path, psb);
-
         if(ret2 < 0)
             {
             if (loglevel > 0)
@@ -244,7 +247,7 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
         }
 
     // Reflect new file position
-    lseek(fi->fh, offset + res, SEEK_SET);
+    //lseek(fi->fh, offset + res, SEEK_SET);
 
    endd:
     // Do not leave data behind
@@ -260,6 +263,7 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
 }
 
 // EOF
+
 
 
 
