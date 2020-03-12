@@ -9,7 +9,7 @@
 
 aa=`mount | grep secrets`
 if [ "$aa" == "" ] ; then
-    echo mount secrets first2
+    echo mount secrets first
     exit 0
 fi
 
@@ -20,12 +20,13 @@ read_file()
     dd  if=~/secrets/a$1 of=test/aa$1 ibs=$2 obs=$2 2>/dev/null
 
     echo -n "bs=$2 "
-    diff -qs test/$1 test/aa$1; ERR=$?
+    #diff -qs test/$1 test/aa$1; ERR=$?
+    pgdiff -qs test/$1 test/aa$1; ERR=$?
 
     if [ "$ERR" != "0" ] ; then
-         echo -e "$RED  *****  bs=$2 Error: $ERR "
-         ls -l test/$1 test/aa$1
-         echo -e $NC
+         #echo -e $RED"bs=$2 Error: $ERR " $NC
+         #ls -l test/$1 test/aa$1
+         echo -n ""
     else
          #echo -en "$GREEN OK $NC"
          echo -n ""
@@ -51,6 +52,7 @@ read_file "aa8192.txt" 412
 read_file "aa300.txt"  23
 read_file "aa5000.txt" 8000
 read_file "aa9000.txt" 406
+
 
 
 

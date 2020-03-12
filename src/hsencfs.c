@@ -703,9 +703,10 @@ int     main(int argc, char *argv[])
     //                            bluepoint2_dumphex(passx, plen));
 
     // Write back expanded paths
-    char *argv2[4];
-    argv2[0]  = "hsencfs";      argv2[1]  = mountpoint;
-    argv2[2]  = mountsecret;    argv2[3]  = NULL;
+    char *argv2[6]; int cnt = 0;
+    argv2[cnt++]  = "hsencfs";      argv2[cnt++]  = mountpoint;
+    argv2[cnt++]  = mountsecret;    argv2[cnt++]  = "user_mmap=1";
+    argv2[cnt++]  = NULL;
 
     if(verbose)
         printf("Mount parms '%s' '%s'\n", mountsecret,  mountpoint);
@@ -772,4 +773,5 @@ int     main(int argc, char *argv[])
 }
 
 // EOF
+
 

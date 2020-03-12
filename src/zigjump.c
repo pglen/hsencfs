@@ -37,11 +37,12 @@ int     main(int argc, char *argv[])
 
     lseek(fp_in, sizeof(buff), SEEK_SET);
 
+    int  backoffs = 1000;
     int ret5 = lseek(fp_out, 0, SEEK_SET);
-    int ret6 = read(fp_out, buff, sizeof(buff)-18);
-    int ret7 = lseek(fp_out, sizeof(buff) -18, SEEK_SET);
+    int ret6 = read(fp_out, buff, sizeof(buff) - backoffs);
+    int ret7 = lseek(fp_out, sizeof(buff) - backoffs, SEEK_SET);
 
-    int ret2 = write(fp_out, buff, 18);
+    int ret2 = write(fp_out, buff, backoffs);
     printf("ret5=%d ret6=%d ret7=%d ret2=%d\n", ret5, ret6, ret7, ret2);
 
     exit(0);
@@ -70,6 +71,7 @@ int     main(int argc, char *argv[])
     close(fp_in);
     close(fp_out);
 }
+
 
 
 

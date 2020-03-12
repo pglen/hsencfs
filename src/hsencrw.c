@@ -247,7 +247,7 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
         }
 
     // Reflect new file position
-    //lseek(fi->fh, offset + res, SEEK_SET);
+    lseek(fi->fh, offset + res, SEEK_SET);
 
    endd:
     // Do not leave data behind
