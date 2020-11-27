@@ -1,6 +1,8 @@
 #                                 README
 
-#                  The High Security EnCrypting File System.
+##                  The High Security EnCrypting File System.
+
+                            UNDER CONSTRUCTION
 
  HSENCFS is a user space encrypting file system. Simple to set up, seamless
 to use, fast, safe, secure and maintenance free. It will encrypt
