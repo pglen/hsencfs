@@ -197,11 +197,13 @@ int main(int argc, char *argv[])
         }
     }
 
+    FILE *fp2 = NULL;
     if (optind >= argc - 1)
         {
-        printf("Not enough arguments.\n");
-        help();
-        exit(1);
+        printf("Not enough arguments, out to stdout\n");
+        //help();
+        //exit(1);
+        fp2 = stdout;
         }
 
    if(verbose)
@@ -245,11 +247,14 @@ int main(int argc, char *argv[])
 
     off_t fsize = stbuf.st_size;
 
-    FILE *fp2 = fopen(argv[optind+1], "wb+");
-    if (!fp2)
+    if(!fp2)
         {
-        fprintf(stderr, "File '%s' must be writable.\n", argv[optind+1]);
-        exit(1);
+        fp2 = fopen(argv[optind+1], "wb+");
+        if (!fp2)
+            {
+            fprintf(stderr, "File '%s' must be writable.\n", argv[optind+1]);
+            exit(1);
+            }
         }
 
     char *ptmp2 = mk_backup_path(argv[optind]);
@@ -327,23 +332,4 @@ int main(int argc, char *argv[])
     exit(0);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// EOF

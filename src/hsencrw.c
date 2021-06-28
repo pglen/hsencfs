@@ -13,6 +13,9 @@
 //      Patch required data back.
 //
 
+// This is to debug the FUSE subsystem without the encryption
+
+
 // Shorthands to make code compacter. Notice: { block enclosed }
 
 #define EVAL_MEM_GO(memmsg, enddx)                                      \
@@ -40,19 +43,32 @@
 //    | skip |    opend    |
 //
 
-static int xmp_write(const char *path, const char *buf, size_t size, off_t offset, struct fuse_file_info *fi)
-
+static int xmp_write(const char *path, const char *buf, size_t size, // )
+                        off_t offset,  struct fuse_file_info *fi)
 {
 	int res = 0, loop = 0;
     if(size == 0) {
-        if (loglevel > 3)
+        if (loglevel > 1)
             syslog(LOG_DEBUG, "zero write on '%s'\n", path);
         return 0;
         }
 
     if (loglevel > 3)
         syslog(LOG_DEBUG,
-                " *** xmp_write(): name '%s'\n", path);
+                " *** xmp_write():fh=%ld  name '%s' size=%lu offs=%lu\n",
+                                                fi->fh, path, size, offset);
+
+    #ifdef BYPASS
+    int res2a = pwrite(fi->fh, buf, size, offset);
+	if (res2a < 0)
+        {
+        return -errno;
+        }
+    else
+        {
+        return res2a;
+        }
+    #endif
 
     // Change file handle to reflect read / write
     //int ret3 = fchmod(fi->fh, S_IRUSR | S_IWUSR |  S_IRGRP);
@@ -163,7 +179,7 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
 
         if(ret3 < 0)
             {
-            if (loglevel > 0)
+            if (loglevel > 9)
                 syslog(LOG_DEBUG, "Cannot pre read data. ret3=%d errno=%d\n", ret3, errno);
 
             // New ending ... kill sideblock
@@ -220,7 +236,7 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
         }
     res = res2 - skip;
 
-    if (loglevel > 3)
+    if (loglevel > 9)
         syslog(LOG_DEBUG, "Written: res %d bytes\n", res);
 
     if(new_end > fsize)
@@ -230,7 +246,7 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
             syslog(LOG_DEBUG,
                         "Write sideblock: new_beg=%ld predat=%ld total=%ld\n",
                                                       new_beg, predat, total);
-        if (loglevel > 4)
+        if (loglevel > 9)
             syslog(LOG_DEBUG, "Sideblock: '%s'\n",
                                             bluepoint2_dumphex(mem + predat, 8));
 
@@ -263,10 +279,3 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
 }
 
 // EOF
-
-
-
-
-
-
-

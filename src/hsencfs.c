@@ -26,6 +26,7 @@
  */
 
 //#define FUSE_USE_VERSION 34
+//#define FUSE_USE_VERSION 31
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -91,7 +92,6 @@ static  char  mountpoint[PATH_MAX] ;
 static  char  mountsecret[PATH_MAX] ;
 static  char  tmpsecret[PATH_MAX] ;
 static  char  passprog[PATH_MAX] ;
-
 static  char  inodedir[PATH_MAX] ;
 
 /// We use this as a string to obfuscate the password. Do not change.
@@ -107,11 +107,13 @@ static char *myext = ".datx";
 // Get the extracted sources:
 
 #include "hsencsb.c"
+//#define BYPASS 1                  // Test case for no interception
 #include "hsencrr.c"                // Separated to read / write
 #include "hsencrw.c"
 #include "hsencop.c"
 
 static struct fuse_operations xmp_oper = {
+	.init       = xmp_init,
 	.getattr	= xmp_getattr,
 	//.fgetattr	= xmp_fgetattr,
 	.access		= xmp_access,
@@ -590,7 +592,7 @@ int     main(int argc, char *argv[])
     // We mostly use this log facility, but one can monitor from a
     // separate terminal.
 
-    openlog("HSENCFS",  LOG_PID,  LOG_DAEMON);
+    openlog("HSEncFs",  LOG_PID,  LOG_DAEMON);
 
     DIR *dd; struct dirent *dir;
     dd = opendir(mountpoint);
@@ -705,7 +707,7 @@ int     main(int argc, char *argv[])
     // Write back expanded paths
     char *argv2[6]; int cnt = 0;
     argv2[cnt++]  = "hsencfs";      argv2[cnt++]  = mountpoint;
-    argv2[cnt++]  = mountsecret;    argv2[cnt++]  = "user_mmap=1";
+    argv2[cnt++]  = mountsecret;    //argv2[cnt++]  = "user_mmap=1";
     argv2[cnt++]  = NULL;
 
     if(verbose)
@@ -751,7 +753,7 @@ int     main(int argc, char *argv[])
             }
 
         printf("Mounted by uid %d -> %s\n", getuid(), mountpoint);
-        printf("Mount returned with '%d' errno=%d\n", ret, errno);
+        printf("Mount returned with ret=%d errno=%d\n", ret, errno);
 
         syslog(LOG_AUTH, "Cannot mount, attempt by user %d '%s' -> '%s'",
                                          getuid(), mountsecret, mountpoint);
@@ -773,5 +775,3 @@ int     main(int argc, char *argv[])
 }
 
 // EOF
-
-

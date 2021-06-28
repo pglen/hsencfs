@@ -1,11 +1,10 @@
                                 COMPILE
 
-
   The standard autoreconf / configure / make toolchain is in operation.
 
-  Dependencies:
+  Main Dependencies:
 
-    GCC, FUSE3
+        GCC, FUSE3
 
 
 

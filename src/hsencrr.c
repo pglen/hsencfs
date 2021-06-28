@@ -21,7 +21,8 @@
 // contains a copy of the last block, one that overflows the real file length.
 //
 
-static int xmp_read(const char *path, char *buf, size_t size, off_t offset, struct fuse_file_info *fi)
+static int xmp_read(const char *path, char *buf, size_t size, off_t offset, // )
+                         struct fuse_file_info *fi)
 
 {
 	int res = 0;
@@ -29,8 +30,20 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset, stru
     if (loglevel > 3)
         {
         syslog(LOG_DEBUG,
-            "xmp_read(): '%s' size=%ld offs=%ld\n", path, size, offset);
+            "xmp_read(): fh=%ld '%s' size=%ld offs=%ld\n", fi->fh, path, size, offset);
         }
+
+    #ifdef BYPASS
+    int res2a = pread(fi->fh, buf, size, offset);
+    if(res2a < 0)
+        {
+        return -errno;
+        }
+    else
+        {
+        return res2a;
+        }
+    #endif
 
     // Remember old place, get size
     off_t fsize = get_fsize(fi->fh);  off_t oldoff = lseek(fi->fh, 0, SEEK_SET);
@@ -85,7 +98,7 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset, stru
         {
         if (loglevel > 3)
             {
-            syslog(LOG_DEBUG, "offs=%ld size=%ld fsize=%ld\n", offset, size, fsize);
+            syslog(LOG_DEBUG, "past fsize offs=%ld size=%ld fsize=%ld\n", offset, size, fsize);
             }
 
         // Read in last block from lastblock file
@@ -112,6 +125,9 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset, stru
                 syslog(LOG_DEBUG, "Cannot read sideblock data.\n");
             // Still could be good, buffer is all zeros
             }
+
+        // try     thisssssss
+        //hs_encrypt(psb->buff, HS_BLOCK, passx, plen);
 
         //if (loglevel > 2)
         //    syslog(LOG_DEBUG, "Got sideblock: '%s'\n",
@@ -189,4 +205,3 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset, stru
 }
 
 // EOF
-

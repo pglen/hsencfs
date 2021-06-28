@@ -12,9 +12,25 @@
 #endif
 
 // This is used for testing ONLY
-// NO NO  define FAKE
 
-#ifdef FAKE
+// NO NO  define FAKE
+// NO NO  define NONE
+
+//#define FAKE   1
+//#define NONE   1
+
+#ifdef NONE
+
+// Make sure the maintainer knows this is a NO NO
+//#pragma GCC error "This is for testing only. DO NOT ENABLE"
+
+#define     hs_encrypt  hs_encrypt_none
+#define     hs_decrypt  hs_decrypt_none
+
+void hs_encrypt_none(void *mem, int size2, void *pass, int plen);
+void hs_decrypt_none(void *mem, int size2, void *pass, int plen);
+
+#elif defined(FAKE)
 
 // Make sure the maintainer knows this is a NO NO
 //#pragma GCC error "This is for testing only. DO NOT ENABLE"
@@ -39,7 +55,3 @@ void hs_decrypt_org(void *mem, int size2, void *pass, int plen);
 
 
 // EOF
-
-
-
-

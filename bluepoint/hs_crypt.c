@@ -6,46 +6,25 @@
 #include "hs_crypt.h"
 #include <syslog.h>
 
-#ifndef FAKE
+#ifdef NONE
 
-// -----------------------------------------------------------------------
-// HS crypt block loop. Extracted for the hsencfs project.
+#warning "None encryption, for testing only"
 
-void hs_encrypt_org(void *mem, int size2, void *pass, int plen)
-
-{
-    int loop; char *pmem = (char*)mem;
-
-    for(loop = 0; loop < size2; loop += HS_BLOCK)
-        {
-        int block = MIN(HS_BLOCK, size2 - loop);
-
-        //syslog(LOG_DEBUG,"hs_encrypt_org block=%d", block);
-
-        bluepoint2_encrypt(pmem, block, pass, plen);
-        pmem += HS_BLOCK;
-        }
-}
-
-void hs_decrypt_org(void *mem, int size2, void *pass, int plen)
+void hs_encrypt_none(void *mem, int size2, void *pass, int plen)
 
 {
-    int loop; char *pmem = (char*)mem;
-
-    for(loop = 0; loop < size2; loop += HS_BLOCK)
-        {
-        int block = MIN(HS_BLOCK, size2 - loop);
-
-        //syslog(LOG_DEBUG,"hs_decrypt_org block=%d", block);
-
-        bluepoint2_decrypt(pmem, block, pass, plen);
-        pmem += HS_BLOCK;
-        }
+    return;
 }
 
-#else
+void hs_decrypt_none(void *mem, int size2, void *pass, int plen)
 
-#warning "Fake encryption"
+{
+    return;
+}
+
+#elif defined(FAKE)
+
+#warning "Fake encryption, for testing only"
 
 // Just an XOR of the buffer to troubleshoot the interceptor
 
@@ -93,13 +72,43 @@ void hs_decrypt_fake(void *mem, int size2, void *pass, int plen)
         }
 }
 
+#else
+
+// -----------------------------------------------------------------------
+// HS crypt block loop. Extracted for the hsencfs project.
+
+void hs_encrypt_org(void *mem, int size2, void *pass, int plen)
+
+{
+    int loop; char *pmem = (char*)mem;
+
+    for(loop = 0; loop < size2; loop += HS_BLOCK)
+        {
+        int block = MIN(HS_BLOCK, size2 - loop);
+
+        //syslog(LOG_DEBUG,"hs_encrypt_org block=%d", block);
+
+        bluepoint2_encrypt(pmem, block, pass, plen);
+        pmem += HS_BLOCK;
+        }
+}
+
+void hs_decrypt_org(void *mem, int size2, void *pass, int plen)
+
+{
+    int loop; char *pmem = (char*)mem;
+
+    for(loop = 0; loop < size2; loop += HS_BLOCK)
+        {
+        int block = MIN(HS_BLOCK, size2 - loop);
+
+        //syslog(LOG_DEBUG,"hs_decrypt_org block=%d", block);
+
+        bluepoint2_decrypt(pmem, block, pass, plen);
+        pmem += HS_BLOCK;
+        }
+}
+
 #endif
 
 // EOF
-
-
-
-
-
-
-

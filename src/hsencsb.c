@@ -36,7 +36,8 @@ char    *get_sidename(const char *path)
         goto endd;
         }
 
-    //syslog(LOG_DEBUG, "Generate sidename '%s'\n", path);
+     if (loglevel > 9)
+        syslog(LOG_DEBUG, "Generate sidename '%s'\n", path);
 
     int cnt = 0, cnt2 = 0; char *pch, *temp;
     char *ddd = strdup(path);
@@ -68,8 +69,8 @@ char    *get_sidename(const char *path)
     free(eee);
     strcat(ptmp2, myext);
 
-    //if (loglevel > 3)
-    //     syslog(LOG_DEBUG, "Got sidename '%s'\n", ptmp2);
+    if (loglevel > 3)
+         syslog(LOG_DEBUG, "Got sidename '%s'\n", ptmp2);
 
    endd:
     return ptmp2;
@@ -189,10 +190,10 @@ static  int     write_sideblock(const char *path, sideblock *psb)
     //    syslog(LOG_DEBUG, "Written sideblock file, '%s'\n", bluepoint2_dumphex(bbuff, 16));
 
    endd2:
-    free(ptmp2);
-
     if (loglevel > 2)
         syslog(LOG_DEBUG, "Writing sideblock file3 '%s'\n", ptmp2);
+
+    free(ptmp2);
 
   endd:
     return ret;
@@ -353,17 +354,3 @@ static  int     openpass(const char *path)
 }
 
 // EOF
-
-
-
-
-
-
-
-
-
-
-
-
-
-

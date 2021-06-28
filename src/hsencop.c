@@ -2,6 +2,26 @@
 
 #pragma GCC diagnostic ignored "-Wformat-truncation"
 
+static void *xmp_init(struct fuse_conn_info *conn,
+		      struct fuse_config *cfg)
+{
+	(void) conn;
+	cfg->use_ino = 1;
+
+	/* Pick up changes from lower filesystem right away. This is
+	   also necessary for better hardlink support. When the kernel
+	   calls the unlink() handler, it does not know the inode of
+	   the to-be-removed entry and can therefore not invalidate
+	   the cache of the associated inode - resulting in an
+	   incorrect st_nlink value being reported for any remaining
+	   hardlinks to this inode. */
+	cfg->entry_timeout = 0;
+	cfg->attr_timeout = 0;
+	cfg->negative_timeout = 0;
+
+	return NULL;
+}
+
 static inline struct xmp_dirp *get_dirp(struct fuse_file_info *fi)
 {
 	return (struct xmp_dirp *) (uintptr_t) fi->fh;
@@ -23,11 +43,9 @@ static int xmp_getattr(const char *path, struct stat *stbuf, struct fuse_file_in
 
     char  path2[PATH_MAX] ;
     strcpy(path2, mountsecret); strcat(path2, path);
-
 	res = lstat(path2, stbuf);
 	if (res == -1)
 		return -errno;
-
 	return 0;
 }
 
@@ -35,13 +53,10 @@ static int xmp_fgetattr(const char *path, struct stat *stbuf,
 			struct fuse_file_info *fi)
 {
 	int res;
-
 	(void) path;
-
 	res = fstat(fi->fh, stbuf);
 	if (res == -1)
 		return -errno;
-
 	return 0;
 }
 
@@ -123,10 +138,10 @@ static int xmp_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_
 {
 	struct xmp_dirp *d = get_dirp(fi);
 
-    //if (loglevel > 3)
-    //    {
-    //    syslog(LOG_DEBUG, "xmp_readdir='%s'\n", path);
-    //    }
+    if (loglevel > 9)
+        {
+        syslog(LOG_DEBUG, "xmp_readdir='%s'\n", path);
+        }
 
 	(void) path;
 	if (offset != d->offset) {
@@ -288,12 +303,18 @@ static int xmp_rmdir(const char *path)
 //# Symlink is not implemented in the encrypted file system
 // We disabled symlink, as it confused the dataroot. Remember we link
 // to dataroot as an intercept.
+// Re-enabled symlink ... wtf
 
 static int xmp_symlink(const char *from, const char *to)
 {
 	int res;
 
-    return -ENOSYS;
+    //return -ENOSYS;
+
+    if (loglevel > 1)
+        syslog(LOG_DEBUG, "Symlink parms: %s -> %s\n", from, to);
+
+    // TODO symlink between file systems
 
     char  path2[PATH_MAX] ;
     strcpy(path2, mountsecret); strcat(path2, from);
@@ -301,16 +322,22 @@ static int xmp_symlink(const char *from, const char *to)
     char  path3[PATH_MAX] ;
     strcpy(path3, mountsecret); strcat(path3, to);
 
-    //if (loglevel > 1)
-    //    syslog(LOG_DEBUG, "Symlink file: %s -> %s\n", path, path3);
+    if (loglevel > 1)
+        syslog(LOG_DEBUG, "Symlink file: %s -> %s\n", path2, path3);
 
-	res = symlink(path2, path3);
+	res = symlink(from, path3);
+	//res = symlink(path2, path3);
 	//res = symlink(from, to);
+
 	if (res == -1)
 		return -errno;
 
 	return 0;
 }
+
+//
+// Here we assume that rename is on the same file system
+//
 
 static int xmp_rename(const char *from, const char *to, unsigned int flags)
 {
@@ -325,7 +352,31 @@ static int xmp_rename(const char *from, const char *to, unsigned int flags)
     if (loglevel > 3)
         syslog(LOG_DEBUG, "Renamed file: %s to %s uid: %d\n", from, to, getuid());
 
+    char *ptmp2 = get_sidename(from);
+    if(!ptmp2)
+        {
+        if (loglevel > 1)
+            syslog(LOG_DEBUG, "Error on malloc sideblock file2\n");
+        return -errno;
+        }
+    char *ptmp3 = get_sidename(to);
+    if(!ptmp3)
+        {
+        if (loglevel > 1)
+            syslog(LOG_DEBUG, "Error on malloc sideblock file3\n");
+
+        free(ptmp2);
+        return -errno;
+        }
+
+    if (loglevel > 3)
+        syslog(LOG_DEBUG, "Rename sideblock file1: %s\n", ptmp2);
+
+    rename(ptmp2, ptmp3);
+    free(ptmp2), free(ptmp3);
+
 	res = rename(path2, path3);
+
 	//res = rename(from, to);
 	if (res == -1)
 		return -errno;
@@ -624,15 +675,14 @@ static int xmp_open(const char *path, struct fuse_file_info *fi)
     		return -errno;
             }
         }
-
 	fi->fh = fd;
+    if (loglevel > 3)
+        syslog(LOG_DEBUG, "Opened file, '%s' fh=%ld\n", path2, fi->fh);
 
     //struct stat stbuf;	memset(&stbuf, 0, sizeof(stbuf));
     //int res = fstat(fi->fh, &stbuf);
-    //
     //if (loglevel > 2)
     //    syslog(LOG_DEBUG, "Inode: %lud\n", stbuf.st_ino);
-
 	return 0;
 }
 
@@ -681,7 +731,7 @@ static int xmp_flush(const char *path, struct fuse_file_info *fi)
 	if (res == -1)
 		return -errno;
 
-    if (loglevel > 4)
+    if (loglevel > 9)
         syslog(LOG_DEBUG, "Flushed file: %s fh: %ld\n", path, fi->fh);
 
 	return 0;
@@ -692,8 +742,8 @@ static int xmp_release(const char *path, struct fuse_file_info *fi)
 {
     int res;
 
-    //if (loglevel > 3)
-    //    syslog(LOG_DEBUG, "Releasing: '%s' fh: %ld\n", path, fi->fh);
+    if (loglevel > 3)
+        syslog(LOG_DEBUG, "Releasing: '%s' fh: %ld\n", path, fi->fh);
 
     // try until error
     for (int aa = 0; aa < 3; aa++)
@@ -710,7 +760,7 @@ static int xmp_release(const char *path, struct fuse_file_info *fi)
 
     //usleep(10000);
 
-    if (loglevel > 4)
+    if (loglevel > 9)
         syslog(LOG_DEBUG, "Released: '%s' fh: %ld\n", path, fi->fh);
 
 	return 0;
@@ -796,33 +846,4 @@ static int xmp_lock(const char *path, struct fuse_file_info *fi, int cmd,
 			   sizeof(fi->lock_owner));
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// EOF
