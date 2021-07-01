@@ -42,7 +42,7 @@ accessible, and the encrypted data is not legible until it is mounted again.
 
  HSENCFS does not manage passwords. The password becomes the encryption key,
 and the key is used to encrypt the file system access. If the password / key
-is lost, the data cannot be recovered. Seriousely, lost.
+is lost, the data cannot be recovered. Seriousely, the data is lost.
 
  As the password becomes the key, it is possible to achieve long key lengths
 by entering a long password. Short key lengths are replicated to standard
@@ -63,7 +63,8 @@ An example of on-demand command line:
 
         hsencfs -o -a 'which hsaskpass.py` .mydata mysecret
 
-Note the 'which' utility, as HSENCFS needs absolute path.
+Note the 'which' utility, as HSENCFS needs absolute path. I real deployment,
+specify the askpass absolte path.
 
 ## Safety, Security, Feeding and Care
 
@@ -79,7 +80,7 @@ that HSENCFS having block size 4096, and will handle data accoringly.
  Files can be extracted from the backing data directory with the 'bpdec2'
 utility. To extract a single encrypted file by hand:
 
-     bpdec2 ~/secretdata/filename > newname
+     bpdec2 ~/.secrets/filename  newname
 
 (Will ask for password.)
 
@@ -102,12 +103,13 @@ password on decrypt. These utilities are provided as recovery tools only.
  Files can be copied out from the backing data directory. They stay encrypted
 when copied directly out of the data directory. This is useful for backup /
 replication / archiving / transport etc ... make sure you copy them with hidden
-(.dot) files included. Use: shopt -s dotglob before copy.
+(.dot) files included. Use: shopt -s dotglob before copy. Warning: the
+copied data will be unreadable without the dot files.
 
 ## Going to the Cloud.
 
  The backing data directory can reside on any valid file system, including
-a cloud drive. HSENCFS will encrypt data automatically before it sees
+a cloud drive. HSENCFS will encrypt data automatically before the data sees
 the transport layer, and decrypt data after the transport layer delivered it.
 
   This allows secure remote storage without data ever leaving the local
@@ -135,9 +137,10 @@ command line. Fuse will not allow the allow_other option unless configured in
 
  HSENCFS makes use of the API offered by the fuse subsystem to intercept file
 operations. The interception is done from mountdata to mountpoint. Copying
-data to mountpoint ends up encrypted in mountdata. Because of HSENCFS intercept
-concept, encryption / decryption is fast. It is plausible to use it to encrypt
-video streams, or compile programs in the encrypted directory.
+data to the mountpoint directory ends up encrypted in mountdata.
+Because of HSENCFS intercept concept, encryption / decryption is fast.
+It is plausible (and tested) to use it to encrypt video streams, or
+compile programs in the encrypted directory.
 
 ### The GNOME Panel Applet: (unsupported)
 
@@ -162,9 +165,6 @@ or the whole system.
 ## Additional Versions:
 
  The industrial version of this project is available upon request.
-Please send a message to the author. (see SourceForge page)
+Please send a message to the author. (see SourceForge page Update: this github page)
 
 // EOF
-
-
-
