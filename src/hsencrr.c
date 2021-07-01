@@ -30,7 +30,7 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset, // )
     if (loglevel > 3)
         {
         syslog(LOG_DEBUG,
-            "xmp_read(): fh=%ld '%s' size=%ld offs=%ld\n", fi->fh, path, size, offset);
+            "@@ xmp_read(): fh=%ld '%s' size=%ld offs=%ld\n", fi->fh, path, size, offset);
         }
 
     #ifdef BYPASS
@@ -83,7 +83,7 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset, // )
         syslog(LOG_DEBUG,
              "Reading: '%s' fsize=%ld\n", path, fsize);
         }
-    if (loglevel > 3)
+    if (loglevel > 9)
         {
         syslog(LOG_DEBUG,
             "Read par: new_offs=%ld end_offset=%ld\n",
@@ -133,7 +133,7 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset, // )
         //    syslog(LOG_DEBUG, "Got sideblock: '%s'\n",
         //                            bluepoint2_dumphex(bbuff, 8));
 
-        if (loglevel > 2)
+        if (loglevel > 9)
             syslog(LOG_DEBUG, "Patching in last block last=%ld\n", last);
 
         // Foundation is the sideblock data, copy it in
@@ -148,7 +148,7 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset, // )
         size_t res2 = pread(fi->fh, mem, fsize - beg_offset, beg_offset);
         if (res2 < 0 )
             {
-            if (loglevel > 2)
+            if (loglevel > 0)
                 syslog(LOG_DEBUG, "Cannot read enc data size=%ld offs=%ld\n",
                         size, beg_offset);
 
@@ -156,7 +156,7 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset, // )
             goto endd;
             }
         // Added data from file
-        if (loglevel > 2)
+        if (loglevel > 9)
             syslog(LOG_DEBUG, "Read in from file res2=%ld\n", res2);
 
         // No read, extend
@@ -171,7 +171,7 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset, // )
     else
         {
         res = pread(fi->fh, mem, total, beg_offset);
-        if (loglevel > 2)
+        if (loglevel > 9)
             syslog(LOG_DEBUG, "Read full res=%d\n", res);
         }
 
@@ -191,7 +191,7 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset, // )
     //lseek(fi->fh, oldoff + res, SEEK_SET);
     lseek(fi->fh, offset + res, SEEK_SET);
 
-    if (loglevel > 2)
+    if (loglevel > 9)
         syslog(LOG_DEBUG, "Read in data: '%s' size %d\n", path, res);
 
   endd:

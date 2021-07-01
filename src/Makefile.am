@@ -3,7 +3,7 @@
 
 # Fuse based encrypted file system, test utilities
 
-bin_PROGRAMS =  hsencfs
+bin_PROGRAMS =  hsencfs dualwrite seekcp zigjump zigzag
 #hsaskpass
 
 # The main program
@@ -23,6 +23,7 @@ hsaskpass_CFLAGS = -D_FILE_OFFSET_BITS=64 -O2 -I$(srcdir)/bluepoint
 clean-local:
 	@-rm -f aa bb cc
 	@-rm -f *.obj
+	@-rm -f hsencfs dualwrite zigzag zigjump
 
 # Help
 

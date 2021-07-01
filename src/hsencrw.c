@@ -15,21 +15,7 @@
 
 // This is to debug the FUSE subsystem without the encryption
 
-
-// Shorthands to make code compacter. Notice: { block enclosed }
-
-#define EVAL_MEM_GO(memmsg, enddx)                                      \
-         { if (loglevel > 0)                                            \
-                syslog(LOG_DEBUG, "Cannot get %s memory.\n", memmsg);   \
-            res = -ENOMEM;                                              \
-            goto enddx; }
-
-#define EVAL_READ_GO(msgm, xlen, enddx)                                 \
-          { if (loglevel > 0)                                           \
-                syslog(LOG_DEBUG, "Cannot read %s, len=%d\n",           \
-                                msgm, xlen);                            \
-            res = -errno;                                               \
-            goto enddx; }
+//#define BYPASS
 
 // -----------------------------------------------------------------------
 // Intercept write. Make it block size even, so encryption / decryption
@@ -39,15 +25,15 @@
 //    new_beg (buf % n)                       new_end (buf % n) * n + (buf % n ? n : 0)
 //    |   .   .   .   .   .   .   .   .   .   |
 // ===-------|--------------|---------------------============
-//           ^ offs         ^offs + size    | - lastbuff - |
+//           ^ offs         ^offs + wsize    | - lastbuff - |
 //    | skip |    opend    |
 //
 
-static int xmp_write(const char *path, const char *buf, size_t size, // )
+static int xmp_write(const char *path, const char *buf, size_t wsize, // )
                         off_t offset,  struct fuse_file_info *fi)
 {
 	int res = 0, loop = 0;
-    if(size == 0) {
+    if(wsize == 0) {
         if (loglevel > 1)
             syslog(LOG_DEBUG, "zero write on '%s'\n", path);
         return 0;
@@ -55,11 +41,12 @@ static int xmp_write(const char *path, const char *buf, size_t size, // )
 
     if (loglevel > 3)
         syslog(LOG_DEBUG,
-                " *** xmp_write():fh=%ld  name '%s' size=%lu offs=%lu\n",
-                                                fi->fh, path, size, offset);
+                " *** xmp_write():fh=%ld  name '%s' wsize=%lu offs=%lu\n",
+                                                fi->fh, path, wsize, offset);
 
+    // This is a test case for evaluating the FUSE side of the system
     #ifdef BYPASS
-    int res2a = pwrite(fi->fh, buf, size, offset);
+    int res2a = pwrite(fi->fh, buf, wsize, offset);
 	if (res2a < 0)
         {
         return -errno;
@@ -81,102 +68,121 @@ static int xmp_write(const char *path, const char *buf, size_t size, // )
     //off_t oldoff = lseek(fi->fh, 0, SEEK_CUR);
     off_t fsize = get_fsize(fi->fh);
 
+    //if (loglevel > 4)
+    //    syslog(LOG_DEBUG, "File size fsize=%ld\n", fsize);
+
     // ----- Visualize what is going on ------------------------------
     // Intervals have space next to it, points touch bars
     // Intervals have no undescore in name;
     // Note: fsize is both point and interval.
-    //
     //         [             total             ]
     //         |new_beg                        |new_end
     //         | skip |            |fsize      |
     // ===-----|------|------------|===============
     //         |      |offset   op_end|        |
-    //                |   size        |        |
+    //                |   wsize       |        |
     //         |--------------|----------------|
     //         |mem           |   sideblock    |
     //         |    predat    |
-    // see also visualize.txt
+    //
+    // See also visualize.txt
 
     // Pre-calculate stuff
-    size_t op_end  = offset + size;
+    size_t op_end  = offset + wsize;
     size_t new_beg = (offset / HS_BLOCK) * HS_BLOCK;
     size_t new_end = (op_end / HS_BLOCK) * HS_BLOCK;
     if((op_end % HS_BLOCK) > 0)
         new_end += HS_BLOCK;
 
-    size_t  total = new_end - new_beg;
-    size_t  skip  = offset - new_beg;
-    size_t  predat =  total - HS_BLOCK;
+    size_t  total  = new_end - new_beg;
+    size_t  skip   = offset - new_beg;
+    size_t  predat = total - HS_BLOCK;
 
     if (loglevel > 3)
         {
         syslog(LOG_DEBUG,
-            "Prep wr:  offset=%ld size=%ld fsize=%ld\n",
-                                         offset, size, fsize);
-        //syslog(LOG_DEBUG,
-        //    "Prep wr2: new_beg=%ld total=%ld skip=%ld\n",
-        //                                 new_beg, total, skip);
-        //syslog(LOG_DEBUG,
-        //    "Prep wr3: fsize=%ld\n", fsize);
+            "Prep wr: offs=%ld wsize=%ld fsize=%ld\n",
+                                         offset, wsize, fsize);
         }
-
     // Scratch pad for the whole lot
     void *mem =  malloc(total);
     if (mem == NULL)
-        EVAL_MEM_GO("main block", endd);
-
-    memset(mem, 0, total);                  // Zero it
-
-    //if (loglevel > 4)
-    //    syslog(LOG_DEBUG, "File size fsize=%ld\n", fsize);
+        {
+        if (loglevel > 0)
+            syslog(LOG_DEBUG, "Cannot get main block memory.\n");
+        res = -ENOMEM;
+        goto endd;
+        }
+     memset(mem, 0, total);                  // Zero it
 
     // Do it: Read / Decrypt / Patch / Encrypt / Write
-
-    sideblock *psb = NULL;
-
-    // Close to end: Sideblock is needed
-    if(new_end > fsize)
+    sideblock *psb = malloc(sizeof(sideblock));
+    if(psb == NULL)
         {
-        // Read in last block from lastblock file
-        psb =  malloc(sizeof(sideblock));
-        if(psb == NULL)
+        if (loglevel > 0)
+           syslog(LOG_DEBUG, "Cannot allocate memory for sideblock '%s'\n", path);
+        res = -ENOMEM;
+        goto endd;
+        }
+    memset(psb, '\0', sizeof(sideblock));
+    psb->magic =  HSENCFS_MAGIC;
+
+    // Read in last block from lastblock file
+    // Op past file end?
+    if(new_end >= fsize)
+        {
+        size_t padd = new_end - fsize;
+        // Long past?
+        if(padd > HS_BLOCK)
             {
-            if (loglevel > 0)
-               syslog(LOG_DEBUG, "Cannot allocate memory for sideblock '%s'\n", path);
+            if (loglevel > 3)
+                {
+                syslog(LOG_DEBUG,
+                    "=== Long past EOF: %s offset=%ld size=%ld fsize=%ld new_end=%ld\n",
+                                                 path, offset, wsize, fsize, new_end);
+                }
 
-            res = -ENOMEM;
-            goto endd;
+            #if 0
+            // Zero pad it to new end
+            char *pmem = malloc(padd + 1);
+            if(pmem == NULL)
+                {
+                if (loglevel > 0)
+                   syslog(LOG_DEBUG, "Cannot allocate memory for padding '%s'\n", path);
+                res = -ENOMEM;
+                goto endd;
+                }
+            memset(pmem, '\0', padd);
+            int res3 = pwrite(fi->fh, pmem, padd, fsize);
+            free(pmem);
+            #endif
             }
-        memset(psb, '\0', sizeof(sideblock));
-        psb->magic =  HSENCFS_MAGIC;
 
-        // Last block, load it
-        int ret = read_sideblock(path, psb);
-        if(ret < 0)
+        else
             {
-            if (loglevel > 2)
-                syslog(LOG_DEBUG, "Cannot read sideblock data.\n");
-            // Still could be good, buffer is all zeros
+            // Close to end: Sideblock is needed
+            int ret = read_sideblock(path, psb);
+            if(ret < 0)
+                {
+                if (loglevel > 2)
+                    syslog(LOG_DEBUG, "Cannot read sideblock data.\n");
+                // Still could be good, buffer is all zeros
+                }
+            //hs_encrypt(mem, HS_BLOCK, passx, plen);
+            // Assemble buffer from pre and post
+            //if (loglevel > 3)
+            //    syslog(LOG_DEBUG, "Got sideblock: '%s'\n",
+            //                            bluepoint2_dumphex(bbuff, 8));
+            // Patch in sb data
+            memcpy(mem, psb->buff, HS_BLOCK);
+            //kill_buff(psb, sizeof(sideblock));
             }
-
-        //hs_encrypt(mem, HS_BLOCK, passx, plen);
-
-        // Assemble buffer from pre and post
-
-        //if (loglevel > 3)
-        //    syslog(LOG_DEBUG, "Got sideblock: '%s'\n",
-        //                            bluepoint2_dumphex(bbuff, 8));
-
-        // Patch in sb data
-        memcpy(mem, psb->buff, HS_BLOCK);
-        //kill_buff(psb, sizeof(sideblock));
 
         // Get original
-        int ret3 = pread(fi->fh, mem + skip, size, new_beg + skip);
+        int ret3 = pread(fi->fh, mem + skip, wsize, new_beg + skip);
         if (loglevel > 2)
             syslog(LOG_DEBUG,
                 "Pre read: ret=%d  new_beg=%ld\n", ret3, new_beg);
-
         if(ret3 < 0)
             {
             if (loglevel > 9)
@@ -188,12 +194,13 @@ static int xmp_write(const char *path, const char *buf, size_t size, // )
             //res = -errno;
             //goto endd;
             }
-        else if(ret3 < skip + size)
+        else if(ret3 < skip + wsize)
             {
-            //if (loglevel > 0)
-            //    syslog(LOG_DEBUG, "Pre write data. len=%ld\n", skip + size);
+            if (loglevel > 9)
+                syslog(LOG_DEBUG, "Pre write data. ret=%d len=%ld\n", ret3, skip + wsize);
+
             // Expand file
-            //int ret4 = pwrite(fi->fh, mem, skip + size, new_beg);
+            //int ret4 = pwrite(fi->fh, mem, skip + wsize, new_beg);
             }
         }
     else
@@ -217,16 +224,16 @@ static int xmp_write(const char *path, const char *buf, size_t size, // )
 
     if (loglevel > 2)
         syslog(LOG_DEBUG,
-            "Writing: size=%ld offs=%ld skip=%ld\n",
-                                            size, offset, skip);
+            "Writing: wsize=%ld offs=%ld skip=%ld\n",
+                                            wsize, offset, skip);
     // Grab the new data
-    memcpy(mem + skip, buf, size);
+    memcpy(mem + skip, buf, wsize);
 
     // Encryption / decryption by block size
     hs_encrypt(mem, total, passx, plen);
 
     // Write it back out, all that changed
-    int res2 = pwrite(fi->fh, mem, size+skip, new_beg);
+    int res2 = pwrite(fi->fh, mem, wsize + skip, new_beg);
 	if (res2 < 0)
         {
         if (loglevel > 0)
@@ -263,7 +270,7 @@ static int xmp_write(const char *path, const char *buf, size_t size, // )
         }
 
     // Reflect new file position
-    lseek(fi->fh, offset + res, SEEK_SET);
+    //lseek(fi->fh, offset + res, SEEK_SET);
 
    endd:
     // Do not leave data behind

@@ -561,7 +561,11 @@ static int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
         }
 
     char  path2[PATH_MAX] ;
-    strcpy(path2, mountsecret); strcat(path2, path);
+    strcpy(path2, mountsecret);
+    if(path[0] == '/')
+        strcat(path2, path + 1);
+    else
+        strcat(path2, path);
 
     if (loglevel > 1)
         syslog(LOG_DEBUG, "Creating file: '%s' uid: %d mode: %x\n", path, getuid(), mode);

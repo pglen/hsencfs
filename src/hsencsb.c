@@ -69,7 +69,7 @@ char    *get_sidename(const char *path)
     free(eee);
     strcat(ptmp2, myext);
 
-    if (loglevel > 3)
+    if (loglevel > 9)
          syslog(LOG_DEBUG, "Got sidename '%s'\n", ptmp2);
 
    endd:
@@ -120,7 +120,7 @@ static  int    read_sideblock(const char *path, sideblock *psb)
         ret = read(fdi, psb, sizeof(sideblock));
         if(ret && ret < sizeof(sideblock))        // We ignore empty file
             {
-            if (loglevel > 2)
+            if (loglevel > 0)
                 syslog(LOG_DEBUG, "Error on reading sideblock file, errno: %d\n", errno);
             //ret = -EFAULT;
             }
@@ -190,7 +190,7 @@ static  int     write_sideblock(const char *path, sideblock *psb)
     //    syslog(LOG_DEBUG, "Written sideblock file, '%s'\n", bluepoint2_dumphex(bbuff, 16));
 
    endd2:
-    if (loglevel > 2)
+    if (loglevel > 9)
         syslog(LOG_DEBUG, "Writing sideblock file3 '%s'\n", ptmp2);
 
     free(ptmp2);
@@ -227,7 +227,7 @@ static  int    create_sideblock(const char *path)
     int fdi = open(ptmp2, O_RDWR | O_CREAT | O_TRUNC , S_IRUSR | S_IWUSR);
     if(fdi < 0)
         {
-        if (loglevel > 2)
+        if (loglevel > 0)
             syslog(LOG_DEBUG, "Error on creating sideblock '%s' errno: %d\n", ptmp2, errno);
 
         // Not sure what to do ... error?
@@ -237,7 +237,7 @@ static  int    create_sideblock(const char *path)
     int ww = write(fdi, psb, sizeof(sideblock));
     if(ww < sizeof(sideblock))
         {
-        if (loglevel > 2)
+        if (loglevel > 0)
             syslog(LOG_DEBUG, "Error on writing to sideblock errno: %d\n", errno);
         }
     close(fdi);

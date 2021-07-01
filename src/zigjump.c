@@ -35,25 +35,31 @@ int     main(int argc, char *argv[])
     if(fp_out < 0)
         errexit("no out file"); //, argv[2]);
 
+#if 0
     lseek(fp_in, sizeof(buff), SEEK_SET);
-
     int  backoffs = 1000;
     int ret5 = lseek(fp_out, 0, SEEK_SET);
     int ret6 = read(fp_out, buff, sizeof(buff) - backoffs);
     int ret7 = lseek(fp_out, sizeof(buff) - backoffs, SEEK_SET);
-
     int ret2 = write(fp_out, buff, backoffs);
     printf("ret5=%d ret6=%d ret7=%d ret2=%d\n", ret5, ret6, ret7, ret2);
+#endif
 
-    exit(0);
+    //exit(0);
 
+    int endd = lseek(fp_in, 0, SEEK_END);
+    lseek(fp_in, 0, SEEK_SET);
     int hhh = 200;
+    //printf("End of file = %d\n", endd);
+
     while(1)
         {
-        lseek(fp_in, -hhh, SEEK_CUR);
-        lseek(fp_out, -hhh, SEEK_CUR);
+        int eof = lseek(fp_in, 0, SEEK_CUR);
+        //printf("Reading at %d\n", eof);
+        //if(eof >= endd)
+        //    break;
 
-        int ret = read(fp_in, buff, hhh / 2);
+        int ret = read(fp_in, buff, hhh);
         if(ret < 0)
             {
             errexit("Cannot read");
@@ -63,13 +69,17 @@ int     main(int argc, char *argv[])
             {
             errexit("Cannot write");
             }
-        if(ret < hhh / 2)
+
+        // End of file
+        if(ret < hhh)
             {
             break;
             }
+        lseek(fp_in, -hhh/2, SEEK_CUR);
+        lseek(fp_out, -hhh/2, SEEK_CUR);
         }
-    close(fp_in);
-    close(fp_out);
+
+    close(fp_in);  close(fp_out);
 }
 
 

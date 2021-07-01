@@ -4,6 +4,8 @@
 
                             UNDER CONSTRUCTION
 
+  Progress: some working parts DO NOT DEPLOY yet.
+
  HSENCFS is a user space encrypting file system. Simple to set up, seamless
 to use, fast, safe, secure and maintenance free. It will encrypt
 data on the fly written to it, decrypt data read from it. HSENCFS uses only

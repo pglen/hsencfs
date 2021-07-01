@@ -1,19 +1,29 @@
+                          BLOCK Visualizer
 
-        // ----- Visualize what is going on ------------------------------
-        // Intervals have space next to it, points touch bars
-        // Intervals have no undescore in name; Note: fsize is both point
-        // and interval.
-        //
-        //         [             total             ]
-        //         |new_beg                        |new_end
-        //         | skip |            |fsize      |
-        // ===-----|------|------------|===============
-        //         |      |offset   op_end|        |
-        //                |   size        |        |
-        //         |--------------|----------------|
-        //         |mem           |   sideblock    |
-        //         |    predat    |
-        // see also visualize.txt
+     This file contains details of buffer interception for encryptions.
+The transaction is padded forward to HS_BLOCK boundary and at the end
+it is padded to HS_BLOCK boundary as well. The whole block is read in,
+decrypted and the new data is introduced. Then the new data is encrypted,
+and written back.
+
+  Quote from code:
+
+    // ----- Visualize what is going on ------------------------------
+    // Intervals have space next to it, and code points touch the bars
+    // Intervals also have no undescore their name;
+    //
+    //   Exception: fsize is both a point and an interval.
+    //
+    //         [             total             ]
+    //         |new_beg                        |new_end
+    //         | skip |            |fsize      |
+    // ===-----|------|------------|===============
+    //         |      |offset   op_end|        |
+    //                |   size        |        |
+    //         |--------------|----------------|
+    //         |mem           |   sideblock    |
+    //         |    predat    |
+    // see also visualize.txt
 
 
 
