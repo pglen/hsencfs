@@ -8,22 +8,28 @@ and written back.
 
   Quote from code:
 
-    // ----- Visualize what is going on ------------------------------
-    // Intervals have space next to it, and code points touch the bars
-    // Intervals also have no undescore their name;
-    //
-    //   Exception: fsize is both a point and an interval.
-    //
-    //         [             total             ]
-    //         |new_beg                        |new_end
-    //         | skip |            |fsize      |
-    // ===-----|------|------------|===============
-    //         |      |offset   op_end|        |
-    //                |   size        |        |
-    //         |--------------|----------------|
-    //         |mem           |   sideblock    |
-    //         |    predat    |
-    // see also visualize.txt
-
-
+ // ----- Visualize what is going on -----------------
+ // Intervals have space next to it, points touch bars
+ // Intervals have no undescore in name;
+ // Note: fsize is both point and interval.
+ //
+ //         [             total              ]
+ //         |new_beg                         |new_end
+ //         | skip  |            |fsize      |
+ // ===-----|-------|------------|===============
+ //         |       |offset   op_end|        |
+ //                 |   wsize       |        |
+ //         |---------------|----------------|
+ //         |mem            |   sideblock    |
+ //         |     predat    |                |
+ // ------ Special case1: fsize is before offset
+ //  |fsize |       |offset   op_end|        |
+ //                 |   wsize       |        |
+ //         |new_beg                         |new_end
+ // ------ Special case2: fsize is before op_end
+ //         |       |offset | op_end|        |
+ //                         |fsize           |
+ //         |new_beg                         |new_end
+ //
+ // See also visualize.txt
 

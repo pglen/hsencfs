@@ -24,6 +24,38 @@ typedef struct _sideblock
 
 } sideblock;
 
+// -----------------------------------------------------------------------
+// Shorthand for log to syslog
+
+void  hslog(int lev, char *fmt, ...)
+{
+    if (loglevel > lev)
+        {
+        va_list ap;
+        va_start(ap, fmt);
+        vsyslog(LOG_DEBUG, fmt, ap);
+        va_end(ap);
+        }
+}
+
+// -----------------------------------------------------------------------
+// Scratch pad for the whole lot
+
+void    *hsalloc(int total)
+{
+    void *mem =  malloc(total);
+    if (mem == NULL)
+        {
+        hslog(0, "Cannot get main block memory.\n");
+        goto endd;
+        }
+     memset(mem, 0, total);                  // Zero it
+
+ endd:
+    return mem;
+}
+
+// -----------------------------------------------------------------------
 
 char    *get_sidename(const char *path)
 
@@ -157,7 +189,7 @@ static  int     write_sideblock(const char *path, sideblock *psb)
         goto endd;
         }
 
-    if (loglevel > 2)
+    if (loglevel > 9)
         syslog(LOG_DEBUG, "Writing sideblock file '%s'\n", ptmp2);
 
     int rrr = 0, old_errno = errno;
@@ -279,6 +311,26 @@ static  int     is_our_file(const char *path, int fname_only)
         //    syslog(LOG_DEBUG, "is_our_file: eee '%s' nnn '%s' ret=%d\n", eee, nnn, ret);
         }
     return ret;
+}
+
+// -----------------------------------------------------------------------
+
+sideblock *alloc_sideblock()
+
+{
+    sideblock *psb = malloc(sizeof(sideblock));
+    if(psb == NULL)
+        {
+        if (loglevel > 0)
+           syslog(LOG_DEBUG, "Cannot allocate memory for sideblock\n");
+        goto endd;
+        }
+    memset(psb, '\0', sizeof(sideblock));
+    psb->magic =  HSENCFS_MAGIC;
+
+    endd:
+
+    return psb;
 }
 
 // Estabilish file size

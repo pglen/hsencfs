@@ -25,7 +25,7 @@ int     main(int argc, char *argv[])
     //printf("Zigzag read test\n");
 
     if(argc < 3)
-        errexit("Not enough arguments.");
+        errexit("Not enough arguments. use: zigzag infile outfile");
 
     int fp_in = open(argv[1], O_RDWR);
     if(fp_in < 0)

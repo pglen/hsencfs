@@ -1,3 +1,18 @@
+
+/* =====[ project ]========================================================
+
+   File Name:       dualwrite.c
+
+   Description:     Seek and write (the last, most enduring test)
+
+   Revisions:
+
+      REV       DATE                BY           DESCRIPTION
+      ----  ---------------      ----------      -------------------------
+      0.00  Sat 03.Jul.2021      Peter Glen      Initial version.
+
+   ======================================================================= */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
@@ -14,10 +29,9 @@ int errexit(char *str)
     printf("%s\n", str);
     exit(1);
     }
+
 // -----------------------------------------------------------------------
 // Main entry point
-
-//char buff[4096];
 
 int     main(int argc, char *argv[])
 

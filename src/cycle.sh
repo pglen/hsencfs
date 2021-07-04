@@ -1,12 +1,35 @@
 #!/bin/bash
 
-#
-#make
-#fusermount -u ~/secret
-./src/hsencfs -q -l 4 -p 1234 ~/.secret ~/secret
-cp Makefile ~/secret
-diff Makefile ~/secret/Makefile
-fusermount -u ~/secret
+make
+ERR=$?
+if [ "$ERR" != "0" ] ; then
+    echo $ERR "Cannot compile"
+    exit
+fi
+
+fusermount -u ~/secrets
+ERR=$?
+if [ "$ERR" != "0" ] ; then
+    echo "Waning: cannot unmount; err=" $ERR
+fi
+
+./hsencfs -q -l 9 -p 1234 ~/secrets ~/.secrets
+
+ERR=$?
+if [ "$ERR" != "0" ] ; then
+    echo $ERR "Cannot mount. err=" $ERR
+    exit
+fi
+
+rm -rf ~/secrets/*
+cp -a ~/pgsrc/hello/* ~/secrets
+diff -r ~/secrets/ ~/pgsrc/hello
+./tests/farwrite aaa
+./tests/farwrite ~/secrets/aaa
+diff aaa ~/secrets/aaa
+rm aaa
+
+
 
 
 

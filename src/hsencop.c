@@ -29,11 +29,7 @@ static inline struct xmp_dirp *get_dirp(struct fuse_file_info *fi)
 
 static off_t xmp_lseek(const char *path,  off_t off, int whence, struct fuse_file_info *fi)
 {
-    if (loglevel > 3)
-        {
-        syslog(LOG_DEBUG, "xmp_lseek='%s' off=%ld whence=%d\n", path, off, whence);
-        }
-
+    hslog(2, "xmp_lseek='%s' off=%ld whence=%d\n", path, off, whence);
     return lseek(fi->fh, off, whence);
 }
 
@@ -567,10 +563,10 @@ static int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
     else
         strcat(path2, path);
 
-    if (loglevel > 1)
-        syslog(LOG_DEBUG, "Creating file: '%s' uid: %d mode: %x\n", path, getuid(), mode);
+    if (loglevel > 9)
+        syslog(LOG_DEBUG, "Create: '%s' uid: %d mode: %x\n", path, getuid(), mode);
 
-    if (loglevel > 2)
+    if (loglevel > 9)
         syslog(LOG_DEBUG, "Shadow file: '%s'\n", path2);
 
     if(passx[0] == 0)
@@ -617,6 +613,9 @@ static int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
         goto endd;
         }
 
+    hslog(3, " - - - - - \n");
+    hslog(3, "Created: '%s' fh=%d\n", path, fi->fh);
+
     //if (loglevel > 2)
     //    syslog(LOG_DEBUG, "Inode: %lud blocksize %ld \n",
     //                                stbuf.st_ino, stbuf.st_blksize);
@@ -643,7 +642,7 @@ static int xmp_open(const char *path, struct fuse_file_info *fi)
     strcpy(path2, mountsecret); strcat(path2, path);
 
     if (loglevel > 1)
-        syslog(LOG_DEBUG, "Opening file: %s uid: %d mode: %x\n",
+        syslog(LOG_DEBUG, "Open: %s uid: %d mode: %x\n",
                                                 path, getuid(),fi->flags);
     if(passx[0] == 0)
         {
@@ -680,8 +679,9 @@ static int xmp_open(const char *path, struct fuse_file_info *fi)
             }
         }
 	fi->fh = fd;
+
     if (loglevel > 3)
-        syslog(LOG_DEBUG, "Opened file, '%s' fh=%ld\n", path2, fi->fh);
+        syslog(LOG_DEBUG, "Open '%s' fh=%ld\n", path2, fi->fh);
 
     //struct stat stbuf;	memset(&stbuf, 0, sizeof(stbuf));
     //int res = fstat(fi->fh, &stbuf);

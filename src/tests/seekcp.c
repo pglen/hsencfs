@@ -17,15 +17,13 @@ int errexit(char *str)
 // -----------------------------------------------------------------------
 // Main entry point
 
-char buff[4096];
+char buff[500];
 
 int     main(int argc, char *argv[])
 
 {
-    //printf("Zigzag read test\n");
-
     if(argc < 3)
-        errexit("Not enough arguments.");
+        errexit("Not enough arguments. Use: seekcp infile outfile");
 
     int fp_in = open(argv[1], O_RDWR);
     if(fp_in < 0)
@@ -35,21 +33,18 @@ int     main(int argc, char *argv[])
     if(fp_out < 0)
         errexit("no out file");
 
-    int ret = lseek(fp_in, 1000, SEEK_SET);
+    int fsize = lseek(fp_in, 0, SEEK_END);
+    lseek(fp_in, 0, SEEK_SET);
+    //printf("File size %d\n", fsize);
+
+    int ret = lseek(fp_in,  fsize + sizeof(buff), SEEK_SET);
     if(ret < 0)
-            {
-            errexit("Cannot seek in");
-            }
-    ret = ftruncate(fp_out, 1000);
-    if(ret < 0)
-            {
-            errexit("Cannot truncate");
-            }
-    ret = lseek(fp_out, 1000, SEEK_SET);
-    if(ret < 1000)
-            {
-            errexit("Cannot seek out");
-            }
+        errexit("Cannot seek in");
+    int ret2 = lseek(fp_out, fsize + sizeof(buff), SEEK_SET);
+    if(ret2 < 0)
+        errexit("Cannot seek out");
+
+    int last = 0;
     while(1)
         {
         int ret = read(fp_in, buff, sizeof(buff));
@@ -62,14 +57,20 @@ int     main(int argc, char *argv[])
             {
             errexit("Cannot write");
             }
-        if(ret < sizeof(buff))
-            {
+        if(last)
             break;
+        int curr = lseek(fp_in, 0, SEEK_CUR);
+        //printf("At pos %d\n", curr);
+        curr -= 2  * sizeof(buff);
+        if(curr < 0)
+            {
+            curr = 0; last = 1;
             }
+        lseek(fp_in, curr, SEEK_SET);
+        lseek(fp_out, curr, SEEK_SET);
         }
     close(fp_in);
     close(fp_out);
-
 }
 
 

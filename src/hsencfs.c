@@ -107,7 +107,7 @@ static char *myext = ".datx";
 // Get the extracted sources:
 
 #include "hsencsb.c"
-//#define BYPASS 1                  // Test case for no interception
+#define BYPASS 1                  // Test case for no interception
 #include "hsencrr.c"                // Separated to read / write
 #include "hsencrw.c"
 #include "hsencop.c"

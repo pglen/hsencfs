@@ -91,8 +91,9 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-bin_PROGRAMS = hsencfs$(EXEEXT) dualwrite$(EXEEXT) seekcp$(EXEEXT) \
-	zigjump$(EXEEXT) zigzag$(EXEEXT)
+bin_PROGRAMS = hsencfs$(EXEEXT) tests/dualwrite$(EXEEXT) \
+	tests/seekcp$(EXEEXT) tests/zigjump$(EXEEXT) \
+	tests/zigzag$(EXEEXT) tests/farwrite$(EXEEXT)
 subdir = src
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -105,9 +106,6 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-dualwrite_SOURCES = dualwrite.c
-dualwrite_OBJECTS = dualwrite.$(OBJEXT)
-dualwrite_LDADD = $(LDADD)
 am__dirstamp = $(am__leading_dot)dirstamp
 am_hsencfs_OBJECTS = hsencfs-hsencfs.$(OBJEXT) \
 	hsencfs-base64.$(OBJEXT) ../common/hsencfs-hsutils.$(OBJEXT) \
@@ -117,15 +115,21 @@ hsencfs_OBJECTS = $(am_hsencfs_OBJECTS)
 hsencfs_DEPENDENCIES =
 hsencfs_LINK = $(CCLD) $(hsencfs_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-seekcp_SOURCES = seekcp.c
-seekcp_OBJECTS = seekcp.$(OBJEXT)
-seekcp_LDADD = $(LDADD)
-zigjump_SOURCES = zigjump.c
-zigjump_OBJECTS = zigjump.$(OBJEXT)
-zigjump_LDADD = $(LDADD)
-zigzag_SOURCES = zigzag.c
-zigzag_OBJECTS = zigzag.$(OBJEXT)
-zigzag_LDADD = $(LDADD)
+tests_dualwrite_SOURCES = tests/dualwrite.c
+tests_dualwrite_OBJECTS = tests/dualwrite.$(OBJEXT)
+tests_dualwrite_LDADD = $(LDADD)
+tests_farwrite_SOURCES = tests/farwrite.c
+tests_farwrite_OBJECTS = tests/farwrite.$(OBJEXT)
+tests_farwrite_LDADD = $(LDADD)
+tests_seekcp_SOURCES = tests/seekcp.c
+tests_seekcp_OBJECTS = tests/seekcp.$(OBJEXT)
+tests_seekcp_LDADD = $(LDADD)
+tests_zigjump_SOURCES = tests/zigjump.c
+tests_zigjump_OBJECTS = tests/zigjump.$(OBJEXT)
+tests_zigjump_LDADD = $(LDADD)
+tests_zigzag_SOURCES = tests/zigzag.c
+tests_zigzag_OBJECTS = tests/zigzag.$(OBJEXT)
+tests_zigzag_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_$(V))
 am__v_P_ = $(am__v_P_$(AM_DEFAULT_VERBOSITY))
 am__v_P_0 = false
@@ -144,9 +148,10 @@ am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ../bluepoint/$(DEPDIR)/hsencfs-bluepoint2.Po \
 	../common/$(DEPDIR)/hsencfs-hspass.Po \
 	../common/$(DEPDIR)/hsencfs-hsutils.Po \
-	./$(DEPDIR)/dualwrite.Po ./$(DEPDIR)/hsencfs-base64.Po \
-	./$(DEPDIR)/hsencfs-hsencfs.Po ./$(DEPDIR)/seekcp.Po \
-	./$(DEPDIR)/zigjump.Po ./$(DEPDIR)/zigzag.Po
+	./$(DEPDIR)/hsencfs-base64.Po ./$(DEPDIR)/hsencfs-hsencfs.Po \
+	tests/$(DEPDIR)/dualwrite.Po tests/$(DEPDIR)/farwrite.Po \
+	tests/$(DEPDIR)/seekcp.Po tests/$(DEPDIR)/zigjump.Po \
+	tests/$(DEPDIR)/zigzag.Po
 am__mv = mv -f
 AM_V_lt = $(am__v_lt_$(V))
 am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
@@ -164,9 +169,10 @@ AM_V_CCLD = $(am__v_CCLD_$(V))
 am__v_CCLD_ = $(am__v_CCLD_$(AM_DEFAULT_VERBOSITY))
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = dualwrite.c $(hsencfs_SOURCES) seekcp.c zigjump.c zigzag.c
-DIST_SOURCES = dualwrite.c $(hsencfs_SOURCES) seekcp.c zigjump.c \
-	zigzag.c
+SOURCES = $(hsencfs_SOURCES) tests/dualwrite.c tests/farwrite.c \
+	tests/seekcp.c tests/zigjump.c tests/zigzag.c
+DIST_SOURCES = $(hsencfs_SOURCES) tests/dualwrite.c tests/farwrite.c \
+	tests/seekcp.c tests/zigjump.c tests/zigzag.c
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -282,6 +288,7 @@ target_alias =
 top_build_prefix = ../
 top_builddir = ..
 top_srcdir = ..
+
 #hsaskpass
 
 # The main program
@@ -371,10 +378,6 @@ uninstall-binPROGRAMS:
 
 clean-binPROGRAMS:
 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
-
-dualwrite$(EXEEXT): $(dualwrite_OBJECTS) $(dualwrite_DEPENDENCIES) $(EXTRA_dualwrite_DEPENDENCIES) 
-	@rm -f dualwrite$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(dualwrite_OBJECTS) $(dualwrite_LDADD) $(LIBS)
 ../common/$(am__dirstamp):
 	@$(MKDIR_P) ../common
 	@: > ../common/$(am__dirstamp)
@@ -398,23 +401,48 @@ dualwrite$(EXEEXT): $(dualwrite_OBJECTS) $(dualwrite_DEPENDENCIES) $(EXTRA_dualw
 hsencfs$(EXEEXT): $(hsencfs_OBJECTS) $(hsencfs_DEPENDENCIES) $(EXTRA_hsencfs_DEPENDENCIES) 
 	@rm -f hsencfs$(EXEEXT)
 	$(AM_V_CCLD)$(hsencfs_LINK) $(hsencfs_OBJECTS) $(hsencfs_LDADD) $(LIBS)
+tests/$(am__dirstamp):
+	@$(MKDIR_P) tests
+	@: > tests/$(am__dirstamp)
+tests/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) tests/$(DEPDIR)
+	@: > tests/$(DEPDIR)/$(am__dirstamp)
+tests/dualwrite.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 
-seekcp$(EXEEXT): $(seekcp_OBJECTS) $(seekcp_DEPENDENCIES) $(EXTRA_seekcp_DEPENDENCIES) 
-	@rm -f seekcp$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(seekcp_OBJECTS) $(seekcp_LDADD) $(LIBS)
+tests/dualwrite$(EXEEXT): $(tests_dualwrite_OBJECTS) $(tests_dualwrite_DEPENDENCIES) $(EXTRA_tests_dualwrite_DEPENDENCIES) tests/$(am__dirstamp)
+	@rm -f tests/dualwrite$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(tests_dualwrite_OBJECTS) $(tests_dualwrite_LDADD) $(LIBS)
+tests/farwrite.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 
-zigjump$(EXEEXT): $(zigjump_OBJECTS) $(zigjump_DEPENDENCIES) $(EXTRA_zigjump_DEPENDENCIES) 
-	@rm -f zigjump$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(zigjump_OBJECTS) $(zigjump_LDADD) $(LIBS)
+tests/farwrite$(EXEEXT): $(tests_farwrite_OBJECTS) $(tests_farwrite_DEPENDENCIES) $(EXTRA_tests_farwrite_DEPENDENCIES) tests/$(am__dirstamp)
+	@rm -f tests/farwrite$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(tests_farwrite_OBJECTS) $(tests_farwrite_LDADD) $(LIBS)
+tests/seekcp.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
 
-zigzag$(EXEEXT): $(zigzag_OBJECTS) $(zigzag_DEPENDENCIES) $(EXTRA_zigzag_DEPENDENCIES) 
-	@rm -f zigzag$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(zigzag_OBJECTS) $(zigzag_LDADD) $(LIBS)
+tests/seekcp$(EXEEXT): $(tests_seekcp_OBJECTS) $(tests_seekcp_DEPENDENCIES) $(EXTRA_tests_seekcp_DEPENDENCIES) tests/$(am__dirstamp)
+	@rm -f tests/seekcp$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(tests_seekcp_OBJECTS) $(tests_seekcp_LDADD) $(LIBS)
+tests/zigjump.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
+
+tests/zigjump$(EXEEXT): $(tests_zigjump_OBJECTS) $(tests_zigjump_DEPENDENCIES) $(EXTRA_tests_zigjump_DEPENDENCIES) tests/$(am__dirstamp)
+	@rm -f tests/zigjump$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(tests_zigjump_OBJECTS) $(tests_zigjump_LDADD) $(LIBS)
+tests/zigzag.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
+
+tests/zigzag$(EXEEXT): $(tests_zigzag_OBJECTS) $(tests_zigzag_DEPENDENCIES) $(EXTRA_tests_zigzag_DEPENDENCIES) tests/$(am__dirstamp)
+	@rm -f tests/zigzag$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(tests_zigzag_OBJECTS) $(tests_zigzag_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
 	-rm -f ../bluepoint/*.$(OBJEXT)
 	-rm -f ../common/*.$(OBJEXT)
+	-rm -f tests/*.$(OBJEXT)
 
 distclean-compile:
 	-rm -f *.tab.c
@@ -422,12 +450,13 @@ distclean-compile:
 include ../bluepoint/$(DEPDIR)/hsencfs-bluepoint2.Po # am--include-marker
 include ../common/$(DEPDIR)/hsencfs-hspass.Po # am--include-marker
 include ../common/$(DEPDIR)/hsencfs-hsutils.Po # am--include-marker
-include ./$(DEPDIR)/dualwrite.Po # am--include-marker
 include ./$(DEPDIR)/hsencfs-base64.Po # am--include-marker
 include ./$(DEPDIR)/hsencfs-hsencfs.Po # am--include-marker
-include ./$(DEPDIR)/seekcp.Po # am--include-marker
-include ./$(DEPDIR)/zigjump.Po # am--include-marker
-include ./$(DEPDIR)/zigzag.Po # am--include-marker
+include tests/$(DEPDIR)/dualwrite.Po # am--include-marker
+include tests/$(DEPDIR)/farwrite.Po # am--include-marker
+include tests/$(DEPDIR)/seekcp.Po # am--include-marker
+include tests/$(DEPDIR)/zigjump.Po # am--include-marker
+include tests/$(DEPDIR)/zigzag.Po # am--include-marker
 
 $(am__depfiles_remade):
 	@$(MKDIR_P) $(@D)
@@ -643,6 +672,8 @@ distclean-generic:
 	-rm -f ../bluepoint/$(am__dirstamp)
 	-rm -f ../common/$(DEPDIR)/$(am__dirstamp)
 	-rm -f ../common/$(am__dirstamp)
+	-rm -f tests/$(DEPDIR)/$(am__dirstamp)
+	-rm -f tests/$(am__dirstamp)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
@@ -655,12 +686,13 @@ distclean: distclean-am
 		-rm -f ../bluepoint/$(DEPDIR)/hsencfs-bluepoint2.Po
 	-rm -f ../common/$(DEPDIR)/hsencfs-hspass.Po
 	-rm -f ../common/$(DEPDIR)/hsencfs-hsutils.Po
-	-rm -f ./$(DEPDIR)/dualwrite.Po
 	-rm -f ./$(DEPDIR)/hsencfs-base64.Po
 	-rm -f ./$(DEPDIR)/hsencfs-hsencfs.Po
-	-rm -f ./$(DEPDIR)/seekcp.Po
-	-rm -f ./$(DEPDIR)/zigjump.Po
-	-rm -f ./$(DEPDIR)/zigzag.Po
+	-rm -f tests/$(DEPDIR)/dualwrite.Po
+	-rm -f tests/$(DEPDIR)/farwrite.Po
+	-rm -f tests/$(DEPDIR)/seekcp.Po
+	-rm -f tests/$(DEPDIR)/zigjump.Po
+	-rm -f tests/$(DEPDIR)/zigzag.Po
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
@@ -709,12 +741,13 @@ maintainer-clean: maintainer-clean-am
 		-rm -f ../bluepoint/$(DEPDIR)/hsencfs-bluepoint2.Po
 	-rm -f ../common/$(DEPDIR)/hsencfs-hspass.Po
 	-rm -f ../common/$(DEPDIR)/hsencfs-hsutils.Po
-	-rm -f ./$(DEPDIR)/dualwrite.Po
 	-rm -f ./$(DEPDIR)/hsencfs-base64.Po
 	-rm -f ./$(DEPDIR)/hsencfs-hsencfs.Po
-	-rm -f ./$(DEPDIR)/seekcp.Po
-	-rm -f ./$(DEPDIR)/zigjump.Po
-	-rm -f ./$(DEPDIR)/zigzag.Po
+	-rm -f tests/$(DEPDIR)/dualwrite.Po
+	-rm -f tests/$(DEPDIR)/farwrite.Po
+	-rm -f tests/$(DEPDIR)/seekcp.Po
+	-rm -f tests/$(DEPDIR)/zigjump.Po
+	-rm -f tests/$(DEPDIR)/zigzag.Po
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 

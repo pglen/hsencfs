@@ -27,22 +27,15 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset, // )
 {
 	int res = 0;
 
-    if (loglevel > 3)
-        {
-        syslog(LOG_DEBUG,
-            "@@ xmp_read(): fh=%ld '%s' size=%ld offs=%ld\n", fi->fh, path, size, offset);
-        }
+    hslog(2, "@@ xmp_read(): fh=%ld '%s'\n", fi->fh, path);
+    hslog(3, "xmp_read(): fh=%ld size=%ld offs=%ld\n", fi->fh, size, offset);
 
     #ifdef BYPASS
     int res2a = pread(fi->fh, buf, size, offset);
-    if(res2a < 0)
-        {
-        return -errno;
-        }
-    else
-        {
-        return res2a;
-        }
+    if(res2a < 0) {
+        return -errno;  }
+    else  {
+        return res2a;   }
     #endif
 
     // Remember old place, get size
@@ -83,22 +76,14 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset, // )
         syslog(LOG_DEBUG,
              "Reading: '%s' fsize=%ld\n", path, fsize);
         }
-    if (loglevel > 9)
-        {
-        syslog(LOG_DEBUG,
-            "Read par: new_offs=%ld end_offset=%ld\n",
-                                            beg_offset, end_offset);
-        //syslog(LOG_DEBUG,
-        //    "Read par2: total=%ld skip=%ld\n",
-        //                                    total, skip);
-        }
+    hslog(9, "Read par: new_offs=%ld end_offset=%ld\n", beg_offset, end_offset);
 
     // Close to end of file
     if(end_offset >= fsize)
         {
         if (loglevel > 3)
             {
-            syslog(LOG_DEBUG, "past fsize offs=%ld size=%ld fsize=%ld\n", offset, size, fsize);
+            syslog(LOG_DEBUG, "Past EOF offs=%ld size=%ld fsize=%ld\n", offset, size, fsize);
             }
 
         // Read in last block from lastblock file

@@ -3,7 +3,9 @@
 
 # Fuse based encrypted file system, test utilities
 
-bin_PROGRAMS =  hsencfs dualwrite seekcp zigjump zigzag
+bin_PROGRAMS =  hsencfs \
+tests/dualwrite tests/seekcp tests/zigjump tests/zigzag tests/farwrite
+
 #hsaskpass
 
 # The main program
