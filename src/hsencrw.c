@@ -13,29 +13,34 @@
 //      Patch required data back.
 //
 
-// This is to debug the FUSE subsystem without the encryption
-
-//#define BYPASS
-
 // -----------------------------------------------------------------------
 // Intercept write. Make it block size aligned, both beginning and end.
 // This way encryption / decryption is symmetric.
 //
 
 static int xmp_write(const char *path, const char *buf, size_t wsize, // )
-                        off_t offset,  struct fuse_file_info *fi)
+                        off_t offset, struct fuse_file_info *fi)
 {
 	int res = 0, loop = 0;
+    int fd;
+
+    //(void) fi;
+	if(fi == NULL)
+		fd = open(path, O_WRONLY);
+	else
+		fd = fi->fh;
+
     if(wsize == 0) {
             hslog(1, "zero write on '%s'\n", path);
         return 0;
         }
     hslog(LOG_DEBUG, "xmp_write():fh=%ld wsize=%lu offs=%lu\n",
-                                fi->fh, wsize, offset);
+                                fd, wsize, offset);
 
     // This is a test case for evaluating the FUSE side of the system (is OK)
     #ifdef BYPASS
-        int res2a = pwrite(fi->fh, buf, wsize, offset);
+        //hs_encrypt(buf, wsize, passx, plen);
+        int res2a = pwrite(fd, buf, wsize, offset);
     	if (res2a < 0) {
             return -errno; }
         else {
@@ -43,16 +48,16 @@ static int xmp_write(const char *path, const char *buf, size_t wsize, // )
     #endif
 
     // Change file handle to reflect read / write
-    //int ret3 = fchmod(fi->fh, S_IRUSR | S_IWUSR |  S_IRGRP);
+    //int ret3 = fchmod(fd, S_IRUSR | S_IWUSR |  S_IRGRP);
     //if (retls3 < 0)
     //    if (loglevel > 0)
     //    syslog(LOG_DEBUG,
     //            " Cannot change mode on write '%s'\n", path);
 
     // Save current file parameters, as the FS sees it
-    off_t oldoff = lseek(fi->fh, 0, SEEK_CUR);
-    off_t fsize = get_fsize(fi->fh);
-    hslog(4, "File fh=%d fsize=%ld\n", fi->fh, fsize);
+    off_t oldoff = lseek(fd, 0, SEEK_CUR);
+    off_t fsize = get_fsize(fd);
+    hslog(4, "File fh=%d fsize=%ld\n", fd, fsize);
 
     // ----- Visualize what is going on ----------------------
     // Intervals have space next to it, points touch bars
@@ -92,86 +97,87 @@ static int xmp_write(const char *path, const char *buf, size_t wsize, // )
 
     hslog(3, "Write: offs=%ld wsize=%ld fsize=%ld\n", offset, wsize, fsize);
 
-    void *mem =  hsalloc(total);
-    // Was a seek past EOF?
-    if(offset > fsize)
-        {
-        int mlen = (offset - fsize) + wsize;
-        hslog(3, "Past EOF offs=%ld fsize=%ld mlen=%lld\n",
-                                                     offset, fsize, mlen);
-        // Fill it up, bound to bound
-        void *memb =  hsalloc(mlen);
-        if (memb == NULL)
-            {
-            hslog(0, "Cannot get fill block memory at %s\n", path);
-            res = -ENOMEM; goto endd;
-            }
-        hs_encrypt(memb, mlen, passx, plen);
-        // Write it out
-        int res2 = pwrite(fi->fh, memb, mlen, fsize);
-        kill_buff(memb, mlen);
-        }
-    else if (offset + wsize > fsize)
-        {
-        int mlen = (offset - fsize) + wsize;
-        hslog(3, "Past EOF offs=%ld fsize=%ld mlen=%lld\n",
-                                                     offset, fsize, mlen);
-        }
-
-    //else
-    //    {
-    //    // Scratch pad for the whole lot
-    //    void *mem =  hsalloc(total);
-    //    if (mem == NULL)
-    //        {
-    //        hslog(0, "Cannot get main block memory at %s\n", path);
-    //        res = -ENOMEM; goto endd;
-    //        }
-    //    }
-
-    // Do it: Read / Decrypt / Patch / Encrypt / Write
     sideblock *psb = alloc_sideblock();
     if(psb == NULL)
         {
         res = -ENOMEM;  goto endd;
         }
-    int ret4 = pread(fi->fh, mem, total, new_beg);
-    hslog(2, "Read full block: ret4=%d new_beg=%ld\n", ret4, new_beg);
+
+    // Writing past end of file, padd it
+    // ==---------|======================================
+    //            |fsize  |offset   op_end|        |new_end
+    //            | mlen  |               |        |
+    //   |fsize2  |       |    wsize      |        |
+    //   |     mlen2      |
+    //   |       mlen3             | fill_end
+    //   | mlen4  |
+    //   |memb
+
+    // Was a seek past EOF?
+    if(offset > fsize)
+        {
+        int mlen = offset - fsize;
+        int fsize2 = (fsize / HS_BLOCK) * HS_BLOCK;
+        int mlen2 =  offset - fsize2;
+        int mlen3 = (mlen2 / HS_BLOCK) * HS_BLOCK;      // Extend to full size
+        //if((mlen3 % HS_BLOCK) > 0)                      // Always up
+            mlen3 += HS_BLOCK;
+        int mlen4 = fsize - fsize2;
+        hslog(3, "Pad EOF fsize2=%ld mlen2=%lld mlen3=%lld\n", fsize2, mlen2, mlen3);
+        // Fill it up, bound to bound
+        void *memb =  hsalloc(mlen3);
+        if (memb == NULL)
+            {
+            hslog(0, "Cannot get fill block memory at %s\n", path);
+            res = -ENOMEM; goto endd;
+            }
+        memset(memb, 'b', mlen3);
+        //hs_encrypt(memb, mlen3, passx, plen);
+        //hs_decrypt(memb, mlen3, passx, plen);
+        //int res3 = pread(fd, memb, mlen4, fsize2);
+        //hslog(3, "Pad EOF read=%d\n", res3);
+
+        // Write it out
+        int res2 = pwrite(fd, memb + mlen4, mlen, fsize);
+        fsync(fd);
+
+        //hslog(3, "Pad EOF write ret=%d\n", res2);
+        // Write sideblock back out
+        //memcpy(psb->buff, memb, HS_BLOCK);
+        //int ret2 = write_sideblock(path, psb);
+        //if(ret2 < 0)
+        //    {
+        //    hslog(0, "Error on sideblock write %d\n", errno);
+    	//    //res = -errno;
+        //    //goto endd;
+        //    }
+        kill_buff(memb, mlen3);
+
+        // Recalulate
+        fsize = offset;
+
+        }
+    void *mem =  hsalloc(total);
+
+    // Do it: Read / Decrypt / Patch / Encrypt / Write
+    //int ret4 = pread(fd, mem, total, new_beg);
+    //hslog(2, "Read full block: ret4=%d new_beg=%ld\n", ret4, new_beg);
 
     // Read in last block from lastblock file
     // Op past file end?
     if(new_end >= fsize)
         {
         size_t padd = new_end - fsize;
-        // Long past?
-        if(padd > HS_BLOCK)
+        hslog(3, "=== Past EOF: %s padd=%ld\n", path, padd);
+        // Close to end: Sideblock is needed
+        int ret = read_sideblock(path, psb);
+        if(ret < 0)
             {
-            // Discard far away sideblock
-            hslog(3, "=== Long past EOF: %s padd=%ld\n", path, padd);
-            // Insert an intermidiary op by padding it as the OS would
-            }
-        else
-            {
-            hslog(3, "=== Past EOF: %s padd=%ld\n", path, padd);
-            // Close to end: Sideblock is needed
-            int ret = read_sideblock(path, psb);
-            if(ret < 0)
-                {
-                if (loglevel > 2)
-                    syslog(LOG_DEBUG, "Cannot read sideblock data.\n");
-                // Still could be good, buffer is all zeros
-                }
-            //hs_encrypt(mem, HS_BLOCK, passx, plen);
-            // Assemble buffer from pre and post
-            //if (loglevel > 3)
-            //    syslog(LOG_DEBUG, "Got sideblock: '%s'\n",
-            //                            bluepoint2_dumphex(bbuff, 8));
-            // Patch in sideblock
-            //memcpy(mem + predat, psb->buff, HS_BLOCK);
-            //kill_buff(psb, sizeof(sideblock));
+            hslog(2, "Cannot read sideblock data.\n");
+            // Still could be good, buffer is all zeros
             }
         // Get original
-        int ret3 = pread(fi->fh, mem + skip, wsize, new_beg + skip);
+        int ret3 = pread(fd, mem + skip, wsize, new_beg + skip);
         if (loglevel > 2)
             syslog(LOG_DEBUG,
                 "Pre read: ret=%d  new_beg=%ld\n", ret3, new_beg);
@@ -186,31 +192,22 @@ static int xmp_write(const char *path, const char *buf, size_t wsize, // )
                 syslog(LOG_DEBUG, "Pre write data. ret=%d len=%ld\n", ret3, skip + wsize);
 
             // Expand file
-            //int ret4 = pwrite(fi->fh, mem, skip + wsize, new_beg);
+            //int ret4 = pwrite(fd, mem, skip + wsize, new_beg);
             }
         }
     else
         {
-        //int ret4 = pread(fi->fh, mem, total, new_beg);
-        //if (loglevel > 2)
-        //    syslog(LOG_DEBUG,
-        //        "Read full block: ret4=%d new_beg=%ld\n", ret4, new_beg);
+        int ret4 = pread(fd, mem, total, new_beg);
+        if (loglevel > 2)
+            syslog(LOG_DEBUG,
+                "Read full block: ret4=%d new_beg=%ld\n", ret4, new_beg);
         }
 
     // Buffer now in, complete; decrypt it
     hs_decrypt(mem, total, passx, plen);
 
-    //if (loglevel > 2)
-    //    syslog(LOG_DEBUG, "decrypt len=%ld '%s'",  total,
-    //                            bluepoint2_dumphex(mem, 16));
-    //if (loglevel > 2)
-    //    syslog(LOG_DEBUG, "decrypt end '%s'",
-    //                bluepoint2_dumphex(mem + HS_BLOCK - 16, 16));
+    hslog(2, "Writing: wsize=%ld offs=%ld skip=%ld\n",  wsize, offset, skip);
 
-    if (loglevel > 2)
-        syslog(LOG_DEBUG,
-            "Writing: wsize=%ld offs=%ld skip=%ld\n",
-                                            wsize, offset, skip);
     // Grab the new data
     memcpy(mem + skip, buf, wsize);
 
@@ -218,53 +215,37 @@ static int xmp_write(const char *path, const char *buf, size_t wsize, // )
     hs_encrypt(mem, total, passx, plen);
 
     // Write it back out, all that changed
-    int res2 = pwrite(fi->fh, mem, wsize + skip, new_beg);
+    int res2 = pwrite(fd, mem, wsize + skip, new_beg);
 	if (res2 < 0)
         {
-        if (loglevel > 0)
-            syslog(LOG_DEBUG, "Error on writing file: %s res %d errno %d\n", path, res, errno);
+        hslog(0, "Err writing file: %s res %d errno %d\n", path, res, errno);
 		res = -errno;
         goto endd;
         }
     res = res2 - skip;
 
-    if (loglevel > 9)
-        syslog(LOG_DEBUG, "Written: res %d bytes\n", res);
-
+    hslog(9, "Written: res %d bytes\n", res);
     if(new_end > fsize)
         {
+        size_t padd = new_end - fsize;
         // Write sideblock back out
         hslog(9, "Write sideblock: new_beg=%ld predat=%ld total=%ld\n",
                                                       new_beg, predat, total);
-        if (loglevel > 9)
-            syslog(LOG_DEBUG, "Sideblock: '%s'\n",
-                                            bluepoint2_dumphex(mem + predat, 8));
-
         memcpy(psb->buff, mem + predat, HS_BLOCK);
         int ret2 = write_sideblock(path, psb);
         if(ret2 < 0)
             {
-            if (loglevel > 0)
-                syslog(LOG_DEBUG, "Error on sideblock write %d\n", errno);
-
-    		res = -errno;
+            hslog(0, "Error on sideblock write %d\n", errno);
+    	    res = -errno;
             goto endd;
             }
         }
-
-    // Reflect new file position
-    lseek(fi->fh, offset + res, SEEK_SET);
-
+    // Reflect new file position  (not needed)
+    //lseek(fd, offset + res, SEEK_SET);
    endd:
-    // Do not leave data behind
-    if (mem)
-        {
-        kill_buff(mem, total);
-        }
-    if(psb)
-        {
-        kill_buff(psb, sizeof(sideblock));
-        }
+    // Do not leave dangling data behind
+    kill_buff(mem, total);
+    kill_sideblock(psb);
 	return res;
 }
 

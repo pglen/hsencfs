@@ -22,12 +22,18 @@ if [ "$ERR" != "0" ] ; then
 fi
 
 rm -rf ~/secrets/*
-cp -a ~/pgsrc/hello/* ~/secrets
-diff -r ~/secrets/ ~/pgsrc/hello
-./tests/farwrite aaa
-./tests/farwrite ~/secrets/aaa
-diff aaa ~/secrets/aaa
+cp -r ../hello/* ~/secrets
+diff -r ~/secrets/ ../hello
+
 rm aaa
+#./tests/farwrite aaa
+#./tests/farwrite ~/secrets/aaa
+
+./tests/onejump aaa
+./tests/onejump ~/secrets/aaa
+
+diff aaa ~/secrets/aaa
+#rm aaa
 
 
 

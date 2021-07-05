@@ -76,7 +76,7 @@ static  int     ondemand = 0;
 int     loglevel = 0;
 
 // Maintain internal count
-static  char    version[] = "1.18";
+static  char    version[] = "1.2";
 
 // The decoy employed occasionally to stop spyers
 // from figuring out where it is stored
@@ -107,7 +107,10 @@ static char *myext = ".datx";
 // Get the extracted sources:
 
 #include "hsencsb.c"
-#define BYPASS 1                  // Test case for no interception
+
+// This is to debug the FUSE subsystem without the encryption
+//define BYPASS 1                   // Test case for no interception
+
 #include "hsencrr.c"                // Separated to read / write
 #include "hsencrw.c"
 #include "hsencop.c"
@@ -174,6 +177,7 @@ void    closefrom(int lowfd)
     }
 }
 
+// -----------------------------------------------------------------------
 // Simple help
 
 int     help()

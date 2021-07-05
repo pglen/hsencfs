@@ -93,7 +93,8 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 bin_PROGRAMS = hsencfs$(EXEEXT) tests/dualwrite$(EXEEXT) \
 	tests/seekcp$(EXEEXT) tests/zigjump$(EXEEXT) \
-	tests/zigzag$(EXEEXT) tests/farwrite$(EXEEXT)
+	tests/zigzag$(EXEEXT) tests/farwrite$(EXEEXT) \
+	tests/onejump$(EXEEXT)
 subdir = src
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -121,6 +122,9 @@ tests_dualwrite_LDADD = $(LDADD)
 tests_farwrite_SOURCES = tests/farwrite.c
 tests_farwrite_OBJECTS = tests/farwrite.$(OBJEXT)
 tests_farwrite_LDADD = $(LDADD)
+tests_onejump_SOURCES = tests/onejump.c
+tests_onejump_OBJECTS = tests/onejump.$(OBJEXT)
+tests_onejump_LDADD = $(LDADD)
 tests_seekcp_SOURCES = tests/seekcp.c
 tests_seekcp_OBJECTS = tests/seekcp.$(OBJEXT)
 tests_seekcp_LDADD = $(LDADD)
@@ -150,8 +154,8 @@ am__depfiles_remade = ../bluepoint/$(DEPDIR)/hsencfs-bluepoint2.Po \
 	../common/$(DEPDIR)/hsencfs-hsutils.Po \
 	./$(DEPDIR)/hsencfs-base64.Po ./$(DEPDIR)/hsencfs-hsencfs.Po \
 	tests/$(DEPDIR)/dualwrite.Po tests/$(DEPDIR)/farwrite.Po \
-	tests/$(DEPDIR)/seekcp.Po tests/$(DEPDIR)/zigjump.Po \
-	tests/$(DEPDIR)/zigzag.Po
+	tests/$(DEPDIR)/onejump.Po tests/$(DEPDIR)/seekcp.Po \
+	tests/$(DEPDIR)/zigjump.Po tests/$(DEPDIR)/zigzag.Po
 am__mv = mv -f
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -170,9 +174,9 @@ am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
 SOURCES = $(hsencfs_SOURCES) tests/dualwrite.c tests/farwrite.c \
-	tests/seekcp.c tests/zigjump.c tests/zigzag.c
+	tests/onejump.c tests/seekcp.c tests/zigjump.c tests/zigzag.c
 DIST_SOURCES = $(hsencfs_SOURCES) tests/dualwrite.c tests/farwrite.c \
-	tests/seekcp.c tests/zigjump.c tests/zigzag.c
+	tests/onejump.c tests/seekcp.c tests/zigjump.c tests/zigzag.c
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -419,6 +423,12 @@ tests/farwrite.$(OBJEXT): tests/$(am__dirstamp) \
 tests/farwrite$(EXEEXT): $(tests_farwrite_OBJECTS) $(tests_farwrite_DEPENDENCIES) $(EXTRA_tests_farwrite_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/farwrite$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_farwrite_OBJECTS) $(tests_farwrite_LDADD) $(LIBS)
+tests/onejump.$(OBJEXT): tests/$(am__dirstamp) \
+	tests/$(DEPDIR)/$(am__dirstamp)
+
+tests/onejump$(EXEEXT): $(tests_onejump_OBJECTS) $(tests_onejump_DEPENDENCIES) $(EXTRA_tests_onejump_DEPENDENCIES) tests/$(am__dirstamp)
+	@rm -f tests/onejump$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(tests_onejump_OBJECTS) $(tests_onejump_LDADD) $(LIBS)
 tests/seekcp.$(OBJEXT): tests/$(am__dirstamp) \
 	tests/$(DEPDIR)/$(am__dirstamp)
 
@@ -454,6 +464,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hsencfs-hsencfs.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/dualwrite.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/farwrite.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/onejump.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/seekcp.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/zigjump.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/zigzag.Po@am__quote@ # am--include-marker
@@ -690,6 +701,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/hsencfs-hsencfs.Po
 	-rm -f tests/$(DEPDIR)/dualwrite.Po
 	-rm -f tests/$(DEPDIR)/farwrite.Po
+	-rm -f tests/$(DEPDIR)/onejump.Po
 	-rm -f tests/$(DEPDIR)/seekcp.Po
 	-rm -f tests/$(DEPDIR)/zigjump.Po
 	-rm -f tests/$(DEPDIR)/zigzag.Po
@@ -745,6 +757,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/hsencfs-hsencfs.Po
 	-rm -f tests/$(DEPDIR)/dualwrite.Po
 	-rm -f tests/$(DEPDIR)/farwrite.Po
+	-rm -f tests/$(DEPDIR)/onejump.Po
 	-rm -f tests/$(DEPDIR)/seekcp.Po
 	-rm -f tests/$(DEPDIR)/zigjump.Po
 	-rm -f tests/$(DEPDIR)/zigzag.Po

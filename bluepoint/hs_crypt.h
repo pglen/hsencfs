@@ -16,8 +16,8 @@
 // NO NO  define FAKE
 // NO NO  define NONE
 
-//#define FAKE   1
-#define NONE   1
+#define FAKE   1
+//#define NONE   1
 
 #ifdef NONE
 

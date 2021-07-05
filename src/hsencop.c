@@ -542,7 +542,6 @@ static int xmp_utimens(const char *path, const struct timespec ts[2], struct fus
 	return 0;
 }
 
-
 static int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
 {
 	int fd, res = 0;

@@ -368,6 +368,13 @@ static  void  kill_buff(void *bbuff, int xlen)
         }
 }
 
+void    kill_sideblock(sideblock *psb)
+
+{
+    if(psb)
+        kill_buff(psb, sizeof(psb));
+}
+
 // -----------------------------------------------------------------------
 // Go through pass ritual on demand
 
