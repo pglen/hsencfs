@@ -98,8 +98,7 @@ static int xmp_write(const char *path, const char *buf, size_t wsize, // )
     hslog(3, "Write: offs=%ld wsize=%ld fsize=%ld\n", offset, wsize, fsize);
 
     sideblock *psb = alloc_sideblock();
-    if(psb == NULL)
-        {
+    if(psb == NULL) {
         res = -ENOMEM;  goto endd;
         }
 
@@ -113,94 +112,48 @@ static int xmp_write(const char *path, const char *buf, size_t wsize, // )
     //   | mlen4  |
     //   |memb
 
-    // Was a seek past EOF?
+    int fsize2 = 0, mlen4 = 0;
+    // Was a seek past EOF? -- alloc
     if(offset > fsize)
         {
-        int mlen = offset - fsize;
-        int fsize2 = (fsize / HS_BLOCK) * HS_BLOCK;
-        int mlen2 =  offset - fsize2;
-        int mlen3 = (mlen2 / HS_BLOCK) * HS_BLOCK;      // Extend to full size
-        //if((mlen3 % HS_BLOCK) > 0)                      // Always up
-            mlen3 += HS_BLOCK;
-        int mlen4 = fsize - fsize2;
-        hslog(3, "Pad EOF fsize2=%ld mlen2=%lld mlen3=%lld\n", fsize2, mlen2, mlen3);
-        // Fill it up, bound to bound
-        void *memb =  hsalloc(mlen3);
-        if (memb == NULL)
-            {
-            hslog(0, "Cannot get fill block memory at %s\n", path);
-            res = -ENOMEM; goto endd;
-            }
-        memset(memb, 'b', mlen3);
-        //hs_encrypt(memb, mlen3, passx, plen);
-        //hs_decrypt(memb, mlen3, passx, plen);
-        //int res3 = pread(fd, memb, mlen4, fsize2);
-        //hslog(3, "Pad EOF read=%d\n", res3);
-
-        // Write it out
-        int res2 = pwrite(fd, memb + mlen4, mlen, fsize);
-        fsync(fd);
-
-        //hslog(3, "Pad EOF write ret=%d\n", res2);
-        // Write sideblock back out
-        //memcpy(psb->buff, memb, HS_BLOCK);
-        //int ret2 = write_sideblock(path, psb);
-        //if(ret2 < 0)
-        //    {
-        //    hslog(0, "Error on sideblock write %d\n", errno);
-    	//    //res = -errno;
-        //    //goto endd;
-        //    }
-        kill_buff(memb, mlen3);
-
-        // Recalulate
-        fsize = offset;
-
+        // Adjust params: total skip mlen4
+        fsize2 = (fsize / HS_BLOCK) * HS_BLOCK;
+        total  = new_end - fsize2;
+        skip   = offset - fsize2;
+        mlen4 = fsize - fsize2;
         }
     void *mem =  hsalloc(total);
+    hs_encrypt(mem, total, passx, plen);
 
-    // Do it: Read / Decrypt / Patch / Encrypt / Write
-    //int ret4 = pread(fd, mem, total, new_beg);
-    //hslog(2, "Read full block: ret4=%d new_beg=%ld\n", ret4, new_beg);
-
-    // Read in last block from lastblock file
-    // Op past file end?
+    // Was seek past EOF? -- process
+    if(offset > fsize)
+        {
+        hslog(3, "Pad EOF fsize2=%ld mlen4=%lld\n", fsize2, mlen4);
+        // Get original
+        int ret3 = pread(fd, mem, mlen4, fsize2);
+        }
+    // Past file end?
     if(new_end >= fsize)
         {
         size_t padd = new_end - fsize;
         hslog(3, "=== Past EOF: %s padd=%ld\n", path, padd);
         // Close to end: Sideblock is needed
         int ret = read_sideblock(path, psb);
-        if(ret < 0)
-            {
+        if(ret < 0)   // Still could be good, buffer is all zeros
             hslog(2, "Cannot read sideblock data.\n");
-            // Still could be good, buffer is all zeros
-            }
         // Get original
         int ret3 = pread(fd, mem + skip, wsize, new_beg + skip);
-        if (loglevel > 2)
-            syslog(LOG_DEBUG,
-                "Pre read: ret=%d  new_beg=%ld\n", ret3, new_beg);
+        hslog(2, "Pre read: ret=%d  new_beg=%ld\n", ret3, new_beg);
+        // Optional error messages
         if(ret3 < 0)
-            {
-            if (loglevel > 9)
-                syslog(LOG_DEBUG, "Cannot pre read data. ret3=%d errno=%d\n", ret3, errno);
-            }
+            hslog(0, "Cannot pre read data. ret3=%d errno=%d\n", ret3, errno);
         else if(ret3 < skip + wsize)
-            {
-            if (loglevel > 9)
-                syslog(LOG_DEBUG, "Pre write data. ret=%d len=%ld\n", ret3, skip + wsize);
-
-            // Expand file
-            //int ret4 = pwrite(fd, mem, skip + wsize, new_beg);
-            }
+            hslog(9, "Pre write data. ret=%d len=%ld\n", ret3, skip + wsize);
         }
     else
         {
-        int ret4 = pread(fd, mem, total, new_beg);
-        if (loglevel > 2)
-            syslog(LOG_DEBUG,
-                "Read full block: ret4=%d new_beg=%ld\n", ret4, new_beg);
+        int ret4 = pread(fd, mem + mlen4, total, new_beg);
+        hslog(2, "Read full block: ret4=%d new_beg=%ld\n", ret4, new_beg);
         }
 
     // Buffer now in, complete; decrypt it
