@@ -29,7 +29,7 @@ typedef struct _sideblock
 
 void  hslog(int lev, char *fmt, ...)
 {
-    if (loglevel > lev)
+    if (loglevel >= lev)
         {
         va_list ap;
         va_start(ap, fmt);

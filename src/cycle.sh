@@ -25,16 +25,16 @@ rm -rf ~/secrets/*
 cp -r ../hello/* ~/secrets
 diff -r ~/secrets/ ../hello
 
-rm -f aaa
-./tests/farwrite aaa
-./tests/farwrite ~/secrets/aaa
-
 rm -f bbb
 ./tests/onejump bbb
 ./tests/onejump ~/secrets/bbb
+diff bbb ~/secrets/bbb
 
+rm -f aaa
+./tests/farwrite aaa
+./tests/farwrite ~/secrets/aaa
 diff aaa ~/secrets/aaa
-#rm aaa
+
 
 
 
