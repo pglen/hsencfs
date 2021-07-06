@@ -85,26 +85,26 @@ static int xmp_read(const char *path, char *buf, size_t wsize, off_t offset, // 
         {
         hslog(3, "Past EOF offs=%ld size=%ld fsize=%ld\n", offset, wsize, fsize);
         // Read in last block from lastblock file
-        sideblock *psb =  alloc_sideblock();
-        if(psb == NULL)
-            {
-            hslog(0, "Cannot allocate memory for sideblock '%s'\n", path);
-            res = -errno;
-            goto endd;
-            }
+        //sideblock *psb =  alloc_sideblock();
+        //if(psb == NULL)
+        //    {
+        //    hslog(0, "Cannot allocate memory for sideblock '%s'\n", path);
+        //    res = -errno;
+        //    goto endd;
+        //    }
         // Last block, load it
-        int ret = read_sideblock(path, psb);
-        if(ret < 0)
-            {
-            hslog(2, "Cannot read sideblock data.\n");
-            }
-        else
-            {
-            hslog(9, "Patching in last block last=%ld\n", last);
-            // Foundation is the sideblock data, copy it in
-            memcpy(mem + last, psb->buff, HS_BLOCK);
-            }
-        kill_sideblock(psb);
+        //int ret = read_sideblock(path, psb);
+        //if(ret < 0)
+        //    {
+        //    hslog(2, "Cannot read sideblock data.\n");
+        //    }
+        //else
+        //    {
+        //    hslog(9, "Patching in last block last=%ld\n", last);
+        //    // Foundation is the sideblock data, copy it in
+        //    memcpy(mem + last, psb->buff, HS_BLOCK);
+        //    }
+        //kill_sideblock(psb);
 
         // Add in data from file
         hslog(2, "Read blocks from file len=%ld\n", wsize);

@@ -22,6 +22,7 @@ if [ "$ERR" != "0" ] ; then
 fi
 
 rm -rf ~/secrets/*
+rm -rf ~/secrets/.deps/*
 cp -r ../hello/* ~/secrets
 diff -r ~/secrets/ ../hello
 
@@ -35,7 +36,11 @@ rm -f aaa
 ./tests/farwrite ~/secrets/aaa
 diff aaa ~/secrets/aaa
 
+./tests/zigzag test_data/aa3000.txt  ~/secrets/aa3000.txt
+diff test_data/aa3000.txt ~/secrets/aa3000.txt
 
+./tests/zigzag test_data/aa5000.txt  ~/secrets/aa5000.txt
+diff test_data/aa5000.txt ~/secrets/aa5000.txt
 
 
 

@@ -52,8 +52,7 @@ int     main(int argc, char *argv[])
             break;
             }
         int rrr = lseek(fp_in, -110, SEEK_CUR);
-        printf("%d ", rrr);
-
+        //printf("%d ", rrr);
         lseek(fp_out, -110, SEEK_CUR);
         }
     close(fp_in);

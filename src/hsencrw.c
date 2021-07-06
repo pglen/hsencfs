@@ -12,6 +12,7 @@
 //      Decrypt / Encrypt.
 //      Patch required data back.
 //
+// Tue 06.Jul.2021      sideblock system removed
 
 // -----------------------------------------------------------------------
 // Intercept write. Make it block size aligned, both beginning and end.
@@ -97,10 +98,10 @@ static int xmp_write(const char *path, const char *buf, size_t wsize, // )
 
     hslog(3, "Write: offs=%ld wsize=%ld fsize=%ld\n", offset, wsize, fsize);
 
-    sideblock *psb = alloc_sideblock();
-    if(psb == NULL) {
-        res = -ENOMEM;  goto endd;
-        }
+    //sideblock *psb = alloc_sideblock();
+    //if(psb == NULL) {
+    //    res = -ENOMEM;  goto endd;
+    //    }
 
     // Writing past end of file, padd it
     // ==---------|======================================
@@ -197,9 +198,9 @@ static int xmp_write(const char *path, const char *buf, size_t wsize, // )
         {
         size_t padd = new_end - fsize;
         // Write sideblock back out
-        hslog(9, "Write sideblock: new_beg=%ld predat=%ld total=%ld\n",
-                                                      new_beg, predat, total);
-        memcpy(psb->buff, mem + predat, HS_BLOCK);
+        //hslog(9, "Write sideblock: new_beg=%ld predat=%ld total=%ld\n",
+        //                                              new_beg, predat, total);
+        //memcpy(psb->buff, mem + predat, HS_BLOCK);
         //int ret2 = write_sideblock(path, psb);
         //if(ret2 < 0)
         //    {
@@ -213,7 +214,7 @@ static int xmp_write(const char *path, const char *buf, size_t wsize, // )
    endd:
     // Do not leave dangling data behind
     kill_buff(mem, total);
-    kill_sideblock(psb);
+    //kill_sideblock(psb);
 	return res;
 }
 
