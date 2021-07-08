@@ -5,31 +5,13 @@
 // Extracted for eazy editing. This code took forever.
 //
 
-//
-// Read / Write the data coming from the user.
-//      If last block, gather data from sideblock, patch it in.
-//
-
-#define  HSENCFS_MAGIC 0x34231278
-
-typedef struct _sideblock
-
-{
-    int  magic;
-    int  serial;
-    int  misc;
-    //char name[PATH_MAX];
-    char buff[HS_BLOCK];
-    int  misc2;
-
-} sideblock;
 
 // -----------------------------------------------------------------------
 // Shorthand for log to syslog
 
-void  hslog(int lev, char *fmt, ...)
+void    hslog(int lev, char *fmt, ...)
 {
-    if (loglevel >= lev)
+    if (loglevel > lev)
         {
         va_list ap;
         va_start(ap, fmt);
@@ -53,6 +35,27 @@ void    *hsalloc(int total)
 
  endd:
     return mem;
+}
+
+// -----------------------------------------------------------------------
+
+sideblock *alloc_sideblock()
+
+{
+    sideblock *psb = malloc(sizeof(sideblock));
+    if(psb == NULL)
+        {
+        if (loglevel > 0)
+           syslog(LOG_DEBUG, "Cannot allocate memory for sideblock\n");
+        goto endd;
+        }
+    memset(psb, '\0', sizeof(sideblock));
+    psb->magic =  HSENCFS_MAGIC;
+    psb->version = 1;
+    memcpy(psb->sep, "SB0\n", 4);
+
+   endd:
+    return psb;
 }
 
 // -----------------------------------------------------------------------
@@ -159,6 +162,11 @@ static  int    read_sideblock(const char *path, sideblock *psb)
         close(fdi);
         }
     errno = old_errno;
+    if(psb->magic !=  HSENCFS_MAGIC)
+        {
+        if (loglevel > 0)
+            syslog(LOG_DEBUG, "Error on sideblock MAGIC\n");
+        }
 
     //if (loglevel > 3)
     //    syslog(LOG_DEBUG, "Got sideblock:, '%s'\n", bluepoint2_dumphex(*pbuff, 8));
@@ -180,6 +188,14 @@ static  int     write_sideblock(const char *path, sideblock *psb)
 
 {
     int ret = 0;
+
+    if(psb->magic !=  HSENCFS_MAGIC)
+        {
+        if (loglevel > 0)
+            syslog(LOG_DEBUG, "Bad magic on sizeblock write '%s'\n", path);
+        ret = -1;
+        goto endd;
+        }
 
     char *ptmp2 =  get_sidename(path);
     if(!ptmp2)
@@ -244,16 +260,10 @@ static  int    create_sideblock(const char *path)
         ret = -ENOMEM;
         goto endd;
         }
-    sideblock *psb =  malloc(sizeof(sideblock));
-    if(psb == NULL)
-        {
-        if (loglevel > 0)
-            syslog(LOG_DEBUG, "Error on alloc sideblock\n");
-        ret = -errno;
-        goto endd2;
-        }
-    memset(psb, '\0', sizeof(sideblock));
-    psb->magic =  HSENCFS_MAGIC;
+
+    sideblock *psb = alloc_sideblock();
+    if(!psb)
+        goto endd3;
 
     int old_errno = errno;
     int fdi = open(ptmp2, O_RDWR | O_CREAT | O_TRUNC , S_IRUSR | S_IWUSR);
@@ -311,26 +321,6 @@ static  int     is_our_file(const char *path, int fname_only)
         //    syslog(LOG_DEBUG, "is_our_file: eee '%s' nnn '%s' ret=%d\n", eee, nnn, ret);
         }
     return ret;
-}
-
-// -----------------------------------------------------------------------
-
-sideblock *alloc_sideblock()
-
-{
-    sideblock *psb = malloc(sizeof(sideblock));
-    if(psb == NULL)
-        {
-        if (loglevel > 0)
-           syslog(LOG_DEBUG, "Cannot allocate memory for sideblock\n");
-        goto endd;
-        }
-    memset(psb, '\0', sizeof(sideblock));
-    psb->magic =  HSENCFS_MAGIC;
-
-    endd:
-
-    return psb;
 }
 
 // Estabilish file size

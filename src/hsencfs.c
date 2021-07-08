@@ -55,13 +55,12 @@
 #include <signal.h>
 #include <getopt.h>
 
-#include "hsutils.h"
+//#include "hsutils.h"
 #include "base64.h"
 
 #include "../bluepoint/hs_crypt.h"
 #include "../bluepoint/bluepoint2.h"
-
-#define MAXPASSLEN 512
+#include "../common/hsutils.h"
 
 // Log
 static FILE *logfp = NULL;
@@ -70,6 +69,7 @@ static FILE *logfp = NULL;
 static  int     verbose = 0;
 static  int     quiet = 0;
 static  int     force = 0;
+static  int     nobg = 0;
 static  int     ondemand = 0;
 
 // Shared flags
@@ -95,7 +95,8 @@ static  char  passprog[PATH_MAX] ;
 static  char  inodedir[PATH_MAX] ;
 
 /// We use this as a string to obfuscate the password. Do not change.
-char    progname[] = "HSENCFS";
+char    progname[] =  HS_PROGNAME;
+
 int     pg_debug = 0;
 
 #define FALSE (0==1)
@@ -193,6 +194,7 @@ int     help()
     printf("                -p pass  (--pass ) Use pass. Note: cleartext pass.\n");
     printf("                -a prog  (--askpass ) Use program to askin pass. \n");
     printf("                -o       (--ondemand) On demand pass. Ask on first access.\n");
+    printf("                -n       (--nobg) Do not go to background. (removed)\n");
     printf("                -f       (--force) Force creation of storagedir/mountpoint.\n");
     printf("                -q       (--quiet) Quiet, minimal diagnostics printed.\n");
     printf("                -V       (--version) Print hsencfs version.\n");
@@ -303,6 +305,7 @@ static struct option long_options[] =
         {"version",     0,  0,  'V'},
         {"askpass",     0,  0,  'a'},
         {"ondemand",    0,  0,  'o'},
+        {"nobg",        0,  0,  'n'},
         {0,             0,  0,   0}
     };
 
@@ -369,7 +372,7 @@ void    parse_comline(int argc, char *argv[])
 
 {
     int cc, digit_optind = 0, loop, loop2;
-    char *opts = "a:fhl:p:oqvVd:";
+    char *opts = "a:fhl:p:oqvVd:n";
     //opterr = 0;
 
     while (1)
@@ -420,6 +423,10 @@ void    parse_comline(int argc, char *argv[])
 
             case 'f':
                 force = 1;
+                break;
+
+            case 'n':
+                nobg = 1;
                 break;
 
            case 'l':
@@ -774,6 +781,15 @@ int     main(int argc, char *argv[])
         //printf("unMounted '%s'\n", mountpoint);
         //syslog(LOG_AUTH, "unMounted  '%s' by %d", mountpoint, getuid());
         //, mountsecret);
+        }
+
+    if(nobg)
+        {
+        //while(1)
+        //    {
+        //    printf("No background sleep\n");
+        //    sleep(1);
+        //    }
         }
     return ret;
 }

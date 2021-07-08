@@ -745,7 +745,7 @@ static int xmp_release(const char *path, struct fuse_file_info *fi)
 {
     int res;
 
-    if (loglevel > 3)
+    if (loglevel > 9)
         syslog(LOG_DEBUG, "Releasing: '%s' fh: %ld\n", path, fi->fh);
 
     // try until error

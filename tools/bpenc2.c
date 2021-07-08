@@ -73,7 +73,6 @@ void help()
     printf("                -v          -- Verbose (--verbose)\n");
     printf("                -V          -- Print version (--version)\n");
     printf("\n");
-
 }
 
 sideblock sb;

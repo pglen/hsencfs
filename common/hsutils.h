@@ -1,6 +1,46 @@
-// hsutils.h
 
-#define MARK_SIZE 4096
+/* =====[ project ]========================================================
+
+   File Name:       hsutils.h
+
+   Description:
+
+   Revisions:
+
+      REV       DATE                BY           DESCRIPTION
+      ----  ---------------      ----------      -------------------------
+      0.00  Wed 07.Jul.2021      Peter Glen      Initial version.
+
+   ======================================================================= */
+
+#define MARK_SIZE   4096
+
+// Included in encrypters
+
+#define BLOCKSIZE   4096
+
+//#define MAXPASSLEN    256
+#define MAXPASSLEN      512
+
+#define  HSENCFS_MAGIC  0x34231278
+
+#define     HS_PROGNAME    "HSENCFS"
+
+typedef struct _sideblock
+
+{
+    int  magic;                 // Identify
+    int  serial;                // Belongs to this block
+    int  protocol;              // name of encryption; 0 for bluepoint
+    int  version;               // Version of encryption 0 for now
+    // This way it shows up nicely on screen dumps
+    char sep[4];
+    //char name[PATH_MAX];
+    char buff[BLOCKSIZE];
+    int  misc2;
+
+} sideblock;
+
 
 // Prototypes shared between components
 
@@ -11,8 +51,4 @@ char    *hs_askpass(const char *program, char *buf, int buflen);
 void    expandpath(const char *inp, char *outp, int maxlen);
 int     pass_ritual(char *mountroot, char *mountdata, char *pass, int *plen);
 
-
-
-
-
-
+// EOF

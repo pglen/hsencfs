@@ -6,7 +6,7 @@
 #include "hs_crypt.h"
 #include <syslog.h>
 
-#ifdef NONE
+#ifdef NONE_ENCRYPT
 
 #warning "None encryption, for testing only"
 
@@ -22,7 +22,7 @@ void hs_decrypt_none(void *mem, int size2, void *pass, int plen)
     return;
 }
 
-#elif defined(FAKE)
+#elif defined(FAKE_ENCRYPT)
 
 #warning "Fake encryption, for testing only"
 

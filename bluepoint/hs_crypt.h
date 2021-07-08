@@ -16,10 +16,10 @@
 // NO NO  define FAKE
 // NO NO  define NONE
 
-#define FAKE   1
-//#define NONE   1
+//#define FAKE_ENCRYPT   1
+//#define NONE_ENCRYPT   1
 
-#ifdef NONE
+#ifdef NONE_ENCRYPT
 
 // Make sure the maintainer knows this is a NO NO
 //#pragma GCC error "This is for testing only. DO NOT ENABLE"
@@ -30,7 +30,7 @@
 void hs_encrypt_none(void *mem, int size2, void *pass, int plen);
 void hs_decrypt_none(void *mem, int size2, void *pass, int plen);
 
-#elif defined(FAKE)
+#elif defined(FAKE_ENCRYPT)
 
 // Make sure the maintainer knows this is a NO NO
 //#pragma GCC error "This is for testing only. DO NOT ENABLE"

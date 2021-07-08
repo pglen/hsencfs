@@ -200,7 +200,7 @@ int main(int argc, char *argv[])
     FILE *fp2 = NULL;
     if (optind >= argc - 1)
         {
-        printf("Not enough arguments, out to stdout\n");
+        //printf("Not enough arguments, out to stdout\n");
         //help();
         //exit(1);
         fp2 = stdout;

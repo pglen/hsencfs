@@ -4,7 +4,11 @@
 
                             UNDER CONSTRUCTION
 
-  Progress: some working parts DO NOT DEPLOY yet.
+  Progress:
+
+  ...  some working parts DO NOT DEPLOY yet.
+
+  Tue 06.Jul.2021   dummy encryption intercepted, working OK
 
  HSENCFS is a user space encrypting file system. Simple to set up, seamless
 to use, fast, safe, secure and maintenance free. It will encrypt
@@ -42,7 +46,7 @@ accessible, and the encrypted data is not legible until it is mounted again.
 
  HSENCFS does not manage passwords. The password becomes the encryption key,
 and the key is used to encrypt the file system access. If the password / key
-is lost, the data cannot be recovered. Seriousely, the data is lost.
+is lost, the data cannot be recovered. Seriously, the data is lost.
 
  As the password becomes the key, it is possible to achieve long key lengths
 by entering a long password. Short key lengths are replicated to standard
@@ -63,17 +67,17 @@ An example of on-demand command line:
 
         hsencfs -o -a 'which hsaskpass.py` .mydata mysecret
 
-Note the 'which' utility, as HSENCFS needs absolute path. I real deployment,
-specify the askpass absolte path.
+Note the 'which' utility, as HSENCFS needs absolute path. In real deployment,
+specify the askpass program's absolute path.
 
 ## Safety, Security, Feeding and Care
 
- HSENCFS uses BluePoint2 encryption. Bluepoint(2) has been thoroughly tested,
+ HSENCFS uses BluePoint2 encryption. Bluepoint(2) has been thoroughly evaluated,
 and withstood the test of time. The backing files in the data directory
 preserve their original names, size, and access times. The only dependence
 they need is the original password. This means they can be safely copied from
-the backing directory for transport (like email) or backup. Please note
-that HSENCFS having block size 4096, and will handle data accoringly.
+the backing directory for transport. (like email or backup) Please note
+that HSENCFS having block size 4096, and will handle data accordingly.
 
 ### The data directory:
 
@@ -101,7 +105,7 @@ password on decrypt. These utilities are provided as recovery tools only.
 ## The cypher text.
 
  Files can be copied out from the backing data directory. They stay encrypted
-when copied directly out of the data directory. This is useful for backup /
+when copied directly out of the backing/data directory. This is useful for backup /
 replication / archiving / transport etc ... make sure you copy them with hidden
 (.dot) files included. Use: shopt -s dotglob before copy. Warning: the
 copied data will be unreadable without the dot files.

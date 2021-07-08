@@ -14,11 +14,10 @@ To copy every file including hidden ones (starting with a dot) use:
 
 shopt -s dotglob
 
-
 Assuming the following setup:
 
-~/secrets       for the encrypted directory
-~/.secrets      for the supporting data directory
+~/secrets       for the encrypted (user visible) directory
+~/.secrets      for the supporting (data/storage) directory
 
 One can copy plain files out:
 
@@ -38,17 +37,21 @@ One can copy encrypted files out:
 
 Announcement
 
- The source code copied out to the ecrypted directory does NOT compile in that
-directory correctly.
+Tue 06.Jul.2021     dummy encryption is intercepted correctly
 
-This means the file access intercept is not random clean,
-as GCC acesses object files by chunk.
+Older Announcements:
 
- The trick was to pre read to the encryption buffer boundary, and then
-  Decrypt / Patch / Encrypt / Write.
+     The source code copied out to the ecrypted directory does NOT compile in that
+    directory correctly.
 
- The last buffer may be partial, so special arragements are made to
-accomodate that.
+    This means the file access intercept is not random clean,
+    as GCC acesses object files by chunk.
 
-Peter
+     The trick was to pre read to the encryption buffer boundary, and then
+      Decrypt / Patch / Encrypt / Write.
+
+     The last buffer may be partial, so special arragements are made to
+    accomodate that.
+
+Peter Glen
 
