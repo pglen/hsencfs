@@ -20,10 +20,11 @@
 #include <sys/stat.h>
 
 #include "hs_crypt.h"
+
 #include "bp2com.h"
 #include "bluepoint2.h"
 
-static char buff[4096];
+static char buff[BLOCKSIZE];
 
 // Log
 static FILE *logfp = NULL;
@@ -87,8 +88,14 @@ int main(int argc, char *argv[])
     int cc, digit_optind = 0, loop, loop2;
     struct stat ss; struct timespec ts;
 
-    memset(&sb, '\0', sizeof(sb));
-    sb.magic =  HSENCFS_MAGIC;
+    INIT_SIDEBLOCK(sb);
+
+    //memset(&sb, '\0', sizeof(sb));
+    //sb.magic =  HSENCFS_MAGIC;
+    //sb.serial  = -1;                  // So it does not match any
+    //sb.protocol = 0xaa;
+    //sb.version = 1;
+    //memcpy(sb.sep, "SB0\n", 4);
 
     //bluepoint2_set_verbose(1);
     //bluepoint2_set_functrace(1);
@@ -272,16 +279,20 @@ int main(int argc, char *argv[])
 
         int curr = 0;
         // Is this the last one?
-        if(prog + 4096 > fsize)
+        if(prog + BLOCKSIZE > fsize)
             {
             curr = fsize - prog;
             //fwrite(buff, 1, sizeof(buff), fp3);
             memcpy(sb.buff,  buff, sizeof(buff));
+            sb.serial = (prog / BLOCKSIZE) + 1;
+            if(verbose)
+                printf("sideblock serial %d\n", sb.serial);
+
             fwrite(&sb, 1, sizeof(sideblock), fp3);
             }
         else
             {
-            curr = 4096;
+            curr = BLOCKSIZE;
             }
         len2 = fwrite(buff, 1, curr, fp2);
         if(len2 < curr)

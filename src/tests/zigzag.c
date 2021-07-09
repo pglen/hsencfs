@@ -18,6 +18,7 @@ int errexit(char *str)
 // Main entry point
 
 char buff[4096];
+//char buff[1024];
 
 int     main(int argc, char *argv[])
 
@@ -35,9 +36,13 @@ int     main(int argc, char *argv[])
     if(fp_out < 0)
         errexit("no out file");
 
+    int fsize = lseek(fp_in, 0, SEEK_END);
+    lseek(fp_in, 0, SEEK_SET);
+    //printf("%s: fsize=%d -- ", argv[1], fsize);
+
     while(1)
         {
-        int ret = read(fp_in, buff, sizeof(buff) / 10);
+        int ret = read(fp_in, buff, sizeof(buff));
         if(ret < 0)
             {
             errexit("Cannot read");
@@ -47,17 +52,21 @@ int     main(int argc, char *argv[])
             {
             errexit("Cannot write");
             }
-        if(ret < sizeof(buff) / 10)
+        //printf("ret=%d ", ret);
+        if(ret < sizeof(buff))
             {
             break;
             }
-        int rrr = lseek(fp_in, -110, SEEK_CUR);
-        //printf("%d ", rrr);
-        lseek(fp_out, -110, SEEK_CUR);
+        int zig = -256;
+        int rrr = lseek(fp_in, zig, SEEK_CUR);
+        //printf("seek=%d ", rrr);
+        int sss = lseek(fp_out, zig, SEEK_CUR);
+        //printf("%d \n", sss);
         }
+    //printf("\n");
+
     close(fp_in);
     close(fp_out);
-
 }
 
 

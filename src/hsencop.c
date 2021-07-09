@@ -640,9 +640,7 @@ static int xmp_open(const char *path, struct fuse_file_info *fi)
     char  path2[PATH_MAX] ;
     strcpy(path2, mountsecret); strcat(path2, path);
 
-    if (loglevel > 1)
-        syslog(LOG_DEBUG, "Open: %s uid: %d mode: %x\n",
-                                                path, getuid(),fi->flags);
+    //hslog(1, "Open: %s uid: %d mode: %x\n",  path, getuid(),fi->flags);
     if(passx[0] == 0)
         {
         if (loglevel > 3)
@@ -679,13 +677,13 @@ static int xmp_open(const char *path, struct fuse_file_info *fi)
         }
 	fi->fh = fd;
 
-    if (loglevel > 3)
-        syslog(LOG_DEBUG, "Open '%s' fh=%ld\n", path2, fi->fh);
+    hslog(1, "Opened '%s' fh=%ld\n", path, fi->fh);
 
     //struct stat stbuf;	memset(&stbuf, 0, sizeof(stbuf));
     //int res = fstat(fi->fh, &stbuf);
     //if (loglevel > 2)
     //    syslog(LOG_DEBUG, "Inode: %lud\n", stbuf.st_ino);
+
 	return 0;
 }
 

@@ -41,12 +41,12 @@ int     main(int argc, char *argv[])
     if(argc < 2)
         errexit("Not enough arguments. Use: farwrite outfile");
 
-    int fp_out = open(argv[1], O_RDWR | O_CREAT | O_TRUNC,  S_IRWXU);
+    int fp_out = open(argv[1], O_RDWR | O_CREAT | O_TRUNC, S_IRWXU);
     if(fp_out < 0)
-        errexit("no out file");
+        errexit("Cannot create out file");
 
-    int fsize = lseek(fp_out, 0, SEEK_END);
-    lseek(fp_out, 0, SEEK_SET);
+    //int fsize = lseek(fp_out, 0, SEEK_END);
+    //lseek(fp_out, 0, SEEK_SET);
 
     memset(buff, 'a', sizeof(buff));
     lseek(fp_out, 0x300, SEEK_SET);
@@ -56,6 +56,7 @@ int     main(int argc, char *argv[])
         errexit("Cannot write");
         }
 
+    #if 0
     memset(buff, 'b', sizeof(buff));
     lseek(fp_out, 0x1400, SEEK_SET);
     int ret3 = write(fp_out, buff, sizeof(buff));
@@ -63,6 +64,8 @@ int     main(int argc, char *argv[])
         {
         errexit("Cannot write");
         }
+   #endif
+
     close(fp_out);
 }
 

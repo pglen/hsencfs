@@ -1,7 +1,11 @@
 #!/bin/bash
 
+pushd `pwd`
+cd ..
 make
 ERR=$?
+popd
+
 if [ "$ERR" != "0" ] ; then
     echo "Cannot compile err=$ERR"
     exit
@@ -10,9 +14,11 @@ fi
 fusermount -u ~/secrets
 ERR=$?
 if [ "$ERR" != "0" ] ; then
-    #echo "Waning: cannot unmount; err=$ERR"
-    echo
+    echo "Waning: cannot unmount; err=$ERR"
+    #echo
 fi
+
+echo
 
 ./hsencfs -q -l 9 -p 1234 ~/secrets ~/.secrets
 
@@ -51,18 +57,27 @@ rm -f bbb
 ./tests/onejump ~/secrets/bbb
 diff bbb ~/secrets/bbb
 
-rm -f aaa
-./tests/farwrite aaa
-./tests/farwrite ~/secrets/aaa
-diff aaa ~/secrets/aaa
-
+rm -f ~/secrets/aa3000.txt
 ./tests/zigzag test_data/aa3000.txt  ~/secrets/aa3000.txt
-diff test_data/aa3000.txt ~/secrets/aa3000.txt
+diff -q test_data/aa3000.txt ~/secrets/aa3000.txt
 
-./tests/zigzag test_data/aa5000.txt  ~/secrets/aa5000.txt
-diff test_data/aa5000.txt ~/secrets/aa5000.txt
+rm -f ~/secrets/aa4096.txt
+./tests/zigzag test_data/aa4096.txt  ~/secrets/aa4096.txt
+diff -q test_data/aa4096.txt ~/secrets/aa4096.txt
+
+rm -f ~/secrets/aa5500.txt
+../tools/bpenc2 -p 1234 test_data/aa5000.txt ~/.secrets/aa5000.txt
+diff -q test_data/aa5000.txt ~/secrets/aa5000.txt
+
+rm -f farwrite.txt
+./tests/farwrite farwrite.txt
+./tests/farwrite ~/secrets/farwrite.txt
+diff -q farwrite.txt ~/secrets/farwrite.txt
+
+rm -f ~/secrets/aa5500.txt
+./tests/zigzag test_data/aa5500.txt  ~/secrets/aa5500.txt
+diff -q test_data/aa5500.txt ~/secrets/aa5500.txt
+
 echo Done
 
-
-
-
+# eof

@@ -139,13 +139,13 @@ static int xmp_write(const char *path, const char *buf, size_t wsize, // )
     //    hslog(2, "Got org content %d bytes.\n", ret4);
     //    }
 
-    int ret4 = pread(fd, mem, total, fsize2);
 
     // Past file end?
     if(new_end >= fsize2)
         {
-        size_t padd = new_end - fsize;
-        hslog(3, "=== Past EOF: %s padd=%ld\n", path, padd);
+        //size_t padd = new_end - fsize;
+        //hslog(3, "=== Past EOF: %s padd=%ld\n", path, padd);
+
         // Close to end: Sideblock is needed
         int ret = read_sideblock(path, psb);
         if(ret < 0)   // Still could be good, buffer is all zeros
@@ -154,18 +154,26 @@ static int xmp_write(const char *path, const char *buf, size_t wsize, // )
         // Patch sideblock back in:
         if(psb->serial ==  new_end / HS_BLOCK)
             {
+            int ret4 = pread(fd, mem, predat, fsize2);
             memcpy(mem + predat, psb->buff, HS_BLOCK);
             }
         else
             {
             hslog(2, "Mismatch: Sideblock serial=%d current=%d\n", psb->serial, new_end / HS_BLOCK);
+            int ret5 = pread(fd, mem, total, new_beg);
+            hslog(2, "Read: total=%lld fsize2=%lld ret4=%d\n", total, new_beg, ret5);
             }
+        }
+    else
+        {
+        int ret6 = pread(fd, mem, total, fsize2);
+        hslog(2, "Full Read: total=%lld fsize2=%lld ret4=%d\n", total, fsize2, ret6);
         }
 
     // Buffer now in, complete; decrypt it
     hs_decrypt(mem, total, passx, plen);
 
-    //hslog(2, "Writing: wsize=%ld offs=%ld skip=%ld\n",  wsize, offset, skip);
+    hslog(2, "Writing: wsize=%ld offs=%ld skip2=%ld\n",  wsize, offset, skip2);
 
     // Grab the new data
     memcpy(mem + skip2, buf, wsize);

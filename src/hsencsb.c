@@ -49,10 +49,15 @@ sideblock *alloc_sideblock()
            syslog(LOG_DEBUG, "Cannot allocate memory for sideblock\n");
         goto endd;
         }
-    memset(psb, '\0', sizeof(sideblock));
-    psb->magic =  HSENCFS_MAGIC;
-    psb->version = 1;
-    memcpy(psb->sep, "SB0\n", 4);
+
+    INIT_SIDEBLOCK(*psb);
+
+    //memset(psb, '\0', sizeof(sideblock));
+    //psb->magic =  HSENCFS_MAGIC;
+    //psb->serial  = -1;                  // So it does not match any
+    //psb->protocol = 0xaa;
+    //psb->version = 1;
+    //memcpy(psb->sep, "SB0\n", 4);
 
    endd:
     return psb;
