@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
@@ -14,11 +15,11 @@ int errexit(char *str)
     printf("%s\n", str);
     exit(1);
     }
+
 // -----------------------------------------------------------------------
 // Main entry point
 
 char buff[4096];
-//char buff[1024];
 
 int     main(int argc, char *argv[])
 
@@ -36,8 +37,8 @@ int     main(int argc, char *argv[])
     if(fp_out < 0)
         errexit("no out file");
 
-    int fsize = lseek(fp_in, 0, SEEK_END);
-    lseek(fp_in, 0, SEEK_SET);
+    //int fsize = lseek(fp_in, 0, SEEK_END);
+    //lseek(fp_in, 0, SEEK_SET);
     //printf("%s: fsize=%d -- ", argv[1], fsize);
 
     while(1)
@@ -57,7 +58,7 @@ int     main(int argc, char *argv[])
             {
             break;
             }
-        int zig = -256;
+        int zig = -200;
         int rrr = lseek(fp_in, zig, SEEK_CUR);
         //printf("seek=%d ", rrr);
         int sss = lseek(fp_out, zig, SEEK_CUR);

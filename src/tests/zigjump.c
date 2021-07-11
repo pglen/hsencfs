@@ -1,3 +1,18 @@
+
+/* =====[ project ]========================================================
+
+   File Name:       zigjump.c
+
+   Description:
+
+   Revisions:
+
+      REV       DATE                BY           DESCRIPTION
+      ----  ---------------      ----------      -------------------------
+      0.00  Sat 10.Jul.2021      Peter Glen      Initial version.
+
+   ======================================================================= */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
@@ -45,20 +60,14 @@ int     main(int argc, char *argv[])
     printf("ret5=%d ret6=%d ret7=%d ret2=%d\n", ret5, ret6, ret7, ret2);
 #endif
 
-    //exit(0);
-
-    int endd = lseek(fp_in, 0, SEEK_END);
-    lseek(fp_in, 0, SEEK_SET);
-    int hhh = 200;
+    //int endd = lseek(fp_in, 0, SEEK_END);
+    //lseek(fp_in, 0, SEEK_SET);
     //printf("End of file = %d\n", endd);
+
+    int hhh = 4000;
 
     while(1)
         {
-        int eof = lseek(fp_in, 0, SEEK_CUR);
-        //printf("Reading at %d\n", eof);
-        //if(eof >= endd)
-        //    break;
-
         int ret = read(fp_in, buff, hhh);
         if(ret < 0)
             {
@@ -69,6 +78,8 @@ int     main(int argc, char *argv[])
             {
             errexit("Cannot write");
             }
+        int eof = lseek(fp_in, 0, SEEK_CUR);
+        //printf("j:%d ", eof);
 
         // End of file
         if(ret < hhh)
@@ -78,11 +89,8 @@ int     main(int argc, char *argv[])
         lseek(fp_in, -hhh/2, SEEK_CUR);
         lseek(fp_out, -hhh/2, SEEK_CUR);
         }
-
+    //printf("\n");
     close(fp_in);  close(fp_out);
 }
 
-
-
-
-
+// EOF

@@ -36,7 +36,7 @@ typedef struct _sideblock
     // This way it shows up nicely on screen dumps
     char sep[4];
     //char name[PATH_MAX];
-    char buff[BLOCKSIZE];
+    char buff[ 2 * BLOCKSIZE];
     int  misc2;
 
 } sideblock;

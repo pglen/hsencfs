@@ -28,20 +28,21 @@
 static int xmp_write(const char *path, const char *buf, size_t wsize, // )
                         off_t offset, struct fuse_file_info *fi)
 {
-	int res = 0, loop = 0;
-    int fd;
+	int res = 0, loop = 0, fd = -1;
 
     //(void) fi;
 	if(fi == NULL)
-		fd = open(path, O_WRONLY);
+		fd = open(path, O_RDWR);
 	else
 		fd = fi->fh;
 
-    if(wsize == 0) {
-            hslog(1, "zero write on '%s'\n", path);
+    if(wsize == 0)
+        {
+        hslog(1, "zero write on '%s'\n", path);
         return 0;
         }
-    hslog(LOG_DEBUG, "xmp_write():fh=%ld wsize=%lu offs=%lu\n",
+
+    hslog(LOG_DEBUG, "** xmp_write(): fh=%ld wsize=%lu offs=%lu\n",
                                 fd, wsize, offset);
 
     // This is a test case for evaluating the FUSE side of the system (is OK)
@@ -62,9 +63,10 @@ static int xmp_write(const char *path, const char *buf, size_t wsize, // )
     //            " Cannot change mode on write '%s'\n", path);
 
     // Save current file parameters, as the FS sees it
-    off_t oldoff = lseek(fd, 0, SEEK_CUR);
+    //off_t oldoff = lseek(fd, 0, SEEK_CUR);
+
     off_t fsize = get_fsize(fd);
-    hslog(4, "File fh=%d fsize=%ld\n", fd, fsize);
+    hslog(4, "File %s fh=%d fsize=%ld\n", path, fd, fsize);
 
     // ----- Visualize what is going on ----------------------
     // Intervals have space next to it, points touch bars
@@ -126,6 +128,7 @@ static int xmp_write(const char *path, const char *buf, size_t wsize, // )
         skip2  = offset  - fsize2;     mlen4  = fsize   - fsize2;
         }
     void *mem =  hsalloc(total);
+    hslog(3, "Malloc: %d\n", total);
     hs_encrypt(mem, total, passx, plen);
 
     //if(offset > fsize)  // Was seek past EOF? -- process
@@ -139,7 +142,6 @@ static int xmp_write(const char *path, const char *buf, size_t wsize, // )
     //    hslog(2, "Got org content %d bytes.\n", ret4);
     //    }
 
-
     // Past file end?
     if(new_end >= fsize2)
         {
@@ -150,12 +152,25 @@ static int xmp_write(const char *path, const char *buf, size_t wsize, // )
         int ret = read_sideblock(path, psb);
         if(ret < 0)   // Still could be good, buffer is all zeros
             hslog(2, "Cannot read sideblock data.\n");
-        //hslog(2, "Sideblock serial=%d current=%d\n", psb->serial, new_end / HS_BLOCK);
+        hslog(2, "Sideblock ret=%d serial=%d current=%d\n", ret, psb->serial, op_end / HS_BLOCK);
         // Patch sideblock back in:
-        if(psb->serial ==  new_end / HS_BLOCK)
+        if(psb->serial ==  op_end / HS_BLOCK)
             {
-            int ret4 = pread(fd, mem, predat, fsize2);
-            memcpy(mem + predat, psb->buff, HS_BLOCK);
+            if(predat >= 4096)
+                {   // Spanning multiple buffers, get original and new
+                memcpy(mem, psb->buff, 2 * HS_BLOCK);
+
+                int respan = HS_BLOCK - fsize2;
+                int ret4 = 0; //pread(fd, mem + HS_BLOCK, respan, HS_BLOCK);
+                hslog(2, "RD?: resp=%ld fsi2=%lld new_b=%d ret4=%d\n",
+                                                         respan, fsize2, new_beg, ret4);
+                }
+            else
+                {
+                int ret4 = pread(fd, mem, predat, new_beg);
+                hslog(2, "Read: predat=%lld fsize2=%lld ret4=%d\n", predat, fsize2, ret4);
+                memcpy(mem + predat, psb->buff, HS_BLOCK);
+                }
             }
         else
             {
@@ -173,7 +188,7 @@ static int xmp_write(const char *path, const char *buf, size_t wsize, // )
     // Buffer now in, complete; decrypt it
     hs_decrypt(mem, total, passx, plen);
 
-    hslog(2, "Writing: wsize=%ld offs=%ld skip2=%ld\n",  wsize, offset, skip2);
+    hslog(2, "WR out: wsize=%ld offs=%ld skip2=%ld\n",  wsize, offset, skip2);
 
     // Grab the new data
     memcpy(mem + skip2, buf, wsize);
@@ -212,8 +227,8 @@ static int xmp_write(const char *path, const char *buf, size_t wsize, // )
         // Write sideblock back out
 
         psb->serial = new_end / HS_BLOCK;
-        //hslog(7, "Write sideblock: serial=%d new_beg=%ld predat=%ld total=%ld\n",
-        //                                        psb->serial, new_beg, predat, total);
+        hslog(7, "Wr SB: ser=%d new_b=%ld pdat=%ld tot=%ld\n",
+                                                psb->serial, new_beg, predat, total);
         memcpy(psb->buff, (mem + total) - HS_BLOCK, HS_BLOCK);
         int ret2 = write_sideblock(path, psb);
         if(ret2 < 0)
