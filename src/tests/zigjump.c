@@ -78,7 +78,9 @@ int     main(int argc, char *argv[])
             {
             errexit("Cannot write");
             }
-        int eof = lseek(fp_in, 0, SEEK_CUR);
+
+        //break;
+        //int eof = lseek(fp_in, 0, SEEK_CUR);
         //printf("j:%d ", eof);
 
         // End of file

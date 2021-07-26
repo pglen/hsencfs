@@ -109,6 +109,8 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am__dirstamp = $(am__leading_dot)dirstamp
 am_hsencfs_OBJECTS = hsencfs-hsencfs.$(OBJEXT) \
+	hsencfs-hsencrr.$(OBJEXT) hsencfs-hsencrw.$(OBJEXT) \
+	hsencfs-hsencsb.$(OBJEXT) hsencfs-hsencsu.$(OBJEXT) \
 	hsencfs-base64.$(OBJEXT) ../common/hsencfs-hsutils.$(OBJEXT) \
 	../common/hsencfs-hspass.$(OBJEXT) \
 	../bluepoint/hsencfs-bluepoint2.$(OBJEXT)
@@ -153,6 +155,8 @@ am__depfiles_remade = ../bluepoint/$(DEPDIR)/hsencfs-bluepoint2.Po \
 	../common/$(DEPDIR)/hsencfs-hspass.Po \
 	../common/$(DEPDIR)/hsencfs-hsutils.Po \
 	./$(DEPDIR)/hsencfs-base64.Po ./$(DEPDIR)/hsencfs-hsencfs.Po \
+	./$(DEPDIR)/hsencfs-hsencrr.Po ./$(DEPDIR)/hsencfs-hsencrw.Po \
+	./$(DEPDIR)/hsencfs-hsencsb.Po ./$(DEPDIR)/hsencfs-hsencsu.Po \
 	tests/$(DEPDIR)/dualwrite.Po tests/$(DEPDIR)/farwrite.Po \
 	tests/$(DEPDIR)/onejump.Po tests/$(DEPDIR)/seekcp.Po \
 	tests/$(DEPDIR)/zigjump.Po tests/$(DEPDIR)/zigzag.Po
@@ -300,8 +304,9 @@ hsencfsdir = .
 hsencfs_CFLAGS = -g -D_FILE_OFFSET_BITS=64 -O2 -I$(srcdir)/bluepoint \
             -I$(srcdir)/../common
 
-hsencfs_SOURCES = hsencfs.c base64.c ../common/hsutils.c ../common/hspass.c \
-                        ../bluepoint/bluepoint2.c
+hsencfs_SOURCES = hsencfs.c hsencrr.c hsencrw.c hsencsb.c hsencsu.c base64.c \
+                        ../common/hsutils.c ../common/hspass.c \
+                            ../bluepoint/bluepoint2.c
 
 hsencfs_LDADD = -lulockmgr -lfuse3
 
@@ -462,6 +467,10 @@ include ../common/$(DEPDIR)/hsencfs-hspass.Po # am--include-marker
 include ../common/$(DEPDIR)/hsencfs-hsutils.Po # am--include-marker
 include ./$(DEPDIR)/hsencfs-base64.Po # am--include-marker
 include ./$(DEPDIR)/hsencfs-hsencfs.Po # am--include-marker
+include ./$(DEPDIR)/hsencfs-hsencrr.Po # am--include-marker
+include ./$(DEPDIR)/hsencfs-hsencrw.Po # am--include-marker
+include ./$(DEPDIR)/hsencfs-hsencsb.Po # am--include-marker
+include ./$(DEPDIR)/hsencfs-hsencsu.Po # am--include-marker
 include tests/$(DEPDIR)/dualwrite.Po # am--include-marker
 include tests/$(DEPDIR)/farwrite.Po # am--include-marker
 include tests/$(DEPDIR)/onejump.Po # am--include-marker
@@ -504,6 +513,62 @@ hsencfs-hsencfs.obj: hsencfs.c
 #	$(AM_V_CC)source='hsencfs.c' object='hsencfs-hsencfs.obj' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -c -o hsencfs-hsencfs.obj `if test -f 'hsencfs.c'; then $(CYGPATH_W) 'hsencfs.c'; else $(CYGPATH_W) '$(srcdir)/hsencfs.c'; fi`
+
+hsencfs-hsencrr.o: hsencrr.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -MT hsencfs-hsencrr.o -MD -MP -MF $(DEPDIR)/hsencfs-hsencrr.Tpo -c -o hsencfs-hsencrr.o `test -f 'hsencrr.c' || echo '$(srcdir)/'`hsencrr.c
+	$(AM_V_at)$(am__mv) $(DEPDIR)/hsencfs-hsencrr.Tpo $(DEPDIR)/hsencfs-hsencrr.Po
+#	$(AM_V_CC)source='hsencrr.c' object='hsencfs-hsencrr.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -c -o hsencfs-hsencrr.o `test -f 'hsencrr.c' || echo '$(srcdir)/'`hsencrr.c
+
+hsencfs-hsencrr.obj: hsencrr.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -MT hsencfs-hsencrr.obj -MD -MP -MF $(DEPDIR)/hsencfs-hsencrr.Tpo -c -o hsencfs-hsencrr.obj `if test -f 'hsencrr.c'; then $(CYGPATH_W) 'hsencrr.c'; else $(CYGPATH_W) '$(srcdir)/hsencrr.c'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/hsencfs-hsencrr.Tpo $(DEPDIR)/hsencfs-hsencrr.Po
+#	$(AM_V_CC)source='hsencrr.c' object='hsencfs-hsencrr.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -c -o hsencfs-hsencrr.obj `if test -f 'hsencrr.c'; then $(CYGPATH_W) 'hsencrr.c'; else $(CYGPATH_W) '$(srcdir)/hsencrr.c'; fi`
+
+hsencfs-hsencrw.o: hsencrw.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -MT hsencfs-hsencrw.o -MD -MP -MF $(DEPDIR)/hsencfs-hsencrw.Tpo -c -o hsencfs-hsencrw.o `test -f 'hsencrw.c' || echo '$(srcdir)/'`hsencrw.c
+	$(AM_V_at)$(am__mv) $(DEPDIR)/hsencfs-hsencrw.Tpo $(DEPDIR)/hsencfs-hsencrw.Po
+#	$(AM_V_CC)source='hsencrw.c' object='hsencfs-hsencrw.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -c -o hsencfs-hsencrw.o `test -f 'hsencrw.c' || echo '$(srcdir)/'`hsencrw.c
+
+hsencfs-hsencrw.obj: hsencrw.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -MT hsencfs-hsencrw.obj -MD -MP -MF $(DEPDIR)/hsencfs-hsencrw.Tpo -c -o hsencfs-hsencrw.obj `if test -f 'hsencrw.c'; then $(CYGPATH_W) 'hsencrw.c'; else $(CYGPATH_W) '$(srcdir)/hsencrw.c'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/hsencfs-hsencrw.Tpo $(DEPDIR)/hsencfs-hsencrw.Po
+#	$(AM_V_CC)source='hsencrw.c' object='hsencfs-hsencrw.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -c -o hsencfs-hsencrw.obj `if test -f 'hsencrw.c'; then $(CYGPATH_W) 'hsencrw.c'; else $(CYGPATH_W) '$(srcdir)/hsencrw.c'; fi`
+
+hsencfs-hsencsb.o: hsencsb.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -MT hsencfs-hsencsb.o -MD -MP -MF $(DEPDIR)/hsencfs-hsencsb.Tpo -c -o hsencfs-hsencsb.o `test -f 'hsencsb.c' || echo '$(srcdir)/'`hsencsb.c
+	$(AM_V_at)$(am__mv) $(DEPDIR)/hsencfs-hsencsb.Tpo $(DEPDIR)/hsencfs-hsencsb.Po
+#	$(AM_V_CC)source='hsencsb.c' object='hsencfs-hsencsb.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -c -o hsencfs-hsencsb.o `test -f 'hsencsb.c' || echo '$(srcdir)/'`hsencsb.c
+
+hsencfs-hsencsb.obj: hsencsb.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -MT hsencfs-hsencsb.obj -MD -MP -MF $(DEPDIR)/hsencfs-hsencsb.Tpo -c -o hsencfs-hsencsb.obj `if test -f 'hsencsb.c'; then $(CYGPATH_W) 'hsencsb.c'; else $(CYGPATH_W) '$(srcdir)/hsencsb.c'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/hsencfs-hsencsb.Tpo $(DEPDIR)/hsencfs-hsencsb.Po
+#	$(AM_V_CC)source='hsencsb.c' object='hsencfs-hsencsb.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -c -o hsencfs-hsencsb.obj `if test -f 'hsencsb.c'; then $(CYGPATH_W) 'hsencsb.c'; else $(CYGPATH_W) '$(srcdir)/hsencsb.c'; fi`
+
+hsencfs-hsencsu.o: hsencsu.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -MT hsencfs-hsencsu.o -MD -MP -MF $(DEPDIR)/hsencfs-hsencsu.Tpo -c -o hsencfs-hsencsu.o `test -f 'hsencsu.c' || echo '$(srcdir)/'`hsencsu.c
+	$(AM_V_at)$(am__mv) $(DEPDIR)/hsencfs-hsencsu.Tpo $(DEPDIR)/hsencfs-hsencsu.Po
+#	$(AM_V_CC)source='hsencsu.c' object='hsencfs-hsencsu.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -c -o hsencfs-hsencsu.o `test -f 'hsencsu.c' || echo '$(srcdir)/'`hsencsu.c
+
+hsencfs-hsencsu.obj: hsencsu.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -MT hsencfs-hsencsu.obj -MD -MP -MF $(DEPDIR)/hsencfs-hsencsu.Tpo -c -o hsencfs-hsencsu.obj `if test -f 'hsencsu.c'; then $(CYGPATH_W) 'hsencsu.c'; else $(CYGPATH_W) '$(srcdir)/hsencsu.c'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/hsencfs-hsencsu.Tpo $(DEPDIR)/hsencfs-hsencsu.Po
+#	$(AM_V_CC)source='hsencsu.c' object='hsencfs-hsencsu.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -c -o hsencfs-hsencsu.obj `if test -f 'hsencsu.c'; then $(CYGPATH_W) 'hsencsu.c'; else $(CYGPATH_W) '$(srcdir)/hsencsu.c'; fi`
 
 hsencfs-base64.o: base64.c
 	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -MT hsencfs-base64.o -MD -MP -MF $(DEPDIR)/hsencfs-base64.Tpo -c -o hsencfs-base64.o `test -f 'base64.c' || echo '$(srcdir)/'`base64.c
@@ -699,6 +764,10 @@ distclean: distclean-am
 	-rm -f ../common/$(DEPDIR)/hsencfs-hsutils.Po
 	-rm -f ./$(DEPDIR)/hsencfs-base64.Po
 	-rm -f ./$(DEPDIR)/hsencfs-hsencfs.Po
+	-rm -f ./$(DEPDIR)/hsencfs-hsencrr.Po
+	-rm -f ./$(DEPDIR)/hsencfs-hsencrw.Po
+	-rm -f ./$(DEPDIR)/hsencfs-hsencsb.Po
+	-rm -f ./$(DEPDIR)/hsencfs-hsencsu.Po
 	-rm -f tests/$(DEPDIR)/dualwrite.Po
 	-rm -f tests/$(DEPDIR)/farwrite.Po
 	-rm -f tests/$(DEPDIR)/onejump.Po
@@ -755,6 +824,10 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ../common/$(DEPDIR)/hsencfs-hsutils.Po
 	-rm -f ./$(DEPDIR)/hsencfs-base64.Po
 	-rm -f ./$(DEPDIR)/hsencfs-hsencfs.Po
+	-rm -f ./$(DEPDIR)/hsencfs-hsencrr.Po
+	-rm -f ./$(DEPDIR)/hsencfs-hsencrw.Po
+	-rm -f ./$(DEPDIR)/hsencfs-hsencsb.Po
+	-rm -f ./$(DEPDIR)/hsencfs-hsencsu.Po
 	-rm -f tests/$(DEPDIR)/dualwrite.Po
 	-rm -f tests/$(DEPDIR)/farwrite.Po
 	-rm -f tests/$(DEPDIR)/onejump.Po

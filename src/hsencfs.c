@@ -55,12 +55,34 @@
 #include <signal.h>
 #include <getopt.h>
 
-//#include "hsutils.h"
+#include "hsutils.h"
+#include "hsencfs.h"
 #include "base64.h"
 
 #include "../bluepoint/hs_crypt.h"
 #include "../bluepoint/bluepoint2.h"
-#include "../common/hsutils.h"
+
+// -----------------------------------------------------------------------
+// Shared flags
+
+int     loglevel = 0;
+
+char    passx[MAXPASSLEN];
+int     plen = sizeof(passx);
+
+// Main directories for data / encryption
+
+char  mountpoint[PATH_MAX] ;
+char  mountsecret[PATH_MAX] ;
+
+char *myext = ".datx";
+
+/// We use this as a string to obfuscate the password. Do not change.
+char    progname[] =  HS_PROGNAME;
+
+char  passprog[PATH_MAX] ;
+
+// -----------------------------------------------------------------------
 
 // Log
 static FILE *logfp = NULL;
@@ -72,48 +94,32 @@ static  int     force = 0;
 static  int     nobg = 0;
 static  int     ondemand = 0;
 
-// Shared flags
-int     loglevel = 0;
-
 // Maintain internal count
-static  char    version[] = "1.2";
+static  char    version[] = "1.3";
 
 // The decoy employed occasionally to stop spyers
 // from figuring out where it is stored
 
-static  char    passx[MAXPASSLEN];
-static  int     plen = sizeof(passx);
 static  char    decoy[MAXPASSLEN];
 static  int     plen2 = sizeof(decoy);
 
-// Main directories for data / encryption
-
-static  char  mountpoint[PATH_MAX] ;
-static  char  mountsecret[PATH_MAX] ;
 static  char  tmpsecret[PATH_MAX] ;
-static  char  passprog[PATH_MAX] ;
 static  char  inodedir[PATH_MAX] ;
 
-/// We use this as a string to obfuscate the password. Do not change.
-char    progname[] =  HS_PROGNAME;
-
-int     pg_debug = 0;
-
-#define FALSE (0==1)
-#define TRUE  (0==0)
-
-static char *myext = ".datx";
+static  int     pg_debug = 0;
 
 // -----------------------------------------------------------------------
 // Get the extracted sources:
 
-#include "hsencsb.c"
+//#include "hsencsu.c"
+//#include "hsencsb.c"
 
 // This is to debug the FUSE subsystem without the encryption
 //define BYPASS 1                   // Test case for no interception
 
-#include "hsencrr.c"                // Separated to read / write
-#include "hsencrw.c"
+//include "hsencrr.c"                // Separated to read / write
+//#include "hsencrw.c"
+
 #include "hsencop.c"
 
 static struct fuse_operations xmp_oper = {

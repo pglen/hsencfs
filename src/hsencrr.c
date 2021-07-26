@@ -21,7 +21,46 @@
 // contains a copy of the last block, one that overflows the real file length.
 //
 
-static int xmp_read(const char *path, char *buf, size_t wsize, off_t offset, // )
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#define _GNU_SOURCE
+
+#include <fuse.h>
+#include <ulockmgr.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+#include <string.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <dirent.h>
+#include <errno.h>
+#include <syslog.h>
+#include <sys/time.h>
+
+#ifdef HAVE_SETXATTR
+#include <sys/xattr.h>
+#endif
+
+#include <signal.h>
+#include <getopt.h>
+
+#include "base64.h"
+
+#include "../bluepoint/hs_crypt.h"
+#include "../bluepoint/bluepoint2.h"
+#include "../common/hsutils.h"
+
+#include "hsencfs.h"
+
+//
+//
+//
+
+int xmp_read(const char *path, char *buf, size_t wsize, off_t offset, // )
                          struct fuse_file_info *fi)
 
 {
@@ -112,7 +151,7 @@ static int xmp_read(const char *path, char *buf, size_t wsize, off_t offset, // 
             }
         else
             {
-            hslog(2, "Patching in side block last=%ld serial=%d\n", last, psb->serial);
+            hslog(9, "Patching in side block last=%ld serial=%d\n", last, psb->serial);
             // Foundation is the sideblock data, copy it in
             if(psb->serial == end_offset / HS_BLOCK)
                  memcpy(mem + last, psb->buff, HS_BLOCK);

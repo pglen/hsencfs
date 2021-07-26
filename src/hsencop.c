@@ -260,8 +260,8 @@ static int xmp_unlink(const char *path)
     char *ptmp2 = get_sidename(path);
     if(ptmp2)
         {
-        if (loglevel > 3)
-            syslog(LOG_DEBUG, "Unlinking sideblock file: %s\n", ptmp2);
+        if (loglevel > 9)
+            syslog(LOG_DEBUG, "RM sb file: %s\n", ptmp2);
 
         int ret2 = unlink(ptmp2);
         if(ret2 < 0)
