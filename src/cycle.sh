@@ -44,10 +44,23 @@ function test_direct {
     diff -q test_data/$1 ~/secrets/$1  # note the missing dot
 }
 
+function test_rzig {
+    ../tools/bpenc2 -p 1234 -f test_data/$1 ~/.secrets/$1
+    ./tests/zigzag  ~/secrets/$1  test_data/$1.rev
+    diff -q test_data/$1 test_data/$1.rev
+}
+
 test_direct aa300.txt
 test_direct aa4096.txt
 test_direct aa4500.txt
 test_direct aa9000.txt
+
+echo Rzig
+
+test_rzig aa300.txt
+test_rzig aa4096.txt
+test_rzig aa4500.txt
+test_rzig aa9000.txt
 
 rm -f bbb
 ./tests/onejump bbb
