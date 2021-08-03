@@ -147,6 +147,10 @@ int xmp_write(const char *path, const char *buf, size_t wsize, // )
     if(psb == NULL) {
         res = -ENOMEM;  goto endd;
         }
+
+    // Here we prepare the sideblock for partial read
+    //hs_encrypt(psb->buff, HS_BLOCK, passx, plen);
+
     // Writing past end of file, padd it
     // ==---------|======================================
     //            |fsize   |offset         |op_end    |new_end
@@ -158,57 +162,61 @@ int xmp_write(const char *path, const char *buf, size_t wsize, // )
     //   |                       total                | --> updated
     int fsize2 = fsize, skip2 = skip, mlen4 = 0;
     // Was a seek past EOF? -- alloc
-    if(offset > fsize)   // Adjust params: total skip mlen4
-        {
-        fsize2 = (fsize / HS_BLOCK) * HS_BLOCK;
-        total  = new_end - fsize2;     predat = total - HS_BLOCK;
-        skip2  = offset  - fsize2;     mlen4  = fsize   - fsize2;
-        }
+    //if(offset > fsize)   // Adjust params: total skip mlen4
+    //    {
+    //    fsize2 = (fsize / HS_BLOCK) * HS_BLOCK;
+    //    new_beg = fsize2;
+    //    total  = new_end - fsize2;     predat = total - HS_BLOCK;
+    //    skip2  = offset  - fsize2;     mlen4  = fsize   - fsize2;
+    //    predat = total - HS_BLOCK;
+    //    }
     void *mem =  hsalloc(total);
-    //hslog(3, "Malloc: %d\n", total);
+    //hslog(3, "Malloc hsalloc: %d\n", total);
     hs_encrypt(mem, total, passx, plen);
 
-    if(offset > fsize2)  // Was seek past EOF? -- process
-        {   // Get original
-        hslog(3, "Pad EOF fsize2=%ld mlen4=%lld\n", fsize2, mlen4);
-        int ret3 = pread(fd, mem, mlen4, fsize2);
-        }
-    else
+    //if(offset > fsize2)  // Was seek past EOF? -- process
+    //    {   // Get original
+    //    //hslog(3, "Pad EOF fsize2=%ld mlen4=%lld\n", fsize2, mlen4);
+    //    int ret3 = pread(fd, mem, mlen4, fsize2);
+    //    }
+    //else
         {   // Get original content, as much as available
-        int ret4 = pread(fd, mem, total, fsize2);
+        //int ret4 = pread(fd, mem, total, fsize2);
+        int ret4 = pread(fd, mem, total, new_beg);
         //hslog(2, "Got org content %d bytes.\n", ret4);
         }
 
     // Past file end?
-    if(new_end >= fsize2)
+    //if(new_end >= fsize2)
+    //    {
+    //    size_t padd = new_end - fsize;
+    //    hslog(3, "=== Past EOF: fd=%d fsize=%lld padd=%ld\n", fd, fsize2, padd);
+    //
+    //    // Close to end: Sideblock is needed
+    //    int ret = read_sideblock(path, psb);
+    //    if(ret < 0)   // Still could be good, buffer is all zeros (or known)
+    //        hslog(2, "Cannot read sideblock data.\n");
+    //
+    //    //hslog(2, "Sideblock ret=%d serial=%d current=%d\n", ret, psb->serial, op_end / HS_BLOCK);
+    //
+    //    // Patch sideblock back in:
+    //    //if(psb->serial ==  new_end / HS_BLOCK)
+    //    if(psb->serial ==  op_end / HS_BLOCK)
+    //        {
+    //        //int ret4 = pread(fd, mem, predat, new_beg);
+    //        //hslog(2, "Readp: sb=%d predat=%lld fsize2=%lld ret4=%d\n", psb->serial, predat, fsize2, ret4);
+    //        memcpy(mem + predat, psb->buff, HS_BLOCK);
+    //        }
+    //    else
+    //        {
+    //        //hslog(2, "Mismatch: Sideblock serial=%d current=%d\n", psb->serial, new_end / HS_BLOCK);
+    //        //int ret5 = pread(fd, mem, total, new_beg);
+    //        //hslog(2, "Readf: total=%lld fsize2=%lld ret4=%d\n", total, new_beg, ret5);
+    //        }
+    //    }
+    //else
         {
-        size_t padd = new_end - fsize;
-        hslog(3, "=== Past EOF: fd=%d fsize=%lld padd=%ld\n", fd, fsize2, padd);
-
-        // Close to end: Sideblock is needed
-        int ret = read_sideblock(path, psb);
-        if(ret < 0)   // Still could be good, buffer is all zeros (or known)
-            hslog(2, "Cannot read sideblock data.\n");
-        //hslog(2, "Sideblock ret=%d serial=%d current=%d\n", ret, psb->serial, op_end / HS_BLOCK);
-
-        // Patch sideblock back in:
-        if(psb->serial ==  op_end / HS_BLOCK)
-        //if(psb->serial ==  new_beg / HS_BLOCK)
-            {
-            int ret4 = pread(fd, mem, predat, new_beg);
-            hslog(2, "Readp: predat=%lld fsize2=%lld ret4=%d\n", predat, fsize2, ret4);
-            memcpy(mem + predat, psb->buff, HS_BLOCK);
-            }
-        else
-            {
-            hslog(2, "Mismatch: Sideblock serial=%d current=%d\n", psb->serial, new_end / HS_BLOCK);
-            int ret5 = pread(fd, mem, total, new_beg);
-            hslog(2, "Readf: total=%lld fsize2=%lld ret4=%d\n", total, new_beg, ret5);
-            }
-        }
-    else
-        {
-        int ret6 = pread(fd, mem, total, fsize2);
+        int ret6 = pread(fd, mem, total, new_beg);
         hslog(2, "Full Read: total=%lld fsize2=%lld ret4=%d\n", total, fsize2, ret6);
         }
 
@@ -224,42 +232,46 @@ int xmp_write(const char *path, const char *buf, size_t wsize, // )
     hs_encrypt(mem, total, passx, plen);
 
     // Write it back out, all that changed
-    if(offset > fsize)
+
+    //if(offset > fsize)
+    //    {
+    //    int res3 = pwrite(fd, mem + mlen4, op_end - fsize, fsize);
+    //	if (res3 < 0)
+    //        {
+    //        hslog(1, "Err writing file: %s res %d errno %d\n", path, res, errno);
+    //		res = -errno;
+    //        goto endd;
+    //        }
+    //    res = MIN(wsize, res3);
+    //    }
+    //else
         {
-        int res3 = pwrite(fd, mem + mlen4, op_end - fsize, fsize);
-    	if (res3 < 0)
+        //hslog(1, "Att wr:total=%lld, offs=%lld", total, fsize2);
+        int res4 = pwrite(fd, mem, skip + wsize, new_beg);
+    	if(res4 < 0)
             {
             hslog(1, "Err writing file: %s res %d errno %d\n", path, res, errno);
-    		res = -errno;
+            res = -errno;
             goto endd;
             }
-        res = MIN(wsize, res3);
-        }
-    else
-        {
-        int res4 = pwrite(fd, mem + skip2, wsize, offset);
-    	if (res4 < 0)
-            {
-            hslog(1, "Err writing file: %s res %d errno %d\n", path, res, errno);
-    		res = -errno;
-            goto endd;
-            }
-        res = res4;
+        res = wsize;
         }
     //hslog(9, "Written: res %d bytes\n", res);
 
-    if(new_end >= fsize)
+    //if(new_end >= fsize)
         {
         size_t padd = new_end - fsize;
         // Write sideblock back out
 
         psb->serial = new_end / HS_BLOCK;
-        //hslog(7, "Wr SB: ser=%d new_b=%ld pdat=%ld tot=%ld\n",
-        //                                        psb->serial, new_beg, predat, total);
+        //psb->serial = op_end / HS_BLOCK;
+        hslog(7, "Wr SB: ser=%d new_b=%ld pdat=%ld tot=%ld\n",
+                                                psb->serial, new_beg, predat, total);
         //if(predat > 4096)
         //    memcpy(psb->buff, (mem + total) -  2 * HS_BLOCK, 2 * HS_BLOCK);
         //else
-            memcpy(psb->buff, (mem + total) - HS_BLOCK, HS_BLOCK);
+
+        //memcpy(psb->buff, (mem + total) - HS_BLOCK, HS_BLOCK);
 
         int ret2 = write_sideblock(path, psb);
         if(ret2 < 0)
@@ -269,6 +281,7 @@ int xmp_write(const char *path, const char *buf, size_t wsize, // )
             //goto endd;
             }
         }
+
     // Reflect new file position  (not needed)
     //lseek(fd, offset + res, SEEK_SET);
 

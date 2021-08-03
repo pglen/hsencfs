@@ -16,8 +16,12 @@
 // NO NO  define FAKE
 // NO NO  define NONE
 
-//#define FAKE_ENCRYPT   1
-//#define NONE_ENCRYPT   1
+// -----------------------------------------------------------------------
+// Test cases for siplifying and / or disabling encryption
+// Nothing defined activates the real encryption
+
+//define FAKE_ENCRYPT   1
+#define NONE_ENCRYPT   1
 
 #ifdef NONE_ENCRYPT
 

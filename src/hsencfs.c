@@ -85,7 +85,7 @@ char  passprog[PATH_MAX] ;
 // -----------------------------------------------------------------------
 
 // Log
-static FILE *logfp = NULL;
+//static FILE *logfp = NULL;
 
 // Flags
 static  int     verbose = 0;
@@ -109,16 +109,6 @@ static  char  inodedir[PATH_MAX] ;
 static  int     pg_debug = 0;
 
 // -----------------------------------------------------------------------
-// Get the extracted sources:
-
-//#include "hsencsu.c"
-//#include "hsencsb.c"
-
-// This is to debug the FUSE subsystem without the encryption
-//define BYPASS 1                   // Test case for no interception
-
-//include "hsencrr.c"                // Separated to read / write
-//#include "hsencrw.c"
 
 #include "hsencop.c"
 

@@ -1,4 +1,18 @@
 
+/* =====[ project ]========================================================
+
+   File Name:       readzig.c
+
+   Description:
+
+   Revisions:
+
+      REV       DATE                BY           DESCRIPTION
+      ----  ---------------      ----------      -------------------------
+      0.00  Mon 02.Aug.2021      Peter Glen      Initial version.
+
+   ======================================================================= */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>

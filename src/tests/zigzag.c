@@ -1,4 +1,18 @@
 
+/* =====[ project ]========================================================
+
+   File Name:       zigzag.c
+
+   Description:
+
+   Revisions:
+
+      REV       DATE                BY           DESCRIPTION
+      ----  ---------------      ----------      -------------------------
+      0.00  Mon 02.Aug.2021      Peter Glen      Initial version.
+
+   ======================================================================= */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
@@ -24,10 +38,10 @@ char buff[4096];
 int     main(int argc, char *argv[])
 
 {
-    //printf("Zigzag read test\n");
-
     if(argc < 3)
         errexit("Not enough arguments. use: zigzag infile outfile");
+
+    //printf("Zigzag read test %s\n", argv[1]);
 
     int fp_in = open(argv[1], O_RDWR);
     if(fp_in < 0)

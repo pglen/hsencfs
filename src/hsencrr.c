@@ -48,8 +48,6 @@
 #include <signal.h>
 #include <getopt.h>
 
-#include "base64.h"
-
 #include "../bluepoint/hs_crypt.h"
 #include "../bluepoint/bluepoint2.h"
 #include "../common/hsutils.h"
@@ -57,7 +55,7 @@
 #include "hsencfs.h"
 
 //
-//
+// Read intercept
 //
 
 int xmp_read(const char *path, char *buf, size_t wsize, off_t offset, // )

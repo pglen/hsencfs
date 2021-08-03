@@ -7,15 +7,16 @@ bin_PROGRAMS =  bpdec2 bpenc2
 
 bpenc2dir = .
 bpenc2_SOURCES  = bpenc2.c  bp2com.c  ../common/hsutils.c ../common/hspass.c \
-                        ../bluepoint/bluepoint2.c
+                       ../bluepoint/hs_crypt.c  ../bluepoint/hs_crypt.h  \
+                              ../bluepoint/bluepoint2.c
 
 bpenc2_CFLAGS   =  -I$(srcdir)/../bluepoint -I$(srcdir)/../common
 bpenc2_DEPENDENCIES =
 
 bpdec2dir = .
 bpdec2_SOURCES  = bpdec2.c bp2com.c ../common/hsutils.c ../common/hspass.c  \
-                        ../bluepoint/bluepoint2.c
-
+                       ../bluepoint/hs_crypt.c  ../bluepoint/hs_crypt.h  \
+                               ../bluepoint/bluepoint2.c
 
 bpdec2_CFLAGS   =  -I$(srcdir)/../bluepoint -I$(srcdir)/../common
 bpdec2_DEPENDENCIES =

@@ -54,7 +54,11 @@ sideblock *alloc_sideblock()
         goto endd;
         }
     INIT_SIDEBLOCK(*psb);
+
+    //memset(psb->buff, '\0', sizeof(psb->buff));
+
    endd:
+
     return psb;
 }
 
@@ -263,7 +267,7 @@ int    create_sideblock(const char *path)
 
     sideblock *psb = alloc_sideblock();
     if(!psb)
-        goto endd3;
+        goto endd2;
 
     int old_errno = errno;
     int fdi = open(ptmp2, O_RDWR | O_CREAT | O_TRUNC , S_IRUSR | S_IWUSR);

@@ -68,7 +68,7 @@ void    *hsalloc(int total)
         hslog(0, "Cannot get main block memory.\n");
         goto endd;
         }
-     memset(mem, 0, total);                  // Zero it
+     memset(mem, '\0', total);                  // Zero it
 
  endd:
     return mem;
