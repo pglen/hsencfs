@@ -1,0 +1,51 @@
+\hypertarget{base64_8c}{}\doxysection{src/base64.c File Reference}
+\label{base64_8c}\index{src/base64.c@{src/base64.c}}
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}base64.\+h\char`\"{}}\newline
+Include dependency graph for base64.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=270pt]{base64_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+char $\ast$ \mbox{\hyperlink{base64_8c_aab78ff2ac8c7390cd6755ce3a55eaa21}{base64\+\_\+encode}} (const unsigned char $\ast$data, size\+\_\+t input\+\_\+length, size\+\_\+t $\ast$output\+\_\+length)
+\item 
+unsigned char $\ast$ \mbox{\hyperlink{base64_8c_a093de76493e254154a5ccee90672244b}{base64\+\_\+decode}} (const char $\ast$data, size\+\_\+t input\+\_\+length, size\+\_\+t $\ast$output\+\_\+length)
+\item 
+void \mbox{\hyperlink{base64_8c_a0ff93d87e55e69b8cb5397c30cd10b51}{build\+\_\+decoding\+\_\+table}} ()
+\item 
+void \mbox{\hyperlink{base64_8c_a24c1b02f2e403468ce12faa8374877c1}{base64\+\_\+cleanup}} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{base64_8c_a24c1b02f2e403468ce12faa8374877c1}\label{base64_8c_a24c1b02f2e403468ce12faa8374877c1}} 
+\index{base64.c@{base64.c}!base64\_cleanup@{base64\_cleanup}}
+\index{base64\_cleanup@{base64\_cleanup}!base64.c@{base64.c}}
+\doxysubsubsection{\texorpdfstring{base64\_cleanup()}{base64\_cleanup()}}
+{\footnotesize\ttfamily void base64\+\_\+cleanup (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{base64_8c_a093de76493e254154a5ccee90672244b}\label{base64_8c_a093de76493e254154a5ccee90672244b}} 
+\index{base64.c@{base64.c}!base64\_decode@{base64\_decode}}
+\index{base64\_decode@{base64\_decode}!base64.c@{base64.c}}
+\doxysubsubsection{\texorpdfstring{base64\_decode()}{base64\_decode()}}
+{\footnotesize\ttfamily unsigned char$\ast$ base64\+\_\+decode (\begin{DoxyParamCaption}\item[{const char $\ast$}]{data,  }\item[{size\+\_\+t}]{input\+\_\+length,  }\item[{size\+\_\+t $\ast$}]{output\+\_\+length }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{base64_8c_aab78ff2ac8c7390cd6755ce3a55eaa21}\label{base64_8c_aab78ff2ac8c7390cd6755ce3a55eaa21}} 
+\index{base64.c@{base64.c}!base64\_encode@{base64\_encode}}
+\index{base64\_encode@{base64\_encode}!base64.c@{base64.c}}
+\doxysubsubsection{\texorpdfstring{base64\_encode()}{base64\_encode()}}
+{\footnotesize\ttfamily char$\ast$ base64\+\_\+encode (\begin{DoxyParamCaption}\item[{const unsigned char $\ast$}]{data,  }\item[{size\+\_\+t}]{input\+\_\+length,  }\item[{size\+\_\+t $\ast$}]{output\+\_\+length }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{base64_8c_a0ff93d87e55e69b8cb5397c30cd10b51}\label{base64_8c_a0ff93d87e55e69b8cb5397c30cd10b51}} 
+\index{base64.c@{base64.c}!build\_decoding\_table@{build\_decoding\_table}}
+\index{build\_decoding\_table@{build\_decoding\_table}!base64.c@{base64.c}}
+\doxysubsubsection{\texorpdfstring{build\_decoding\_table()}{build\_decoding\_table()}}
+{\footnotesize\ttfamily void build\+\_\+decoding\+\_\+table (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+

@@ -1,0 +1,27 @@
+var searchData=
+[
+  ['sb_283',['sb',['../bpdec2_8c.html#aac19c04e161d1f272c22b94122d832de',1,'sb():&#160;bpdec2.c'],['../bpenc2_8c.html#aac19c04e161d1f272c22b94122d832de',1,'sb():&#160;bpenc2.c']]],
+  ['scrolltext_284',['scrolltext',['../classhstray_1_1MountEd.html#a03e5634668b749d6d21198d64aa0547c',1,'hstray::MountEd']]],
+  ['scrollwindow_285',['scrollwindow',['../classhstray_1_1MountSelector.html#a6032daf6576e5e9bcdc5b3a55a307272',1,'hstray::MountSelector']]],
+  ['sdump_286',['sdump',['../block__blue2_8c.html#af526355f72b6cec33051ff28a7971088',1,'block_blue2.c']]],
+  ['seekcp_2ec_287',['seekcp.c',['../seekcp_8c.html',1,'']]],
+  ['sel_288',['sel',['../classhstray_1_1HSapplet.html#a7add70abc473db024bf131e07041366d',1,'hstray::HSapplet']]],
+  ['selection_289',['selection',['../classhstray_1_1MountSelector.html#a4f9a56a2064c9e33c2e30b50c2d66d05',1,'hstray::MountSelector']]],
+  ['sent1_290',['sent1',['../structcentinel.html#a2c6a0632300dc865aafa260ebaad739c',1,'centinel']]],
+  ['sent2_291',['sent2',['../structcentinel.html#a424f2e4c49469bf2689b0408901d82f9',1,'centinel']]],
+  ['sent3_292',['sent3',['../structcentinel.html#a7e2966b0098d753e022ad1376115072d',1,'centinel']]],
+  ['sent4_293',['sent4',['../structcentinel.html#a11a1007398c392c5e8e49234c8fedd7c',1,'centinel']]],
+  ['sent5_294',['sent5',['../structcentinel.html#a6e94f2e4c51785180ae6f1531cffb1c7',1,'centinel']]],
+  ['sent6_295',['sent6',['../structcentinel.html#a03d844ad88a2f16d9b68a462d23110b4',1,'centinel']]],
+  ['sep_296',['sep',['../struct__sideblock.html#a75ccc3a156da87fecba0d2b024eaae8a',1,'_sideblock']]],
+  ['serial_297',['serial',['../struct__sideblock.html#afd1040ef98d419d6718c90dda0ef33da',1,'_sideblock']]],
+  ['set_5ftext_298',['set_text',['../classhstray_1_1TextView.html#a5533f9ead689638d5146e6b3a0bb3e92',1,'hstray::TextView']]],
+  ['show_299',['show',['../classhstray_1_1MountSelector.html#a04b1eb6ddeb7e3caf11de056757d8ad4',1,'hstray.MountSelector.show(self)'],['../classhstray_1_1MountSelector.html#a050fa65f079eb2d3f3bd9522c1e87501',1,'hstray.MountSelector.show(self, items={})']]],
+  ['show_5ftooltip_300',['show_tooltip',['../classhstray_1_1HSapplet.html#ad597a38fd1a3cc05b3ff9d759097c746',1,'hstray::HSapplet']]],
+  ['sideblock_301',['sideblock',['../hsutils_8h.html#a6f48993114b8a2456db1344a937f1537',1,'hsutils.h']]],
+  ['slen_302',['slen',['../block__blue2_8c.html#a77e5778dba48d5d75c364f1c6f9f5da4',1,'block_blue2.c']]],
+  ['spacer_303',['spacer',['../classhstray_1_1MountEd.html#a5077552fe869a8c13d6e8bc173651f8c',1,'hstray::MountEd']]],
+  ['stdc_5fheaders_304',['STDC_HEADERS',['../config_8h.html#a550e5c272cc3cf3814651721167dcd23',1,'STDC_HEADERS():&#160;config.h'],['../src_2config_8h.html#a550e5c272cc3cf3814651721167dcd23',1,'STDC_HEADERS():&#160;config.h']]],
+  ['str_305',['str',['../trunctest_8c.html#a53dbc2382caf520f4a511f07d1e77a71',1,'trunctest.c']]],
+  ['str2_306',['str2',['../trunctest_8c.html#ab46b3b646686aa98128ca5ee5e337d0c',1,'trunctest.c']]]
+];

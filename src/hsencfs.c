@@ -1,4 +1,22 @@
-/*
+
+/* =====[ hsencfs.sess ]========================================================
+
+   File Name:       hsencfs.c
+
+   Description:     Functions for hsencfs.c
+
+   Revisions:
+
+      REV   DATE                BY              DESCRIPTION
+      ----  -----------         ----------      --------------------------
+      0.00  Tue 12.Apr.2022     Peter Glen      Virtual remake started
+
+   ======================================================================= */
+
+// Old header
+
+/*! \mainpage
+ *
  * HSENCFS (High Security EnCrypting File System)
  *
  * High security encryption file system. We make use of the API offered by
@@ -13,9 +31,10 @@
  * One additional useful feature is auditing. Reports file access by user ID.
  * The report is sent to syslog. (use the -l option to turn on log)
  *
- * To make it:
+ * To make it, type:
  *
- *     gcc -lfuse -lulockmgr [localobjects ...] hsencfs.c -o hsencfs
+ *     make
+ *     .. or gcc -lfuse -lulockmgr [localobjects ...] hsencfs.c -o hsencfs
  *
  *  To use it:
  *

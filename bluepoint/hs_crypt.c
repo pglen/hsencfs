@@ -8,7 +8,7 @@
 
 #ifdef NONE_ENCRYPT
 
-#warning "None encryption, (does nothing) for testing only"
+//#warning "None encryption, (does nothing) for testing only"
 
 void hs_encrypt_none(void *mem, int size2, void *pass, int plen)
 
@@ -24,7 +24,7 @@ void hs_decrypt_none(void *mem, int size2, void *pass, int plen)
 
 #elif defined(FAKE_ENCRYPT)
 
-#warning "Fake encryption, (simple XOR) for testing only"
+//#warning "Fake encryption, (simple XOR) for testing only"
 
 // Just an XOR of the buffer to troubleshoot the interceptor
 
@@ -43,7 +43,7 @@ void hs_encrypt_fake(void *mem, int size2, void *pass, int plen)
 
         for(int aa = 0; aa < block; aa++)
             {
-            cmem[loop + aa] = cmem[loop + aa] ^ 0x8;
+            //cmem[loop + aa] = cmem[loop + aa] ^ 0x8;
             //cmem[loop + aa] = cmem[loop + aa] ^ cpass[loop + aa % plen];
             //cmem[loop + aa] = cmem[loop + aa] ^ (loop + aa % 200);
             }
@@ -67,7 +67,7 @@ void hs_decrypt_fake(void *mem, int size2, void *pass, int plen)
             {
             //cmem[loop + aa] = cmem[loop + aa] ^ (loop + aa % 200);
             //cmem[loop + aa] = cmem[loop + aa] ^ cpass[loop + aa % plen];
-            cmem[loop + aa] = cmem[loop + aa] ^ 0x8;
+            //cmem[loop + aa] = cmem[loop + aa] ^ 0x8;
             }
         }
 }

@@ -20,8 +20,9 @@
 // Test cases for siplifying and / or disabling encryption
 // Nothing defined activates the real encryption
 
-//define FAKE_ENCRYPT   1
+//#define FAKE_ENCRYPT   1
 #define NONE_ENCRYPT   1
+//#define FULL_ENCRYPT   1
 
 #ifdef NONE_ENCRYPT
 
@@ -45,7 +46,7 @@ void hs_decrypt_none(void *mem, int size2, void *pass, int plen);
 void hs_encrypt_fake(void *mem, int size2, void *pass, int plen);
 void hs_decrypt_fake(void *mem, int size2, void *pass, int plen);
 
-#else
+#elif defined(FULL_ENCRYPT)
 
 // Deploy the real encryption
 
@@ -54,6 +55,16 @@ void hs_decrypt_fake(void *mem, int size2, void *pass, int plen);
 
 void hs_encrypt_org(void *mem, int size2, void *pass, int plen);
 void hs_decrypt_org(void *mem, int size2, void *pass, int plen);
+
+#else
+
+#define     hs_encrypt  hs_encrypt_undef
+#define     hs_decrypt  hs_decrypt_undef
+
+#error "Must define encryption type: FAKE NONE FULL"
+
+void hs_encrypt_undef(void *mem, int size2, void *pass, int plen) {};
+void hs_decrypt_undef(void *mem, int size2, void *pass, int plen) {};
 
 #endif
 

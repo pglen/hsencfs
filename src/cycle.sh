@@ -35,11 +35,15 @@ echo Compilation Done, Begin tests ...
 echo -------------------------------------------------------
 echo "Tests:  (silent if all is OK)"
 
-echo Direct "(for read test)"
+echo Direct "(for read / write test)"
 
 function test_direct {
+    #rm -f ~/.secrets/$1
     ../tools/bpenc2 -p 1234 test_data/$1 ~/.secrets/$1
     diff -q test_data/$1 ~/secrets/$1  # note the missing dot
+    rm -f tmp/$1
+    ../tools/bpdec2 -p 1234 ~/.secrets/$1 tmp/$1
+    diff -q test_data/$1 tmp/$1
 }
 
 test_direct aa300.txt
@@ -60,10 +64,9 @@ if [ "$ERR" != "0" ] ; then
     exit
 fi
 
-
 # Test for match between the two subsystems:
 
-echo Rzig
+echo test rzig
 
 function test_rzig {
     ../tools/bpenc2 -p 1234 -f test_data/$1 ~/.secrets/$1
@@ -77,11 +80,21 @@ test_rzig aa4096.txt
 test_rzig aa4500.txt
 test_rzig aa9100.txt
 
-rm -f bbb
-./tests/onejump bbb
-./tests/onejump ~/secrets/bbb
-diff bbb ~/secrets/bbb
-rm -f bbb
+echo test onejump
+
+rm -f jump.txt
+./tests/onejump jump.txt
+./tests/onejump ~/secrets/jump.txt
+diff jump.txt ~/secrets/jump.txt
+#rm -f jump.txt
+
+ERR=$?
+if [ "$ERR" != "0" ] ; then
+    echo "Error: Cannot pass onejump stage; err=$ERR"
+    exit
+fi
+
+echo test farwrite
 
 rm -f farwrite.txt
 ./tests/farwrite farwrite.txt
@@ -95,22 +108,32 @@ function test_item {
     IN=$2/$4;  OUT=$3/$4
     rm -f $OUT
     #echo $1 "--" $IN  $OUT
-    $1 $IN  $OUT
+    $1 $IN $OUT
     diff -q $IN  $OUT
+    ERR=$?
+    if [ "$ERR" != "0" ] ; then
+        echo "Error: Cannot pass  $1; err=$ERR with: $4"
+    exit
+    fi
 }
 
-echo test Zigzag
+echo test zigzag
 
-test_item ./tests/zigzag test_data ~/secrets aa300.txt
-test_item ./tests/zigzag test_data ~/secrets aa4096.txt
+#test_item ./tests/zigzag test_data tmp aa300.txt
+#test_item ./tests/zigzag test_data ~/secrets aa300.txt
+#test_item ./tests/zigzag test_data ~/secrets aa4096.txt
+
 test_item ./tests/zigzag test_data ~/secrets aa5000.txt
 test_item ./tests/zigzag test_data ~/secrets aa8192.txt
 test_item ./tests/zigzag test_data ~/secrets aa9000.txt
 test_item ./tests/zigzag test_data ~/secrets aa12288.txt
-exit
-test_item ./tests/zigzag test_data ~/secrets aa16384.txt
+#exit
+#test_item ./tests/zigzag test_data ~/secrets aa16384.txt
 
 echo test Zigjump
+
+# Test if utility
+#test_item ./tests/zigjump test_data tmp aa300.txt
 
 # The problem Items
 test_item ./tests/zigjump test_data ~/secrets aa3000.txt

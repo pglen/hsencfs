@@ -12,6 +12,7 @@
 //      Decrypt / Encrypt.
 //      Patch required data back.
 //
+// Wed 07.Jul.2021      Virtual based remake started
 
 // -----------------------------------------------------------------------
 // Intercept read. Make it block size, (HS_BLOCK) so encryption / decryption
@@ -73,6 +74,14 @@ int xmp_read(const char *path, char *buf, size_t wsize, off_t offset, // )
         return -errno;  }
     else  {
             //hs_decrypt(buf, wsize, passx, plen);
+            return res2a;   }
+    #endif
+
+    #ifdef VIRTUAL
+    int res2a = pread(fi->fh, buf, wsize, offset);
+    if(res2a < 0) {
+        return -errno;  }
+    else  {
             return res2a;   }
     #endif
 
@@ -172,7 +181,7 @@ int xmp_read(const char *path, char *buf, size_t wsize, off_t offset, // )
     // Copy out newly decoded buffer
     memcpy(buf, mem + skip, wsize);
 
-    hslog(9, "Read in data: '%s' size %d\n", path, res);
+    hslog(1, "Read in data: '%s' size %d\n", path, res);
 
   endd:
     // Do not leave data behind

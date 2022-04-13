@@ -1,0 +1,78 @@
+\hypertarget{hs__crypt_8h}{}\doxysection{bluepoint/hs\+\_\+crypt.h File Reference}
+\label{hs__crypt_8h}\index{bluepoint/hs\_crypt.h@{bluepoint/hs\_crypt.h}}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{hs__crypt_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{hs__crypt_8h_a39c7f8aef8acb1b91c64b718a8fa7ec2}{HS\+\_\+\+BLOCK}}~4096
+\item 
+\#define \mbox{\hyperlink{hs__crypt_8h_a3acffbd305ee72dcd4593c0d8af64a4f}{MIN}}(a,  b)~(a) $>$ (b) ? (b) \+: (a)
+\item 
+\#define \mbox{\hyperlink{hs__crypt_8h_a98b3a87874b771a500072c075266e2ba}{NONE\+\_\+\+ENCRYPT}}~1
+\item 
+\#define \mbox{\hyperlink{hs__crypt_8h_a5c35e3266c7df9bbf8bb1723fb2b76fa}{hs\+\_\+encrypt}}~\mbox{\hyperlink{hs__crypt_8h_a56e8e3191c58940d8e314c389e655b11}{hs\+\_\+encrypt\+\_\+none}}
+\item 
+\#define \mbox{\hyperlink{hs__crypt_8h_a0fa92893dff59b9a86a84e8c5c318ffb}{hs\+\_\+decrypt}}~\mbox{\hyperlink{hs__crypt_8h_adecfb1631bb114e5d95bc924ae28ca71}{hs\+\_\+decrypt\+\_\+none}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{hs__crypt_8h_a56e8e3191c58940d8e314c389e655b11}{hs\+\_\+encrypt\+\_\+none}} (void $\ast$mem, int size2, void $\ast$\mbox{\hyperlink{trunctest_8c_a010542bf29e182284896c9c2f42e1387}{pass}}, int \mbox{\hyperlink{trunctest_8c_ad29d2259942853507dff3a3e3c05535a}{plen}})
+\item 
+void \mbox{\hyperlink{hs__crypt_8h_adecfb1631bb114e5d95bc924ae28ca71}{hs\+\_\+decrypt\+\_\+none}} (void $\ast$mem, int size2, void $\ast$\mbox{\hyperlink{trunctest_8c_a010542bf29e182284896c9c2f42e1387}{pass}}, int \mbox{\hyperlink{trunctest_8c_ad29d2259942853507dff3a3e3c05535a}{plen}})
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{hs__crypt_8h_a39c7f8aef8acb1b91c64b718a8fa7ec2}\label{hs__crypt_8h_a39c7f8aef8acb1b91c64b718a8fa7ec2}} 
+\index{hs\_crypt.h@{hs\_crypt.h}!HS\_BLOCK@{HS\_BLOCK}}
+\index{HS\_BLOCK@{HS\_BLOCK}!hs\_crypt.h@{hs\_crypt.h}}
+\doxysubsubsection{\texorpdfstring{HS\_BLOCK}{HS\_BLOCK}}
+{\footnotesize\ttfamily \#define HS\+\_\+\+BLOCK~4096}
+
+\mbox{\Hypertarget{hs__crypt_8h_a0fa92893dff59b9a86a84e8c5c318ffb}\label{hs__crypt_8h_a0fa92893dff59b9a86a84e8c5c318ffb}} 
+\index{hs\_crypt.h@{hs\_crypt.h}!hs\_decrypt@{hs\_decrypt}}
+\index{hs\_decrypt@{hs\_decrypt}!hs\_crypt.h@{hs\_crypt.h}}
+\doxysubsubsection{\texorpdfstring{hs\_decrypt}{hs\_decrypt}}
+{\footnotesize\ttfamily \#define hs\+\_\+decrypt~\mbox{\hyperlink{hs__crypt_8h_adecfb1631bb114e5d95bc924ae28ca71}{hs\+\_\+decrypt\+\_\+none}}}
+
+\mbox{\Hypertarget{hs__crypt_8h_a5c35e3266c7df9bbf8bb1723fb2b76fa}\label{hs__crypt_8h_a5c35e3266c7df9bbf8bb1723fb2b76fa}} 
+\index{hs\_crypt.h@{hs\_crypt.h}!hs\_encrypt@{hs\_encrypt}}
+\index{hs\_encrypt@{hs\_encrypt}!hs\_crypt.h@{hs\_crypt.h}}
+\doxysubsubsection{\texorpdfstring{hs\_encrypt}{hs\_encrypt}}
+{\footnotesize\ttfamily \#define hs\+\_\+encrypt~\mbox{\hyperlink{hs__crypt_8h_a56e8e3191c58940d8e314c389e655b11}{hs\+\_\+encrypt\+\_\+none}}}
+
+\mbox{\Hypertarget{hs__crypt_8h_a3acffbd305ee72dcd4593c0d8af64a4f}\label{hs__crypt_8h_a3acffbd305ee72dcd4593c0d8af64a4f}} 
+\index{hs\_crypt.h@{hs\_crypt.h}!MIN@{MIN}}
+\index{MIN@{MIN}!hs\_crypt.h@{hs\_crypt.h}}
+\doxysubsubsection{\texorpdfstring{MIN}{MIN}}
+{\footnotesize\ttfamily \#define MIN(\begin{DoxyParamCaption}\item[{}]{a,  }\item[{}]{b }\end{DoxyParamCaption})~(a) $>$ (b) ? (b) \+: (a)}
+
+\mbox{\Hypertarget{hs__crypt_8h_a98b3a87874b771a500072c075266e2ba}\label{hs__crypt_8h_a98b3a87874b771a500072c075266e2ba}} 
+\index{hs\_crypt.h@{hs\_crypt.h}!NONE\_ENCRYPT@{NONE\_ENCRYPT}}
+\index{NONE\_ENCRYPT@{NONE\_ENCRYPT}!hs\_crypt.h@{hs\_crypt.h}}
+\doxysubsubsection{\texorpdfstring{NONE\_ENCRYPT}{NONE\_ENCRYPT}}
+{\footnotesize\ttfamily \#define NONE\+\_\+\+ENCRYPT~1}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{hs__crypt_8h_adecfb1631bb114e5d95bc924ae28ca71}\label{hs__crypt_8h_adecfb1631bb114e5d95bc924ae28ca71}} 
+\index{hs\_crypt.h@{hs\_crypt.h}!hs\_decrypt\_none@{hs\_decrypt\_none}}
+\index{hs\_decrypt\_none@{hs\_decrypt\_none}!hs\_crypt.h@{hs\_crypt.h}}
+\doxysubsubsection{\texorpdfstring{hs\_decrypt\_none()}{hs\_decrypt\_none()}}
+{\footnotesize\ttfamily void hs\+\_\+decrypt\+\_\+none (\begin{DoxyParamCaption}\item[{void $\ast$}]{mem,  }\item[{int}]{size2,  }\item[{void $\ast$}]{pass,  }\item[{int}]{plen }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hs__crypt_8h_a56e8e3191c58940d8e314c389e655b11}\label{hs__crypt_8h_a56e8e3191c58940d8e314c389e655b11}} 
+\index{hs\_crypt.h@{hs\_crypt.h}!hs\_encrypt\_none@{hs\_encrypt\_none}}
+\index{hs\_encrypt\_none@{hs\_encrypt\_none}!hs\_crypt.h@{hs\_crypt.h}}
+\doxysubsubsection{\texorpdfstring{hs\_encrypt\_none()}{hs\_encrypt\_none()}}
+{\footnotesize\ttfamily void hs\+\_\+encrypt\+\_\+none (\begin{DoxyParamCaption}\item[{void $\ast$}]{mem,  }\item[{int}]{size2,  }\item[{void $\ast$}]{pass,  }\item[{int}]{plen }\end{DoxyParamCaption})}
+

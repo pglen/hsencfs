@@ -10,8 +10,12 @@
       REV       DATE                BY           DESCRIPTION
       ----  ---------------      ----------      -------------------------
       0.00  Wed 07.Jul.2021      Peter Glen      Initial version.
+      0.00  Tue 12.Apr.2022      Peter Glen      Reworked for virtual
 
    ======================================================================= */
+
+typedef unsigned int  uint;
+typedef unsigned char uchar;
 
 #define MARK_SIZE   4096
 

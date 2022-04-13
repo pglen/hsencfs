@@ -1,0 +1,97 @@
+\hypertarget{hsencsb_8c}{}\doxysection{src/hsencsb.c File Reference}
+\label{hsencsb_8c}\index{src/hsencsb.c@{src/hsencsb.c}}
+{\ttfamily \#include $<$fuse.\+h$>$}\newline
+{\ttfamily \#include $<$ulockmgr.\+h$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$limits.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+{\ttfamily \#include $<$fcntl.\+h$>$}\newline
+{\ttfamily \#include $<$dirent.\+h$>$}\newline
+{\ttfamily \#include $<$errno.\+h$>$}\newline
+{\ttfamily \#include $<$syslog.\+h$>$}\newline
+{\ttfamily \#include $<$sys/time.\+h$>$}\newline
+{\ttfamily \#include $<$signal.\+h$>$}\newline
+{\ttfamily \#include $<$getopt.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}base64.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../bluepoint/hs\+\_\+crypt.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../bluepoint/bluepoint2.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../common/hsutils.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hsencfs.\+h\char`\"{}}\newline
+Include dependency graph for hsencsb.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{hsencsb_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{hsencsb_8c_a369266c24eacffb87046522897a570d5}{\+\_\+\+GNU\+\_\+\+SOURCE}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{hsutils_8h_a6f48993114b8a2456db1344a937f1537}{sideblock}} $\ast$ \mbox{\hyperlink{hsencsb_8c_a324b09cbf311621037056d32bdaabce1}{alloc\+\_\+sideblock}} ()
+\item 
+char $\ast$ \mbox{\hyperlink{hsencsb_8c_a6f409d502744c25cbcda21afbd33000b}{get\+\_\+sidename}} (const char $\ast$path)
+\item 
+int \mbox{\hyperlink{hsencsb_8c_a9762217a73b844453a5ae50bf98b2309}{read\+\_\+sideblock}} (const char $\ast$path, \mbox{\hyperlink{hsutils_8h_a6f48993114b8a2456db1344a937f1537}{sideblock}} $\ast$psb)
+\item 
+int \mbox{\hyperlink{hsencsb_8c_a6efbf23419ef39cc2b1eccb3796ee38e}{write\+\_\+sideblock}} (const char $\ast$path, \mbox{\hyperlink{hsutils_8h_a6f48993114b8a2456db1344a937f1537}{sideblock}} $\ast$psb)
+\item 
+int \mbox{\hyperlink{hsencsb_8c_a0423d1ae7528def173fca9666021cab8}{create\+\_\+sideblock}} (const char $\ast$path)
+\item 
+void \mbox{\hyperlink{hsencsb_8c_abdaa7326bb222f72b1aba9ceea17324d}{kill\+\_\+sideblock}} (\mbox{\hyperlink{hsutils_8h_a6f48993114b8a2456db1344a937f1537}{sideblock}} $\ast$psb)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{hsencsb_8c_a369266c24eacffb87046522897a570d5}\label{hsencsb_8c_a369266c24eacffb87046522897a570d5}} 
+\index{hsencsb.c@{hsencsb.c}!\_GNU\_SOURCE@{\_GNU\_SOURCE}}
+\index{\_GNU\_SOURCE@{\_GNU\_SOURCE}!hsencsb.c@{hsencsb.c}}
+\doxysubsubsection{\texorpdfstring{\_GNU\_SOURCE}{\_GNU\_SOURCE}}
+{\footnotesize\ttfamily \#define \+\_\+\+GNU\+\_\+\+SOURCE}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{hsencsb_8c_a324b09cbf311621037056d32bdaabce1}\label{hsencsb_8c_a324b09cbf311621037056d32bdaabce1}} 
+\index{hsencsb.c@{hsencsb.c}!alloc\_sideblock@{alloc\_sideblock}}
+\index{alloc\_sideblock@{alloc\_sideblock}!hsencsb.c@{hsencsb.c}}
+\doxysubsubsection{\texorpdfstring{alloc\_sideblock()}{alloc\_sideblock()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{hsutils_8h_a6f48993114b8a2456db1344a937f1537}{sideblock}}$\ast$ alloc\+\_\+sideblock (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hsencsb_8c_a0423d1ae7528def173fca9666021cab8}\label{hsencsb_8c_a0423d1ae7528def173fca9666021cab8}} 
+\index{hsencsb.c@{hsencsb.c}!create\_sideblock@{create\_sideblock}}
+\index{create\_sideblock@{create\_sideblock}!hsencsb.c@{hsencsb.c}}
+\doxysubsubsection{\texorpdfstring{create\_sideblock()}{create\_sideblock()}}
+{\footnotesize\ttfamily int create\+\_\+sideblock (\begin{DoxyParamCaption}\item[{const char $\ast$}]{path }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hsencsb_8c_a6f409d502744c25cbcda21afbd33000b}\label{hsencsb_8c_a6f409d502744c25cbcda21afbd33000b}} 
+\index{hsencsb.c@{hsencsb.c}!get\_sidename@{get\_sidename}}
+\index{get\_sidename@{get\_sidename}!hsencsb.c@{hsencsb.c}}
+\doxysubsubsection{\texorpdfstring{get\_sidename()}{get\_sidename()}}
+{\footnotesize\ttfamily char$\ast$ get\+\_\+sidename (\begin{DoxyParamCaption}\item[{const char $\ast$}]{path }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hsencsb_8c_abdaa7326bb222f72b1aba9ceea17324d}\label{hsencsb_8c_abdaa7326bb222f72b1aba9ceea17324d}} 
+\index{hsencsb.c@{hsencsb.c}!kill\_sideblock@{kill\_sideblock}}
+\index{kill\_sideblock@{kill\_sideblock}!hsencsb.c@{hsencsb.c}}
+\doxysubsubsection{\texorpdfstring{kill\_sideblock()}{kill\_sideblock()}}
+{\footnotesize\ttfamily void kill\+\_\+sideblock (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{hsutils_8h_a6f48993114b8a2456db1344a937f1537}{sideblock}} $\ast$}]{psb }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hsencsb_8c_a9762217a73b844453a5ae50bf98b2309}\label{hsencsb_8c_a9762217a73b844453a5ae50bf98b2309}} 
+\index{hsencsb.c@{hsencsb.c}!read\_sideblock@{read\_sideblock}}
+\index{read\_sideblock@{read\_sideblock}!hsencsb.c@{hsencsb.c}}
+\doxysubsubsection{\texorpdfstring{read\_sideblock()}{read\_sideblock()}}
+{\footnotesize\ttfamily int read\+\_\+sideblock (\begin{DoxyParamCaption}\item[{const char $\ast$}]{path,  }\item[{\mbox{\hyperlink{hsutils_8h_a6f48993114b8a2456db1344a937f1537}{sideblock}} $\ast$}]{psb }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hsencsb_8c_a6efbf23419ef39cc2b1eccb3796ee38e}\label{hsencsb_8c_a6efbf23419ef39cc2b1eccb3796ee38e}} 
+\index{hsencsb.c@{hsencsb.c}!write\_sideblock@{write\_sideblock}}
+\index{write\_sideblock@{write\_sideblock}!hsencsb.c@{hsencsb.c}}
+\doxysubsubsection{\texorpdfstring{write\_sideblock()}{write\_sideblock()}}
+{\footnotesize\ttfamily int write\+\_\+sideblock (\begin{DoxyParamCaption}\item[{const char $\ast$}]{path,  }\item[{\mbox{\hyperlink{hsutils_8h_a6f48993114b8a2456db1344a937f1537}{sideblock}} $\ast$}]{psb }\end{DoxyParamCaption})}
+

@@ -17,7 +17,9 @@
 #define TRUE  (0==0)
 
 // This is to debug the FUSE subsystem without the encryption
-//define BYPASS 1                   // Test case for no interception
+#define BYPASS 1                         // Test case for no interception
+
+//#define VIRTUAL 1                     // Newer version of interception
 
 extern  int     plen;
 extern  char    passx[MAXPASSLEN];

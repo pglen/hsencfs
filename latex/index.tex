@@ -1,0 +1,16 @@
+HSENCFS (High Security En\+Crypting File System)
+
+High security encryption file system. We make use of the API offered by the fuse subsystem to intercept file operations.
+
+The interception is done between mountsecret and mountpoint. Copying data to mountpoint ends up encrypted in mountsecret. Copying data from mountpoint is sourced from mountsecret and decrypted. See \char`\"{}hsencrw.\+c\char`\"{}.
+
+Use a dotted file for mountsecret (like .data or .secretdata)
+
+One additional useful feature is auditing. Reports file access by user ID. The report is sent to syslog. (use the -\/l option to turn on log)
+
+To make it, type\+: \begin{DoxyVerb}make
+.. or gcc -lfuse -lulockmgr [localobjects ...] hsencfs.c -o hsencfs
+\end{DoxyVerb}
+ To use it\+: \begin{DoxyVerb} hsenc [-f] ~/secrets  ~/.secrets
+\end{DoxyVerb}
+ Command above will expose the $\sim$/secrets directory. It is sourced from the backing directory $\sim$/.secrets 

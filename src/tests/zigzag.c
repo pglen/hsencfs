@@ -33,7 +33,9 @@ int errexit(char *str)
 // -----------------------------------------------------------------------
 // Main entry point
 
-char buff[4096];
+#define ZIGSIZE 4096
+
+char buff[ZIGSIZE];
 
 int     main(int argc, char *argv[])
 
@@ -72,7 +74,7 @@ int     main(int argc, char *argv[])
             {
             break;
             }
-        int zig = -200;
+        int zig = -ZIGSIZE/2;
         int rrr = lseek(fp_in, zig, SEEK_CUR);
         //printf("seek=%d ", rrr);
         int sss = lseek(fp_out, zig, SEEK_CUR);
@@ -84,6 +86,6 @@ int     main(int argc, char *argv[])
     close(fp_out);
 }
 
-
+// EOF
 
 

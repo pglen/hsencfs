@@ -524,22 +524,30 @@ static int xmp_ftruncate(const char *path, off_t size, struct fuse_file_info *fi
 
 static int xmp_utimens(const char *path, const struct timespec ts[2], struct fuse_file_info *fi)
 {
-	int res;
-	struct timeval tv[2];
-
-	tv[0].tv_sec = ts[0].tv_sec;
-	tv[0].tv_usec = ts[0].tv_nsec / 1000;
-	tv[1].tv_sec = ts[1].tv_sec;
-	tv[1].tv_usec = ts[1].tv_nsec / 1000;
+	//int res;
+	//struct timeval tv[2];
+    //
+	//tv[0].tv_sec = ts[0].tv_sec;
+	//tv[0].tv_usec = ts[0].tv_nsec / 1000;
+	//tv[1].tv_sec = ts[1].tv_sec;
+	//tv[1].tv_usec = ts[1].tv_nsec / 1000;
+    //
 
     char  path2[PATH_MAX] ;
     strcpy(path2, mountsecret); strcat(path2, path);
 
-	res = utimes(path2, tv);
-	if (res == -1)
-		return -errno;
+    (void) fi;
+    int res;
+    /* don't use utime/utimes since they follow symlinks */
+    res = utimensat(0, path2, ts, AT_SYMLINK_NOFOLLOW);
+    if (res == -1)
+            return -errno;
+    return 0;
 
-	return 0;
+	//res = utimes(path2, tv);
+	//if (res == -1)
+	//	return -errno;
+	//return 0;
 }
 
 static int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
@@ -677,6 +685,7 @@ static int xmp_open(const char *path, struct fuse_file_info *fi)
         }
 	fi->fh = fd;
 
+    hslog(3, " - - - - - \n");
     hslog(1, "Opened '%s' fh=%ld\n", path, fi->fh);
 
     //struct stat stbuf;	memset(&stbuf, 0, sizeof(stbuf));
