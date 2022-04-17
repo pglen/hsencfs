@@ -114,7 +114,7 @@ static  int     nobg = 0;
 static  int     ondemand = 0;
 
 // Maintain internal count
-static  char    version[] = "1.3";
+static  char    version[] = "1.4";
 
 // The decoy employed occasionally to stop spyers
 // from figuring out where it is stored

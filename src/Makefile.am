@@ -5,7 +5,7 @@
 
 bin_PROGRAMS =  hsencfs \
 tests/dualwrite tests/seekcp tests/zigjump tests/zigzag tests/farwrite \
-tests/onejump
+tests/onejump tests/dualread
 
 #hsaskpass
 

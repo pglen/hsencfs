@@ -5,24 +5,40 @@
 
 // High security block encryption
 
+#include "bluepoint2.h"
+
 #define HS_BLOCK 4096
 
 #ifndef MIN
 #define MIN(a, b) (a) > (b) ? (b) : (a)
 #endif
 
-// This is used for testing ONLY
+// Warning: this will disable all encryptions;
+// This is used for testing ONLY;
 
-// NO NO  define FAKE
-// NO NO  define NONE
+//   define FAKE
+//   define NONE
 
 // -----------------------------------------------------------------------
-// Test cases for siplifying and / or disabling encryption
+// Test cases for simplifying and / or disabling encryption
 // Nothing defined activates the real encryption
 
-//#define FAKE_ENCRYPT   1
-#define NONE_ENCRYPT   1
-//#define FULL_ENCRYPT   1
+//#define NONE_ENCRYPT  1
+//#define FAKE_ENCRYPT    1
+#define FULL_ENCRYPT  1
+
+#if defined(NONE_ENCRYPT) && defined(FAKE_ENCRYPT)
+    #error "Cannot define more than one. of NONE or FAKE"
+#endif
+
+#if defined(NONE_ENCRYPT) && defined(FULL_ENCRYPT)
+    #error "Cannot define more than one. of NONE or FULL"
+#endif
+
+#if defined(FAKE_ENCRYPT) && defined(FULL_ENCRYPT)
+    #error "Cannot define more than one. of FAKE or FULL"
+#endif
+
 
 #ifdef NONE_ENCRYPT
 

@@ -5,10 +5,14 @@ Uesful trick to see the logs in a separate file.
 Edit (Create) /etc/rsyslog/rsyslog.d/10-custom.conf
 with the following contents:
 
-if $programname == 'HSENCFS' then {
+if $programname == 'HSEncFs' then {
         /var/log/hsencfs.log
         ~
 }
+
+Then the file '/var/log/hsencfs.log' contains details of
+the hsencfs workings. Use the -l option to control how much detail
+would you like to see;
 
 To copy every file including hidden ones (starting with a dot) use:
 
@@ -35,9 +39,10 @@ One can copy encrypted files out:
    example:  cp -a  ~/.secret/*  target_dir
 
 
-Announcement
+Announcements / History
 
 Tue 06.Jul.2021     dummy encryption is intercepted correctly
+Tue 12.Apr.2022     started virtual based encryption
 
 Older Announcements:
 

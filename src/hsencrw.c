@@ -62,14 +62,80 @@
 
 #include "hsencfs.h"
 
-int     virt_write(int fd, char *buf, uint wsize, uint offset)
+int     virt_write(const char *path, int fd, const char *buf, uint wsize, uint offset)
 
 {
-       int res2a = pwrite(fd, buf, wsize, offset);
+    int ret = 0;
+    uint new_offs = (offset / HS_BLOCK) * HS_BLOCK;
+    uint endd = offset + wsize;
+    uint new_end  = (endd / HS_BLOCK) * HS_BLOCK;
+    if(endd % HS_BLOCK)
+        new_end += HS_BLOCK;
 
-       return res2a;
+    int xsize = new_end - new_offs;
+    hslog(3, "virt_write(): new_offs=%ld new_end=%ld xsize=%d\n",
+                    new_offs, new_end, xsize);
+
+    // Read in full blocks
+    char *mem = malloc(xsize + 1);
+    if(!mem)
+        {
+        //hslog(1, "virt_write(): cannot alloc memory xsize=%d\n", xsize);
+        ret = -ENOMEM;
+        goto end_func;
+        }
+    int old_errno = errno;
+
+    memset(mem, '\0', xsize);
+    int res2a = pread(fd, mem, xsize, new_offs);
+    if(res2a < 0)
+        {
+        hslog(3, "virt_write(): error res2a=%lx, errno=%d\n",  res2a, errno);
+        // Ignore pre read error
+        //  ret =  -errno;  goto end_func2;
+        }
+    if(res2a < xsize)
+        {
+        hslog(3, "virt_write(): short read res2a=%lx xsize=%ld\n", res2a, xsize);
+        }
+    // Make sure our auxilliary ops did not create an error condition
+    errno = old_errno;
+
+    hs_decrypt(mem, xsize, passx, plen);
+    memcpy(mem + (offset - new_offs), buf, wsize);
+    hs_encrypt(mem, xsize, passx, plen);
+
+    int res3a = pwrite(fd, mem + (offset - new_offs), wsize, offset);
+    hslog(3, "virt_write(): res2a=%ld xsize=%ld\n", res3a, xsize);
+    ret = res3a;     // Tell them we got it
+
+    // Write sideblock
+    sideblock_t *psb = alloc_sideblock();
+    if(psb == NULL) {
+        ret = -ENOMEM;  goto end_func2;
+        }
+    psb->serial = new_end / HS_BLOCK;
+    //psb->serial = op_end / HS_BLOCK;
+    //hslog(7, "Wr SB: ser=%d new_b=%ld pdat=%ld tot=%ld\n",
+    //                                        psb->serial, new_beg, predat, total);
+    memcpy(psb->buff, (mem + xsize) - HS_BLOCK, HS_BLOCK);
+
+    int ret2 = write_sideblock(path, psb);
+    if(ret2 < 0)
+        {
+        hslog(1, "Error on sideblock write %d\n", errno);
+	    //res = -errno;
+        //goto endd;
+        }
+    kill_sideblock(psb);
+
+
+  end_func2:
+    free(mem);
+
+   end_func:
+    return ret;
 }
-
 
 int xmp_write(const char *path, const char *buf, size_t wsize, // )
                         off_t offset, struct fuse_file_info *fi)
@@ -88,8 +154,12 @@ int xmp_write(const char *path, const char *buf, size_t wsize, // )
         return 0;
         }
 
-    hslog(LOG_DEBUG, "xmp_write(): fh=%ld wsize=%lu offs=%lu\n",
-                                fd, wsize, offset);
+    off_t orgfsize = get_fsize(fd);
+    off_t oldoff = lseek(fd, 0, SEEK_CUR);
+
+    hslog(2, "@@ xmp_write(): fh=%ld '%s'\n", fi->fh, path);
+    hslog(3, "xmp_write(): fh=%ld wsize=%lu offs=%lu\n", fd, wsize, offset);
+    hslog(3, "xmp_write(): orgfsize=%lu oldoff=%lu\n", orgfsize, oldoff);
 
     // This is a test case for evaluating the FUSE side of the system (it is OK)
     #ifdef BYPASS
@@ -103,11 +173,7 @@ int xmp_write(const char *path, const char *buf, size_t wsize, // )
     #endif
 
     #ifdef VIRTUAL
-        int res2a = pwrite(fd, buf, wsize, offset);
-    	if (res2a < 0) {
-            return -errno; }
-        else {
-            return res2a;  }
+        return(virt_write(path, fd, buf, wsize, offset));
     #endif
 
     // Change file handle to reflect read / write
@@ -161,7 +227,7 @@ int xmp_write(const char *path, const char *buf, size_t wsize, // )
 
     //hslog(3, "Write: offs=%ld wsize=%ld fsize=%ld\n", offset, wsize, fsize);
 
-    sideblock *psb = alloc_sideblock();
+    sideblock_t *psb = alloc_sideblock();
     if(psb == NULL) {
         res = -ENOMEM;  goto endd;
         }

@@ -51,33 +51,33 @@ PATH: /home/peterglen/cloud/flutter/bin
 ## Core tests. ##
 ## ----------- ##
 
-configure:2316: checking for a BSD-compatible install
-configure:2384: result: /usr/bin/install -c
-configure:2395: checking whether build environment is sane
-configure:2450: result: yes
-configure:2596: checking for a thread-safe mkdir -p
-configure:2635: result: /usr/bin/mkdir -p
-configure:2642: checking for gawk
-configure:2658: found /usr/bin/gawk
-configure:2669: result: gawk
-configure:2680: checking whether make sets $(MAKE)
-configure:2702: result: yes
-configure:2731: checking whether make supports nested variables
-configure:2748: result: yes
-configure:2882: checking for gawk
-configure:2909: result: gawk
-configure:2968: checking for gcc
-configure:2984: found /usr/bin/gcc
-configure:2995: result: gcc
-configure:3224: checking for C compiler version
-configure:3233: gcc --version >&5
+configure:2319: checking for a BSD-compatible install
+configure:2387: result: /usr/bin/install -c
+configure:2398: checking whether build environment is sane
+configure:2453: result: yes
+configure:2599: checking for a thread-safe mkdir -p
+configure:2638: result: /usr/bin/mkdir -p
+configure:2645: checking for gawk
+configure:2661: found /usr/bin/gawk
+configure:2672: result: gawk
+configure:2683: checking whether make sets $(MAKE)
+configure:2705: result: yes
+configure:2734: checking whether make supports nested variables
+configure:2751: result: yes
+configure:2899: checking for gawk
+configure:2926: result: gawk
+configure:2985: checking for gcc
+configure:3001: found /usr/bin/gcc
+configure:3012: result: gcc
+configure:3241: checking for C compiler version
+configure:3250: gcc --version >&5
 gcc (Ubuntu 11.2.0-7ubuntu2) 11.2.0
 Copyright (C) 2021 Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-configure:3244: $? = 0
-configure:3233: gcc -v >&5
+configure:3261: $? = 0
+configure:3250: gcc -v >&5
 Using built-in specs.
 COLLECT_GCC=gcc
 COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/11/lto-wrapper
@@ -89,69 +89,69 @@ Thread model: posix
 Supported LTO compression algorithms: zlib zstd
 gcc version 11.2.0 (Ubuntu 11.2.0-7ubuntu2) 
 ... rest of stderr output deleted ...
-configure:3244: $? = 0
-configure:3233: gcc -V >&5
+configure:3261: $? = 0
+configure:3250: gcc -V >&5
 gcc: error: unrecognized command-line option '-V'
 gcc: fatal error: no input files
 compilation terminated.
-configure:3244: $? = 1
-configure:3233: gcc -qversion >&5
+configure:3261: $? = 1
+configure:3250: gcc -qversion >&5
 gcc: error: unrecognized command-line option '-qversion'; did you mean '--version'?
 gcc: fatal error: no input files
 compilation terminated.
-configure:3244: $? = 1
-configure:3264: checking whether the C compiler works
-configure:3286: gcc    conftest.c  >&5
-configure:3290: $? = 0
-configure:3338: result: yes
-configure:3341: checking for C compiler default output file name
-configure:3343: result: a.out
-configure:3349: checking for suffix of executables
-configure:3356: gcc -o conftest    conftest.c  >&5
-configure:3360: $? = 0
-configure:3382: result: 
-configure:3404: checking whether we are cross compiling
-configure:3412: gcc -o conftest    conftest.c  >&5
-configure:3416: $? = 0
-configure:3423: ./conftest
-configure:3427: $? = 0
-configure:3442: result: no
-configure:3447: checking for suffix of object files
-configure:3469: gcc -c   conftest.c >&5
-configure:3473: $? = 0
-configure:3494: result: o
-configure:3498: checking whether we are using the GNU C compiler
-configure:3517: gcc -c   conftest.c >&5
-configure:3517: $? = 0
-configure:3526: result: yes
-configure:3535: checking whether gcc accepts -g
-configure:3555: gcc -c -g  conftest.c >&5
-configure:3555: $? = 0
-configure:3596: result: yes
-configure:3613: checking for gcc option to accept ISO C89
-configure:3676: gcc  -c -g -O2  conftest.c >&5
-configure:3676: $? = 0
-configure:3689: result: none needed
-configure:3714: checking whether gcc understands -c and -o together
-configure:3736: gcc -c conftest.c -o conftest2.o
-configure:3739: $? = 0
-configure:3736: gcc -c conftest.c -o conftest2.o
-configure:3739: $? = 0
-configure:3751: result: yes
-configure:3771: checking whether make supports the include directive
-configure:3786: make -f confmf.GNU && cat confinc.out
+configure:3261: $? = 1
+configure:3281: checking whether the C compiler works
+configure:3303: gcc    conftest.c  >&5
+configure:3307: $? = 0
+configure:3355: result: yes
+configure:3358: checking for C compiler default output file name
+configure:3360: result: a.out
+configure:3366: checking for suffix of executables
+configure:3373: gcc -o conftest    conftest.c  >&5
+configure:3377: $? = 0
+configure:3399: result: 
+configure:3421: checking whether we are cross compiling
+configure:3429: gcc -o conftest    conftest.c  >&5
+configure:3433: $? = 0
+configure:3440: ./conftest
+configure:3444: $? = 0
+configure:3459: result: no
+configure:3464: checking for suffix of object files
+configure:3486: gcc -c   conftest.c >&5
+configure:3490: $? = 0
+configure:3511: result: o
+configure:3515: checking whether we are using the GNU C compiler
+configure:3534: gcc -c   conftest.c >&5
+configure:3534: $? = 0
+configure:3543: result: yes
+configure:3552: checking whether gcc accepts -g
+configure:3572: gcc -c -g  conftest.c >&5
+configure:3572: $? = 0
+configure:3613: result: yes
+configure:3630: checking for gcc option to accept ISO C89
+configure:3693: gcc  -c -g -O2  conftest.c >&5
+configure:3693: $? = 0
+configure:3706: result: none needed
+configure:3731: checking whether gcc understands -c and -o together
+configure:3753: gcc -c conftest.c -o conftest2.o
+configure:3756: $? = 0
+configure:3753: gcc -c conftest.c -o conftest2.o
+configure:3756: $? = 0
+configure:3768: result: yes
+configure:3788: checking whether make supports the include directive
+configure:3803: make -f confmf.GNU && cat confinc.out
 this is the am__doit target
-configure:3789: $? = 0
-configure:3808: result: yes (GNU style)
-configure:3833: checking dependency style of gcc
-configure:3944: result: gcc3
-configure:3959: checking whether make sets $(MAKE)
-configure:3981: result: yes
-configure:3999: checking for fuse_new in -lfuse_ino64
-configure:4024: gcc -o conftest -g -O2   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c -lfuse_ino64   >&5
+configure:3806: $? = 0
+configure:3825: result: yes (GNU style)
+configure:3850: checking dependency style of gcc
+configure:3961: result: gcc3
+configure:3976: checking whether make sets $(MAKE)
+configure:3998: result: yes
+configure:4016: checking for fuse_new in -lfuse_ino64
+configure:4041: gcc -o conftest -g -O2   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c -lfuse_ino64   >&5
 /usr/bin/ld: cannot find -lfuse_ino64
 collect2: error: ld returned 1 exit status
-configure:4024: $? = 1
+configure:4041: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "hsencfs"
@@ -178,20 +178,20 @@ configure: failed program was:
 |   ;
 |   return 0;
 | }
-configure:4033: result: no
-configure:4038: checking for fuse_new in -lfuse3
-configure:4063: gcc -o conftest -g -O2   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c -lfuse3   >&5
-configure:4063: $? = 0
-configure:4072: result: yes
-configure:4092: checking how to run the C preprocessor
-configure:4123: gcc -E   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c
-configure:4123: $? = 0
-configure:4137: gcc -E   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c
+configure:4050: result: no
+configure:4055: checking for fuse_new in -lfuse3
+configure:4080: gcc -o conftest -g -O2   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c -lfuse3   >&5
+configure:4080: $? = 0
+configure:4089: result: yes
+configure:4109: checking how to run the C preprocessor
+configure:4140: gcc -E   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c
+configure:4140: $? = 0
+configure:4154: gcc -E   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c
 conftest.c:11:10: fatal error: ac_nonexistent.h: No such file or directory
    11 | #include <ac_nonexistent.h>
       |          ^~~~~~~~~~~~~~~~~~
 compilation terminated.
-configure:4137: $? = 1
+configure:4154: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "hsencfs"
@@ -204,15 +204,15 @@ configure: failed program was:
 | #define VERSION "1.20"
 | /* end confdefs.h.  */
 | #include <ac_nonexistent.h>
-configure:4162: result: gcc -E
-configure:4182: gcc -E   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c
-configure:4182: $? = 0
-configure:4196: gcc -E   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c
+configure:4179: result: gcc -E
+configure:4199: gcc -E   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c
+configure:4199: $? = 0
+configure:4213: gcc -E   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c
 conftest.c:11:10: fatal error: ac_nonexistent.h: No such file or directory
    11 | #include <ac_nonexistent.h>
       |          ^~~~~~~~~~~~~~~~~~
 compilation terminated.
-configure:4196: $? = 1
+configure:4213: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "hsencfs"
@@ -225,129 +225,129 @@ configure: failed program was:
 | #define VERSION "1.20"
 | /* end confdefs.h.  */
 | #include <ac_nonexistent.h>
-configure:4225: checking for grep that handles long lines and -e
-configure:4283: result: /usr/bin/grep
-configure:4288: checking for egrep
-configure:4350: result: /usr/bin/grep -E
-configure:4355: checking for ANSI C header files
-configure:4375: gcc -c -g -O2   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
-configure:4375: $? = 0
-configure:4448: gcc -o conftest -g -O2   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c  >&5
-configure:4448: $? = 0
-configure:4448: ./conftest
-configure:4448: $? = 0
-configure:4459: result: yes
-configure:4472: checking for sys/types.h
-configure:4472: gcc -c -g -O2   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
-configure:4472: $? = 0
-configure:4472: result: yes
-configure:4472: checking for sys/stat.h
-configure:4472: gcc -c -g -O2   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
-configure:4472: $? = 0
-configure:4472: result: yes
-configure:4472: checking for stdlib.h
-configure:4472: gcc -c -g -O2   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
-configure:4472: $? = 0
-configure:4472: result: yes
-configure:4472: checking for string.h
-configure:4472: gcc -c -g -O2   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
-configure:4472: $? = 0
-configure:4472: result: yes
-configure:4472: checking for memory.h
-configure:4472: gcc -c -g -O2   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
-configure:4472: $? = 0
-configure:4472: result: yes
-configure:4472: checking for strings.h
-configure:4472: gcc -c -g -O2   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
-configure:4472: $? = 0
-configure:4472: result: yes
-configure:4472: checking for inttypes.h
-configure:4472: gcc -c -g -O2   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
-configure:4472: $? = 0
-configure:4472: result: yes
-configure:4472: checking for stdint.h
-configure:4472: gcc -c -g -O2   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
-configure:4472: $? = 0
-configure:4472: result: yes
-configure:4472: checking for unistd.h
-configure:4472: gcc -c -g -O2   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
-configure:4472: $? = 0
-configure:4472: result: yes
-configure:4484: checking fuse.h usability
-configure:4484: gcc -c -g -O2   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
-configure:4484: $? = 0
-configure:4484: result: yes
-configure:4484: checking fuse.h presence
-configure:4484: gcc -E   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c
-configure:4484: $? = 0
-configure:4484: result: yes
-configure:4484: checking for fuse.h
-configure:4484: result: yes
-configure:4500: checking for main in -lulockmgr
-configure:4519: gcc -o conftest -g -O2   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c -lulockmgr   >&5
-configure:4519: $? = 0
-configure:4528: result: yes
-configure:4544: checking fcntl.h usability
-configure:4544: gcc -c -g -O2   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
-configure:4544: $? = 0
-configure:4544: result: yes
-configure:4544: checking fcntl.h presence
-configure:4544: gcc -E   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c
-configure:4544: $? = 0
-configure:4544: result: yes
-configure:4544: checking for fcntl.h
-configure:4544: result: yes
-configure:4544: checking limits.h usability
-configure:4544: gcc -c -g -O2   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
-configure:4544: $? = 0
-configure:4544: result: yes
-configure:4544: checking limits.h presence
-configure:4544: gcc -E   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c
-configure:4544: $? = 0
-configure:4544: result: yes
-configure:4544: checking for limits.h
-configure:4544: result: yes
-configure:4544: checking for stdlib.h
-configure:4544: result: yes
-configure:4544: checking for string.h
-configure:4544: result: yes
-configure:4544: checking sys/time.h usability
-configure:4544: gcc -c -g -O2   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
-configure:4544: $? = 0
-configure:4544: result: yes
-configure:4544: checking sys/time.h presence
-configure:4544: gcc -E   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c
-configure:4544: $? = 0
-configure:4544: result: yes
-configure:4544: checking for sys/time.h
-configure:4544: result: yes
-configure:4544: checking syslog.h usability
-configure:4544: gcc -c -g -O2   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
-configure:4544: $? = 0
-configure:4544: result: yes
-configure:4544: checking syslog.h presence
-configure:4544: gcc -E   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c
-configure:4544: $? = 0
-configure:4544: result: yes
-configure:4544: checking for syslog.h
-configure:4544: result: yes
-configure:4544: checking for unistd.h
-configure:4544: result: yes
-configure:4562: checking for uid_t in sys/types.h
-configure:4581: result: yes
-configure:4592: checking for inline
-configure:4608: gcc -c    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
-configure:4608: $? = 0
-configure:4616: result: inline
-configure:4634: checking for mode_t
-configure:4634: gcc -c    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
-configure:4634: $? = 0
-configure:4634: gcc -c    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
+configure:4242: checking for grep that handles long lines and -e
+configure:4300: result: /usr/bin/grep
+configure:4305: checking for egrep
+configure:4367: result: /usr/bin/grep -E
+configure:4372: checking for ANSI C header files
+configure:4392: gcc -c -g -O2   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
+configure:4392: $? = 0
+configure:4465: gcc -o conftest -g -O2   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c  >&5
+configure:4465: $? = 0
+configure:4465: ./conftest
+configure:4465: $? = 0
+configure:4476: result: yes
+configure:4489: checking for sys/types.h
+configure:4489: gcc -c -g -O2   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
+configure:4489: $? = 0
+configure:4489: result: yes
+configure:4489: checking for sys/stat.h
+configure:4489: gcc -c -g -O2   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
+configure:4489: $? = 0
+configure:4489: result: yes
+configure:4489: checking for stdlib.h
+configure:4489: gcc -c -g -O2   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
+configure:4489: $? = 0
+configure:4489: result: yes
+configure:4489: checking for string.h
+configure:4489: gcc -c -g -O2   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
+configure:4489: $? = 0
+configure:4489: result: yes
+configure:4489: checking for memory.h
+configure:4489: gcc -c -g -O2   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
+configure:4489: $? = 0
+configure:4489: result: yes
+configure:4489: checking for strings.h
+configure:4489: gcc -c -g -O2   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
+configure:4489: $? = 0
+configure:4489: result: yes
+configure:4489: checking for inttypes.h
+configure:4489: gcc -c -g -O2   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
+configure:4489: $? = 0
+configure:4489: result: yes
+configure:4489: checking for stdint.h
+configure:4489: gcc -c -g -O2   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
+configure:4489: $? = 0
+configure:4489: result: yes
+configure:4489: checking for unistd.h
+configure:4489: gcc -c -g -O2   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
+configure:4489: $? = 0
+configure:4489: result: yes
+configure:4501: checking fuse.h usability
+configure:4501: gcc -c -g -O2   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
+configure:4501: $? = 0
+configure:4501: result: yes
+configure:4501: checking fuse.h presence
+configure:4501: gcc -E   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c
+configure:4501: $? = 0
+configure:4501: result: yes
+configure:4501: checking for fuse.h
+configure:4501: result: yes
+configure:4517: checking for main in -lulockmgr
+configure:4536: gcc -o conftest -g -O2   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c -lulockmgr   >&5
+configure:4536: $? = 0
+configure:4545: result: yes
+configure:4561: checking fcntl.h usability
+configure:4561: gcc -c -g -O2   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
+configure:4561: $? = 0
+configure:4561: result: yes
+configure:4561: checking fcntl.h presence
+configure:4561: gcc -E   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c
+configure:4561: $? = 0
+configure:4561: result: yes
+configure:4561: checking for fcntl.h
+configure:4561: result: yes
+configure:4561: checking limits.h usability
+configure:4561: gcc -c -g -O2   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
+configure:4561: $? = 0
+configure:4561: result: yes
+configure:4561: checking limits.h presence
+configure:4561: gcc -E   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c
+configure:4561: $? = 0
+configure:4561: result: yes
+configure:4561: checking for limits.h
+configure:4561: result: yes
+configure:4561: checking for stdlib.h
+configure:4561: result: yes
+configure:4561: checking for string.h
+configure:4561: result: yes
+configure:4561: checking sys/time.h usability
+configure:4561: gcc -c -g -O2   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
+configure:4561: $? = 0
+configure:4561: result: yes
+configure:4561: checking sys/time.h presence
+configure:4561: gcc -E   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c
+configure:4561: $? = 0
+configure:4561: result: yes
+configure:4561: checking for sys/time.h
+configure:4561: result: yes
+configure:4561: checking syslog.h usability
+configure:4561: gcc -c -g -O2   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
+configure:4561: $? = 0
+configure:4561: result: yes
+configure:4561: checking syslog.h presence
+configure:4561: gcc -E   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c
+configure:4561: $? = 0
+configure:4561: result: yes
+configure:4561: checking for syslog.h
+configure:4561: result: yes
+configure:4561: checking for unistd.h
+configure:4561: result: yes
+configure:4579: checking for uid_t in sys/types.h
+configure:4598: result: yes
+configure:4609: checking for inline
+configure:4625: gcc -c    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
+configure:4625: $? = 0
+configure:4633: result: inline
+configure:4651: checking for mode_t
+configure:4651: gcc -c    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
+configure:4651: $? = 0
+configure:4651: gcc -c    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
 conftest.c: In function 'main':
 conftest.c:65:21: error: expected expression before ')' token
    65 | if (sizeof ((mode_t)))
       |                     ^
-configure:4634: $? = 1
+configure:4651: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "hsencfs"
@@ -418,16 +418,16 @@ configure: failed program was:
 |   ;
 |   return 0;
 | }
-configure:4634: result: yes
-configure:4645: checking for off_t
-configure:4645: gcc -c    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
-configure:4645: $? = 0
-configure:4645: gcc -c    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
+configure:4651: result: yes
+configure:4662: checking for off_t
+configure:4662: gcc -c    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
+configure:4662: $? = 0
+configure:4662: gcc -c    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
 conftest.c: In function 'main':
 conftest.c:65:20: error: expected expression before ')' token
    65 | if (sizeof ((off_t)))
       |                    ^
-configure:4645: $? = 1
+configure:4662: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "hsencfs"
@@ -498,16 +498,16 @@ configure: failed program was:
 |   ;
 |   return 0;
 | }
-configure:4645: result: yes
-configure:4656: checking for pid_t
-configure:4656: gcc -c    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
-configure:4656: $? = 0
-configure:4656: gcc -c    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
+configure:4662: result: yes
+configure:4673: checking for pid_t
+configure:4673: gcc -c    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
+configure:4673: $? = 0
+configure:4673: gcc -c    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
 conftest.c: In function 'main':
 conftest.c:65:20: error: expected expression before ')' token
    65 | if (sizeof ((pid_t)))
       |                    ^
-configure:4656: $? = 1
+configure:4673: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "hsencfs"
@@ -578,16 +578,16 @@ configure: failed program was:
 |   ;
 |   return 0;
 | }
-configure:4656: result: yes
-configure:4667: checking for size_t
-configure:4667: gcc -c    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
-configure:4667: $? = 0
-configure:4667: gcc -c    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
+configure:4673: result: yes
+configure:4684: checking for size_t
+configure:4684: gcc -c    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
+configure:4684: $? = 0
+configure:4684: gcc -c    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
 conftest.c: In function 'main':
 conftest.c:65:21: error: expected expression before ')' token
    65 | if (sizeof ((size_t)))
       |                     ^
-configure:4667: $? = 1
+configure:4684: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "hsencfs"
@@ -658,16 +658,16 @@ configure: failed program was:
 |   ;
 |   return 0;
 | }
-configure:4667: result: yes
-configure:4678: checking for ssize_t
-configure:4678: gcc -c    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
-configure:4678: $? = 0
-configure:4678: gcc -c    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
+configure:4684: result: yes
+configure:4695: checking for ssize_t
+configure:4695: gcc -c    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
+configure:4695: $? = 0
+configure:4695: gcc -c    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
 conftest.c: In function 'main':
 conftest.c:65:22: error: expected expression before ')' token
    65 | if (sizeof ((ssize_t)))
       |                      ^
-configure:4678: $? = 1
+configure:4695: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "hsencfs"
@@ -738,22 +738,22 @@ configure: failed program was:
 |   ;
 |   return 0;
 | }
-configure:4678: result: yes
-configure:4689: checking for struct stat.st_blksize
-configure:4689: gcc -c    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
-configure:4689: $? = 0
-configure:4689: result: yes
-configure:4701: checking for error_at_line
-configure:4717: gcc -o conftest    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c -lulockmgr  >&5
-configure:4717: $? = 0
-configure:4725: result: yes
-configure:4738: checking vfork.h usability
-configure:4738: gcc -c    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
+configure:4695: result: yes
+configure:4706: checking for struct stat.st_blksize
+configure:4706: gcc -c    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
+configure:4706: $? = 0
+configure:4706: result: yes
+configure:4718: checking for error_at_line
+configure:4734: gcc -o conftest    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c -lulockmgr  >&5
+configure:4734: $? = 0
+configure:4742: result: yes
+configure:4755: checking vfork.h usability
+configure:4755: gcc -c    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c >&5
 conftest.c:63:10: fatal error: vfork.h: No such file or directory
    63 | #include <vfork.h>
       |          ^~~~~~~~~
 compilation terminated.
-configure:4738: $? = 1
+configure:4755: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "hsencfs"
@@ -818,14 +818,14 @@ configure: failed program was:
 | # include <unistd.h>
 | #endif
 | #include <vfork.h>
-configure:4738: result: no
-configure:4738: checking vfork.h presence
-configure:4738: gcc -E   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c
+configure:4755: result: no
+configure:4755: checking vfork.h presence
+configure:4755: gcc -E   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS conftest.c
 conftest.c:30:10: fatal error: vfork.h: No such file or directory
    30 | #include <vfork.h>
       |          ^~~~~~~~~
 compilation terminated.
-configure:4738: $? = 1
+configure:4755: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "hsencfs"
@@ -857,109 +857,109 @@ configure: failed program was:
 | #define HAVE_STRUCT_STAT_ST_BLKSIZE 1
 | /* end confdefs.h.  */
 | #include <vfork.h>
-configure:4738: result: no
-configure:4738: checking for vfork.h
-configure:4738: result: no
-configure:4751: checking for fork
-configure:4751: gcc -o conftest    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c -lulockmgr  >&5
+configure:4755: result: no
+configure:4755: checking for vfork.h
+configure:4755: result: no
+configure:4768: checking for fork
+configure:4768: gcc -o conftest    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c -lulockmgr  >&5
 conftest.c:53:6: warning: conflicting types for built-in function 'fork'; expected 'int(void)' [-Wbuiltin-declaration-mismatch]
    53 | char fork ();
       |      ^~~~
-configure:4751: $? = 0
-configure:4751: result: yes
-configure:4751: checking for vfork
-configure:4751: gcc -o conftest    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c -lulockmgr  >&5
-configure:4751: $? = 0
-configure:4751: result: yes
-configure:4761: checking for working fork
-configure:4783: gcc -o conftest    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c -lulockmgr  >&5
-configure:4783: $? = 0
-configure:4783: ./conftest
-configure:4783: $? = 0
-configure:4793: result: yes
-configure:4814: checking for working vfork
-configure:4924: result: yes
-configure:4949: checking whether lstat correctly handles trailing slash
-configure:4975: gcc -o conftest    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c -lulockmgr  >&5
-configure:4975: $? = 0
-configure:4975: ./conftest
-configure:4975: $? = 0
-configure:4992: result: yes
-configure:5013: checking for stdlib.h
-configure:5013: result: yes
-configure:5023: checking for GNU libc compatible malloc
-configure:5047: gcc -o conftest    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c -lulockmgr  >&5
-configure:5047: $? = 0
-configure:5047: ./conftest
-configure:5047: $? = 0
-configure:5057: result: yes
-configure:5081: checking for clock_gettime
-configure:5081: gcc -o conftest    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c -lulockmgr  >&5
-configure:5081: $? = 0
-configure:5081: result: yes
-configure:5081: checking for dup2
-configure:5081: gcc -o conftest    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c -lulockmgr  >&5
-configure:5081: $? = 0
-configure:5081: result: yes
-configure:5081: checking for fdatasync
-configure:5081: gcc -o conftest    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c -lulockmgr  >&5
-configure:5081: $? = 0
-configure:5081: result: yes
-configure:5081: checking for ftruncate
-configure:5081: gcc -o conftest    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c -lulockmgr  >&5
-configure:5081: $? = 0
-configure:5081: result: yes
-configure:5081: checking for getcwd
-configure:5081: gcc -o conftest    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c -lulockmgr  >&5
-configure:5081: $? = 0
-configure:5081: result: yes
-configure:5081: checking for getpass
-configure:5081: gcc -o conftest    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c -lulockmgr  >&5
-configure:5081: $? = 0
-configure:5081: result: yes
-configure:5081: checking for lchown
-configure:5081: gcc -o conftest    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c -lulockmgr  >&5
-configure:5081: $? = 0
-configure:5081: result: yes
-configure:5081: checking for memset
-configure:5081: gcc -o conftest    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c -lulockmgr  >&5
+configure:4768: $? = 0
+configure:4768: result: yes
+configure:4768: checking for vfork
+configure:4768: gcc -o conftest    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c -lulockmgr  >&5
+configure:4768: $? = 0
+configure:4768: result: yes
+configure:4778: checking for working fork
+configure:4800: gcc -o conftest    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c -lulockmgr  >&5
+configure:4800: $? = 0
+configure:4800: ./conftest
+configure:4800: $? = 0
+configure:4810: result: yes
+configure:4831: checking for working vfork
+configure:4941: result: yes
+configure:4966: checking whether lstat correctly handles trailing slash
+configure:4992: gcc -o conftest    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c -lulockmgr  >&5
+configure:4992: $? = 0
+configure:4992: ./conftest
+configure:4992: $? = 0
+configure:5009: result: yes
+configure:5030: checking for stdlib.h
+configure:5030: result: yes
+configure:5040: checking for GNU libc compatible malloc
+configure:5064: gcc -o conftest    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c -lulockmgr  >&5
+configure:5064: $? = 0
+configure:5064: ./conftest
+configure:5064: $? = 0
+configure:5074: result: yes
+configure:5098: checking for clock_gettime
+configure:5098: gcc -o conftest    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c -lulockmgr  >&5
+configure:5098: $? = 0
+configure:5098: result: yes
+configure:5098: checking for dup2
+configure:5098: gcc -o conftest    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c -lulockmgr  >&5
+configure:5098: $? = 0
+configure:5098: result: yes
+configure:5098: checking for fdatasync
+configure:5098: gcc -o conftest    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c -lulockmgr  >&5
+configure:5098: $? = 0
+configure:5098: result: yes
+configure:5098: checking for ftruncate
+configure:5098: gcc -o conftest    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c -lulockmgr  >&5
+configure:5098: $? = 0
+configure:5098: result: yes
+configure:5098: checking for getcwd
+configure:5098: gcc -o conftest    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c -lulockmgr  >&5
+configure:5098: $? = 0
+configure:5098: result: yes
+configure:5098: checking for getpass
+configure:5098: gcc -o conftest    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c -lulockmgr  >&5
+configure:5098: $? = 0
+configure:5098: result: yes
+configure:5098: checking for lchown
+configure:5098: gcc -o conftest    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c -lulockmgr  >&5
+configure:5098: $? = 0
+configure:5098: result: yes
+configure:5098: checking for memset
+configure:5098: gcc -o conftest    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c -lulockmgr  >&5
 conftest.c:67:6: warning: conflicting types for built-in function 'memset'; expected 'void *(void *, int,  long unsigned int)' [-Wbuiltin-declaration-mismatch]
    67 | char memset ();
       |      ^~~~~~
 conftest.c:55:1: note: 'memset' is declared in header '<string.h>'
    54 | # include <limits.h>
    55 | #else
-configure:5081: $? = 0
-configure:5081: result: yes
-configure:5081: checking for mkdir
-configure:5081: gcc -o conftest    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c -lulockmgr  >&5
-configure:5081: $? = 0
-configure:5081: result: yes
-configure:5081: checking for mkfifo
-configure:5081: gcc -o conftest    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c -lulockmgr  >&5
-configure:5081: $? = 0
-configure:5081: result: yes
-configure:5081: checking for rmdir
-configure:5081: gcc -o conftest    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c -lulockmgr  >&5
-configure:5081: $? = 0
-configure:5081: result: yes
-configure:5081: checking for strstr
-configure:5081: gcc -o conftest    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c -lulockmgr  >&5
+configure:5098: $? = 0
+configure:5098: result: yes
+configure:5098: checking for mkdir
+configure:5098: gcc -o conftest    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c -lulockmgr  >&5
+configure:5098: $? = 0
+configure:5098: result: yes
+configure:5098: checking for mkfifo
+configure:5098: gcc -o conftest    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c -lulockmgr  >&5
+configure:5098: $? = 0
+configure:5098: result: yes
+configure:5098: checking for rmdir
+configure:5098: gcc -o conftest    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c -lulockmgr  >&5
+configure:5098: $? = 0
+configure:5098: result: yes
+configure:5098: checking for strstr
+configure:5098: gcc -o conftest    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c -lulockmgr  >&5
 conftest.c:71:6: warning: conflicting types for built-in function 'strstr'; expected 'char *(const char *, const char *)' [-Wbuiltin-declaration-mismatch]
    71 | char strstr ();
       |      ^~~~~~
 conftest.c:59:1: note: 'strstr' is declared in header '<string.h>'
    58 | # include <limits.h>
    59 | #else
-configure:5081: $? = 0
-configure:5081: result: yes
-configure:5081: checking for strtol
-configure:5081: gcc -o conftest    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c -lulockmgr  >&5
-configure:5081: $? = 0
-configure:5081: result: yes
-configure:5194: checking that generated files are newer than configure
-configure:5200: result: done
-configure:5223: creating ./config.status
+configure:5098: $? = 0
+configure:5098: result: yes
+configure:5098: checking for strtol
+configure:5098: gcc -o conftest    -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c -lulockmgr  >&5
+configure:5098: $? = 0
+configure:5098: result: yes
+configure:5211: checking that generated files are newer than configure
+configure:5217: result: done
+configure:5240: creating ./config.status
 
 ## ---------------------- ##
 ## Running config.status. ##
@@ -976,22 +976,22 @@ generated by GNU Autoconf 2.69.  Invocation command line was
 
 on ubunew
 
-config.status:887: creating Makefile
-config.status:887: creating bluepoint/Makefile
-config.status:887: creating tools/Makefile
-config.status:887: creating common/Makefile
-config.status:887: creating src/Makefile
-config.status:887: creating docs/Makefile
-config.status:887: creating config.h
-config.status:1116: executing depfiles commands
-config.status:1193: cd bluepoint       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
-config.status:1198: $? = 0
-config.status:1193: cd tools       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
-config.status:1198: $? = 0
-config.status:1193: cd common       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
-config.status:1198: $? = 0
-config.status:1193: cd src       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
-config.status:1198: $? = 0
+config.status:890: creating Makefile
+config.status:890: creating bluepoint/Makefile
+config.status:890: creating tools/Makefile
+config.status:890: creating common/Makefile
+config.status:890: creating src/Makefile
+config.status:890: creating docs/Makefile
+config.status:890: creating config.h
+config.status:1119: executing depfiles commands
+config.status:1196: cd bluepoint       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1201: $? = 0
+config.status:1196: cd tools       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1201: $? = 0
+config.status:1196: cd common       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1201: $? = 0
+config.status:1196: cd src       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1201: $? = 0
 
 ## ---------------- ##
 ## Cache variables. ##
@@ -1100,6 +1100,8 @@ CCDEPMODE='depmode=gcc3'
 CFLAGS=''
 CPP='gcc -E'
 CPPFLAGS='  -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS'
+CSCOPE='cscope'
+CTAGS='ctags'
 CYGPATH_W='echo'
 DEFS='-DHAVE_CONFIG_H'
 DEPDIR='.deps'
@@ -1107,6 +1109,7 @@ ECHO_C=''
 ECHO_N='-n'
 ECHO_T=''
 EGREP='/usr/bin/grep -E'
+ETAGS='etags'
 EXEEXT=''
 GREP='/usr/bin/grep'
 INSTALL_DATA='${INSTALL} -m 644'

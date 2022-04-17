@@ -43,9 +43,8 @@ void hs_encrypt_fake(void *mem, int size2, void *pass, int plen)
 
         for(int aa = 0; aa < block; aa++)
             {
-            //cmem[loop + aa] = cmem[loop + aa] ^ 0x8;
-            //cmem[loop + aa] = cmem[loop + aa] ^ cpass[loop + aa % plen];
-            //cmem[loop + aa] = cmem[loop + aa] ^ (loop + aa % 200);
+            cmem[loop + aa] = cmem[loop + aa] ^ 0xa4;
+            cmem[loop + aa] = cmem[loop + aa] ^ cpass[aa % plen];
             }
         }
 }
@@ -65,9 +64,8 @@ void hs_decrypt_fake(void *mem, int size2, void *pass, int plen)
 
         for(int aa = 0; aa < block; aa++)
             {
-            //cmem[loop + aa] = cmem[loop + aa] ^ (loop + aa % 200);
-            //cmem[loop + aa] = cmem[loop + aa] ^ cpass[loop + aa % plen];
-            //cmem[loop + aa] = cmem[loop + aa] ^ 0x8;
+            cmem[loop + aa] = cmem[loop + aa] ^ cpass[aa % plen];
+            cmem[loop + aa] = cmem[loop + aa] ^ 0xa4;
             }
         }
 }

@@ -30,34 +30,6 @@ typedef unsigned char uchar;
 
 #define     HS_PROGNAME    "HSENCFS"
 
-typedef struct _sideblock
-
-{
-    int  magic;                 // Identify
-    int  serial;                // Belongs to this block
-    int  protocol;              // name of encryption; 0xaa for bluepoint
-    int  version;               // Version of encryption 1 for now
-    // This way it shows up nicely on screen dumps
-    char sep[4];
-    //char name[PATH_MAX];
-    char buff[BLOCKSIZE];
-    //char buff[ 2 * BLOCKSIZE];
-    int  misc2;
-
-} sideblock;
-
-// -----------------------------------------------------------------------
-// Init sideblock structure, unified
-// serial is -1 so it does not match any block
-
-#define INIT_SIDEBLOCK(sb)                  \
-    memset(&(sb), '\0', sizeof((sb)));      \
-    (sb).magic =  HSENCFS_MAGIC;            \
-    (sb).serial  = -1;                      \
-    (sb).protocol = 0xaa;                   \
-    (sb).version = 1;                       \
-    memcpy((sb).sep, "SB0\n", 4);
-
 // Prototypes shared between components
 
 int     check_markfile(char *name, char *pass, int *plen);

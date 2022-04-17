@@ -43,10 +43,10 @@
 
 #include "hsencfs.h"
 
-sideblock *alloc_sideblock()
+sideblock_t *alloc_sideblock()
 
 {
-    sideblock *psb = malloc(sizeof(sideblock));
+    sideblock_t *psb = malloc(sizeof(sideblock_t));
     if(psb == NULL)
         {
         if (loglevel > 0)
@@ -118,7 +118,7 @@ char    *get_sidename(const char *path)
 // ----------------------------------------------------------------------
 // Always read full blocks from sideblock
 
-int    read_sideblock(const char *path, sideblock *psb)
+int    read_sideblock(const char *path, sideblock_t *psb)
 
 {
     int ret = 0;
@@ -156,8 +156,8 @@ int    read_sideblock(const char *path, sideblock *psb)
         }
     else
         {
-        ret = read(fdi, psb, sizeof(sideblock));
-        if(ret && ret < sizeof(sideblock))        // We ignore empty file
+        ret = read(fdi, psb, sizeof(sideblock_t));
+        if(ret && ret < sizeof(sideblock_t))        // We ignore empty file
             {
             if (loglevel > 0)
                 syslog(LOG_DEBUG, "Error on reading sideblock file, errno: %d\n", errno);
@@ -188,7 +188,7 @@ int    read_sideblock(const char *path, sideblock *psb)
 //      If last block, gather data from sideblock, patch it in.
 //
 
-int     write_sideblock(const char *path, sideblock *psb)
+int     write_sideblock(const char *path, sideblock_t *psb)
 
 {
     int ret = 0;
@@ -223,8 +223,8 @@ int     write_sideblock(const char *path, sideblock *psb)
         errno = old_errno;
         goto endd2;
         }
-    rrr = write(fdi, psb, sizeof(sideblock));
-    if(rrr < sizeof(sideblock))
+    rrr = write(fdi, psb, sizeof(sideblock_t));
+    if(rrr < sizeof(sideblock_t))
         {
         if (loglevel > 0)
             syslog(LOG_DEBUG, "Error on writing sideblock file, errno: %d\n", errno);
@@ -265,7 +265,7 @@ int    create_sideblock(const char *path)
         goto endd;
         }
 
-    sideblock *psb = alloc_sideblock();
+    sideblock_t *psb = alloc_sideblock();
     if(!psb)
         goto endd2;
 
@@ -280,8 +280,8 @@ int    create_sideblock(const char *path)
         ret = -errno;
         goto endd3;
         }
-    int ww = write(fdi, psb, sizeof(sideblock));
-    if(ww < sizeof(sideblock))
+    int ww = write(fdi, psb, sizeof(sideblock_t));
+    if(ww < sizeof(sideblock_t))
         {
         if (loglevel > 0)
             syslog(LOG_DEBUG, "Error on writing to sideblock errno: %d\n", errno);
@@ -299,7 +299,7 @@ int    create_sideblock(const char *path)
     return ret;
 }
 
-void    kill_sideblock(sideblock *psb)
+void    kill_sideblock(sideblock_t *psb)
 
 {
     if(psb)
