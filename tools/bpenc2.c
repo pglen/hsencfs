@@ -23,6 +23,7 @@
 
 #include "bp2com.h"
 #include "bluepoint2.h"
+#include "../src/hsencsb.h"
 
 static char buff[BLOCKSIZE];
 
@@ -76,7 +77,7 @@ void help()
     printf("\n");
 }
 
-sideblock sb;
+sideblock_t sb;
 
 // -----------------------------------------------------------------------
 
@@ -288,7 +289,7 @@ int main(int argc, char *argv[])
             if(verbose)
                 printf("sideblock serial %d\n", sb.serial);
 
-            fwrite(&sb, 1, sizeof(sideblock), fp3);
+            fwrite(&sb, 1, sizeof(sideblock_t), fp3);
             }
         else
             {

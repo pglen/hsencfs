@@ -74,12 +74,14 @@
 #include <signal.h>
 #include <getopt.h>
 
-#include "hsutils.h"
-#include "hsencfs.h"
 #include "base64.h"
 
-#include "../bluepoint/hs_crypt.h"
-#include "../bluepoint/bluepoint2.h"
+#include "hs_crypt.h"
+#include "hsutils.h"
+
+#include "hsencsb.h"
+#include "hsencfs.h"
+
 
 // -----------------------------------------------------------------------
 // Shared flags

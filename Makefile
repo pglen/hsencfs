@@ -20,6 +20,10 @@
 # It will encrypt data on write, decrypt data on read.
 #
 
+#ifeq ("$(AUTOCHECK)","")
+#AUTOCHECK=autocheck
+#endif
+
 
 
 am__is_gnu_make = { \

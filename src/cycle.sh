@@ -54,6 +54,7 @@ test_direct aa12288.txt
 
 echo Copy "(for boundary aligned copy test)"
 
+shopt -s dotglob
 rm -rf ~/secrets/*
 
 cp -r ../hello/* ~/secrets
@@ -84,6 +85,7 @@ echo test onejump
 
 rm -f jump.txt
 ./tests/onejump jump.txt
+rm -f ~/secrets/jump.txt
 ./tests/onejump ~/secrets/jump.txt
 diff jump.txt ~/secrets/jump.txt
 #rm -f jump.txt
@@ -100,7 +102,11 @@ rm -f farwrite.txt
 ./tests/farwrite farwrite.txt
 ./tests/farwrite ~/secrets/farwrite.txt
 diff -q farwrite.txt ~/secrets/farwrite.txt
-rm -f farwrite.txt
+ERR=$?
+if [ "$ERR" != "0" ] ; then
+    echo "Error: Cannot pass farwrite stage; err=$ERR"
+    exit
+fi
 
 # ------------------------------------------------------------------------
 
@@ -119,10 +125,11 @@ function test_item {
 
 echo test zigzag
 
+# Test if utility is OK
 #test_item ./tests/zigzag test_data tmp aa300.txt
-#test_item ./tests/zigzag test_data ~/secrets aa300.txt
-#test_item ./tests/zigzag test_data ~/secrets aa4096.txt
 
+test_item ./tests/zigzag test_data ~/secrets aa300.txt
+test_item ./tests/zigzag test_data ~/secrets aa4096.txt
 test_item ./tests/zigzag test_data ~/secrets aa5000.txt
 test_item ./tests/zigzag test_data ~/secrets aa8192.txt
 test_item ./tests/zigzag test_data ~/secrets aa9000.txt
@@ -132,11 +139,13 @@ test_item ./tests/zigzag test_data ~/secrets aa12288.txt
 
 echo test Zigjump
 
-# Test if utility
-#test_item ./tests/zigjump test_data tmp aa300.txt
+# Test if utility is OK
+#test_item ./tests/zigjump test_data tmp aa5000.txt
 
 # The problem Items
 test_item ./tests/zigjump test_data ~/secrets aa3000.txt
+test_item ./tests/zigjump test_data ~/secrets aa4096.txt
+test_item ./tests/zigjump test_data ~/secrets aa5000.txt  # this one
 test_item ./tests/zigjump test_data ~/secrets aa5500.txt
 test_item ./tests/zigjump test_data ~/secrets aa9100.txt
 test_item ./tests/zigjump test_data ~/secrets aa12288.txt

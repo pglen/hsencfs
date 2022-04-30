@@ -41,6 +41,7 @@
 #include "../bluepoint/bluepoint2.h"
 #include "../common/hsutils.h"
 
+#include "hsencsb.h"
 #include "hsencfs.h"
 
 sideblock_t *alloc_sideblock()
@@ -54,7 +55,6 @@ sideblock_t *alloc_sideblock()
         goto endd;
         }
     INIT_SIDEBLOCK(*psb);
-
     //memset(psb->buff, '\0', sizeof(psb->buff));
 
    endd:

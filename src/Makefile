@@ -310,7 +310,7 @@ top_srcdir = ..
 
 # The main program
 hsencfsdir = .
-hsencfs_CFLAGS = -g -D_FILE_OFFSET_BITS=64 -O2 -I$(srcdir)/bluepoint \
+hsencfs_CFLAGS = -g -D_FILE_OFFSET_BITS=64 -O2 -I$(srcdir)/../bluepoint \
             -I$(srcdir)/../common
 
 hsencfs_SOURCES = hsencfs.c hsencrr.c hsencrw.c hsencsb.c hsencsu.c base64.c \

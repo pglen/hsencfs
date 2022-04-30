@@ -23,6 +23,7 @@
 #include "hs_crypt.h"
 #include "bp2com.h"
 #include "bluepoint2.h"
+#include "../src/hsencsb.h"
 
 static char buff[4096];
 static char pass[256];
@@ -82,7 +83,7 @@ void help()
 
 }
 
-sideblock sb;
+sideblock_t sb;
 
 // -----------------------------------------------------------------------
 
@@ -284,10 +285,10 @@ int main(int argc, char *argv[])
             //printf("33\n");
             curr = fsize - prog;
 
-            sideblock sb;
+            sideblock_t sb;
 
             //len3 = fread(buff, 1, sizeof(buff), fp3);
-            len3 = fread(&sb, 1, sizeof(sideblock), fp3);
+            len3 = fread(&sb, 1, sizeof(sideblock_t), fp3);
             memcpy(buff, sb.buff, sizeof(buff));
 
             if(len3 == 0)

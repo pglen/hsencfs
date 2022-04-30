@@ -42,6 +42,7 @@
 #include "../bluepoint/bluepoint2.h"
 #include "../common/hsutils.h"
 
+#include "hsencsb.h"
 #include "hsencfs.h"
 
 void    hslog(int lev, char *fmt, ...)

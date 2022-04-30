@@ -19,14 +19,10 @@ typedef unsigned char uchar;
 
 #define MARK_SIZE   4096
 
-// Included in encrypters
+// Included in ALl encrypters
 
 #define BLOCKSIZE   4096
-
-//#define MAXPASSLEN    256
 #define MAXPASSLEN      512
-
-#define  HSENCFS_MAGIC  0x34231278
 
 #define     HS_PROGNAME    "HSENCFS"
 

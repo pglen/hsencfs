@@ -4,6 +4,10 @@
 # It will encrypt data on write, decrypt data on read.
 #
 
+#ifeq ("$(AUTOCHECK)","")
+#AUTOCHECK=autocheck
+#endif
+
 SUBDIRS =  docs tools bluepoint common src
 
 PAN_SERV=GNOME_HSENCApplet.server
@@ -145,6 +149,7 @@ git:
 	git add .
 	git commit -m autocheck
 	git push
+
 
 #clean:
 #	@-rm -f *.old
