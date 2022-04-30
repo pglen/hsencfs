@@ -147,7 +147,7 @@ test-vars:
 git:
 	make clean
 	git add .
-	git commit -m $AUTOCHECK
+	git commit -m autocheck
 	git push
 
 
