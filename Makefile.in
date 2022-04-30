@@ -20,10 +20,6 @@
 # It will encrypt data on write, decrypt data on read.
 #
 
-#ifeq ("$(AUTOCHECK)","")
-#AUTOCHECK=autocheck
-#endif
-
 
 VPATH = @srcdir@
 am__is_gnu_make = { \
@@ -1001,10 +997,14 @@ test-vars:
 	@echo  srcdir=$(srcdir)
 	@echo  prefix=$(prefix)
 
+#	if $(AUTOCHECK_DEFINED)
+#	AUTOCHECK="autocheck"
+#	endif
+
 git:
 	make clean
 	git add .
-	git commit -m autocheck
+	git commit -m AUTOCHECK
 	git push
 
 #clean:

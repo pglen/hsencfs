@@ -4,10 +4,6 @@
 # It will encrypt data on write, decrypt data on read.
 #
 
-#ifeq ("$(AUTOCHECK)","")
-#AUTOCHECK=autocheck
-#endif
-
 SUBDIRS =  docs tools bluepoint common src
 
 PAN_SERV=GNOME_HSENCApplet.server
@@ -144,10 +140,14 @@ test-vars:
 	@echo  srcdir=$(srcdir)
 	@echo  prefix=$(prefix)
 
+#	if $(AUTOCHECK_DEFINED)
+#	AUTOCHECK="autocheck"
+#	endif
+
 git:
 	make clean
 	git add .
-	git commit -m autocheck
+	git commit -m AUTOCHECK
 	git push
 
 

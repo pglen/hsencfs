@@ -646,6 +646,8 @@ CPPFLAGS
 LDFLAGS
 CFLAGS
 CC
+AUTOCHECK_DEFINED_FALSE
+AUTOCHECK_DEFINED_TRUE
 AM_BACKSLASH
 AM_DEFAULT_VERBOSITY
 AM_DEFAULT_V
@@ -2886,6 +2888,14 @@ to "yes", and re-run configure.
 END
     as_fn_error $? "Your 'rm' program is bad, sorry." "$LINENO" 5
   fi
+fi
+
+ if test x"$AUTOCHECK" != x""; then
+  AUTOCHECK_DEFINED_TRUE=
+  AUTOCHECK_DEFINED_FALSE='#'
+else
+  AUTOCHECK_DEFINED_TRUE='#'
+  AUTOCHECK_DEFINED_FALSE=
 fi
 
 
@@ -5232,6 +5242,10 @@ else
   am__EXEEXT_FALSE=
 fi
 
+if test -z "${AUTOCHECK_DEFINED_TRUE}" && test -z "${AUTOCHECK_DEFINED_FALSE}"; then
+  as_fn_error $? "conditional \"AUTOCHECK_DEFINED\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
 if test -z "${AMDEP_TRUE}" && test -z "${AMDEP_FALSE}"; then
   as_fn_error $? "conditional \"AMDEP\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5

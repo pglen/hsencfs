@@ -7,6 +7,7 @@ AC_CONFIG_SRCDIR([src/hsencop.c])
 #AC_CONFIG_SUBDIRS([src tools])
 AC_CONFIG_HEADERS([config.h])
 AM_INIT_AUTOMAKE([subdir-objects])
+AM_CONDITIONAL([AUTOCHECK_DEFINED], [test x"$AUTOCHECK" != x""])
 
 AC_PREFIX_DEFAULT(/usr/local)
 
