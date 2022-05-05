@@ -60,6 +60,9 @@
 #include "../bluepoint/bluepoint2.h"
 #include "../common/hsutils.h"
 
+#define MAX(x, y) (((x) > (y)) ? (x) : (y))
+//#define MIN(x, y) (((x) < (y)) ? (x) : (y))
+
 #include "hsencsb.h"
 #include "hsencfs.h"
 
@@ -124,8 +127,8 @@ int     virt_write(const char *path, int fd, const char *buf, uint wsize, uint o
     // Sideblock is saved encrypted
     int ret3 = read_sideblock(path, psbr);
     hslog(3, "virt_write(): read SIDEBLOCK %d (ours) %d\n", psbr->serial, new_end / HS_BLOCK);
-    if(psbr->serial == new_end / HS_BLOCK)
-        memcpy(mem + xsize - HS_BLOCK, psbr->buff, HS_BLOCK);
+    //if(psbr->serial == new_end / HS_BLOCK)
+    //    memcpy(mem + xsize - HS_BLOCK, psbr->buff, HS_BLOCK);
     //else if(psbr->serial2 == new_end / HS_BLOCK)
     //    memcpy(mem + xsize - HS_BLOCK, psbr->buff2, HS_BLOCK);
 
@@ -138,8 +141,10 @@ int     virt_write(const char *path, int fd, const char *buf, uint wsize, uint o
     // Make sure our auxilliary ops did not create an error condition
     errno = old_errno;
 
-    // The actual write
-    int res3a = pwrite(fd, mem + (offset - new_offs), wsize, offset);
+    // The actual write writes out all of it
+    int res3a = pwrite(fd, mem, wsize, offset);
+    //int res3a = pwrite(fd, mem + (offset - new_offs), wsize, offset);
+
     hslog(3, "virt_write(): res2a=%ld xsize=%ld\n", res3a, xsize);
     ret = res3a;     // Tell them we got it
 
@@ -152,8 +157,12 @@ int     virt_write(const char *path, int fd, const char *buf, uint wsize, uint o
         {
         psb->serial = new_end / HS_BLOCK;
         hslog(3, "virt_write(): write SIDEBLOCK %d\n", psb->serial);
-        memcpy(psb->buff, (mem + xsize) - HS_BLOCK, HS_BLOCK);
+        //memcpy(psb->buff, (mem + xsize) - HS_BLOCK, HS_BLOCK);
         }
+
+    size_t newsize =  MAX(offset + wsize, psb->flen);
+
+
     //if(new_end / HS_BLOCK == 2)
     //    {
     //    psb->serial2 = new_end / HS_BLOCK;

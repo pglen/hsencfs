@@ -1,5 +1,5 @@
 
-/* =====[ project ]========================================================
+/* =====[ hsencfs ]========================================================
 
    File Name:       hsencfs.h
 
@@ -52,5 +52,3 @@ int    create_sideblock(const char *path);
 void    kill_sideblock(sideblock_t *psb);
 
 // EOF
-
-

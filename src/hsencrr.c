@@ -104,8 +104,8 @@ int     virt_read(const char *path, int fd, char *buf, uint wsize, uint offset)
         {
         hslog(9, "Patching in side block last=%ld serial=%d\n", new_end / HS_BLOCK, psb->serial);
         // Foundation is the sideblock data, copy it in
-        if(psb->serial == new_end / HS_BLOCK)
-             memcpy(mem + xsize - HS_BLOCK, psb->buff, HS_BLOCK);
+        //if(psb->serial == new_end / HS_BLOCK)
+        //     memcpy(mem + xsize - HS_BLOCK, psb->buff, HS_BLOCK);
         }
     kill_sideblock(psb);
 
