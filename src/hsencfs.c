@@ -752,6 +752,9 @@ int     main(int argc, char *argv[])
     //        }
     //    }
 
+    if(loglevel > 0)
+        syslog(LOG_DEBUG, "*** Mounted '%s'", mountsecret);
+
     // Skip arguments that are parsed already
     // Synthesize new array
     //int ret = fuse_main(2, argv2, &xmp_oper, NULL);
@@ -793,12 +796,10 @@ int     main(int argc, char *argv[])
             syslog(LOG_DEBUG, "unMntSec '%s'", mountsecret);
             syslog(LOG_DEBUG, "ended by uid=%d ", getuid());
             }
-
         //printf("unMounted '%s'\n", mountpoint);
         //syslog(LOG_AUTH, "unMounted  '%s' by %d", mountpoint, getuid());
         //, mountsecret);
         }
-
     if(nobg)
         {
         //while(1)

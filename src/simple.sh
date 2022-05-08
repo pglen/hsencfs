@@ -69,10 +69,11 @@ function    test_copy {
 }
 
 test_copy  aa300.txt
-test_copy  aa4096.txt
-test_copy  aa8100.txt
+#test_copy  aa4096.txt
+#test_copy  aa8100.txt
 
 rm -rf ~/secrets/*
+
 
 echo Copy "(all of hello dir)"
 
@@ -83,6 +84,8 @@ if [ "$ERR" != "0" ] ; then
     echo "Error: Cannot pass copy stage; err=$ERR"
     exit
 fi
+
+exit 0
 
 # Test for match between the two subsystems:
 #echo test rzig

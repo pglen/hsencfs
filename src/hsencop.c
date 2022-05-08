@@ -253,11 +253,14 @@ static int xmp_unlink(const char *path)
     strcpy(path2, mountsecret); strcat(path2, path);
 
     if (loglevel > 3)
-        syslog(LOG_DEBUG, "Unlinking file: %s uid: %d\n", path, getuid());
+        syslog(LOG_DEBUG, "Unlinking file '%s' uid: %d\n", path, getuid());
 
 	res = unlink(path2);
 	if (res == -1)
+        {
+        hslog(3, "Error on Unlinking: '%s' errno: %d\n", path, errno);
 		return -errno;
+        }
 
     // Also unlink the .sideblock
     // Reassemble with dot path
@@ -289,11 +292,30 @@ static int xmp_rmdir(const char *path)
     if (loglevel > 3)
         syslog(LOG_DEBUG, "Removing dir: %s uid: %d\n", path, getuid());
 
-    // ?? Also remove all secret tiles
-
 	res = rmdir(path2);
 	if (res == -1)
+        {
+        if (loglevel > 0)
+            syslog(LOG_DEBUG, "Cannot remove dir: '%s' errno=%d\n", path2, errno);
+
 		return -errno;
+        }
+
+    // ?? Also remove all side items
+    char *ptmp2 = get_sidename(path);
+    if(ptmp2)
+        {
+        if (loglevel > 9)
+            syslog(LOG_DEBUG, "RM sb file: %s\n", ptmp2);
+
+        int ret2 = unlink(ptmp2);
+        if(ret2 < 0)
+            if (loglevel > 3)
+                syslog(LOG_DEBUG,
+                    "Cannot unlink sideblock file: %s errno %d\n", ptmp2, errno);
+
+        free(ptmp2);
+        }
 
     if (loglevel > 3)
         syslog(LOG_DEBUG, "Removed dir: %s uid: %d\n", path, getuid());

@@ -77,7 +77,7 @@ int     virt_read(const char *path, int fd, char *buf, uint wsize, uint offset)
         goto end_func;
         }
     memset(mem, '\0', xsize);
-    hslog(3, "virt_read(): pread() new_offs=%ld new_end=%ld\n", new_offs, new_end);
+    //hslog(3, "virt_read(): pread() new_offs=%ld new_end=%ld\n", new_offs, new_end);
 
     int res2a = pread(fd, mem, xsize, new_offs);
     if(res2a < 0)

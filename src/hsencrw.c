@@ -120,7 +120,7 @@ int     virt_write(const char *path, int fd, const char *buf, uint wsize, uint o
         }
     if(res2a < xsize)
         {
-        hslog(3, "virt_write(): shortread res2a=%lx of %ld\n", res2a, xsize);
+        //hslog(3, "virt_write(): shortread res2a=%lx of %ld\n", res2a, xsize);
         }
    //if(offset > ofsize)
    //     {

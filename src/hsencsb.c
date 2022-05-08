@@ -108,8 +108,7 @@ char    *get_sidename(const char *path)
     free(eee);
     strcat(ptmp2, myext);
 
-    //if (loglevel > 2)
-    //     syslog(LOG_DEBUG, "Got sidename '%s'\n", ptmp2);
+    //hslog(2, "Sidename '%s'\n", ptmp2 + 15);
 
    endd:
     return ptmp2;
@@ -249,6 +248,8 @@ int     write_sideblock(const char *path, sideblock_t *psb)
         goto endd;
         }
 
+    hslog(2, "Sidename '%s'\n", ptmp2 + 15);
+
     if (loglevel > 9)
         syslog(LOG_DEBUG, "Writing sideblock file '%s'\n", ptmp2);
 
@@ -303,6 +304,8 @@ int    create_sideblock(const char *path)
         ret = -ENOMEM;
         goto endd;
         }
+
+    hslog(3, "Sideblock created '%s'\n", ptmp2);
 
     sideblock_t *psb = alloc_sideblock();
     if(!psb)
