@@ -284,7 +284,7 @@ int main(int argc, char *argv[])
             {
             curr = fsize - prog;
             //fwrite(buff, 1, sizeof(buff), fp3);
-            memcpy(sb.buff,  buff, sizeof(buff));
+            //memcpy(sb.buff,  buff, sizeof(buff));
             sb.serial = (prog / BLOCKSIZE) + 1;
             if(verbose)
                 printf("sideblock serial %d\n", sb.serial);

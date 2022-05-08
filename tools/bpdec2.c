@@ -289,7 +289,7 @@ int main(int argc, char *argv[])
 
             //len3 = fread(buff, 1, sizeof(buff), fp3);
             len3 = fread(&sb, 1, sizeof(sideblock_t), fp3);
-            memcpy(buff, sb.buff, sizeof(buff));
+            //memcpy(buff, sb.buff, sizeof(buff));
 
             if(len3 == 0)
                 {

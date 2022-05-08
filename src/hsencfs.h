@@ -40,15 +40,8 @@ int xmp_write(const char *path, const char *buf, size_t wsize, // )
 void    hslog(int lev, char *fmt, ...);
 void    *hsalloc(int total);
 int     is_our_file(const char *path, int fname_only);
-off_t    get_fsize(int fh);
+off_t   get_fsize(int fh);
 void    kill_buff(void *bbuff, int xlen);
 int     openpass(const char *path);
-
-sideblock_t *alloc_sideblock();
-char    *get_sidename(const char *path);
-int    read_sideblock(const char *path, sideblock_t *psb);
-int     write_sideblock(const char *path, sideblock_t *psb);
-int    create_sideblock(const char *path);
-void    kill_sideblock(sideblock_t *psb);
 
 // EOF

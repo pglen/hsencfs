@@ -108,11 +108,46 @@ char    *get_sidename(const char *path)
     free(eee);
     strcat(ptmp2, myext);
 
-    if (loglevel > 9)
-         syslog(LOG_DEBUG, "Got sidename '%s'\n", ptmp2);
+    //if (loglevel > 2)
+    //     syslog(LOG_DEBUG, "Got sidename '%s'\n", ptmp2);
 
    endd:
     return ptmp2;
+}
+
+// ----------------------------------------------------------------------
+// Get (real) file size form sideblock
+
+size_t get_sidelen(const char *path)
+
+{
+    size_t ret = 0;  int old_errno = errno;
+
+    if(strlen(path) == 1)
+        return 0;
+
+    hslog(1, "Get sideblock len from: '%s'\n", path);
+
+    sideblock_t *psb = alloc_sideblock();
+    if(psb == NULL) {
+        hslog(1, "Error on sideblock malloc %d\n", errno);
+	    //rret = -ENOMEM;
+        goto end_func2;
+        }
+    int ret2 = read_sideblock(path, psb);
+    if(ret2 < 0)
+        {
+        hslog(1, "Error on sideblock read %d\n", errno);
+        goto end_func2;
+        }
+    ret = psb->flen;
+
+  end_func3:
+    kill_sideblock(psb);
+    errno = old_errno;
+
+   end_func2:
+    return ret;
 }
 
 // ----------------------------------------------------------------------
@@ -145,27 +180,30 @@ int    read_sideblock(const char *path, sideblock_t *psb)
 
     int old_errno = errno;
 
-    //int fdi = open(ptmp2, O_RDWR);
-    //if(fdi < 0)
-    //    {
-    //    if (loglevel > 0)
-    //        syslog(LOG_DEBUG, "Error on opening sideblock file '%s', errno: %d\n", ptmp2, errno);
-    //
-    //    ret = -ENOENT;
-    //    //errno = old_errno;
-    //    goto endd2;
-    //    }
-    //else
-    //    {
-    //    //ret = read(fdi, psb, sizeof(sideblock_t));
-    //    //if(ret && ret < sizeof(sideblock_t))        // We ignore empty file
-    //    //    {
-    //    //    if (loglevel > 0)
-    //    //        syslog(LOG_DEBUG, "Error on reading sideblock file, errno: %d\n", errno);
-    //    //    //ret = -EFAULT;
-    //    //    }
-    //    //close(fdi);
-    //    }
+    int fdi = open(ptmp2, O_RDWR);
+    if(fdi < 0)
+        {
+        fdi = open(ptmp2, O_RDWR | O_CREAT | O_TRUNC , S_IRUSR | S_IWUSR);
+        if(fdi < 0)
+            {
+            if (loglevel > 0)
+                syslog(LOG_DEBUG, "Error on opening sideblock file '%s', errno: %d\n", ptmp2, errno);
+            //ret = -ENOENT;
+            errno = old_errno;
+            goto endd2;
+            }
+        }
+    else
+        {
+        ret = read(fdi, psb, sizeof(sideblock_t));
+        if(ret && ret < sizeof(sideblock_t))        // We ignore empty file
+            {
+            if (loglevel > 0)
+                syslog(LOG_DEBUG, "Error on reading sideblock file, errno: %d\n", errno);
+            //ret = -EFAULT;
+            }
+        close(fdi);
+        }
 
     errno = old_errno;
     if(psb->magic !=  HSENCFS_MAGIC)
@@ -215,25 +253,24 @@ int     write_sideblock(const char *path, sideblock_t *psb)
         syslog(LOG_DEBUG, "Writing sideblock file '%s'\n", ptmp2);
 
     int rrr = 0, old_errno = errno;
-    //int fdi = open(ptmp2, O_RDWR);
-    //if(fdi < 0)
-    //    {
-    //    if (loglevel > 0)
-    //        syslog(LOG_DEBUG, "Error on creating sideblock file '%s', errno: %d\n", ptmp2, errno);
-    //
-    //    ret = -errno;
-    //    errno = old_errno;
-    //    goto endd2;
-    //    }
-    //rrr = write(fdi, psb, sizeof(sideblock_t));
-    //if(rrr < sizeof(sideblock_t))
-    //    {
-    //    if (loglevel > 0)
-    //        syslog(LOG_DEBUG, "Error on writing sideblock file, errno: %d\n", errno);
-    //
-    //    //ret = -errno;
-    //    }
-    //close(fdi);
+    int fdi = open(ptmp2, O_RDWR);
+    if(fdi < 0)
+        {
+        if (loglevel > 0)
+            syslog(LOG_DEBUG, "Error on creating sideblock file '%s', errno: %d\n", ptmp2, errno);
+
+        ret = -errno;
+        errno = old_errno;
+        goto endd2;
+        }
+    rrr = write(fdi, psb, sizeof(sideblock_t));
+    if(rrr < sizeof(sideblock_t))
+        {
+        if (loglevel > 0)
+            syslog(LOG_DEBUG, "Error on writing sideblock file, errno: %d\n", errno);
+        ret = -errno;
+        }
+    close(fdi);
 
     //if (loglevel > 2)
     //    syslog(LOG_DEBUG, "Writing sideblock file2 '%s'\n", ptmp2);

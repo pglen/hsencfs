@@ -35,24 +35,31 @@ static off_t xmp_lseek(const char *path,  off_t off, int whence, struct fuse_fil
 
 static int xmp_getattr(const char *path, struct stat *stbuf, struct fuse_file_info *fi)
 {
-	int res;
-
     char  path2[PATH_MAX] ;
     strcpy(path2, mountsecret); strcat(path2, path);
-	res = lstat(path2, stbuf);
+	int res = lstat(path2, stbuf);
 	if (res == -1)
 		return -errno;
-	return 0;
+
+    hslog(2, "xmp_getattr.org='%s' st_size=%d\n", path, stbuf->st_size);
+
+    // Do not process '/'
+    if(strlen(path) > 1)
+        stbuf->st_size = get_sidelen(path);
+
+	hslog(2, "xmp_getattr.new='%s' st_size=%d\n", path, stbuf->st_size);
+    return 0;
 }
 
 static int xmp_fgetattr(const char *path, struct stat *stbuf,
 			struct fuse_file_info *fi)
 {
-	int res;
-	(void) path;
-	res = fstat(fi->fh, stbuf);
+    char  path2[PATH_MAX] ;
+    strcpy(path2, mountsecret); strcat(path2, path);
+	int res = fstat(fi->fh, stbuf);
 	if (res == -1)
 		return -errno;
+    //stbuf->st_size = get_sidelen(path2);
 	return 0;
 }
 
@@ -709,6 +716,8 @@ static int xmp_statfs(const char *path, struct statvfs *stbuf)
 	res = statvfs(path2, stbuf);
 	if (res == -1)
 		return -errno;
+
+
 
 	return 0;
 }

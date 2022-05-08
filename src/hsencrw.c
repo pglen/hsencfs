@@ -120,19 +120,18 @@ int     virt_write(const char *path, int fd, const char *buf, uint wsize, uint o
         }
 
     // Read original sideblock
-    sideblock_t *psbr = alloc_sideblock();
-    if(psbr == NULL) {
-        ret = -ENOMEM;  goto end_func2;
-        }
-    // Sideblock is saved encrypted
-    int ret3 = read_sideblock(path, psbr);
-    hslog(3, "virt_write(): read SIDEBLOCK %d (ours) %d\n", psbr->serial, new_end / HS_BLOCK);
-    //if(psbr->serial == new_end / HS_BLOCK)
-    //    memcpy(mem + xsize - HS_BLOCK, psbr->buff, HS_BLOCK);
-    //else if(psbr->serial2 == new_end / HS_BLOCK)
-    //    memcpy(mem + xsize - HS_BLOCK, psbr->buff2, HS_BLOCK);
-
-    kill_sideblock(psbr);
+    //sideblock_t *psbr = alloc_sideblock();
+    //if(psbr == NULL) {
+    //    ret = -ENOMEM;  goto end_func2;
+    //    }
+    //// Sideblock is saved encrypted
+    //int ret3 = read_sideblock(path, psbr);
+    //hslog(3, "virt_write(): read SIDEBLOCK %d (ours) %d\n", psbr->serial, new_end / HS_BLOCK);
+    ////if(psbr->serial == new_end / HS_BLOCK)
+    ////    memcpy(mem + xsize - HS_BLOCK, psbr->buff, HS_BLOCK);
+    ////else if(psbr->serial2 == new_end / HS_BLOCK)
+    ////    memcpy(mem + xsize - HS_BLOCK, psbr->buff2, HS_BLOCK);
+    //kill_sideblock(psbr);
 
     hs_decrypt(mem, xsize, passx, plen);
     memcpy(mem + (offset - new_offs), buf, wsize);
@@ -142,26 +141,28 @@ int     virt_write(const char *path, int fd, const char *buf, uint wsize, uint o
     errno = old_errno;
 
     // The actual write writes out all of it
-    int res3a = pwrite(fd, mem, wsize, offset);
+    int res3a = pwrite(fd, mem, xsize, new_offs);
     //int res3a = pwrite(fd, mem + (offset - new_offs), wsize, offset);
 
     hslog(3, "virt_write(): res2a=%ld xsize=%ld\n", res3a, xsize);
-    ret = res3a;     // Tell them we got it
+    ret = wsize;     // Tell them we got it
 
     // Write sideblock
     sideblock_t *psb = alloc_sideblock();
     if(psb == NULL) {
         ret = -ENOMEM;  goto end_func2;
         }
+
     //if(new_end / HS_BLOCK == 1)
-        {
-        psb->serial = new_end / HS_BLOCK;
-        hslog(3, "virt_write(): write SIDEBLOCK %d\n", psb->serial);
-        //memcpy(psb->buff, (mem + xsize) - HS_BLOCK, HS_BLOCK);
-        }
+    //    {
+    //    psb->serial = new_end / HS_BLOCK;
+    //    hslog(3, "virt_write(): write SIDEBLOCK %d\n", psb->serial);
+    //    memcpy(psb->buff, (mem + xsize) - HS_BLOCK, HS_BLOCK);
+    //    }
 
     size_t newsize =  MAX(offset + wsize, psb->flen);
-
+    hslog(3, "virt_write(): newsize=%ld xsize=%ld\n", newsize);
+    psb->flen = newsize;
 
     //if(new_end / HS_BLOCK == 2)
     //    {
