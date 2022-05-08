@@ -39,11 +39,8 @@ echo Direct "(for read / write test)"
 
 function test_direct {
     #rm -f ~/.secrets/$1
-    ../tools/bpenc2 -p 1234 test_data/$1 ~/.secrets/$1
+    cp test_data/$1 ~/secrets/$1
     diff -q test_data/$1 ~/secrets/$1  # note the missing dot
-    rm -f tmp/$1
-    ../tools/bpdec2 -p 1234 ~/.secrets/$1 tmp/$1
-    diff -q test_data/$1 tmp/$1
 }
 
 test_direct aa300.txt
@@ -70,7 +67,7 @@ fi
 echo test rzig
 
 function test_rzig {
-    ../tools/bpenc2 -p 1234 -f test_data/$1 ~/.secrets/$1
+    cp test_data/$1 ~/secrets/$1
     ./tests/zigzag  ~/secrets/$1  test_data/$1.rev
     diff -q test_data/$1 test_data/$1.rev
     rm -f test_data/$1.rev

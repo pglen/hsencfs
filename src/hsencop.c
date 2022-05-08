@@ -41,13 +41,11 @@ static int xmp_getattr(const char *path, struct stat *stbuf, struct fuse_file_in
 	if (res == -1)
 		return -errno;
 
-    hslog(2, "xmp_getattr.org='%s' st_size=%d\n", path, stbuf->st_size);
-
+    //hslog(2, "xmp_getattr.org='%s' st_size=%d\n", path, stbuf->st_size);
     // Do not process '/'
     if(strlen(path) > 1)
         stbuf->st_size = get_sidelen(path);
-
-	hslog(2, "xmp_getattr.new='%s' st_size=%d\n", path, stbuf->st_size);
+	//hslog(7, "xmp_getattr.new='%s' st_size=%d\n", path, stbuf->st_size);
     return 0;
 }
 

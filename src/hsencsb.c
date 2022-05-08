@@ -126,7 +126,7 @@ size_t get_sidelen(const char *path)
     if(strlen(path) == 1)
         return 0;
 
-    hslog(1, "Get sideblock len from: '%s'\n", path);
+    //hslog(1, "Get sideblock len from: '%s'\n", path);
 
     sideblock_t *psb = alloc_sideblock();
     if(psb == NULL) {
