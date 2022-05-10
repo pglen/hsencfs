@@ -2,7 +2,6 @@
 
 ##  The High Security EnCrypting File System.
 
-
   Progress:
 
   ...  some working parts; almost ready to deploy
@@ -12,6 +11,7 @@ Announcements / History
     Tue 06.Jul.2021     dummy encryption intercepted, working OK
     Tue 12.Apr.2022     started virtual based encryption (simpler algo)
     Tue 10.May.2022     real encryption operational
+    Tue 10.May.2022     hsaskpass ported, tested
 
  HSENCFS is a user space encrypting file system. Simple to set up, seamless
 to use, fast, safe, secure and maintenance free. It will encrypt
@@ -160,9 +160,11 @@ or the whole system.
  The industrial version of this project is available upon request.
 Please send a message to the author. (see github page)
 
-Useful trick to see the logs in a separate file.
 
-Edit (Create) /etc/rsyslog/rsyslog.d/10-custom.conf
+## Configuring syslog
+
+Useful trick to see the logs in a separate file. Edit (Create) /etc/rsyslog/rsyslog.d/10-custom.conf
+
 with the following contents:
 
 if $programname == 'HSEncFs' then {
@@ -170,9 +172,10 @@ if $programname == 'HSEncFs' then {
         ~
 }
 
-Then the file '/var/log/hsencfs.log' contains details of
-the hsencfs workings. Use the -l option to control how much detail
-would you like to see;
+Then the file '/var/log/hsencfs.log' contains details of the hsencfs workings. Use the
+-l option to control how much detail would you like to see; 0=none 3=some 9=all
+
+## Backup and recovery
 
 To copy every file including hidden ones (starting with a dot) use:
 
@@ -185,10 +188,11 @@ Assuming the following setup:
 
 One can copy plain files out:
 
-1.) mount directory with hsencfs
-2.) copy as usual
+        1.) mount directory with hsencfs
+        2.) copy as usual
 
-   example:  hsencfs ~/secret
+   example:     hsencfs ~/secrets
+                cp -a ~/secrets/* /where_the_backup_goes
 
 One can copy encrypted files out:
 
@@ -196,25 +200,13 @@ One can copy encrypted files out:
         2.) enable copying all files; use: shopt -s dotglob
         2.) copy as usual
 
-   example:  cp -a  ~/.secret/*  target_dir
+   example:     shopt -s dotglob
+                cp -a  ~/.secret/*  where_the_encrypted_backup_goes
+                shopt -s dotglob
 
-
-Older Announcements:
-
-     The source code copied out to the encrypted directory does NOT compile in that
-    directory correctly.
-
-    This means the file access intercept is not random clean,
-    as GCC accesses object files by chunk.
-
-     The trick was to pre read to the encryption buffer boundary, and then
-      Decrypt / Patch / Encrypt / Write.
-
-     The last buffer may be partial, so special arrangements are made to
-    accommodate that.
 
   Thanks:
 
-Peter Glen
+        Peter Glen
 
 // EOF
