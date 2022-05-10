@@ -106,7 +106,7 @@ int     virt_read(const char *path, int fd, char *buf, uint wsize, uint offset)
         }
     kill_sideblock(psb);
 
-    hslog(3, "virt_read(): res2a=%ld xsize=%ld\n", res2a, xsize);
+    hslog(5, "virt_read(): res2a=%ld xsize=%ld\n", res2a, xsize);
 
     hs_decrypt(mem, xsize, passx, plen);
     memcpy(buf, mem + (offset - new_offs), wsize);
@@ -134,7 +134,7 @@ int xmp_read(const char *path, char *buf, size_t wsize, off_t offset, // )
 	int res = 0;
 
     hslog(2, "@@ xmp_read(): fh=%ld '%s'\n", fi->fh, path);
-    hslog(2, "xmp_read(): fh=%ld wsize=%ld offs=%ld\n", fi->fh, wsize, offset);
+    hslog(3, "xmp_read(): fh=%ld wsize=%ld offs=%ld\n", fi->fh, wsize, offset);
 
     #ifdef BYPASS
     int res2a = pread(fi->fh, buf, wsize, offset);
@@ -144,7 +144,7 @@ int xmp_read(const char *path, char *buf, size_t wsize, off_t offset, // )
         }
     else
         {
-        hslog(2, "xmp_read(): fh=%ld wsize=%ld offs=%ld\n", fi->fh, wsize, offset);
+        hslog(4, "xmp_read(): fh=%ld wsize=%ld offs=%ld\n", fi->fh, wsize, offset);
         return res2a;
         }
     #else
