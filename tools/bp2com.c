@@ -10,13 +10,17 @@
 #include <errno.h>
 #include <syslog.h>
 #include <getopt.h>
+#include <stddef.h>
 
 #include <sys/time.h>
 #include <sys/stat.h>
 
+#include "../src/hsencfs.h"
+#include "bluepoint2.h"
+
 #include "hs_crypt.h"
 #include "bp2com.h"
-#include "bluepoint2.h"
+#include "../src/hsencsb.h"
 
 char    progname[] = "HSENCFS";
 static char     tmp[256];

@@ -1,5 +1,9 @@
 #!/bin/bash
 
+echo "Obsoleted by cycle.sh"
+
+exit 0;
+
 pushd `pwd`
 cd ..
 make -s

@@ -14,7 +14,7 @@
 
 
 
-
+VPATH = ..
 am__is_gnu_make = { \
   if test -z '$(MAKELEVEL)'; then \
     false; \
@@ -117,7 +117,7 @@ AM_V_at = $(am__v_at_$(V))
 am__v_at_ = $(am__v_at_$(AM_DEFAULT_VERBOSITY))
 am__v_at_0 = @
 am__v_at_1 = 
-DEFAULT_INCLUDES = -I.
+DEFAULT_INCLUDES = -I. -I$(srcdir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/hello.Po
@@ -227,10 +227,10 @@ SET_MAKE =
 SHELL = /bin/bash
 STRIP = 
 VERSION = VERSION
-abs_builddir = /home/peterglen/pgsrc/hsenc/hsenc/hello
-abs_srcdir = /home/peterglen/pgsrc/hsenc/hsenc/hello
-abs_top_builddir = /home/peterglen/pgsrc/hsenc/hsenc/hello
-abs_top_srcdir = /home/peterglen/pgsrc/hsenc/hsenc/hello
+abs_builddir = /home/peterglen/pgsrc/hsenc/hsenc/hello/build
+abs_srcdir = /home/peterglen/pgsrc/hsenc/hsenc/hello/build/..
+abs_top_builddir = /home/peterglen/pgsrc/hsenc/hsenc/hello/build
+abs_top_srcdir = /home/peterglen/pgsrc/hsenc/hsenc/hello/build/..
 ac_ct_CC = gcc
 am__include = include
 am__leading_dot = .
@@ -264,12 +264,12 @@ psdir = ${docdir}
 runstatedir = ${localstatedir}/run
 sbindir = ${exec_prefix}/sbin
 sharedstatedir = ${prefix}/com
-srcdir = .
+srcdir = ..
 sysconfdir = ${prefix}/etc
 target_alias = 
 top_build_prefix = 
 top_builddir = .
-top_srcdir = .
+top_srcdir = ..
 hello_SOURCES = hello.c
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am

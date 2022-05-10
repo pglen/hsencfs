@@ -2,10 +2,25 @@
 // Bluepoint block test suite
 //
 
-#include "stdlib.h"
-#include "stdio.h"
-#include "string.h"
+#include <fuse.h>
+#include <ulockmgr.h>
 
+#include <syslog.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+#include <string.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <dirent.h>
+#include <errno.h>
+#include <syslog.h>
+#include <sys/time.h>
+
+#include "stdio.h"
+
+#include "../src/hsencfs.h"
+#include "bluepoint2.h"
 #include "hs_crypt.h"
 
 #define DEF_DUMPHEX  1   // undefine this if you do not want bluepoint2_dumphex

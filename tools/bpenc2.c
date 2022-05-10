@@ -19,10 +19,10 @@
 #include <sys/time.h>
 #include <sys/stat.h>
 
-#include "hs_crypt.h"
-
-#include "bp2com.h"
+#include "../src/hsencfs.h"
 #include "bluepoint2.h"
+#include "hs_crypt.h"
+#include "bp2com.h"
 #include "../src/hsencsb.h"
 
 static char buff[BLOCKSIZE];

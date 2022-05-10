@@ -56,15 +56,12 @@
 
 #include "base64.h"
 
+#include "hsencsb.h"
+#include "hsencfs.h"
+
 #include "../bluepoint/hs_crypt.h"
 #include "../bluepoint/bluepoint2.h"
 #include "../common/hsutils.h"
-
-#define MAX(x, y) (((x) > (y)) ? (x) : (y))
-//#define MIN(x, y) (((x) < (y)) ? (x) : (y))
-
-#include "hsencsb.h"
-#include "hsencfs.h"
 
 int     virt_write(const char *path, int fd, const char *buf, uint wsize, uint offset)
 
@@ -75,6 +72,12 @@ int     virt_write(const char *path, int fd, const char *buf, uint wsize, uint o
     uint new_end  = (endd / HS_BLOCK) * HS_BLOCK;
     if(endd % HS_BLOCK)
         new_end += HS_BLOCK;
+
+    old_errno = errno;
+    lseek(fd, offset, SEEK_CUR);
+    errno = old_errno;
+
+    hslog(3, "virt_write(): wsize=%ld offset=%ld\n", wsize, offset);
 
     int xsize = new_end - new_offs;
     //hslog(3, "virt_write(): new_offs=%ld new_end=%ld\n", new_offs, new_end);
@@ -114,18 +117,20 @@ int     virt_write(const char *path, int fd, const char *buf, uint wsize, uint o
     int res2a = pread(fd, mem, xsize, new_offs);
     if(res2a < 0)
         {
-        hslog(3, "virt_write(): error res2a=%lx, errno=%d\n",  res2a, errno);
+        hslog(3, "virt_write(): read error res2a=%lx, errno=%d\n",  res2a, errno);
         // Ignore pre read error
         //  ret =  -errno;  goto end_func2;
         }
-    if(res2a < xsize)
-        {
-        //hslog(3, "virt_write(): shortread res2a=%lx of %ld\n", res2a, xsize);
-        }
-   //if(offset > ofsize)
-   //     {
-   //     int fff = ftruncate(fd, offset);
-   //     }
+    hslog(3, "virt_write(): read res2a=%lx bytes\n",  res2a);
+
+    //if(res2a < xsize)
+    //    {
+    //    //hslog(3, "virt_write(): shortread res2a=%lx of %ld\n", res2a, xsize);
+    //    }
+    //if(offset > ofsize)
+    //     {
+    //     int fff = ftruncate(fd, offset);
+    //     }
 
     hs_decrypt(mem, xsize, passx, plen);
     memcpy(mem + (offset - new_offs), buf, wsize);
@@ -137,8 +142,13 @@ int     virt_write(const char *path, int fd, const char *buf, uint wsize, uint o
     // The actual write writes out all of it
     int res3a = pwrite(fd, mem, xsize, new_offs);
     //int res3a = pwrite(fd, mem + (offset - new_offs), wsize, offset);
+    if(res3a < 0)
+        {
+        hslog(3, "virt_write(): error xsize=%ld errno=%d\n", errno, xsize);
+        //ret = -errno;  goto end_func2;
+        }
 
-    hslog(3, "virt_write(): res2a=%ld xsize=%ld\n", res3a, xsize);
+    hslog(3, "virt_write(): res3a=%ld xsize=%ld\n", res3a, xsize);
     ret = wsize;     // Tell them we got it
 
     // Write sideblock
@@ -146,18 +156,10 @@ int     virt_write(const char *path, int fd, const char *buf, uint wsize, uint o
     if(psb == NULL) {
         ret = -ENOMEM;  goto end_func2;
         }
-
     int ret3 = read_sideblock(path, psb);
     size_t newsize =  MAX(offset + wsize, psb->flen);
-    hslog(3, "virt_write(): newsize=%ld xsize=%ld\n", newsize);
+    hslog(3, "virt_write(): newsize=%ld xsize=%ld\n", newsize, xsize);
     psb->flen = newsize;
-
-    //if(new_end / HS_BLOCK == 2)
-    //    {
-    //    psb->serial2 = new_end / HS_BLOCK;
-    //    hslog(3, "virt_write(): write SIDEBLOCK %d\n", psb->serial);
-    //    memcpy(psb->buff2, (mem + xsize) - HS_BLOCK, HS_BLOCK);
-    //    }
 
     int ret2 = write_sideblock(path, psb);
     if(ret2 < 0)
@@ -171,7 +173,9 @@ int     virt_write(const char *path, int fd, const char *buf, uint wsize, uint o
   end_func2:
     free(mem);
 
+    old_errno = errno;
     lseek(fd, offset + wsize, SEEK_CUR);
+    errno = old_errno;
 
    end_func:
     return ret;
@@ -182,39 +186,40 @@ int xmp_write(const char *path, const char *buf, size_t wsize, // )
 {
 	int res = 0, loop = 0, fd = -1;
 
-    //(void) fi;
 	if(fi == NULL)
-		fd = open(path, O_RDWR);
-	else
-		fd = fi->fh;
+        return -ENOSYS;
 
+    //fd = open(path, O_RDWR);
+
+    fd = fi->fh;
     if(wsize == 0)
         {
         hslog(1, "zero write on '%s'\n", path);
         return 0;
         }
-
     hslog(2, "@@ xmp_write(): fh=%ld '%s'\n", fi->fh, path);
 
     //off_t orgfsize = get_fsize(fd);
     //off_t oldoff = lseek(fd, 0, SEEK_CUR);
     //hslog(3, "xmp_write(): orgfsize=%lu oldoff=%lu\n", orgfsize, oldoff);
 
-    hslog(3, "xmp_write(): fh=%ld wsize=%lu offs=%lu\n", fd, wsize, offset);
+    //hslog(3, "xmp_write(): fh=%ld wsize=%lu offs=%lu\n", fd, wsize, offset);
 
     // This is a test case for evaluating the FUSE side of the system (it is OK)
     #ifdef BYPASS
-        // Only enable position independent algorithm (aka FAKE)
+        hslog(3, "xmp_write(): bypass fh=%ld wsize=%lu offs=%lu\n", fd, wsize, offset);
         int res2a = pwrite(fd, buf, wsize, offset);
     	if (res2a < 0) {
-            return -errno; }
-        else {
-            return res2a;  }
-    #elif defined(VIRTUAL)
-        // Simplified
-        res = virt_write(path, fd, buf, wsize, offset);
+            return -errno;
+            }
+        else
+            {
+            hslog(3, "xmp_write(): return ret=%d\n", res2a);
+            return res2a;
+            }
     #else
-        #error "Cannot make without a method defined";
+        // Simplified algorythm
+        res = virt_write(path, fd, buf, wsize, offset);
     #endif
 
     return res;

@@ -20,9 +20,11 @@
 #include <sys/time.h>
 #include <sys/stat.h>
 
+#include "../src/hsencfs.h"
+#include "bluepoint2.h"
+
 #include "hs_crypt.h"
 #include "bp2com.h"
-#include "bluepoint2.h"
 #include "../src/hsencsb.h"
 
 static char buff[4096];
@@ -45,8 +47,9 @@ int     loglevel = 0;
 // Maintain internal count
 static  char    version[] = "1.17";
 
-static  char    passx[MAXPASSLEN];
-static  int     plen = sizeof(passx);
+char    passx[MAXPASSLEN];
+int     plen = sizeof(passx);
+
 static  char    decoy[MAXPASSLEN];
 static  int     plen2 = sizeof(decoy);
 static char     pass[256];

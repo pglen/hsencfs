@@ -37,12 +37,12 @@
 
 #include "base64.h"
 
+#include "hsencsb.h"
+#include "hsencfs.h"
+
 #include "../bluepoint/hs_crypt.h"
 #include "../bluepoint/bluepoint2.h"
 #include "../common/hsutils.h"
-
-#include "hsencsb.h"
-#include "hsencfs.h"
 
 sideblock_t *alloc_sideblock()
 
@@ -75,8 +75,8 @@ char    *get_sidename(const char *path)
         goto endd;
         }
 
-     if (loglevel > 9)
-        syslog(LOG_DEBUG, "Generate sidename '%s'\n", path);
+    //if (loglevel > 9)
+    //   syslog(LOG_DEBUG, "Generate sidename '%s'\n", path);
 
     int cnt = 0, cnt2 = 0; char *pch, *temp;
     char *ddd = strdup(path);
@@ -89,7 +89,7 @@ char    *get_sidename(const char *path)
     strcpy(ptmp2, mountsecret);
     pch = strtok(eee, "/");
     if(cnt2 == cnt)
-        strcat(ptmp2, ".");
+        strcat(ptmp2, "._");
     strcat(ptmp2, pch);
     //syslog(LOG_DEBUG, "sb tokenx '%s'\n", pch);
 
@@ -101,7 +101,7 @@ char    *get_sidename(const char *path)
             {
             strcat(ptmp2, "/");
             if(cnt2 == cnt)
-                strcat(ptmp2, ".");
+                strcat(ptmp2, "._");
             strcat(ptmp2, temp);
             }
         }
@@ -248,7 +248,7 @@ int     write_sideblock(const char *path, sideblock_t *psb)
         goto endd;
         }
 
-    hslog(2, "Sidename '%s'\n", ptmp2 + 15);
+    //hslog(2, "Sidename '%s'\n", ptmp2 + 15);
 
     if (loglevel > 9)
         syslog(LOG_DEBUG, "Writing sideblock file '%s'\n", ptmp2);
@@ -305,7 +305,7 @@ int    create_sideblock(const char *path)
         goto endd;
         }
 
-    hslog(3, "Sideblock created '%s'\n", ptmp2);
+    //hslog(3, "Sideblock created '%s'\n", ptmp2 + 15);
 
     sideblock_t *psb = alloc_sideblock();
     if(!psb)

@@ -4,7 +4,8 @@
 # It will encrypt data on write, decrypt data on read.
 #
 
-SUBDIRS =  docs tools bluepoint common src
+#SUBDIRS =  docs tools bluepoint common src
+SUBDIRS =  docs bluepoint common src
 
 PAN_SERV=GNOME_HSENCApplet.server
 BONOBO_DIR=/usr/lib/bonobo/servers

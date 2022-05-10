@@ -75,12 +75,12 @@
 #include <getopt.h>
 
 #include "base64.h"
-
-#include "hs_crypt.h"
 #include "hsutils.h"
-
 #include "hsencsb.h"
+
 #include "hsencfs.h"
+#include "bluepoint2.h"
+#include "hs_crypt.h"
 
 // -----------------------------------------------------------------------
 // Shared flags
@@ -753,7 +753,7 @@ int     main(int argc, char *argv[])
     //    }
 
     if(loglevel > 0)
-        syslog(LOG_DEBUG, "*** Mounted '%s'", mountsecret);
+        syslog(LOG_DEBUG, "*** %x Mounted '%s'", getpid(), mountsecret);
 
     // Skip arguments that are parsed already
     // Synthesize new array

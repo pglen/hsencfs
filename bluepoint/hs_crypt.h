@@ -5,29 +5,9 @@
 
 // High security block encryption
 
-#include "bluepoint2.h"
-
 #define HS_BLOCK 4096
 
-#ifndef MIN
-#define MIN(a, b) (a) > (b) ? (b) : (a)
-#endif
-
-// Warning: this will disable all encryptions;
-// This is used for testing ONLY;
-
-//   define FAKE
-//   define NONE
-
-// -----------------------------------------------------------------------
-// Test cases for simplifying and / or disabling encryption
-// Nothing defined activates the real encryption
-
-//#define NONE_ENCRYPT  1
-//#define FAKE_ENCRYPT    1
-#define FULL_ENCRYPT  1
-
-#if defined(NONE_ENCRYPT) && defined(FAKE_ENCRYPT)
+#if defined(NONE_ENCRYPT) && defined(FAKE_ENCRYPT) && defined(HALF_ENCRYPT)
     #error "Cannot define more than one. of NONE or FAKE"
 #endif
 
@@ -38,7 +18,6 @@
 #if defined(FAKE_ENCRYPT) && defined(FULL_ENCRYPT)
     #error "Cannot define more than one. of FAKE or FULL"
 #endif
-
 
 #ifdef NONE_ENCRYPT
 
@@ -72,12 +51,20 @@ void hs_decrypt_fake(void *mem, int size2, void *pass, int plen);
 void hs_encrypt_org(void *mem, int size2, void *pass, int plen);
 void hs_decrypt_org(void *mem, int size2, void *pass, int plen);
 
+#elif defined(HALF_ENCRYPT)
+
+#define     hs_encrypt  hs_encrypt_half
+#define     hs_decrypt  hs_decrypt_half
+
+void hs_encrypt_half(void *mem, int size2, void *pass, int plen);
+void hs_decrypt_half(void *mem, int size2, void *pass, int plen);
+
 #else
 
 #define     hs_encrypt  hs_encrypt_undef
 #define     hs_decrypt  hs_decrypt_undef
 
-#error "Must define encryption type: FAKE NONE FULL"
+#error "Must define encryption type: FAKE_ENCRYPT NONE_ENCRYPT FULL_ENCRYPT"
 
 void hs_encrypt_undef(void *mem, int size2, void *pass, int plen) {};
 void hs_decrypt_undef(void *mem, int size2, void *pass, int plen) {};

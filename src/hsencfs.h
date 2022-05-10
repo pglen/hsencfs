@@ -16,11 +16,36 @@
 #define FALSE (0==1)
 #define TRUE  (0==0)
 
-// This is to debug the FUSE subsystem without the encryption
-//#define BYPASS 1                      // Test case for no interception
+#ifndef MAX
+#define MAX(x, y) (((x) > (y)) ? (x) : (y))
+#endif
 
-// This is to debug the VIRTUAL read/write subsystem
-#define VIRTUAL 1                       // Newer version of interception
+#ifndef MIN
+#define MIN(x, y) (((x) < (y)) ? (x) : (y))
+#endif
+
+#define MAXPASSLEN      512
+
+// ---------------------------------------------------------------------
+// Debug the FUSE subsystem without (bypass) the encryption
+// Debug the FUSE subsystem with simple (fake) encryption
+// Debug the VIRTUAL read/write subsystem, full encryption
+
+//#define BYPASS  1                       // Test case for no interception
+#define VIRTUAL 1                     // Newer version of interception
+
+// Warning: this will disable all encryptions;
+// This is used for testing ONLY;
+
+// -----------------------------------------------------------------------
+// Test cases for simplifying and / or disabling encryption
+// Nothing defined yields error
+// FULL_ENCRYPT activates the real encryption
+
+#define NONE_ENCRYPT      1
+//#define FAKE_ENCRYPT    1
+//#define HALF_ENCRYPT    1
+//#define FULL_ENCRYPT    1
 
 extern  int     plen;
 extern  char    passx[MAXPASSLEN];

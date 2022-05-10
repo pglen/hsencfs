@@ -66,9 +66,23 @@
 
 ///////////////////////////////////////////////////////////////////////////
 
-#include "stdio.h"
-#include "string.h"
-#include "stdlib.h"
+#define _GNU_SOURCE
+
+#include <fuse.h>
+#include <ulockmgr.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+#include <string.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <dirent.h>
+#include <errno.h>
+#include <syslog.h>
+#include <sys/time.h>
+
+#include "stddef.h"
 
 #define DEF_DUMPHEX  1   // undefine this if you do not want bluepoint2_dumphex
 
@@ -94,6 +108,8 @@
 #define     ROTATE_CHAR_RIGHT(x, n) (((x) >> (n))  | ((x) << (8 - (n))))
 #define     ROTATE_CHAR_LEFT(x, n) (((x) << (n))  | ((x) >> (8 - (n))))
 
+#include "../src/hsencfs.h"
+#include "bluepoint2.h"
 #include "hs_crypt.h"
 #include "bluemac.h"
 

@@ -49,12 +49,12 @@
 #include <signal.h>
 #include <getopt.h>
 
+#include "hsencsb.h"
+#include "hsencfs.h"
+
 #include "../bluepoint/hs_crypt.h"
 #include "../bluepoint/bluepoint2.h"
 #include "../common/hsutils.h"
-
-#include "hsencsb.h"
-#include "hsencfs.h"
 
 int     virt_read(const char *path, int fd, char *buf, uint wsize, uint offset)
 
@@ -65,6 +65,10 @@ int     virt_read(const char *path, int fd, char *buf, uint wsize, uint offset)
     uint new_end  = (endd / HS_BLOCK) * HS_BLOCK;
     if(endd % HS_BLOCK)
         new_end += HS_BLOCK;
+
+    int old_errno = errno;
+    lseek(fd, offset, SEEK_CUR);
+    errno = old_errno;
 
     hslog(3, "virt_read(): new_offs=%ld new_end=%ld\n", new_offs, new_end);
 
@@ -80,6 +84,7 @@ int     virt_read(const char *path, int fd, char *buf, uint wsize, uint offset)
     //hslog(3, "virt_read(): pread() new_offs=%ld new_end=%ld\n", new_offs, new_end);
 
     int res2a = pread(fd, mem, xsize, new_offs);
+    //int res2a = pread(fd, mem +  (offset - new_offs), wsize, offset);
     if(res2a < 0)
         {
         ret =  -errno;
@@ -91,7 +96,7 @@ int     virt_read(const char *path, int fd, char *buf, uint wsize, uint offset)
         {
         hslog(1, "Cannot allocate memory for sideblock\n");
         ret = -errno;
-        goto end_func2;
+        //goto end_func2;
         }
     // Last block, load it
     int ret3 = read_sideblock(path, psb);
@@ -100,23 +105,20 @@ int     virt_read(const char *path, int fd, char *buf, uint wsize, uint offset)
         hslog(1, "Cannot read sideblock data.\n");
         // Ignore, still could be good
         }
-    else
-        {
-        //hslog(9, "Patching in side block last=%ld serial=%d\n", new_end / HS_BLOCK, psb->serial);
-        // Foundation is the sideblock data, copy it in
-        //if(psb->serial == new_end / HS_BLOCK)
-        //     memcpy(mem + xsize - HS_BLOCK, psb->buff, HS_BLOCK);
-        }
     kill_sideblock(psb);
 
-    //hslog(3, "virt_read(): got=%ld xsize=%ld\n", res2a, xsize);
+    hslog(3, "virt_read(): res2a=%ld xsize=%ld\n", res2a, xsize);
 
     hs_decrypt(mem, xsize, passx, plen);
     memcpy(buf, mem + (offset - new_offs), wsize);
     ret = wsize;     // Tell them we got it
 
-    end_func2:
-        free(mem);
+   end_func2:
+    free(mem);
+
+    old_errno = errno;
+    lseek(fd, offset + wsize, SEEK_CUR);
+    errno = old_errno;
 
    end_func:
     return ret;
@@ -138,14 +140,17 @@ int xmp_read(const char *path, char *buf, size_t wsize, off_t offset, // )
     #ifdef BYPASS
     int res2a = pread(fi->fh, buf, wsize, offset);
     if(res2a < 0) {
-        return -errno;  }
-    else  {
-            //hs_decrypt(buf, wsize, passx, plen);
-            return res2a;   }
-    #endif
-
-    #ifdef VIRTUAL
-    res = virt_read(path, fi->fh, buf, wsize, offset);
+        hslog(2, "xmp_read(): error errno=%d\n", errno);
+        return -errno;
+        }
+    else
+        {
+        hslog(2, "xmp_read(): fh=%ld wsize=%ld offs=%ld\n", fi->fh, wsize, offset);
+        return res2a;
+        }
+    #else
+        // Simplified algorythm
+        res = virt_read(path, fi->fh, buf, wsize, offset);
     #endif
 
     return res;
