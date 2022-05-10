@@ -6,12 +6,13 @@
 
   ...  some working parts; almost ready to deploy
 
-Announcements / History
-    Tue 06.Jul.2021     dummy encryption is intercepted correctly
-    Tue 06.Jul.2021     dummy encryption intercepted, working OK
-    Tue 12.Apr.2022     started virtual based encryption (simpler algo)
-    Tue 10.May.2022     real encryption operational
-    Tue 10.May.2022     hsaskpass ported, tested
+### Announcements / History
+
+        Tue 06.Jul.2021     dummy encryption is intercepted correctly
+        Tue 06.Jul.2021     dummy encryption intercepted, working OK
+        Tue 12.Apr.2022     started virtual based encryption (simpler algo)
+        Tue 10.May.2022     real encryption operational
+        Tue 10.May.2022     hsaskpass ported, tested
 
  HSENCFS is a user space encrypting file system. Simple to set up, seamless
 to use, fast, safe, secure and maintenance free. It will encrypt
@@ -173,7 +174,7 @@ if $programname == 'HSEncFs' then {
 }
 
 Then the file '/var/log/hsencfs.log' contains details of the hsencfs workings. Use the
--l option to control how much detail would you like to see; 0=none 3=some 9=all
+-l option to control how much detail would you like to see; 0=none ... 3=some ... 9=all
 
 ## Backup and recovery
 
@@ -191,8 +192,8 @@ One can copy plain files out:
         1.) mount directory with hsencfs
         2.) copy as usual
 
-   example:     hsencfs ~/secrets
-                cp -a ~/secrets/* /where_the_backup_goes
+        example:     hsencfs ~/secrets ~/.secrets
+                     cp -a ~/secrets/* /where_the_backup_goes
 
 One can copy encrypted files out:
 
@@ -200,13 +201,13 @@ One can copy encrypted files out:
         2.) enable copying all files; use: shopt -s dotglob
         2.) copy as usual
 
-   example:     shopt -s dotglob
-                cp -a  ~/.secret/*  where_the_encrypted_backup_goes
-                shopt -s dotglob
+        example:     shopt -s dotglob
+                     cp -a  ~/.secret/*  where_the_encrypted_backup_goes
+                     shopt -s dotglob
 
 
   Thanks:
 
-        Peter Glen
+Peter Glen
 
 // EOF
