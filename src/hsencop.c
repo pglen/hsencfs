@@ -1,3 +1,19 @@
+
+/* =====[ hsencfs.sess ]========================================================
+
+   File Name:       hsencop.c
+
+   Description:     Functions for hsencop.c
+
+   Revisions:
+
+      REV   DATE                BY              DESCRIPTION
+      ----  -----------         ----------      --------------------------
+      0.00  Tue 10.May.2022     Peter Glen      Initial version.
+      0.00  Tue 10.May.2022     Peter Glen      File locking disabled
+
+   ======================================================================= */
+
 // The actual file operations
 
 #pragma GCC diagnostic ignored "-Wformat-truncation"
@@ -36,12 +52,14 @@ static off_t xmp_lseek(const char *path,  off_t off, int whence, struct fuse_fil
 static int xmp_getattr(const char *path, struct stat *stbuf, struct fuse_file_info *fi)
 {
     char  path2[PATH_MAX] ;
+    memset(path2, '\0', PATH_MAX);
+
     strcpy(path2, mountsecret); strcat(path2, path);
 	int res = lstat(path2, stbuf);
 	if (res == -1)
 		return -errno;
 
-    //hslog(2, "xmp_getattr.org='%s' st_size=%d\n", path, stbuf->st_size);
+    hslog(3, "xmp_getattr.org='%s' st_size=%d\n", path, stbuf->st_size);
 
     // Do not process '/'
     #ifndef BYPASS
@@ -49,7 +67,6 @@ static int xmp_getattr(const char *path, struct stat *stbuf, struct fuse_file_in
         stbuf->st_size = get_sidelen(path);
     #endif
 
-	//hslog(7, "xmp_getattr.new='%s' st_size=%d\n", path, stbuf->st_size);
     return 0;
 }
 
@@ -57,6 +74,8 @@ static int xmp_fgetattr(const char *path, struct stat *stbuf,
 			struct fuse_file_info *fi)
 {
     char  path2[PATH_MAX] ;
+    memset(path2, '\0', PATH_MAX);
+
     strcpy(path2, mountsecret); strcat(path2, path);
 	int res = fstat(fi->fh, stbuf);
 	if (res == -1)
@@ -78,6 +97,8 @@ static int xmp_access(const char *path, int mask)
 	int res;
 
     char  path2[PATH_MAX] ;
+    memset(path2, '\0', PATH_MAX);
+
     strcpy(path2, mountsecret); strcat(path2, path);
 
     //if (loglevel > 3)
@@ -101,6 +122,8 @@ static int xmp_readlink(const char *path, char *buf, size_t size)
 
 	int res;
 	char  path2[PATH_MAX] ;
+    memset(path2, '\0', PATH_MAX);
+
     strcpy(path2, mountsecret); strcat(path2, path);
 
     res = readlink(path2, buf, size - 1);
@@ -131,6 +154,8 @@ static int xmp_opendir(const char *path, struct fuse_file_info *fi)
 		return -ENOMEM;
 
     char  path2[PATH_MAX] ;
+    memset(path2, '\0', PATH_MAX);
+
     strcpy(path2, mountsecret); strcat(path2, path);
 
 
@@ -219,6 +244,8 @@ static int xmp_mknod(const char *path, mode_t mode, dev_t rdev)
 	int res;
 
     char  path2[PATH_MAX] ;
+    memset(path2, '\0', PATH_MAX);
+
     strcpy(path2, mountsecret); strcat(path2, path);
 
 	if (S_ISFIFO(mode))
@@ -237,6 +264,8 @@ static int xmp_mkdir(const char *path, mode_t mode)
 	int res;
 
     char  path2[PATH_MAX] ;
+    memset(path2, '\0', PATH_MAX);
+
     strcpy(path2, mountsecret); strcat(path2, path);
 
     if (loglevel > 3)
@@ -264,6 +293,8 @@ static int xmp_unlink(const char *path)
         }
 
     char  path2[PATH_MAX] ;
+    memset(path2, '\0', PATH_MAX);
+
     strcpy(path2, mountsecret); strcat(path2, path);
 
     //if (loglevel > 3)
@@ -272,7 +303,7 @@ static int xmp_unlink(const char *path)
 	res = unlink(path2);
 	if (res == -1)
         {
-        hslog(3, "Error on Unlinking: '%s' errno: %d\n", path, errno);
+        hslog(1, "Error on Unlinking: '%s' errno: %d\n", path, errno);
 		return -errno;
         }
 
@@ -301,6 +332,8 @@ static int xmp_rmdir(const char *path)
 	int res;
 
     char  path2[PATH_MAX] ;
+    memset(path2, '\0', PATH_MAX);
+
     strcpy(path2, mountsecret); strcat(path2, path);
 
     if (loglevel > 3)
@@ -354,6 +387,8 @@ static int xmp_symlink(const char *from, const char *to)
     // TODO symlink between file systems
 
     char  path2[PATH_MAX] ;
+    memset(path2, '\0', PATH_MAX);
+
     strcpy(path2, mountsecret); strcat(path2, from);
 
     char  path3[PATH_MAX] ;
@@ -381,6 +416,8 @@ static int xmp_rename(const char *from, const char *to, unsigned int flags)
 	int res;
 
     char  path2[PATH_MAX] ;
+    memset(path2, '\0', PATH_MAX);
+
     strcpy(path2, mountsecret); strcat(path2, from);
 
     char  path3[PATH_MAX] ;
@@ -431,6 +468,8 @@ static int xmp_link(const char *from, const char *to)
     return -ENOSYS;
 
     char  path2[PATH_MAX] ;
+    memset(path2, '\0', PATH_MAX);
+
     strcpy(path2, mountsecret); strcat(path2, from);
 
     char  path3[PATH_MAX] ;
@@ -449,6 +488,8 @@ static int xmp_chmod(const char *path, mode_t mode, struct fuse_file_info *fi)
 	int res;
 
     char  path2[PATH_MAX] ;
+    memset(path2, '\0', PATH_MAX);
+
     strcpy(path2, mountsecret); strcat(path2, path);
 
     if (loglevel > 3)
@@ -467,6 +508,8 @@ static int xmp_chown(const char *path, uid_t uid, gid_t gid, struct fuse_file_in
 	int res;
 
     char  path2[PATH_MAX] ;
+    memset(path2, '\0', PATH_MAX);
+
     strcpy(path2, mountsecret); strcat(path2, path);
 
     if (loglevel > 3)
@@ -493,6 +536,8 @@ static int xmp_truncate(const char *path, off_t size, struct fuse_file_info *fi)
         }
 
     char  path2[PATH_MAX] ;
+    memset(path2, '\0', PATH_MAX);
+
     strcpy(path2, mountsecret); strcat(path2, path);
 
     if (loglevel > 3)
@@ -578,6 +623,8 @@ static int xmp_utimens(const char *path, const struct timespec ts[2], struct fus
     //
 
     char  path2[PATH_MAX] ;
+    memset(path2, '\0', PATH_MAX);
+
     strcpy(path2, mountsecret); strcat(path2, path);
 
     (void) fi;
@@ -608,11 +655,15 @@ static int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
         }
 
     char  path2[PATH_MAX] ;
+    memset(path2, '\0', PATH_MAX);
+
     strcpy(path2, mountsecret);
     if(path[0] == '/')
         strcat(path2, path + 1);
     else
         strcat(path2, path);
+
+    hslog(0, "Create: '%s' mode: %x flags: %x\n", path, mode, fi->flags);
 
     if (loglevel > 1)
         syslog(LOG_DEBUG, "@@xmp_create: '%s' mode: %x flags: %x\n", path, mode, fi->flags);
@@ -691,9 +742,11 @@ static int xmp_open(const char *path, struct fuse_file_info *fi)
     //    }
 
     char  path2[PATH_MAX] ;
+    memset(path2, '\0', PATH_MAX);
+
     strcpy(path2, mountsecret); strcat(path2, path);
 
-    //hslog(1, "Open: %s uid: %d mode: %x\n",  path, getuid(),fi->flags);
+    hslog(0, "Open: %s uid: %d mode: %x\n",  path, getuid(),fi->flags);
     if(passx[0] == 0)
         {
         if (loglevel > 3)
@@ -733,7 +786,7 @@ static int xmp_open(const char *path, struct fuse_file_info *fi)
 	fi->fh = fd;
 
     hslog(3, " - - - - - \n");
-    hslog(1, "Opened '%s' fh=%ld\n", path, fi->fh);
+    hslog(3, "Opened '%s' fh=%ld\n", path, fi->fh);
 
     //struct stat stbuf;	memset(&stbuf, 0, sizeof(stbuf));
     //int res = fstat(fi->fh, &stbuf);
@@ -748,6 +801,8 @@ static int xmp_statfs(const char *path, struct statvfs *stbuf)
 	int res;
 
     char  path2[PATH_MAX] ;
+    memset(path2, '\0', PATH_MAX);
+
     strcpy(path2, mountsecret); strcat(path2, path);
 
     if (loglevel > 3)
@@ -785,7 +840,7 @@ static int xmp_flush(const char *path, struct fuse_file_info *fi)
     //    }
     //res = 0;
 
-    //hslog(2, "Flusing %d", fi->fh);
+    hslog(4, "Flusing %d", fi->fh);
     res = fsync(fi->fh);
     if (res == -1)
     	return -errno;
@@ -806,21 +861,9 @@ static int xmp_release(const char *path, struct fuse_file_info *fi)
     int res = 0;
 
     hslog(3, "Releasing: '%s' fh: %ld\n", path, fi->fh);
-
-    // try until error
-    //for (int aa = 0; aa < 3; aa++)
-    //    {
-    //    res = syncfs(fi->fh);
-    //    if (res < 0)
-    //        break;
-    //    }
-
-    //usleep(10000);
-
 	(void) path;
-	int rret = close(fi->fh);
-    //usleep(10000);
-    hslog(LOG_DEBUG, "Released: '%s' fh: %ld rret=%d\n", path, fi->fh, rret);
+	int rret =  close(fi->fh);
+    hslog(9, "Released: '%s' fh: %ld rret=%d\n", path, fi->fh, rret);
 	return res;
 }
 
@@ -852,6 +895,8 @@ static int xmp_setxattr(const char *path, const char *name, const char *value,
 			size_t size, int flags)
 {
     char  path2[PATH_MAX] ;
+    memset(path2, '\0', PATH_MAX);
+
     strcpy(path2, mountsecret); strcat(path2, path);
 
 	int res = lsetxattr(path2, name, value, size, flags);
@@ -864,6 +909,8 @@ static int xmp_getxattr(const char *path, const char *name, char *value,
 			size_t size)
 {
     char  path2[PATH_MAX] ;
+    memset(path2, '\0', PATH_MAX);
+
     strcpy(path2, mountsecret); strcat(path2, path);
 
 	int res = lgetxattr(path2, name, value, size);
@@ -875,6 +922,8 @@ static int xmp_getxattr(const char *path, const char *name, char *value,
 static int xmp_listxattr(const char *path, char *list, size_t size)
 {
     char  path2[PATH_MAX] ;
+    memset(path2, '\0', PATH_MAX);
+
     strcpy(path2, mountsecret); strcat(path2, path);
 
 	int res = llistxattr(path3, list, size);
@@ -886,6 +935,8 @@ static int xmp_listxattr(const char *path, char *list, size_t size)
 static int xmp_removexattr(const char *path, const char *name)
 {
     char  path2[PATH_MAX] ;
+    memset(path2, '\0', PATH_MAX);
+
     strcpy(path2, mountsecret); strcat(path2, path);
 
 	int res = lremovexattr(path2, name);
@@ -899,14 +950,10 @@ static int xmp_lock(const char *path, struct fuse_file_info *fi, int cmd,
 		    struct flock *lock)
 {
 	(void) path;
-
     int ret = 0;
-
     //ulockmgr_op(fi->fh, cmd, lock, &fi->lock_owner,
 	//		   sizeof(fi->lock_owner));
-
-    hslog(2, "xmp_lock='%s' cmd=%ld\n", path, cmd);
-
+    hslog(3, "xmp_lock='%s' cmd=%ld\n", path, cmd);
 	return ret;
 }
 

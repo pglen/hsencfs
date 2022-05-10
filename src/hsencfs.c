@@ -649,7 +649,7 @@ int     main(int argc, char *argv[])
 
     if(loglevel > 0)
         {
-        syslog(LOG_DEBUG, "Started with %s\n", mountpoint);
+        syslog(LOG_DEBUG, "hsencfs started with %s\n", mountpoint);
         syslog(LOG_DEBUG, "Using data %s\n", mountsecret);
         syslog(LOG_DEBUG, "Started by uid=%d\n", getuid());
         }
@@ -794,7 +794,7 @@ int     main(int argc, char *argv[])
             {
             syslog(LOG_DEBUG, "unMnt '%s'", mountpoint);
             syslog(LOG_DEBUG, "unMntSec '%s'", mountsecret);
-            syslog(LOG_DEBUG, "ended by uid=%d ", getuid());
+            syslog(LOG_DEBUG, "hsenfs ended by uid=%d ", getuid());
             }
         //printf("unMounted '%s'\n", mountpoint);
         //syslog(LOG_AUTH, "unMounted  '%s' by %d", mountpoint, getuid());

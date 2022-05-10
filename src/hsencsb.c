@@ -75,6 +75,8 @@ char    *get_sidename(const char *path)
         goto endd;
         }
 
+    memset(ptmp2, '\0',  PATH_MAX);
+
     //if (loglevel > 9)
     //   syslog(LOG_DEBUG, "Generate sidename '%s'\n", path);
 
@@ -108,7 +110,7 @@ char    *get_sidename(const char *path)
     free(eee);
     strcat(ptmp2, myext);
 
-    //hslog(2, "Sidename '%s'\n", ptmp2 + 15);
+    hslog(5, "Sidename '%s'\n", ptmp2 + 15);
 
    endd:
     return ptmp2;

@@ -21,7 +21,7 @@ fi
 
 echo -n Starting hsencfs ...
 
-./hsencfs -q -l 9 -p 1234 ~/secrets ~/.secrets
+./hsencfs -q -l 0 -p 1234 ~/secrets ~/.secrets
 ERR=$?
 echo
 if [ "$ERR" != "0" ] ; then

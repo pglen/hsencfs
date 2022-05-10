@@ -84,7 +84,6 @@ int     virt_read(const char *path, int fd, char *buf, uint wsize, uint offset)
     //hslog(3, "virt_read(): pread() new_offs=%ld new_end=%ld\n", new_offs, new_end);
 
     int res2a = pread(fd, mem, xsize, new_offs);
-    //int res2a = pread(fd, mem +  (offset - new_offs), wsize, offset);
     if(res2a < 0)
         {
         ret =  -errno;
