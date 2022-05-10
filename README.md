@@ -2,13 +2,17 @@
 
 ##                  The High Security EnCrypting File System.
 
-                            UNDER CONSTRUCTION
 
   Progress:
 
-  ...  some working parts DO NOT DEPLOY yet.
+  ...  some working parts almost ready to deploy
 
-  Tue 06.Jul.2021   dummy encryption intercepted, working OK
+Announcements / History
+
+    Tue 06.Jul.2021     dummy encryption is intercepted correctly
+    Tue 06.Jul.2021     dummy encryption intercepted, working OK
+    Tue 12.Apr.2022     started virtual based encryption (simpler algo)
+    Tue 10.May.2022     real encryption operational
 
  HSENCFS is a user space encrypting file system. Simple to set up, seamless
 to use, fast, safe, secure and maintenance free. It will encrypt
@@ -169,6 +173,68 @@ or the whole system.
 ## Additional Versions:
 
  The industrial version of this project is available upon request.
-Please send a message to the author. (see SourceForge page Update: this github page)
+Please send a message to the author. (see github page)
+
+Uesful trick to see the logs in a separate file.
+
+Edit (Create) /etc/rsyslog/rsyslog.d/10-custom.conf
+with the following contents:
+
+if $programname == 'HSEncFs' then {
+        /var/log/hsencfs.log
+        ~
+}
+
+Then the file '/var/log/hsencfs.log' contains details of
+the hsencfs workings. Use the -l option to control how much detail
+would you like to see;
+
+To copy every file including hidden ones (starting with a dot) use:
+
+shopt -s dotglob
+
+Assuming the following setup:
+
+~/secrets       for the encrypted (user visible) directory
+~/.secrets      for the supporting (data/storage) directory
+
+One can copy plain files out:
+
+1.) mount directory with hsencfs
+2.) copy as usual
+
+   example:  hsencfs ~/secret
+
+One can copy encrypted files out:
+
+        1.) the directory does not have to be mounted
+        2.) enable copying all files; use: shopt -s dotglob
+        2.) copy as usual
+
+   example:  cp -a  ~/.secret/*  target_dir
+
+
+Older Announcements:
+
+     The source code copied out to the ecrypted directory does NOT compile in that
+    directory correctly.
+
+    This means the file access intercept is not random clean,
+    as GCC acesses object files by chunk.
+
+     The trick was to pre read to the encryption buffer boundary, and then
+      Decrypt / Patch / Encrypt / Write.
+
+     The last buffer may be partial, so special arragements are made to
+    accomodate that.
+
+Peter Glen
+
+
+
+
+
+
+
 
 // EOF
