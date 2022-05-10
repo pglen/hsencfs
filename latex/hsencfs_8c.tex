@@ -14,11 +14,12 @@
 {\ttfamily \#include $<$sys/time.\+h$>$}\newline
 {\ttfamily \#include $<$signal.\+h$>$}\newline
 {\ttfamily \#include $<$getopt.\+h$>$}\newline
-{\ttfamily \#include \char`\"{}hsutils.\+h\char`\"{}}\newline
-{\ttfamily \#include \char`\"{}hsencfs.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}base64.\+h\char`\"{}}\newline
-{\ttfamily \#include \char`\"{}../bluepoint/hs\+\_\+crypt.\+h\char`\"{}}\newline
-{\ttfamily \#include \char`\"{}../bluepoint/bluepoint2.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hsutils.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hsencsb.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hsencfs.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}bluepoint2.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hs\+\_\+crypt.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}hsencop.\+c\char`\"{}}\newline
 Include dependency graph for hsencfs.\+c\+:
 \nopagebreak
@@ -53,9 +54,9 @@ int \mbox{\hyperlink{hsencfs_8c_a0ddf1224851353fc92bfbff6f499fa97}{main}} (int a
 \item 
 int \mbox{\hyperlink{hsencfs_8c_afb19b851dbcd1447c226a8a98c26979d}{loglevel}} = 0
 \item 
-char \mbox{\hyperlink{hsencfs_8c_aeb7fcf49c3dfbcfb1d35684f41383505}{passx}} \mbox{[}\mbox{\hyperlink{hsutils_8h_a42c6d750183b663d674d59240e44f415}{MAXPASSLEN}}\mbox{]}
+char \mbox{\hyperlink{hsencfs_8c_aeb7fcf49c3dfbcfb1d35684f41383505}{passx}} \mbox{[}\mbox{\hyperlink{hsencfs_8h_a42c6d750183b663d674d59240e44f415}{MAXPASSLEN}}\mbox{]}
 \item 
-int \mbox{\hyperlink{hsencfs_8c_ad29d2259942853507dff3a3e3c05535a}{plen}} = sizeof(\mbox{\hyperlink{hsencfs_8h_aeb7fcf49c3dfbcfb1d35684f41383505}{passx}})
+int \mbox{\hyperlink{hsencfs_8c_ad29d2259942853507dff3a3e3c05535a}{plen}} = sizeof(\mbox{\hyperlink{bpdec2_8c_aeb7fcf49c3dfbcfb1d35684f41383505}{passx}})
 \item 
 char \mbox{\hyperlink{hsencfs_8c_aa15929681f30cc2d9cbf2701366c2cef}{mountpoint}} \mbox{[}PATH\+\_\+\+MAX\mbox{]}
 \item 
@@ -152,13 +153,13 @@ char \mbox{\hyperlink{hsencfs_8c_ace8b6ffae051e969f71c619c97ba162e}{passprog}} \
 \index{hsencfs.c@{hsencfs.c}!passx@{passx}}
 \index{passx@{passx}!hsencfs.c@{hsencfs.c}}
 \doxysubsubsection{\texorpdfstring{passx}{passx}}
-{\footnotesize\ttfamily char passx\mbox{[}\mbox{\hyperlink{hsutils_8h_a42c6d750183b663d674d59240e44f415}{MAXPASSLEN}}\mbox{]}}
+{\footnotesize\ttfamily char passx\mbox{[}\mbox{\hyperlink{hsencfs_8h_a42c6d750183b663d674d59240e44f415}{MAXPASSLEN}}\mbox{]}}
 
 \mbox{\Hypertarget{hsencfs_8c_ad29d2259942853507dff3a3e3c05535a}\label{hsencfs_8c_ad29d2259942853507dff3a3e3c05535a}} 
 \index{hsencfs.c@{hsencfs.c}!plen@{plen}}
 \index{plen@{plen}!hsencfs.c@{hsencfs.c}}
 \doxysubsubsection{\texorpdfstring{plen}{plen}}
-{\footnotesize\ttfamily int plen = sizeof(\mbox{\hyperlink{hsencfs_8h_aeb7fcf49c3dfbcfb1d35684f41383505}{passx}})}
+{\footnotesize\ttfamily int plen = sizeof(\mbox{\hyperlink{bpdec2_8c_aeb7fcf49c3dfbcfb1d35684f41383505}{passx}})}
 
 \mbox{\Hypertarget{hsencfs_8c_a9d22394e80281a076c2d925cdfb132c6}\label{hsencfs_8c_a9d22394e80281a076c2d925cdfb132c6}} 
 \index{hsencfs.c@{hsencfs.c}!progname@{progname}}

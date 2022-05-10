@@ -10,5 +10,6 @@ var searchData=
   ['dict_83',['dict',['../classhstray_1_1HSapplet.html#ab74376e79ad35d9cf881b8a56ab14a53',1,'hstray::HSapplet']]],
   ['dlg_84',['dlg',['../classhstray_1_1MountSelector.html#abe386bb40c96ce826e5116270c7d2ead',1,'hstray::MountSelector']]],
   ['dp_85',['dp',['../structxmp__dirp.html#a6fa4847468229f692f0cd9c99ebecb48',1,'xmp_dirp']]],
-  ['dualwrite_2ec_86',['dualwrite.c',['../dualwrite_8c.html',1,'']]]
+  ['dualread_2ec_86',['dualread.c',['../dualread_8c.html',1,'']]],
+  ['dualwrite_2ec_87',['dualwrite.c',['../dualwrite_8c.html',1,'']]]
 ];

@@ -303,7 +303,6 @@ char *hs_askpass(const char *program, char *buf, int buflen)
     (void) close(pfd[0]);
     (void) sigaction(SIGPIPE, &saved_sa_pipe, NULL);
 
-    // Decode base64
     return(xpass);
 }
 
@@ -684,24 +683,36 @@ int     main(int argc, char *argv[])
                     printf("Getting pass from program: '%s'\n", passprog);
 
                 char *res = hs_askpass(passprog, tmp, MAXPASSLEN);
-                int rlen = strlen(res);
-                unsigned long olen = 0;
-
-                if (res && rlen)
+                if (res)
                     {
+                    //printf("Askpass delivered: '%s'\n", res);
+
+                    // Empty pass ?
+                    int rlen = strlen(res);
+                    if(rlen == 0)
+                        {
+                        if(verbose)
+                            fprintf(stderr, "Aborted on empty pass from: '%s'\n", passprog);
+                        exit(4);
+                        }
+                    // Decode base64
+                    unsigned long olen = 0;
                     unsigned char *res2 = base64_decode(res, rlen, &olen);
-                    //strncpy(passx, res, sizeof(passx));
                     strncpy(passx, res2, sizeof(passx));
+                    plen = strlen(passx);
+
+                    //printf("passx '%s'\n", passx);
                     }
                 else
                     {
                     if(loglevel > 0)
                         syslog(LOG_DEBUG, "Cannot obtain pass from: '%s'\n", passprog);
 
-                    fprintf(stderr,"Cannot obtain pass from input.\n");
+                    fprintf(stderr, "Cannot obtain pass from input.\n");
                     exit(4);
                     }
                 }
+
             }
         // Will ask for pass if not filled
         int ret2 = pass_ritual(mountpoint, mountsecret, passx, &plen);

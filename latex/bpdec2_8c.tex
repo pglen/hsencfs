@@ -12,9 +12,11 @@
 {\ttfamily \#include $<$getopt.\+h$>$}\newline
 {\ttfamily \#include $<$sys/time.\+h$>$}\newline
 {\ttfamily \#include $<$sys/stat.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}../src/hsencfs.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}bluepoint2.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}hs\+\_\+crypt.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}bp2com.\+h\char`\"{}}\newline
-{\ttfamily \#include \char`\"{}bluepoint2.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../src/hsencsb.\+h\char`\"{}}\newline
 Include dependency graph for bpdec2.\+c\+:
 \nopagebreak
 \begin{figure}[H]
@@ -35,7 +37,11 @@ int \mbox{\hyperlink{bpdec2_8c_a0ddf1224851353fc92bfbff6f499fa97}{main}} (int ar
 \item 
 int \mbox{\hyperlink{bpdec2_8c_afb19b851dbcd1447c226a8a98c26979d}{loglevel}} = 0
 \item 
-\mbox{\hyperlink{hsutils_8h_a6f48993114b8a2456db1344a937f1537}{sideblock}} \mbox{\hyperlink{bpdec2_8c_aac19c04e161d1f272c22b94122d832de}{sb}}
+char \mbox{\hyperlink{bpdec2_8c_aeb7fcf49c3dfbcfb1d35684f41383505}{passx}} \mbox{[}\mbox{\hyperlink{hsencfs_8h_a42c6d750183b663d674d59240e44f415}{MAXPASSLEN}}\mbox{]}
+\item 
+int \mbox{\hyperlink{bpdec2_8c_ad29d2259942853507dff3a3e3c05535a}{plen}} = sizeof(\mbox{\hyperlink{bpdec2_8c_aeb7fcf49c3dfbcfb1d35684f41383505}{passx}})
+\item 
+\mbox{\hyperlink{hsencsb_8h_a09908504c5dd6e09cf90ebd54634f546}{sideblock\+\_\+t}} \mbox{\hyperlink{bpdec2_8c_a8a3449e2bba4be4e0611d7119819a82d}{sb}}
 \end{DoxyCompactItemize}
 
 
@@ -61,9 +67,21 @@ int \mbox{\hyperlink{bpdec2_8c_afb19b851dbcd1447c226a8a98c26979d}{loglevel}} = 0
 \doxysubsubsection{\texorpdfstring{loglevel}{loglevel}}
 {\footnotesize\ttfamily int loglevel = 0}
 
-\mbox{\Hypertarget{bpdec2_8c_aac19c04e161d1f272c22b94122d832de}\label{bpdec2_8c_aac19c04e161d1f272c22b94122d832de}} 
+\mbox{\Hypertarget{bpdec2_8c_aeb7fcf49c3dfbcfb1d35684f41383505}\label{bpdec2_8c_aeb7fcf49c3dfbcfb1d35684f41383505}} 
+\index{bpdec2.c@{bpdec2.c}!passx@{passx}}
+\index{passx@{passx}!bpdec2.c@{bpdec2.c}}
+\doxysubsubsection{\texorpdfstring{passx}{passx}}
+{\footnotesize\ttfamily char passx\mbox{[}\mbox{\hyperlink{hsencfs_8h_a42c6d750183b663d674d59240e44f415}{MAXPASSLEN}}\mbox{]}}
+
+\mbox{\Hypertarget{bpdec2_8c_ad29d2259942853507dff3a3e3c05535a}\label{bpdec2_8c_ad29d2259942853507dff3a3e3c05535a}} 
+\index{bpdec2.c@{bpdec2.c}!plen@{plen}}
+\index{plen@{plen}!bpdec2.c@{bpdec2.c}}
+\doxysubsubsection{\texorpdfstring{plen}{plen}}
+{\footnotesize\ttfamily int plen = sizeof(\mbox{\hyperlink{bpdec2_8c_aeb7fcf49c3dfbcfb1d35684f41383505}{passx}})}
+
+\mbox{\Hypertarget{bpdec2_8c_a8a3449e2bba4be4e0611d7119819a82d}\label{bpdec2_8c_a8a3449e2bba4be4e0611d7119819a82d}} 
 \index{bpdec2.c@{bpdec2.c}!sb@{sb}}
 \index{sb@{sb}!bpdec2.c@{bpdec2.c}}
 \doxysubsubsection{\texorpdfstring{sb}{sb}}
-{\footnotesize\ttfamily \mbox{\hyperlink{hsutils_8h_a6f48993114b8a2456db1344a937f1537}{sideblock}} sb}
+{\footnotesize\ttfamily \mbox{\hyperlink{hsencsb_8h_a09908504c5dd6e09cf90ebd54634f546}{sideblock\+\_\+t}} sb}
 

@@ -14,10 +14,11 @@
 {\ttfamily \#include $<$sys/time.\+h$>$}\newline
 {\ttfamily \#include $<$signal.\+h$>$}\newline
 {\ttfamily \#include $<$getopt.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}hsencsb.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hsencfs.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}../bluepoint/hs\+\_\+crypt.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}../bluepoint/bluepoint2.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}../common/hsutils.\+h\char`\"{}}\newline
-{\ttfamily \#include \char`\"{}hsencfs.\+h\char`\"{}}\newline
 Include dependency graph for hsencrr.\+c\+:
 \nopagebreak
 \begin{figure}[H]
@@ -34,6 +35,8 @@ Include dependency graph for hsencrr.\+c\+:
 \doxysubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
+int \mbox{\hyperlink{hsencrr_8c_a038e4c8d4421d86511e266cfbb0806b9}{virt\+\_\+read}} (const char $\ast$path, int fd, char $\ast$buf, \mbox{\hyperlink{hsutils_8h_a91ad9478d81a7aaf2593e8d9c3d06a14}{uint}} wsize, \mbox{\hyperlink{hsutils_8h_a91ad9478d81a7aaf2593e8d9c3d06a14}{uint}} offset)
+\item 
 int \mbox{\hyperlink{hsencrr_8c_af8ff0c4185ed9251394f4552b3afe40e}{xmp\+\_\+read}} (const char $\ast$path, char $\ast$buf, size\+\_\+t wsize, off\+\_\+t offset, struct fuse\+\_\+file\+\_\+info $\ast$fi)
 \end{DoxyCompactItemize}
 
@@ -48,6 +51,12 @@ int \mbox{\hyperlink{hsencrr_8c_af8ff0c4185ed9251394f4552b3afe40e}{xmp\+\_\+read
 
 
 \doxysubsection{Function Documentation}
+\mbox{\Hypertarget{hsencrr_8c_a038e4c8d4421d86511e266cfbb0806b9}\label{hsencrr_8c_a038e4c8d4421d86511e266cfbb0806b9}} 
+\index{hsencrr.c@{hsencrr.c}!virt\_read@{virt\_read}}
+\index{virt\_read@{virt\_read}!hsencrr.c@{hsencrr.c}}
+\doxysubsubsection{\texorpdfstring{virt\_read()}{virt\_read()}}
+{\footnotesize\ttfamily int virt\+\_\+read (\begin{DoxyParamCaption}\item[{const char $\ast$}]{path,  }\item[{int}]{fd,  }\item[{char $\ast$}]{buf,  }\item[{\mbox{\hyperlink{hsutils_8h_a91ad9478d81a7aaf2593e8d9c3d06a14}{uint}}}]{wsize,  }\item[{\mbox{\hyperlink{hsutils_8h_a91ad9478d81a7aaf2593e8d9c3d06a14}{uint}}}]{offset }\end{DoxyParamCaption})}
+
 \mbox{\Hypertarget{hsencrr_8c_af8ff0c4185ed9251394f4552b3afe40e}\label{hsencrr_8c_af8ff0c4185ed9251394f4552b3afe40e}} 
 \index{hsencrr.c@{hsencrr.c}!xmp\_read@{xmp\_read}}
 \index{xmp\_read@{xmp\_read}!hsencrr.c@{hsencrr.c}}

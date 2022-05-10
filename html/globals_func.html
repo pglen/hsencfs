@@ -65,8 +65,8 @@ $(function() {
 
 <h3><a id="index_a"></a>- a -</h3><ul>
 <li>alloc_sideblock()
-: <a class="el" href="hsencfs_8h.html#a324b09cbf311621037056d32bdaabce1">hsencfs.h</a>
-, <a class="el" href="hsencsb_8c.html#a324b09cbf311621037056d32bdaabce1">hsencsb.c</a>
+: <a class="el" href="hsencsb_8c.html#a0017b26fc59fed521ca5308a3891622a">hsencsb.c</a>
+, <a class="el" href="hsencsb_8h.html#a0017b26fc59fed521ca5308a3891622a">hsencsb.h</a>
 </li>
 </ul>
 
@@ -195,8 +195,8 @@ $(function() {
 , <a class="el" href="hsutils_8h.html#a25eb5f7534f43f958c5f38f66ae0b62b">hsutils.h</a>
 </li>
 <li>create_sideblock()
-: <a class="el" href="hsencfs_8h.html#a0423d1ae7528def173fca9666021cab8">hsencfs.h</a>
-, <a class="el" href="hsencsb_8c.html#a0423d1ae7528def173fca9666021cab8">hsencsb.c</a>
+: <a class="el" href="hsencsb_8c.html#a0423d1ae7528def173fca9666021cab8">hsencsb.c</a>
+, <a class="el" href="hsencsb_8h.html#a0423d1ae7528def173fca9666021cab8">hsencsb.h</a>
 </li>
 </ul>
 
@@ -213,8 +213,10 @@ $(function() {
 : <a class="el" href="bluepoint2_8c.html#aa4dc9d906b8273198f35d67a152ad992">bluepoint2.c</a>
 </li>
 <li>errexit()
-: <a class="el" href="dualwrite_8c.html#ac1d91cf8853e0e0fcc14140e4ade7bc5">dualwrite.c</a>
+: <a class="el" href="dualread_8c.html#ac1d91cf8853e0e0fcc14140e4ade7bc5">dualread.c</a>
+, <a class="el" href="dualwrite_8c.html#ac1d91cf8853e0e0fcc14140e4ade7bc5">dualwrite.c</a>
 , <a class="el" href="farwrite_8c.html#ac1d91cf8853e0e0fcc14140e4ade7bc5">farwrite.c</a>
+, <a class="el" href="jumpread_8c.html#ac1d91cf8853e0e0fcc14140e4ade7bc5">jumpread.c</a>
 , <a class="el" href="onejump_8c.html#ac1d91cf8853e0e0fcc14140e4ade7bc5">onejump.c</a>
 , <a class="el" href="readzig_8c.html#ac1d91cf8853e0e0fcc14140e4ade7bc5">readzig.c</a>
 , <a class="el" href="seekcp_8c.html#ac1d91cf8853e0e0fcc14140e4ade7bc5">seekcp.c</a>
@@ -233,9 +235,13 @@ $(function() {
 : <a class="el" href="hsencfs_8h.html#a9ebf53d7350470848b4b36e18a66a262">hsencfs.h</a>
 , <a class="el" href="hsencsu_8c.html#a9ebf53d7350470848b4b36e18a66a262">hsencsu.c</a>
 </li>
+<li>get_sidelen()
+: <a class="el" href="hsencsb_8c.html#a8222070e7217b39cad72f15ffbc0dc3d">hsencsb.c</a>
+, <a class="el" href="hsencsb_8h.html#a8222070e7217b39cad72f15ffbc0dc3d">hsencsb.h</a>
+</li>
 <li>get_sidename()
-: <a class="el" href="hsencfs_8h.html#a6f409d502744c25cbcda21afbd33000b">hsencfs.h</a>
-, <a class="el" href="hsencsb_8c.html#a6f409d502744c25cbcda21afbd33000b">hsencsb.c</a>
+: <a class="el" href="hsencsb_8c.html#a6f409d502744c25cbcda21afbd33000b">hsencsb.c</a>
+, <a class="el" href="hsencsb_8h.html#a6f409d502744c25cbcda21afbd33000b">hsencsb.h</a>
 </li>
 </ul>
 
@@ -252,11 +258,15 @@ $(function() {
 </li>
 <li>hs_decrypt_none()
 : <a class="el" href="hs__crypt_8c.html#adecfb1631bb114e5d95bc924ae28ca71">hs_crypt.c</a>
-, <a class="el" href="hs__crypt_8h.html#adecfb1631bb114e5d95bc924ae28ca71">hs_crypt.h</a>
+</li>
+<li>hs_decrypt_undef()
+: <a class="el" href="hs__crypt_8h.html#ac4f916a7a423853ad4ca311854174c02">hs_crypt.h</a>
 </li>
 <li>hs_encrypt_none()
 : <a class="el" href="hs__crypt_8c.html#a56e8e3191c58940d8e314c389e655b11">hs_crypt.c</a>
-, <a class="el" href="hs__crypt_8h.html#a56e8e3191c58940d8e314c389e655b11">hs_crypt.h</a>
+</li>
+<li>hs_encrypt_undef()
+: <a class="el" href="hs__crypt_8h.html#a635bed88c04d827baa42463fd7a22d9d">hs_crypt.h</a>
 </li>
 <li>hsalloc()
 : <a class="el" href="hsencfs_8h.html#a577bd3e210995bb6d3749845883fa9b3">hsencfs.h</a>
@@ -283,8 +293,8 @@ $(function() {
 , <a class="el" href="hsencsu_8c.html#abf4e6118a34309517207a55ac45fbb4c">hsencsu.c</a>
 </li>
 <li>kill_sideblock()
-: <a class="el" href="hsencfs_8h.html#abdaa7326bb222f72b1aba9ceea17324d">hsencfs.h</a>
-, <a class="el" href="hsencsb_8c.html#abdaa7326bb222f72b1aba9ceea17324d">hsencsb.c</a>
+: <a class="el" href="hsencsb_8c.html#af24af2d1b035d5c2e40ccacaa691c068">hsencsb.c</a>
+, <a class="el" href="hsencsb_8h.html#af24af2d1b035d5c2e40ccacaa691c068">hsencsb.h</a>
 </li>
 </ul>
 
@@ -300,9 +310,11 @@ $(function() {
 , <a class="el" href="seekcp_8c.html#a0ddf1224851353fc92bfbff6f499fa97">seekcp.c</a>
 , <a class="el" href="readzig_8c.html#a0ddf1224851353fc92bfbff6f499fa97">readzig.c</a>
 , <a class="el" href="onejump_8c.html#a0ddf1224851353fc92bfbff6f499fa97">onejump.c</a>
+, <a class="el" href="jumpread_8c.html#a0ddf1224851353fc92bfbff6f499fa97">jumpread.c</a>
 , <a class="el" href="src_2tests_2hello_8c.html#a7be7b3f3b810d259483db57fef9b4c4c">hello.c</a>
 , <a class="el" href="farwrite_8c.html#a0ddf1224851353fc92bfbff6f499fa97">farwrite.c</a>
 , <a class="el" href="dualwrite_8c.html#a0ddf1224851353fc92bfbff6f499fa97">dualwrite.c</a>
+, <a class="el" href="dualread_8c.html#a0ddf1224851353fc92bfbff6f499fa97">dualread.c</a>
 , <a class="el" href="hsencfs_8c.html#a0ddf1224851353fc92bfbff6f499fa97">hsencfs.c</a>
 , <a class="el" href="hello_2hello_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4">hello.c</a>
 , <a class="el" href="hsaskpass_8c.html#a0ddf1224851353fc92bfbff6f499fa97">hsaskpass.c</a>
@@ -340,8 +352,8 @@ $(function() {
 
 <h3><a id="index_r"></a>- r -</h3><ul>
 <li>read_sideblock()
-: <a class="el" href="hsencfs_8h.html#a9762217a73b844453a5ae50bf98b2309">hsencfs.h</a>
-, <a class="el" href="hsencsb_8c.html#a9762217a73b844453a5ae50bf98b2309">hsencsb.c</a>
+: <a class="el" href="hsencsb_8c.html#a8fc245e8b809a0b8f3ac2a355333e201">hsencsb.c</a>
+, <a class="el" href="hsencsb_8h.html#a8fc245e8b809a0b8f3ac2a355333e201">hsencsb.h</a>
 </li>
 </ul>
 
@@ -361,16 +373,19 @@ $(function() {
 
 
 <h3><a id="index_v"></a>- v -</h3><ul>
+<li>virt_read()
+: <a class="el" href="hsencrr_8c.html#a038e4c8d4421d86511e266cfbb0806b9">hsencrr.c</a>
+</li>
 <li>virt_write()
-: <a class="el" href="hsencrw_8c.html#a65aed3588e0b4a2e4dc8761ea1622ff0">hsencrw.c</a>
+: <a class="el" href="hsencrw_8c.html#aaa101043531ba725ebda0f1020a35608">hsencrw.c</a>
 </li>
 </ul>
 
 
 <h3><a id="index_w"></a>- w -</h3><ul>
 <li>write_sideblock()
-: <a class="el" href="hsencfs_8h.html#a6efbf23419ef39cc2b1eccb3796ee38e">hsencfs.h</a>
-, <a class="el" href="hsencsb_8c.html#a6efbf23419ef39cc2b1eccb3796ee38e">hsencsb.c</a>
+: <a class="el" href="hsencsb_8c.html#ae2574dc453c154e349d8998b8ea33f8b">hsencsb.c</a>
+, <a class="el" href="hsencsb_8h.html#ae2574dc453c154e349d8998b8ea33f8b">hsencsb.h</a>
 </li>
 </ul>
 

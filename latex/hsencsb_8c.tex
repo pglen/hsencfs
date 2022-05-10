@@ -15,10 +15,11 @@
 {\ttfamily \#include $<$signal.\+h$>$}\newline
 {\ttfamily \#include $<$getopt.\+h$>$}\newline
 {\ttfamily \#include \char`\"{}base64.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hsencsb.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hsencfs.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}../bluepoint/hs\+\_\+crypt.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}../bluepoint/bluepoint2.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}../common/hsutils.\+h\char`\"{}}\newline
-{\ttfamily \#include \char`\"{}hsencfs.\+h\char`\"{}}\newline
 Include dependency graph for hsencsb.\+c\+:
 \nopagebreak
 \begin{figure}[H]
@@ -35,17 +36,19 @@ Include dependency graph for hsencsb.\+c\+:
 \doxysubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\hyperlink{hsutils_8h_a6f48993114b8a2456db1344a937f1537}{sideblock}} $\ast$ \mbox{\hyperlink{hsencsb_8c_a324b09cbf311621037056d32bdaabce1}{alloc\+\_\+sideblock}} ()
+\mbox{\hyperlink{hsencsb_8h_a09908504c5dd6e09cf90ebd54634f546}{sideblock\+\_\+t}} $\ast$ \mbox{\hyperlink{hsencsb_8c_a0017b26fc59fed521ca5308a3891622a}{alloc\+\_\+sideblock}} ()
 \item 
 char $\ast$ \mbox{\hyperlink{hsencsb_8c_a6f409d502744c25cbcda21afbd33000b}{get\+\_\+sidename}} (const char $\ast$path)
 \item 
-int \mbox{\hyperlink{hsencsb_8c_a9762217a73b844453a5ae50bf98b2309}{read\+\_\+sideblock}} (const char $\ast$path, \mbox{\hyperlink{hsutils_8h_a6f48993114b8a2456db1344a937f1537}{sideblock}} $\ast$psb)
+size\+\_\+t \mbox{\hyperlink{hsencsb_8c_a8222070e7217b39cad72f15ffbc0dc3d}{get\+\_\+sidelen}} (const char $\ast$path)
 \item 
-int \mbox{\hyperlink{hsencsb_8c_a6efbf23419ef39cc2b1eccb3796ee38e}{write\+\_\+sideblock}} (const char $\ast$path, \mbox{\hyperlink{hsutils_8h_a6f48993114b8a2456db1344a937f1537}{sideblock}} $\ast$psb)
+int \mbox{\hyperlink{hsencsb_8c_a8fc245e8b809a0b8f3ac2a355333e201}{read\+\_\+sideblock}} (const char $\ast$path, \mbox{\hyperlink{hsencsb_8h_a09908504c5dd6e09cf90ebd54634f546}{sideblock\+\_\+t}} $\ast$psb)
+\item 
+int \mbox{\hyperlink{hsencsb_8c_ae2574dc453c154e349d8998b8ea33f8b}{write\+\_\+sideblock}} (const char $\ast$path, \mbox{\hyperlink{hsencsb_8h_a09908504c5dd6e09cf90ebd54634f546}{sideblock\+\_\+t}} $\ast$psb)
 \item 
 int \mbox{\hyperlink{hsencsb_8c_a0423d1ae7528def173fca9666021cab8}{create\+\_\+sideblock}} (const char $\ast$path)
 \item 
-void \mbox{\hyperlink{hsencsb_8c_abdaa7326bb222f72b1aba9ceea17324d}{kill\+\_\+sideblock}} (\mbox{\hyperlink{hsutils_8h_a6f48993114b8a2456db1344a937f1537}{sideblock}} $\ast$psb)
+void \mbox{\hyperlink{hsencsb_8c_af24af2d1b035d5c2e40ccacaa691c068}{kill\+\_\+sideblock}} (\mbox{\hyperlink{hsencsb_8h_a09908504c5dd6e09cf90ebd54634f546}{sideblock\+\_\+t}} $\ast$psb)
 \end{DoxyCompactItemize}
 
 
@@ -59,11 +62,11 @@ void \mbox{\hyperlink{hsencsb_8c_abdaa7326bb222f72b1aba9ceea17324d}{kill\+\_\+si
 
 
 \doxysubsection{Function Documentation}
-\mbox{\Hypertarget{hsencsb_8c_a324b09cbf311621037056d32bdaabce1}\label{hsencsb_8c_a324b09cbf311621037056d32bdaabce1}} 
+\mbox{\Hypertarget{hsencsb_8c_a0017b26fc59fed521ca5308a3891622a}\label{hsencsb_8c_a0017b26fc59fed521ca5308a3891622a}} 
 \index{hsencsb.c@{hsencsb.c}!alloc\_sideblock@{alloc\_sideblock}}
 \index{alloc\_sideblock@{alloc\_sideblock}!hsencsb.c@{hsencsb.c}}
 \doxysubsubsection{\texorpdfstring{alloc\_sideblock()}{alloc\_sideblock()}}
-{\footnotesize\ttfamily \mbox{\hyperlink{hsutils_8h_a6f48993114b8a2456db1344a937f1537}{sideblock}}$\ast$ alloc\+\_\+sideblock (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \mbox{\hyperlink{hsencsb_8h_a09908504c5dd6e09cf90ebd54634f546}{sideblock\+\_\+t}}$\ast$ alloc\+\_\+sideblock (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
 \mbox{\Hypertarget{hsencsb_8c_a0423d1ae7528def173fca9666021cab8}\label{hsencsb_8c_a0423d1ae7528def173fca9666021cab8}} 
 \index{hsencsb.c@{hsencsb.c}!create\_sideblock@{create\_sideblock}}
@@ -71,27 +74,33 @@ void \mbox{\hyperlink{hsencsb_8c_abdaa7326bb222f72b1aba9ceea17324d}{kill\+\_\+si
 \doxysubsubsection{\texorpdfstring{create\_sideblock()}{create\_sideblock()}}
 {\footnotesize\ttfamily int create\+\_\+sideblock (\begin{DoxyParamCaption}\item[{const char $\ast$}]{path }\end{DoxyParamCaption})}
 
+\mbox{\Hypertarget{hsencsb_8c_a8222070e7217b39cad72f15ffbc0dc3d}\label{hsencsb_8c_a8222070e7217b39cad72f15ffbc0dc3d}} 
+\index{hsencsb.c@{hsencsb.c}!get\_sidelen@{get\_sidelen}}
+\index{get\_sidelen@{get\_sidelen}!hsencsb.c@{hsencsb.c}}
+\doxysubsubsection{\texorpdfstring{get\_sidelen()}{get\_sidelen()}}
+{\footnotesize\ttfamily size\+\_\+t get\+\_\+sidelen (\begin{DoxyParamCaption}\item[{const char $\ast$}]{path }\end{DoxyParamCaption})}
+
 \mbox{\Hypertarget{hsencsb_8c_a6f409d502744c25cbcda21afbd33000b}\label{hsencsb_8c_a6f409d502744c25cbcda21afbd33000b}} 
 \index{hsencsb.c@{hsencsb.c}!get\_sidename@{get\_sidename}}
 \index{get\_sidename@{get\_sidename}!hsencsb.c@{hsencsb.c}}
 \doxysubsubsection{\texorpdfstring{get\_sidename()}{get\_sidename()}}
 {\footnotesize\ttfamily char$\ast$ get\+\_\+sidename (\begin{DoxyParamCaption}\item[{const char $\ast$}]{path }\end{DoxyParamCaption})}
 
-\mbox{\Hypertarget{hsencsb_8c_abdaa7326bb222f72b1aba9ceea17324d}\label{hsencsb_8c_abdaa7326bb222f72b1aba9ceea17324d}} 
+\mbox{\Hypertarget{hsencsb_8c_af24af2d1b035d5c2e40ccacaa691c068}\label{hsencsb_8c_af24af2d1b035d5c2e40ccacaa691c068}} 
 \index{hsencsb.c@{hsencsb.c}!kill\_sideblock@{kill\_sideblock}}
 \index{kill\_sideblock@{kill\_sideblock}!hsencsb.c@{hsencsb.c}}
 \doxysubsubsection{\texorpdfstring{kill\_sideblock()}{kill\_sideblock()}}
-{\footnotesize\ttfamily void kill\+\_\+sideblock (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{hsutils_8h_a6f48993114b8a2456db1344a937f1537}{sideblock}} $\ast$}]{psb }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void kill\+\_\+sideblock (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{hsencsb_8h_a09908504c5dd6e09cf90ebd54634f546}{sideblock\+\_\+t}} $\ast$}]{psb }\end{DoxyParamCaption})}
 
-\mbox{\Hypertarget{hsencsb_8c_a9762217a73b844453a5ae50bf98b2309}\label{hsencsb_8c_a9762217a73b844453a5ae50bf98b2309}} 
+\mbox{\Hypertarget{hsencsb_8c_a8fc245e8b809a0b8f3ac2a355333e201}\label{hsencsb_8c_a8fc245e8b809a0b8f3ac2a355333e201}} 
 \index{hsencsb.c@{hsencsb.c}!read\_sideblock@{read\_sideblock}}
 \index{read\_sideblock@{read\_sideblock}!hsencsb.c@{hsencsb.c}}
 \doxysubsubsection{\texorpdfstring{read\_sideblock()}{read\_sideblock()}}
-{\footnotesize\ttfamily int read\+\_\+sideblock (\begin{DoxyParamCaption}\item[{const char $\ast$}]{path,  }\item[{\mbox{\hyperlink{hsutils_8h_a6f48993114b8a2456db1344a937f1537}{sideblock}} $\ast$}]{psb }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily int read\+\_\+sideblock (\begin{DoxyParamCaption}\item[{const char $\ast$}]{path,  }\item[{\mbox{\hyperlink{hsencsb_8h_a09908504c5dd6e09cf90ebd54634f546}{sideblock\+\_\+t}} $\ast$}]{psb }\end{DoxyParamCaption})}
 
-\mbox{\Hypertarget{hsencsb_8c_a6efbf23419ef39cc2b1eccb3796ee38e}\label{hsencsb_8c_a6efbf23419ef39cc2b1eccb3796ee38e}} 
+\mbox{\Hypertarget{hsencsb_8c_ae2574dc453c154e349d8998b8ea33f8b}\label{hsencsb_8c_ae2574dc453c154e349d8998b8ea33f8b}} 
 \index{hsencsb.c@{hsencsb.c}!write\_sideblock@{write\_sideblock}}
 \index{write\_sideblock@{write\_sideblock}!hsencsb.c@{hsencsb.c}}
 \doxysubsubsection{\texorpdfstring{write\_sideblock()}{write\_sideblock()}}
-{\footnotesize\ttfamily int write\+\_\+sideblock (\begin{DoxyParamCaption}\item[{const char $\ast$}]{path,  }\item[{\mbox{\hyperlink{hsutils_8h_a6f48993114b8a2456db1344a937f1537}{sideblock}} $\ast$}]{psb }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily int write\+\_\+sideblock (\begin{DoxyParamCaption}\item[{const char $\ast$}]{path,  }\item[{\mbox{\hyperlink{hsencsb_8h_a09908504c5dd6e09cf90ebd54634f546}{sideblock\+\_\+t}} $\ast$}]{psb }\end{DoxyParamCaption})}
 

@@ -13,9 +13,8 @@ from gi.repository import Gdk
 
 def getpass(title, message):
 
-    dialog = Gtk.Dialog(title,
-                   None,
-                   Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT)
+    dialog = Gtk.Dialog(title,   None, modal = True, destroy_with_parent = True)
+    #Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT)
 
     sp = "   "
     try:
@@ -27,8 +26,8 @@ def getpass(title, message):
         except:
             pass
 
-    label = Gtk.Label(message);
-    label2 = Gtk.Label(sp);     label3 = Gtk.Label(sp)
+    label = Gtk.Label.new(message);
+    label2 = Gtk.Label.new(sp);     label3 = Gtk.Label.new(sp)
     hbox = Gtk.HBox() ;         hbox.pack_start(label2, 0, 0, 0)
     hbox.pack_start(label, 0, 0, 0);     hbox.pack_start(label3, 0, 0, 0)
 
@@ -38,12 +37,12 @@ def getpass(title, message):
 
     entry.set_width_chars(64)
 
-    label21 = Gtk.Label(sp);     label31 = Gtk.Label(sp)
+    label21 = Gtk.Label.new(sp);     label31 = Gtk.Label.new(sp)
     hbox.pack_start(label21, 0, 0, 0);
     hbox.pack_start(entry, 0, 0, 0)
     hbox.pack_start(label31, 0, 0, 0)
 
-    label22 = Gtk.Label(sp);     label32 = Gtk.Label(sp)
+    label22 = Gtk.Label.new(sp);     label32 = Gtk.Label.new(sp)
 
     dialog.vbox.pack_start(label22, 0, 0, 0)
     dialog.vbox.pack_start(hbox, 0, 0, 0)
@@ -82,11 +81,9 @@ def area_key(win, event):
 if __name__ == '__main__':
 
     text = getpass("Enter HSENCFS Password", "Enter pass: ");
-
     # Does not have to be rocket science, just to hide from plaintext view:
+    sss = base64.b64encode(text.encode())
 
-    print(base64.b64encode(text))
+    print(sss.decode())
 
-
-
-
+# EOF

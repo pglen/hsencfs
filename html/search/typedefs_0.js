@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['sideblock_609',['sideblock',['../hsutils_8h.html#a6f48993114b8a2456db1344a937f1537',1,'hsutils.h']]]
+  ['sideblock_5ft_632',['sideblock_t',['../hsencsb_8h.html#a09908504c5dd6e09cf90ebd54634f546',1,'hsencsb.h']]]
 ];

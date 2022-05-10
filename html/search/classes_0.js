@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['_5fsideblock_346',['_sideblock',['../struct__sideblock.html',1,'']]]
+  ['_5fsideblock_5ft_359',['_sideblock_t',['../struct__sideblock__t.html',1,'']]]
 ];
