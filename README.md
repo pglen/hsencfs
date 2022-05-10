@@ -32,7 +32,7 @@ by time and user ID. The report is sent to syslog. The log is sent to facility
 a new mount. The above command exposes the ~/secrets directory with the
 backing data directory in ~/.secrets
 
-For added convenience, one may specify a dotted (hidden) file for mountdata.
+For added convenience, one may specify a dotted (hidden) file for mount data.
 
       hsencfs  ~/secrets ~/.secrets
 
@@ -97,7 +97,7 @@ files as usual.
  Files can be copied out from the backing data directory. They stay encrypted
 when copied directly out of the backing/data directory. This is useful for backup /
 replication / archiving / transport etc ... make sure you copy them with hidden
-(.dot) files included. Use: shopt -s dotglob before copy. Warning: the
+(.nnn.datx) files included. Use: shopt -s dotglob before copy. Warning: the
 copied data will be unreadable without the dot files.
 
 ## Going to the Cloud.
@@ -108,7 +108,7 @@ the transport layer, and decrypt data after the transport layer delivered it.
 This makes hsencfs an end to end cipher, which allows secure remote storage
 without data ever leaving the local context without encryption.
 
-## The Mountpoint directory:
+## The Mount Point directory:
 
  When the mountpoint is mounted, data is encrypted / decrypted on the fly.
 HSENCFS will warn you if the mount directory is not empty on mount. It is
