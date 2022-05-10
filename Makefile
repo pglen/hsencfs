@@ -194,7 +194,7 @@ am__define_uniq_tagged_files = \
   done | $(am__uniquify_input)`
 DIST_SUBDIRS = $(SUBDIRS)
 am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/config.h.in AUTHORS \
-	COPYING ChangeLog INSTALL NEWS README TODO compile \
+	COPYING ChangeLog INSTALL NEWS README.md TODO compile \
 	config.guess config.sub depcomp install-sh missing \
 	mkinstalldirs
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -1013,9 +1013,9 @@ test-vars:
 #	if $(AUTOCHECK_DEFINED)
 #	AUTOCHECK="autocheck"
 #	endif
+# make clean
 
 git:
-	make clean
 	git add .
 	git commit -m autocheck
 	git push

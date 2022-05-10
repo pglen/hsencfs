@@ -136,6 +136,21 @@ Because of HSENCFS intercept concept, encryption / decryption is fast.
 It is plausible (and tested) to use it to encrypt video streams, or
 compile programs in the encrypted directory.
 
+## Technical Details:
+
+  HSENCFS disallows links. (for now) It may create a complex web of interceptions
+as one may link out of directory, essentially linking to an unencrypted file.
+Note, that this is not a serious shortcoming as most programs can deal with this.
+For instance, the source code of the project compiles flawlessly in an encrypted
+directory. Please note that the files inside the encrypted directory can be linked to.
+
+  HSENCFS does not interpret locks. This decision was made after using libreoffice
+in the encrypted directory. Again not a serious drawback, as the office suites have
+their own locking mechanism.
+
+  HSENCFS does not support secret mount in a mount. This may be due to how fuse operates.
+
+
 ### The GNOME Panel Applet: (unsupported)
 
  HSENCFS can be controlled from the GNOME Panel (System Tray) with the

@@ -144,9 +144,9 @@ test-vars:
 #	if $(AUTOCHECK_DEFINED)
 #	AUTOCHECK="autocheck"
 #	endif
+# make clean
 
 git:
-	make clean
 	git add .
 	git commit -m autocheck
 	git push
