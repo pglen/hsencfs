@@ -12,14 +12,15 @@ Will prompt for password.
 
 Note the leading tilde (~) for making dirs relative to your home dir.
 
-The backing data directory in the above example is ~/.secretdata. Note the
-leading dot, for conveniently hiding the backing data from view.
+The backing data directory in the above example is '~/.secrets' (without the quotes)
+Note the leading dot, for conveniently hiding the backing data from view.
 
 To prevent HSENCFS from prompting, add a pass option:
 
       hsencfs -f -p yourpass ~/secrets ~/.secretdata
 
-Make sure you understand the implications for the clear text password.
+ Make sure you are aware of the implications of the clear text password
+on the command line.
 
 To prevent HSENCFS from prompting, add a pass program:
 
@@ -29,7 +30,7 @@ Where 'hsgetpass' is a program to use for password prompt. It is
 supplied with the HSENCFS project. Notice the backticks, as the 'a' option
 requires a fully resolved path.
 
-To prevent HSENCFS from prompting in a GUI, add a GUI pass program:
+To allow HSENCFS from prompting in a GUI, add a GUI pass program:
 
       hsencfs -f -a `which hsaskpass.py`  ~/secrets ~/.secretdata
 
@@ -43,9 +44,8 @@ To ask HSENCFS to prompt for pass on first file operation:
 
  You may copy cypher text data in / out from the backing data directory.
 This allows for robust backup or transport / upload. Make shure you copy the
-dot files as well.
+.datx files as well.
 
-(Ex.: Email / FTP / Remote Drive)
 
 
 
