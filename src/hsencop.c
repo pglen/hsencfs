@@ -900,8 +900,14 @@ static int xmp_lock(const char *path, struct fuse_file_info *fi, int cmd,
 {
 	(void) path;
 
-	return ulockmgr_op(fi->fh, cmd, lock, &fi->lock_owner,
-			   sizeof(fi->lock_owner));
+    int ret = 0;
+
+    //ulockmgr_op(fi->fh, cmd, lock, &fi->lock_owner,
+	//		   sizeof(fi->lock_owner));
+
+    hslog(2, "xmp_lock='%s' cmd=%ld\n", path, cmd);
+
+	return ret;
 }
 
 // EOF
