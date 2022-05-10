@@ -67,6 +67,7 @@ void    *hsalloc(int total);
 int     is_our_file(const char *path, int fname_only);
 off_t   get_fsize(int fh);
 void    kill_buff(void *bbuff, int xlen);
+
 int     openpass(const char *path);
 
 // EOF

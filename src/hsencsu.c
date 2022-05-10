@@ -41,6 +41,8 @@
 #include "hsencsb.h"
 #include "hsencfs.h"
 
+//#include "hsencsu.h"
+
 #include "../bluepoint/hs_crypt.h"
 #include "../bluepoint/bluepoint2.h"
 #include "../common/hsutils.h"
@@ -161,7 +163,21 @@ int     openpass(const char *path)
         return 1;
         }
 
-    strncpy(passx, res, sizeof(passx));
+    //hslog(2, "Askpass delivered: '%s'\n", res);
+
+    // Empty pass ?
+    int rlen = strlen(res);
+    if(rlen == 0)
+        {
+        hslog(2, "Aborted on empty pass from: '%s'\n", passprog);
+        }
+    // Decode base64
+    unsigned long olen = 0;
+    unsigned char *res2 = base64_decode(res, rlen, &olen);
+    strncpy(passx, res2, sizeof(passx));
+    plen = strlen(passx);
+
+    //hslog(2, "passx '%s'\n", passx);
 
     int ret2 = pass_ritual(mountpoint, mountsecret, passx, &plen);
     if(ret2)

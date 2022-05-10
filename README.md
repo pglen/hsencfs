@@ -69,10 +69,11 @@ deployment, but the console program (hsaskpass) can also be specified.
 
 An example of on-demand command line:
 
-        hsencfs -o -a 'which hsaskpass.py` .mydata mysecret
+        hsencfs -o -a `which hsaskpass.py` .mydata mysecret
 
-Note the 'which' utility, as HSENCFS needs absolute path. In real deployment,
-specify the askpass program's absolute path.
+   Note the backticks and the 'which' utility, as HSENCFS needs the absolute
+path of the askpass program. In real deployment, specify the askpass program's absolute path.
+The askpass program delivers the base64 encoded version of the pass.
 
 ## Safety, Security
 

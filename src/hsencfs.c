@@ -80,7 +80,10 @@
 
 #include "hsencfs.h"
 #include "bluepoint2.h"
+
 #include "hs_crypt.h"
+
+//#include "hsencsu.h"
 
 // -----------------------------------------------------------------------
 // Shared flags
@@ -679,13 +682,12 @@ int     main(int argc, char *argv[])
 
             if(passprog[0] != 0)
                 {
-                if(verbose)
-                    printf("Getting pass from program: '%s'\n", passprog);
+                hslog(2, "Getting pass from program: '%s'\n", passprog);
 
                 char *res = hs_askpass(passprog, tmp, MAXPASSLEN);
                 if (res)
                     {
-                    //printf("Askpass delivered: '%s'\n", res);
+                    hslog(2, "Askpass delivered: '%s'\n", res);
 
                     // Empty pass ?
                     int rlen = strlen(res);
@@ -701,7 +703,7 @@ int     main(int argc, char *argv[])
                     strncpy(passx, res2, sizeof(passx));
                     plen = strlen(passx);
 
-                    //printf("passx '%s'\n", passx);
+                    hslog(2, "passx '%s'\n", passx);
                     }
                 else
                     {
