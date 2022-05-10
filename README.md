@@ -1,14 +1,13 @@
-#                                 README
+#  HSencFS
 
-##                  The High Security EnCrypting File System.
+##  The High Security EnCrypting File System.
 
 
   Progress:
 
-  ...  some working parts almost ready to deploy
+  ...  some working parts; almost ready to deploy
 
 Announcements / History
-
     Tue 06.Jul.2021     dummy encryption is intercepted correctly
     Tue 06.Jul.2021     dummy encryption intercepted, working OK
     Tue 12.Apr.2022     started virtual based encryption (simpler algo)
@@ -74,37 +73,24 @@ An example of on-demand command line:
 Note the 'which' utility, as HSENCFS needs absolute path. In real deployment,
 specify the askpass program's absolute path.
 
-## Safety, Security, Feeding and Care
+## Safety, Security
 
  HSENCFS uses BluePoint2 encryption. Bluepoint(2) has been thoroughly evaluated,
 and withstood the test of time. The backing files in the data directory
 preserve their original names, size, and access times. The only dependence
-they need is the original password. This means they can be safely copied from
-the backing directory for transport. (like email or backup) Please note
-that HSENCFS having block size 4096, and will handle data accordingly.
+they need is the original password, and the .datx file. The files can be
+safely copied from the backing directory for transport to other locations.
+(for instance backup)
+
+## Feeding and Care
+
+  Please note that HSENCFS block size is 4096, and will handle data accordingly.
+This was by choice, so encryption can be exceptionally strong.
 
 ### The data directory:
 
- Files can be extracted from the backing data directory with the 'bpdec2'
-utility. To extract a single encrypted file by hand:
-
-     bpdec2 ~/.secrets/filename  newname
-
-(Will ask for password.)
-
- Also, files can be copied to the backing data directory with
-the 'bpenc2' utility. To add a single file into the data directory by hand:
-
-     bpdec2 filename > ~/.secretdata/newname
-
-(Will ask for password.)
-
- Both bp(enc/dec) utilities need the correct password to create data
-accessible from the HSENCFS subsystem. The utilities do not check the
-encryption key, so the wrong password will produce false cipher-text /
-false clear-text. You may reverse false encryption by entering the same
-password on decrypt. These utilities are provided as recovery tools only.
-  The wrong password may create garbled data. ** You have been warned. **
+ Files can be extracted from the backing data directory. Just mount it, and copy the
+files as usual.
 
 ## The cypher text.
 
@@ -119,9 +105,8 @@ copied data will be unreadable without the dot files.
  The backing data directory can reside on any valid file system, including
 a cloud drive. HSENCFS will encrypt data automatically before the data sees
 the transport layer, and decrypt data after the transport layer delivered it.
-
-  This allows secure remote storage without data ever leaving the local
-context without encryption.
+This makes hsencfs an end to end cipher, which allows secure remote storage
+without data ever leaving the local context without encryption.
 
 ## The Mountpoint directory:
 
@@ -144,7 +129,7 @@ command line. Fuse will not allow the allow_other option unless configured in
 ## Technical Description:
 
  HSENCFS makes use of the API offered by the fuse subsystem to intercept file
-operations. The interception is done from mountdata to mountpoint. Copying
+operations. The interception is done from mountdata to mountpoint. Placing
 data to the mountpoint directory ends up encrypted in mountdata.
 Because of HSENCFS intercept concept, encryption / decryption is fast.
 It is plausible (and tested) to use it to encrypt video streams, or
@@ -175,7 +160,7 @@ or the whole system.
  The industrial version of this project is available upon request.
 Please send a message to the author. (see github page)
 
-Uesful trick to see the logs in a separate file.
+Useful trick to see the logs in a separate file.
 
 Edit (Create) /etc/rsyslog/rsyslog.d/10-custom.conf
 with the following contents:
@@ -216,17 +201,19 @@ One can copy encrypted files out:
 
 Older Announcements:
 
-     The source code copied out to the ecrypted directory does NOT compile in that
+     The source code copied out to the encrypted directory does NOT compile in that
     directory correctly.
 
     This means the file access intercept is not random clean,
-    as GCC acesses object files by chunk.
+    as GCC accesses object files by chunk.
 
      The trick was to pre read to the encryption buffer boundary, and then
       Decrypt / Patch / Encrypt / Write.
 
-     The last buffer may be partial, so special arragements are made to
-    accomodate that.
+     The last buffer may be partial, so special arrangements are made to
+    accommodate that.
+
+  Thanks:
 
 Peter Glen
 
