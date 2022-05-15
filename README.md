@@ -1,6 +1,6 @@
 #  HSencFS
 
-##  The High Security EnCrypting File System.
+##  The High Security encrypting File System.
 
   Progress:
 
@@ -10,9 +10,9 @@
 
         Tue 06.Jul.2021     dummy encryption is intercepted correctly
         Tue 06.Jul.2021     dummy encryption intercepted, working OK
-        Tue 12.Apr.2022     started virtual based encryption (simpler algo)
+        Tue 12.Apr.2022     started virtual based encryption (simpler algorithm)
         Tue 10.May.2022     real encryption operational
-        Tue 10.May.2022     hsaskpass ported, tested
+        Tue 10.May.2022     hsaskpass.py ported, tested
 
  HSENCFS is a user space encrypting file system. Simple to set up, seamless
 to use, fast, safe, secure and maintenance free. It will encrypt
