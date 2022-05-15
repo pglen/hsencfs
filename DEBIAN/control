@@ -1,0 +1,11 @@
+Package: hsencfs
+Essential: no
+Priority: optional
+Section: base
+Maintainer: Peter Glen <peterglen99@gmail.com>
+Architecture: amd64
+Version: 1.4-0
+Pre-Depends: libc6 (>= 2.0.105)
+Provides: hsencfs
+#pre-Depends: libc6 (>= 2.0.105)
+Description: Inline encryption filesysem.
