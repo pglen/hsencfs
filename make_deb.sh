@@ -25,7 +25,7 @@ Section: base
 Maintainer: Peter Glen <peterglen99@gmail.com>
 Architecture: amd64
 Version: 1.4-0
-Pre-Depends: fuse
+Pre-Depends: fuse, fuse3
 Provides: hsencfs
 Description: High Security Encrypted File System; Inline encryption filesystem.
 EOF
