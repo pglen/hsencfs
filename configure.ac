@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.68])
-AC_INIT([hsencfs], [1.20], [bugs@nohost.none])
+AC_INIT([hsencfs], [1.4.0], [peterglen99@gmail.com])
 AC_CONFIG_SRCDIR([src/hsencop.c])
 #AC_CONFIG_SUBDIRS([src tools])
 AC_CONFIG_HEADERS([config.h])

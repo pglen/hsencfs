@@ -1,5 +1,5 @@
 Name:           hsencfs
-Version:        1.20
+Version:        1.4.0
 Release:        1%{?dist}
 Summary:        High Security Encrypted File System
 

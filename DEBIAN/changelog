@@ -1,0 +1,5 @@
+hsencfs (1.4.0-1) UNRELEASED; urgency=medium
+
+  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+
+ -- Peter Glen <peterglen99@gmail.com>  Mon, 23 May 2022 11:47:29 -0400

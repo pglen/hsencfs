@@ -112,13 +112,13 @@
 #define PACKAGE "hsencfs"
 
 /* Define to the address where bug reports for this package should be sent. */
-#define PACKAGE_BUGREPORT "bugs@nohost.none"
+#define PACKAGE_BUGREPORT "peterglen99@gmail.com"
 
 /* Define to the full name of this package. */
 #define PACKAGE_NAME "hsencfs"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "hsencfs 1.20"
+#define PACKAGE_STRING "hsencfs 1.4.0"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "hsencfs"
@@ -127,7 +127,7 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "1.20"
+#define PACKAGE_VERSION "1.4.0"
 
 /* Define to 1 if all of the C90 standard headers exist (not just the ones
    required in a freestanding environment). This macro is provided for
@@ -135,7 +135,7 @@
 #define STDC_HEADERS 1
 
 /* Version number of package */
-#define VERSION "1.20"
+#define VERSION "1.4.0"
 
 /* Define to `int' if <sys/types.h> doesn't define. */
 /* #undef gid_t */
