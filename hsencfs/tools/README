@@ -1,0 +1,29 @@
+                          README
+
+ This directory contains the encrypting / decrypting tools that can handle an
+individual file. Please note, that no key management is done, the utilities
+will blindly obey your command to encrypt / decrypt any file. These utilities
+are entended as a rescue / testing tool. Entering the wrong password will
+generate false cyphertext, entering the wrong password on decryption will
+generate false clear text.
+
+     !!! It is your responsibility to use this collection as intended. !!!
+
+ Files can be extracted from the backing data directory with the 'bpdec2'
+utility. To extract a single encrypted file by hand:
+
+     bpdec2 ~/secretdata/filename > newname
+
+(Will ask for password.)
+
+Files can be copied to the backing data directory with the 'bpenc2' utility.
+To add a single file into the data directory by hand:
+
+     bpdec2 filename > ~/.secretdata/newname
+
+(Will ask for password.)
+
+
+
+
+

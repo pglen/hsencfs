@@ -1,0 +1,304 @@
+\input texinfo @c -*- texinfo -*-
+
+@settitle hsencfs
+@setfilename hsencfs.info
+@finalout
+@synindex ky cp
+
+@titlepage
+@title hsencfs
+@sp 7
+@center @titlefont{HSENCFS}
+@sp 3
+@end titlepage
+
+@copying
+@c man begin COPYRIGHT
+Copyright @copyright{} 2015, ... 2022 Peter Glen
+
+  Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3
+or any later version published by the Free Software Foundation;
+with no Invariant Sections, with no Front-Cover Texts, and with no
+Back-Cover Texts.  A copy of the license is included in the
+section entitled ``GNU Free Documentation License''.
+
+@c man end
+@end copying
+
+@dircategory Data Security
+@direntry
+* hsencfs: (hsencfs).                 High Security Encrypting File System
+@end direntry
+
+@contents
+
+@node Top
+@top HSENCFS High Security Encrypted File System
+
+@raisesections
+
+@cindex Introduction
+@section Introduction
+
+ HSENCFS is a user space encrypting file system. It is simple to set up, seamless to use,
+fast, safe, secure and maintenance free. It will automatically encrypt data
+written to it, decrypt data read from it. It only uses storage space for
+actual data stored, no pre-allocation is needed. It is fast enough for
+real time video encryption, and safe enough for all purposes.
+
+HSENCFS is classified as a variable key length encryption.
+
+@lowersections
+
+@noindent
+An additional and useful feature is auditing. HSENCFS reports file access
+by time and user ID. The report is sent to syslog. The log is sent to facility
+'daemon' with level 'DEBUG'. See: the -l log option.)
+
+@section Quick Usage:
+@example
+    hsencfs ~/secrets ~/.secrets
+@end example
+
+@noindent The above command exposes the ~/secrets directory with the backing data
+directory in ~/.secrets Will ask for password on startup.
+
+@lowersections
+
+@menu
+* Command Line::                    Options and arguments
+* Passwords::                       Passwords and Key Management
+* Safety and Security::             How to use HSENCFS
+* Directories::                     Directory Descriptions
+* Un-mounting::                     Un-Mounting (secret) directories
+* GNU Free Documentation License::  Copying and Redistributing
+* Hsencfs Index::                   Hsencfs Index
+@end menu
+
+@node Un-mounting
+@chapter Un Mounting (secret) mounts
+
+You may un-mount your secret directory with the normal umount utility
+or the fusermount -u option. After un-mounting, the mounted data is not
+accessible, and the encrypted data is not legible until it is mounted again
+and the correct password is entered.
+
+@example
+        fusermount -u ~/secrets
+@end example
+
+All directories are automatically unmounted on system shutdown, so HSENCFS
+content is securely protected.
+
+@node Passwords
+@chapter Passwords
+
+@c man title Passwords
+
+@c man Enter password into HSENCFS
+
+@cindex Passwords
+@section Password / Key management.
+
+HSENCFS does not manage passwords. The password becomes the encryption key,
+and the key is used to encrypt the file system access. If the password / key
+is lost, the data cannot be recovered.
+
+As the password becomes the key, it is possible to achieve long key lengths
+by entering a long password. Short key lengths are replicated to standard
+legal length.
+
+@cindex On Demand Password
+@section On Demand Password entry:
+
+ HSENCFS mount can be mounted (started) with the on-demand (-o) password
+option. This allows the encryption to ask for a password when any
+encrypted file is first accessed.
+ The on-demand option requires the use of an ask pass program. The
+hsaskpass.py is supplied for GUI deployment. HSENCFS will start the ask pass
+program when a password is needed. This only truly makes sense on GUI
+deployment, but the console program (hsaskpass) can also be specified.
+
+An example of on demand password command line:
+
+@example
+hsencfs -o -a 'which hsaskpass.py` ~/secrets ~/.secrets
+@end example
+
+Please note that one may use any valid directory name, 'secrets' is used as an
+example.
+
+The 'which' utility is executed as HSENCFS does not search the path. An
+ additional measure to prevent users from tempering with the askpass path.
+
+@node Safety and Security
+@chapter Safety and Security
+
+@cindex Safety, Seurity
+@cindex Feeding and Care
+@section Safety, Security, Feeding and Care
+
+HSENCFS uses BluePoint2 encryption. Bluepoint2 has been thoroughly tested,
+and withstood the test of time. The backing files in the data directory
+preserve their original names, size, and access times. The only dependence
+they need is the original password. This means they can be safely copied from
+the backing directory for transport (like email / cloud) or backup. Please note
+that HSENCFS relies on the file system having block size 4096. This is
+the case with most modern systems, so it does not present an issue. If the
+block size is not 4096, HSENCFS will operate fine, but the data may not be
+portable across systems.
+
+@node Directories
+@chapter Directories
+
+Files can be copied out from the backing data directory. They stay encrypted
+when copied directly out of the data directory. This is useful for backup /
+replication / archiving etc ...
+
+@cindex The Mountpoint directory
+@section The Mountpoint directory:
+
+When the mountpoint is mounted, data written to it is encrypted in line,
+data read from it is decrypted in line, on the fly.
+
+FUSE will warn you if the mount directory is not empty on mount. (it is
+usually undesirable to mount over data)
+
+HSENCFS makes use of the API offered by the fuse subsystem to intercept file
+operations. The interception is done from mountdata to mountpoint. Copying
+data to mountpoint ends up encrypted in mountdata. Because of HSENCFS intercept
+concept, encryption / decryption is fast. It is possible to use it to encrypt
+video streams.
+
+@node Command Line
+@chapter Command Line
+
+@section Command Line options and arguments
+
+Usage: hsencfs [options] storagedir mountpoint
+
+@indent  'storageedir' is a storage directory for data.@*
+@indent  'mountpoint' is a directory for user visible data.
+
+@noindent
+Use dotted name as storagedir for convenient hiding  of data names@.
+(example: ~/.secretdata)
+
+@subheading Options:
+
+@indent  -l num      -- Use log level  (--loglevel)@*
+@indent   -p pass     -- Use pass (!!Warning!! cleartext pass) (--pass)@*
+@indent   -a program  -- Use program for asking pass (--askpass)@*
+@indent   -o          -- On demand pass. Ask on first access (--ondemand)@*
+@indent   -f          -- Force creation of storagedir/mountpoint (--force)@*
+@indent   -q          -- Quiet (--quiet)@*
+@indent   -v          -- Verbose (--verbose)@*
+@indent   -V          -- Print version (--version).
+
+@section Option descriptions:
+
+@itemize @bullet
+@item
+    -l num      -- Use log level  (--loglevel num)
+
+Log levels:   1 - start/stop;   2 - open/create
+              3 - read/write;   4 - all (noisy)
+@item
+    -p pass     -- Use command line pass (--pass pass)
+
+Warning! This is a clear text pass. While hsencfs obfuscates
+your pass from the command line (like: ps xa) it creates
+security gap because of the temporarily visible password.
+
+@item
+    -a askpass  -- Use a program to ask for pass (--askpass prog)
+
+Hsencfs will start the askpass program will deliver the password
+back to HSENCFS. There are two default askpass programs supplied,
+hsaskpass and hsaskpass.py. The hsaskpass.py is a GUI program to enable
+the system to interact with the user. You may supply a custom
+askpass program to suit your needs. Please note, that the askpass
+mechanism can be the primary means of intercepting your password.
+Make sure you check system integrity regularly. (For example
+verify md5 sinatures - @xref{Verify Notes}.
+
+@item
+    -o  -- On demand pass. Ask on first access (--ondemand)
+
+Hsencfs will delay prompting for password until the first file
+access to the encrypted directory. The ondemand option requires
+an askpass program.
+
+@item
+    -f  -- Force creation of storagedir/mountpoint (--force)
+
+Create storagedir/mountpoint directories if do not exist. Usual access
+controls apply.
+
+@item
+    -q  -- Quiet (--quiet)
+
+Display less information when starting hsencfs.
+
+@item
+    -v   -- Verbose (--verbose)
+
+Display more information when starting hsencfs.
+
+@item
+    -V      -- Print version (--version)
+
+Show version information.
+
+@end itemize
+
+@example
+Use -- (double dash) at the end of options for appending fuse options.
+@end example
+
+@noindent For example:
+
+@example
+'hsencfs mountpoint -- -o ro' # for read only mount.
+'hsencfs mountpoint -- -o allow_other' # for multi user visible mount.
+@end example
+
+Fuse will not allow most of the allow_other option unless configured
+in /etc/fuse.conf (add a line: 'user_allow_other')
+
+Typical invocation:
+
+@example
+    hsenc -l 2 ~/secrets
+@end example
+
+@anchor{Notes}
+@section Notes
+
+ Creating a custom askpass program to read key(s) from a hardware
+key allows a hardware access control to be developed. See the
+hsaskpass source(s) for details.
+
+@anchor{Verify Notes}
+@section Verification Notes
+
+The HSENCFS project has an md5 sum file for all it's files. One can verify
+the project's integrity with the shell utility 'checksum.sh' @*
+The sum is generated with the gensum.sh shell utility. @*
+^The command 'make installcheck' in the original dir also confirms
+ project integrity after installation.
+
+@node GNU Free Documentation License
+@appendix GNU Free Documentation License
+
+@include gpl.texi
+
+@node Hsencfs Index
+@unnumbered Hsencfs Index
+
+@printindex cp
+
+@bye
+
+

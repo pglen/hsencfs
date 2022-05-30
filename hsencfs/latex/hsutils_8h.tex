@@ -1,0 +1,115 @@
+\hypertarget{hsutils_8h}{}\doxysection{common/hsutils.h File Reference}
+\label{hsutils_8h}\index{common/hsutils.h@{common/hsutils.h}}
+This graph shows which files directly or indirectly include this file\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{hsutils_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{hsutils_8h_a017f486cae1059db631df5f5c360d9f5}{MARK\+\_\+\+SIZE}}~4096
+\item 
+\#define \mbox{\hyperlink{hsutils_8h_afcf795f5a96fd55561abe69f56224630}{BLOCKSIZE}}~4096
+\item 
+\#define \mbox{\hyperlink{hsutils_8h_a42c6d750183b663d674d59240e44f415}{MAXPASSLEN}}~512
+\item 
+\#define \mbox{\hyperlink{hsutils_8h_a404b155ae7d5d97cf5ffd2257d50d951}{HS\+\_\+\+PROGNAME}}~\char`\"{}HSENCFS\char`\"{}
+\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef unsigned int \mbox{\hyperlink{hsutils_8h_a91ad9478d81a7aaf2593e8d9c3d06a14}{uint}}
+\item 
+typedef unsigned char \mbox{\hyperlink{hsutils_8h_a65f85814a8290f9797005d3b28e7e5fc}{uchar}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{hsutils_8h_a3f53c26df5ebbdf63347347d774c994f}{check\+\_\+markfile}} (char $\ast$name, char $\ast$\mbox{\hyperlink{trunctest_8c_a010542bf29e182284896c9c2f42e1387}{pass}}, int $\ast$\mbox{\hyperlink{bpdec2_8c_ad29d2259942853507dff3a3e3c05535a}{plen}})
+\item 
+int \mbox{\hyperlink{hsutils_8h_a25eb5f7534f43f958c5f38f66ae0b62b}{create\+\_\+markfile}} (char $\ast$name, char $\ast$\mbox{\hyperlink{trunctest_8c_a010542bf29e182284896c9c2f42e1387}{pass}}, int $\ast$\mbox{\hyperlink{bpdec2_8c_ad29d2259942853507dff3a3e3c05535a}{plen}})
+\item 
+char $\ast$ \mbox{\hyperlink{hsutils_8h_a42eaa7248dc4456f4c3aebab2c2ddc53}{hs\+\_\+askpass}} (const char $\ast$program, char $\ast$buf, int buflen)
+\item 
+void \mbox{\hyperlink{hsutils_8h_acfb56efc8cf2f2fa1921bc6f7be10ded}{expandpath}} (const char $\ast$inp, char $\ast$outp, int maxlen)
+\item 
+int \mbox{\hyperlink{hsutils_8h_abf5421aff82e55237a305026528535f2}{pass\+\_\+ritual}} (char $\ast$mountroot, char $\ast$mountdata, char $\ast$\mbox{\hyperlink{trunctest_8c_a010542bf29e182284896c9c2f42e1387}{pass}}, int $\ast$\mbox{\hyperlink{bpdec2_8c_ad29d2259942853507dff3a3e3c05535a}{plen}})
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{hsutils_8h_afcf795f5a96fd55561abe69f56224630}\label{hsutils_8h_afcf795f5a96fd55561abe69f56224630}} 
+\index{hsutils.h@{hsutils.h}!BLOCKSIZE@{BLOCKSIZE}}
+\index{BLOCKSIZE@{BLOCKSIZE}!hsutils.h@{hsutils.h}}
+\doxysubsubsection{\texorpdfstring{BLOCKSIZE}{BLOCKSIZE}}
+{\footnotesize\ttfamily \#define BLOCKSIZE~4096}
+
+\mbox{\Hypertarget{hsutils_8h_a404b155ae7d5d97cf5ffd2257d50d951}\label{hsutils_8h_a404b155ae7d5d97cf5ffd2257d50d951}} 
+\index{hsutils.h@{hsutils.h}!HS\_PROGNAME@{HS\_PROGNAME}}
+\index{HS\_PROGNAME@{HS\_PROGNAME}!hsutils.h@{hsutils.h}}
+\doxysubsubsection{\texorpdfstring{HS\_PROGNAME}{HS\_PROGNAME}}
+{\footnotesize\ttfamily \#define HS\+\_\+\+PROGNAME~\char`\"{}HSENCFS\char`\"{}}
+
+\mbox{\Hypertarget{hsutils_8h_a017f486cae1059db631df5f5c360d9f5}\label{hsutils_8h_a017f486cae1059db631df5f5c360d9f5}} 
+\index{hsutils.h@{hsutils.h}!MARK\_SIZE@{MARK\_SIZE}}
+\index{MARK\_SIZE@{MARK\_SIZE}!hsutils.h@{hsutils.h}}
+\doxysubsubsection{\texorpdfstring{MARK\_SIZE}{MARK\_SIZE}}
+{\footnotesize\ttfamily \#define MARK\+\_\+\+SIZE~4096}
+
+\mbox{\Hypertarget{hsutils_8h_a42c6d750183b663d674d59240e44f415}\label{hsutils_8h_a42c6d750183b663d674d59240e44f415}} 
+\index{hsutils.h@{hsutils.h}!MAXPASSLEN@{MAXPASSLEN}}
+\index{MAXPASSLEN@{MAXPASSLEN}!hsutils.h@{hsutils.h}}
+\doxysubsubsection{\texorpdfstring{MAXPASSLEN}{MAXPASSLEN}}
+{\footnotesize\ttfamily \#define MAXPASSLEN~512}
+
+
+
+\doxysubsection{Typedef Documentation}
+\mbox{\Hypertarget{hsutils_8h_a65f85814a8290f9797005d3b28e7e5fc}\label{hsutils_8h_a65f85814a8290f9797005d3b28e7e5fc}} 
+\index{hsutils.h@{hsutils.h}!uchar@{uchar}}
+\index{uchar@{uchar}!hsutils.h@{hsutils.h}}
+\doxysubsubsection{\texorpdfstring{uchar}{uchar}}
+{\footnotesize\ttfamily typedef unsigned char \mbox{\hyperlink{hsutils_8h_a65f85814a8290f9797005d3b28e7e5fc}{uchar}}}
+
+\mbox{\Hypertarget{hsutils_8h_a91ad9478d81a7aaf2593e8d9c3d06a14}\label{hsutils_8h_a91ad9478d81a7aaf2593e8d9c3d06a14}} 
+\index{hsutils.h@{hsutils.h}!uint@{uint}}
+\index{uint@{uint}!hsutils.h@{hsutils.h}}
+\doxysubsubsection{\texorpdfstring{uint}{uint}}
+{\footnotesize\ttfamily typedef unsigned int \mbox{\hyperlink{hsutils_8h_a91ad9478d81a7aaf2593e8d9c3d06a14}{uint}}}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{hsutils_8h_a3f53c26df5ebbdf63347347d774c994f}\label{hsutils_8h_a3f53c26df5ebbdf63347347d774c994f}} 
+\index{hsutils.h@{hsutils.h}!check\_markfile@{check\_markfile}}
+\index{check\_markfile@{check\_markfile}!hsutils.h@{hsutils.h}}
+\doxysubsubsection{\texorpdfstring{check\_markfile()}{check\_markfile()}}
+{\footnotesize\ttfamily int check\+\_\+markfile (\begin{DoxyParamCaption}\item[{char $\ast$}]{name,  }\item[{char $\ast$}]{pass,  }\item[{int $\ast$}]{plen }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hsutils_8h_a25eb5f7534f43f958c5f38f66ae0b62b}\label{hsutils_8h_a25eb5f7534f43f958c5f38f66ae0b62b}} 
+\index{hsutils.h@{hsutils.h}!create\_markfile@{create\_markfile}}
+\index{create\_markfile@{create\_markfile}!hsutils.h@{hsutils.h}}
+\doxysubsubsection{\texorpdfstring{create\_markfile()}{create\_markfile()}}
+{\footnotesize\ttfamily int create\+\_\+markfile (\begin{DoxyParamCaption}\item[{char $\ast$}]{name,  }\item[{char $\ast$}]{pass,  }\item[{int $\ast$}]{plen }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hsutils_8h_acfb56efc8cf2f2fa1921bc6f7be10ded}\label{hsutils_8h_acfb56efc8cf2f2fa1921bc6f7be10ded}} 
+\index{hsutils.h@{hsutils.h}!expandpath@{expandpath}}
+\index{expandpath@{expandpath}!hsutils.h@{hsutils.h}}
+\doxysubsubsection{\texorpdfstring{expandpath()}{expandpath()}}
+{\footnotesize\ttfamily void expandpath (\begin{DoxyParamCaption}\item[{const char $\ast$}]{inp,  }\item[{char $\ast$}]{outp,  }\item[{int}]{maxlen }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hsutils_8h_a42eaa7248dc4456f4c3aebab2c2ddc53}\label{hsutils_8h_a42eaa7248dc4456f4c3aebab2c2ddc53}} 
+\index{hsutils.h@{hsutils.h}!hs\_askpass@{hs\_askpass}}
+\index{hs\_askpass@{hs\_askpass}!hsutils.h@{hsutils.h}}
+\doxysubsubsection{\texorpdfstring{hs\_askpass()}{hs\_askpass()}}
+{\footnotesize\ttfamily char$\ast$ hs\+\_\+askpass (\begin{DoxyParamCaption}\item[{const char $\ast$}]{program,  }\item[{char $\ast$}]{buf,  }\item[{int}]{buflen }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hsutils_8h_abf5421aff82e55237a305026528535f2}\label{hsutils_8h_abf5421aff82e55237a305026528535f2}} 
+\index{hsutils.h@{hsutils.h}!pass\_ritual@{pass\_ritual}}
+\index{pass\_ritual@{pass\_ritual}!hsutils.h@{hsutils.h}}
+\doxysubsubsection{\texorpdfstring{pass\_ritual()}{pass\_ritual()}}
+{\footnotesize\ttfamily int pass\+\_\+ritual (\begin{DoxyParamCaption}\item[{char $\ast$}]{mountroot,  }\item[{char $\ast$}]{mountdata,  }\item[{char $\ast$}]{pass,  }\item[{int $\ast$}]{plen }\end{DoxyParamCaption})}
+

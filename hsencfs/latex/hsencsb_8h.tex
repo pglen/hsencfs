@@ -1,0 +1,124 @@
+\hypertarget{hsencsb_8h}{}\doxysection{src/hsencsb.h File Reference}
+\label{hsencsb_8h}\index{src/hsencsb.h@{src/hsencsb.h}}
+This graph shows which files directly or indirectly include this file\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{hsencsb_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct__sideblock__t}{\+\_\+sideblock\+\_\+t}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{hsencsb_8h_ad370d8a93262e029d702f2c905110e13}{HSENCFS\+\_\+\+MAGIC}}~0x34231278
+\item 
+\#define \mbox{\hyperlink{hsencsb_8h_a62e0ab07482652db101ad25ecbd8b6cc}{INIT\+\_\+\+SIDEBLOCK}}(\mbox{\hyperlink{bpenc2_8c_a8a3449e2bba4be4e0611d7119819a82d}{sb}})
+\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \mbox{\hyperlink{struct__sideblock__t}{\+\_\+sideblock\+\_\+t}} \mbox{\hyperlink{hsencsb_8h_a09908504c5dd6e09cf90ebd54634f546}{sideblock\+\_\+t}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{hsencsb_8h_a09908504c5dd6e09cf90ebd54634f546}{sideblock\+\_\+t}} $\ast$ \mbox{\hyperlink{hsencsb_8h_a0017b26fc59fed521ca5308a3891622a}{alloc\+\_\+sideblock}} ()
+\item 
+char $\ast$ \mbox{\hyperlink{hsencsb_8h_a6f409d502744c25cbcda21afbd33000b}{get\+\_\+sidename}} (const char $\ast$path)
+\item 
+size\+\_\+t \mbox{\hyperlink{hsencsb_8h_a8222070e7217b39cad72f15ffbc0dc3d}{get\+\_\+sidelen}} (const char $\ast$path)
+\item 
+int \mbox{\hyperlink{hsencsb_8h_a8fc245e8b809a0b8f3ac2a355333e201}{read\+\_\+sideblock}} (const char $\ast$path, \mbox{\hyperlink{hsencsb_8h_a09908504c5dd6e09cf90ebd54634f546}{sideblock\+\_\+t}} $\ast$psb)
+\item 
+int \mbox{\hyperlink{hsencsb_8h_ae2574dc453c154e349d8998b8ea33f8b}{write\+\_\+sideblock}} (const char $\ast$path, \mbox{\hyperlink{hsencsb_8h_a09908504c5dd6e09cf90ebd54634f546}{sideblock\+\_\+t}} $\ast$psb)
+\item 
+int \mbox{\hyperlink{hsencsb_8h_a0423d1ae7528def173fca9666021cab8}{create\+\_\+sideblock}} (const char $\ast$path)
+\item 
+void \mbox{\hyperlink{hsencsb_8h_af24af2d1b035d5c2e40ccacaa691c068}{kill\+\_\+sideblock}} (\mbox{\hyperlink{hsencsb_8h_a09908504c5dd6e09cf90ebd54634f546}{sideblock\+\_\+t}} $\ast$psb)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{hsencsb_8h_ad370d8a93262e029d702f2c905110e13}\label{hsencsb_8h_ad370d8a93262e029d702f2c905110e13}} 
+\index{hsencsb.h@{hsencsb.h}!HSENCFS\_MAGIC@{HSENCFS\_MAGIC}}
+\index{HSENCFS\_MAGIC@{HSENCFS\_MAGIC}!hsencsb.h@{hsencsb.h}}
+\doxysubsubsection{\texorpdfstring{HSENCFS\_MAGIC}{HSENCFS\_MAGIC}}
+{\footnotesize\ttfamily \#define HSENCFS\+\_\+\+MAGIC~0x34231278}
+
+\mbox{\Hypertarget{hsencsb_8h_a62e0ab07482652db101ad25ecbd8b6cc}\label{hsencsb_8h_a62e0ab07482652db101ad25ecbd8b6cc}} 
+\index{hsencsb.h@{hsencsb.h}!INIT\_SIDEBLOCK@{INIT\_SIDEBLOCK}}
+\index{INIT\_SIDEBLOCK@{INIT\_SIDEBLOCK}!hsencsb.h@{hsencsb.h}}
+\doxysubsubsection{\texorpdfstring{INIT\_SIDEBLOCK}{INIT\_SIDEBLOCK}}
+{\footnotesize\ttfamily \#define INIT\+\_\+\+SIDEBLOCK(\begin{DoxyParamCaption}\item[{}]{\mbox{\hyperlink{bpenc2_8c_a8a3449e2bba4be4e0611d7119819a82d}{sb}} }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{    memset(\&(\mbox{\hyperlink{bpdec2_8c_a8a3449e2bba4be4e0611d7119819a82d}{sb}}), \textcolor{charliteral}{'\(\backslash\)0'}, \textcolor{keyword}{sizeof}((\mbox{\hyperlink{bpdec2_8c_a8a3449e2bba4be4e0611d7119819a82d}{sb}})));      \(\backslash\)}
+\DoxyCodeLine{    (\mbox{\hyperlink{bpdec2_8c_a8a3449e2bba4be4e0611d7119819a82d}{sb}}).magic =  \mbox{\hyperlink{hsencsb_8h_ad370d8a93262e029d702f2c905110e13}{HSENCFS\_MAGIC}};            \(\backslash\)}
+\DoxyCodeLine{    (\mbox{\hyperlink{bpdec2_8c_a8a3449e2bba4be4e0611d7119819a82d}{sb}}).serial   = -\/1;                     \(\backslash\)}
+\DoxyCodeLine{    (\mbox{\hyperlink{bpdec2_8c_a8a3449e2bba4be4e0611d7119819a82d}{sb}}).protocol = 0xaa;                   \(\backslash\)}
+\DoxyCodeLine{    (\mbox{\hyperlink{bpdec2_8c_a8a3449e2bba4be4e0611d7119819a82d}{sb}}).version = 1;                       \(\backslash\)}
+\DoxyCodeLine{    (\mbox{\hyperlink{bpdec2_8c_a8a3449e2bba4be4e0611d7119819a82d}{sb}}).flen = 0;                          \(\backslash\)}
+\DoxyCodeLine{    memcpy((\mbox{\hyperlink{bpdec2_8c_a8a3449e2bba4be4e0611d7119819a82d}{sb}}).sep,  \textcolor{stringliteral}{"{}SB0\(\backslash\)n"{}}, 4);          \(\backslash\)}
+\DoxyCodeLine{    memcpy((\mbox{\hyperlink{bpdec2_8c_a8a3449e2bba4be4e0611d7119819a82d}{sb}}).sep2, \textcolor{stringliteral}{"{}SB0\(\backslash\)n"{}}, 4);}
+
+\end{DoxyCode}
+
+
+\doxysubsection{Typedef Documentation}
+\mbox{\Hypertarget{hsencsb_8h_a09908504c5dd6e09cf90ebd54634f546}\label{hsencsb_8h_a09908504c5dd6e09cf90ebd54634f546}} 
+\index{hsencsb.h@{hsencsb.h}!sideblock\_t@{sideblock\_t}}
+\index{sideblock\_t@{sideblock\_t}!hsencsb.h@{hsencsb.h}}
+\doxysubsubsection{\texorpdfstring{sideblock\_t}{sideblock\_t}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{struct__sideblock__t}{\+\_\+sideblock\+\_\+t}} \mbox{\hyperlink{hsencsb_8h_a09908504c5dd6e09cf90ebd54634f546}{sideblock\+\_\+t}}}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{hsencsb_8h_a0017b26fc59fed521ca5308a3891622a}\label{hsencsb_8h_a0017b26fc59fed521ca5308a3891622a}} 
+\index{hsencsb.h@{hsencsb.h}!alloc\_sideblock@{alloc\_sideblock}}
+\index{alloc\_sideblock@{alloc\_sideblock}!hsencsb.h@{hsencsb.h}}
+\doxysubsubsection{\texorpdfstring{alloc\_sideblock()}{alloc\_sideblock()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{hsencsb_8h_a09908504c5dd6e09cf90ebd54634f546}{sideblock\+\_\+t}}$\ast$ alloc\+\_\+sideblock (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hsencsb_8h_a0423d1ae7528def173fca9666021cab8}\label{hsencsb_8h_a0423d1ae7528def173fca9666021cab8}} 
+\index{hsencsb.h@{hsencsb.h}!create\_sideblock@{create\_sideblock}}
+\index{create\_sideblock@{create\_sideblock}!hsencsb.h@{hsencsb.h}}
+\doxysubsubsection{\texorpdfstring{create\_sideblock()}{create\_sideblock()}}
+{\footnotesize\ttfamily int create\+\_\+sideblock (\begin{DoxyParamCaption}\item[{const char $\ast$}]{path }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hsencsb_8h_a8222070e7217b39cad72f15ffbc0dc3d}\label{hsencsb_8h_a8222070e7217b39cad72f15ffbc0dc3d}} 
+\index{hsencsb.h@{hsencsb.h}!get\_sidelen@{get\_sidelen}}
+\index{get\_sidelen@{get\_sidelen}!hsencsb.h@{hsencsb.h}}
+\doxysubsubsection{\texorpdfstring{get\_sidelen()}{get\_sidelen()}}
+{\footnotesize\ttfamily size\+\_\+t get\+\_\+sidelen (\begin{DoxyParamCaption}\item[{const char $\ast$}]{path }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hsencsb_8h_a6f409d502744c25cbcda21afbd33000b}\label{hsencsb_8h_a6f409d502744c25cbcda21afbd33000b}} 
+\index{hsencsb.h@{hsencsb.h}!get\_sidename@{get\_sidename}}
+\index{get\_sidename@{get\_sidename}!hsencsb.h@{hsencsb.h}}
+\doxysubsubsection{\texorpdfstring{get\_sidename()}{get\_sidename()}}
+{\footnotesize\ttfamily char$\ast$ get\+\_\+sidename (\begin{DoxyParamCaption}\item[{const char $\ast$}]{path }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hsencsb_8h_af24af2d1b035d5c2e40ccacaa691c068}\label{hsencsb_8h_af24af2d1b035d5c2e40ccacaa691c068}} 
+\index{hsencsb.h@{hsencsb.h}!kill\_sideblock@{kill\_sideblock}}
+\index{kill\_sideblock@{kill\_sideblock}!hsencsb.h@{hsencsb.h}}
+\doxysubsubsection{\texorpdfstring{kill\_sideblock()}{kill\_sideblock()}}
+{\footnotesize\ttfamily void kill\+\_\+sideblock (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{hsencsb_8h_a09908504c5dd6e09cf90ebd54634f546}{sideblock\+\_\+t}} $\ast$}]{psb }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hsencsb_8h_a8fc245e8b809a0b8f3ac2a355333e201}\label{hsencsb_8h_a8fc245e8b809a0b8f3ac2a355333e201}} 
+\index{hsencsb.h@{hsencsb.h}!read\_sideblock@{read\_sideblock}}
+\index{read\_sideblock@{read\_sideblock}!hsencsb.h@{hsencsb.h}}
+\doxysubsubsection{\texorpdfstring{read\_sideblock()}{read\_sideblock()}}
+{\footnotesize\ttfamily int read\+\_\+sideblock (\begin{DoxyParamCaption}\item[{const char $\ast$}]{path,  }\item[{\mbox{\hyperlink{hsencsb_8h_a09908504c5dd6e09cf90ebd54634f546}{sideblock\+\_\+t}} $\ast$}]{psb }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hsencsb_8h_ae2574dc453c154e349d8998b8ea33f8b}\label{hsencsb_8h_ae2574dc453c154e349d8998b8ea33f8b}} 
+\index{hsencsb.h@{hsencsb.h}!write\_sideblock@{write\_sideblock}}
+\index{write\_sideblock@{write\_sideblock}!hsencsb.h@{hsencsb.h}}
+\doxysubsubsection{\texorpdfstring{write\_sideblock()}{write\_sideblock()}}
+{\footnotesize\ttfamily int write\+\_\+sideblock (\begin{DoxyParamCaption}\item[{const char $\ast$}]{path,  }\item[{\mbox{\hyperlink{hsencsb_8h_a09908504c5dd6e09cf90ebd54634f546}{sideblock\+\_\+t}} $\ast$}]{psb }\end{DoxyParamCaption})}
+

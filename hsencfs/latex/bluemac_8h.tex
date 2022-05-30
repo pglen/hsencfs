@@ -1,0 +1,244 @@
+\hypertarget{bluemac_8h}{}\doxysection{bluepoint/bluemac.h File Reference}
+\label{bluemac_8h}\index{bluepoint/bluemac.h@{bluepoint/bluemac.h}}
+This graph shows which files directly or indirectly include this file\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=191pt]{bluemac_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{bluemac_8h_ab6ab781cfbd88c6f4120221e703acfad}{HECTOR}}(op)
+\item 
+\#define \mbox{\hyperlink{bluemac_8h_a47ed7587ea460ce5f91ed0837b09ccf8}{PASSLOOP}}(op)
+\item 
+\#define \mbox{\hyperlink{bluemac_8h_acc566cc5b2d210cfbfce7b5480a37d47}{FWLOOP}}(op)
+\item 
+\#define \mbox{\hyperlink{bluemac_8h_ad0f6e269371fdde07d612c3170169ce1}{FWLOOP2}}(op)
+\item 
+\#define \mbox{\hyperlink{bluemac_8h_a487da5698ee0a5338585692bb63398c0}{BWLOOP}}(op)
+\item 
+\#define \mbox{\hyperlink{bluemac_8h_a75e8d24f4a7c1975f8c37c0d1cc34bf4}{BWLOOP2}}(op)
+\item 
+\#define \mbox{\hyperlink{bluemac_8h_a27b4d30240a99a8f5d573a50ebbc783b}{MIXIT}}(op)
+\item 
+\#define \mbox{\hyperlink{bluemac_8h_a8624e1b63029db8de2413474545c0a49}{MIXITR}}(op)
+\item 
+\#define \mbox{\hyperlink{bluemac_8h_a3e3de62193701889a715b70ce296ab35}{MIXIT2}}(op)
+\item 
+\#define \mbox{\hyperlink{bluemac_8h_a576bb5534f7218fbd1a7642e9ad18014}{MIXIT2R}}(op)
+\item 
+\#define \mbox{\hyperlink{bluemac_8h_ad54b6f49452822dc2e66a1ed55b1df62}{MIXIT4}}(op)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{bluemac_8h_a487da5698ee0a5338585692bb63398c0}\label{bluemac_8h_a487da5698ee0a5338585692bb63398c0}} 
+\index{bluemac.h@{bluemac.h}!BWLOOP@{BWLOOP}}
+\index{BWLOOP@{BWLOOP}!bluemac.h@{bluemac.h}}
+\doxysubsubsection{\texorpdfstring{BWLOOP}{BWLOOP}}
+{\footnotesize\ttfamily \#define BWLOOP(\begin{DoxyParamCaption}\item[{}]{op }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{    bb = 0;                                         \(\backslash\)}
+\DoxyCodeLine{    for (loop = \mbox{\hyperlink{block__blue2_8c_a77e5778dba48d5d75c364f1c6f9f5da4}{slen}}-\/1; loop >= 0; loop-\/-\/)          \(\backslash\)}
+\DoxyCodeLine{        \{                                           \(\backslash\)}
+\DoxyCodeLine{        aa = \mbox{\hyperlink{trunctest_8c_a53dbc2382caf520f4a511f07d1e77a71}{str}}[loop];                             \(\backslash\)}
+\DoxyCodeLine{        aa \string^= backward;                             \(\backslash\)}
+\DoxyCodeLine{        aa = aa op addend;                          \(\backslash\)}
+\DoxyCodeLine{        aa = aa op bb;                              \(\backslash\)}
+\DoxyCodeLine{        bb = aa;                                    \(\backslash\)}
+\DoxyCodeLine{        str[loop] = aa;                             \(\backslash\)}
+\DoxyCodeLine{        \}                                           \(\backslash\)}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{bluemac_8h_a75e8d24f4a7c1975f8c37c0d1cc34bf4}\label{bluemac_8h_a75e8d24f4a7c1975f8c37c0d1cc34bf4}} 
+\index{bluemac.h@{bluemac.h}!BWLOOP2@{BWLOOP2}}
+\index{BWLOOP2@{BWLOOP2}!bluemac.h@{bluemac.h}}
+\doxysubsubsection{\texorpdfstring{BWLOOP2}{BWLOOP2}}
+{\footnotesize\ttfamily \#define BWLOOP2(\begin{DoxyParamCaption}\item[{}]{op }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{    cc = 0;                                         \(\backslash\)}
+\DoxyCodeLine{    for (loop = \mbox{\hyperlink{block__blue2_8c_a77e5778dba48d5d75c364f1c6f9f5da4}{slen}}-\/1; loop >= 0; loop-\/-\/)          \(\backslash\)}
+\DoxyCodeLine{        \{                                           \(\backslash\)}
+\DoxyCodeLine{        bb = cc;                                    \(\backslash\)}
+\DoxyCodeLine{        aa = cc = \mbox{\hyperlink{trunctest_8c_a53dbc2382caf520f4a511f07d1e77a71}{str}}[loop];                        \(\backslash\)}
+\DoxyCodeLine{                                                    \(\backslash\)}
+\DoxyCodeLine{        aa = aa op bb;                              \(\backslash\)}
+\DoxyCodeLine{        aa = aa op addend;                          \(\backslash\)}
+\DoxyCodeLine{        aa \string^= backward;                             \(\backslash\)}
+\DoxyCodeLine{        str[loop] = aa;                             \(\backslash\)}
+\DoxyCodeLine{        \}                                           \(\backslash\)}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{bluemac_8h_acc566cc5b2d210cfbfce7b5480a37d47}\label{bluemac_8h_acc566cc5b2d210cfbfce7b5480a37d47}} 
+\index{bluemac.h@{bluemac.h}!FWLOOP@{FWLOOP}}
+\index{FWLOOP@{FWLOOP}!bluemac.h@{bluemac.h}}
+\doxysubsubsection{\texorpdfstring{FWLOOP}{FWLOOP}}
+{\footnotesize\ttfamily \#define FWLOOP(\begin{DoxyParamCaption}\item[{}]{op }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{    bb = 0;                                         \(\backslash\)}
+\DoxyCodeLine{    for (loop = 0; loop < \mbox{\hyperlink{block__blue2_8c_a77e5778dba48d5d75c364f1c6f9f5da4}{slen}}; loop++)             \(\backslash\)}
+\DoxyCodeLine{        \{                                           \(\backslash\)}
+\DoxyCodeLine{        aa = \mbox{\hyperlink{trunctest_8c_a53dbc2382caf520f4a511f07d1e77a71}{str}}[loop];                             \(\backslash\)}
+\DoxyCodeLine{        aa \string^= forward;                              \(\backslash\)}
+\DoxyCodeLine{        aa  += addend;                              \(\backslash\)}
+\DoxyCodeLine{        aa  += bb;                                  \(\backslash\)}
+\DoxyCodeLine{        aa = \mbox{\hyperlink{bluepoint_8c_aebfc1d9410369473afcb6d7752e6140f}{ROTATE\_CHAR\_RIGHT}}(aa, 3);              \(\backslash\)}
+\DoxyCodeLine{        bb = aa;                                    \(\backslash\)}
+\DoxyCodeLine{        str[loop] = aa;                             \(\backslash\)}
+\DoxyCodeLine{        \}                                           \(\backslash\)}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{bluemac_8h_ad0f6e269371fdde07d612c3170169ce1}\label{bluemac_8h_ad0f6e269371fdde07d612c3170169ce1}} 
+\index{bluemac.h@{bluemac.h}!FWLOOP2@{FWLOOP2}}
+\index{FWLOOP2@{FWLOOP2}!bluemac.h@{bluemac.h}}
+\doxysubsubsection{\texorpdfstring{FWLOOP2}{FWLOOP2}}
+{\footnotesize\ttfamily \#define FWLOOP2(\begin{DoxyParamCaption}\item[{}]{op }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{    cc = 0;                                         \(\backslash\)}
+\DoxyCodeLine{    for (loop = 0; loop < \mbox{\hyperlink{block__blue2_8c_a77e5778dba48d5d75c364f1c6f9f5da4}{slen}}; loop++)             \(\backslash\)}
+\DoxyCodeLine{        \{                                           \(\backslash\)}
+\DoxyCodeLine{        bb = cc;                                    \(\backslash\)}
+\DoxyCodeLine{        cc = aa = \mbox{\hyperlink{trunctest_8c_a53dbc2382caf520f4a511f07d1e77a71}{str}}[loop];                        \(\backslash\)}
+\DoxyCodeLine{        aa = \mbox{\hyperlink{bluepoint_8c_a3586c377c3dd0880b68b840aa6120c67}{ROTATE\_CHAR\_LEFT}}(aa, 3);               \(\backslash\)}
+\DoxyCodeLine{        aa -\/=  bb;                                  \(\backslash\)}
+\DoxyCodeLine{        aa -\/= addend;                               \(\backslash\)}
+\DoxyCodeLine{        aa \string^= forward;                              \(\backslash\)}
+\DoxyCodeLine{        str[loop] = aa;                             \(\backslash\)}
+\DoxyCodeLine{        \}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{bluemac_8h_ab6ab781cfbd88c6f4120221e703acfad}\label{bluemac_8h_ab6ab781cfbd88c6f4120221e703acfad}} 
+\index{bluemac.h@{bluemac.h}!HECTOR@{HECTOR}}
+\index{HECTOR@{HECTOR}!bluemac.h@{bluemac.h}}
+\doxysubsubsection{\texorpdfstring{HECTOR}{HECTOR}}
+{\footnotesize\ttfamily \#define HECTOR(\begin{DoxyParamCaption}\item[{}]{op }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{    loop2 = 0;                                      \(\backslash\)}
+\DoxyCodeLine{    for (loop = 0; loop < \mbox{\hyperlink{block__blue2_8c_a77e5778dba48d5d75c364f1c6f9f5da4}{slen}}; loop++)             \(\backslash\)}
+\DoxyCodeLine{        \{                                           \(\backslash\)}
+\DoxyCodeLine{        aa = \mbox{\hyperlink{trunctest_8c_a53dbc2382caf520f4a511f07d1e77a71}{str}}[loop];                             \(\backslash\)}
+\DoxyCodeLine{        aa = aa op hector[loop2];                   \(\backslash\)}
+\DoxyCodeLine{        loop2++;                                    \(\backslash\)}
+\DoxyCodeLine{        if(loop2 >= \textcolor{keyword}{sizeof}(hector)) \{loop2 = 0;\}    \(\backslash\)}
+\DoxyCodeLine{        str[loop] = aa;                             \(\backslash\)}
+\DoxyCodeLine{        \}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{bluemac_8h_a27b4d30240a99a8f5d573a50ebbc783b}\label{bluemac_8h_a27b4d30240a99a8f5d573a50ebbc783b}} 
+\index{bluemac.h@{bluemac.h}!MIXIT@{MIXIT}}
+\index{MIXIT@{MIXIT}!bluemac.h@{bluemac.h}}
+\doxysubsubsection{\texorpdfstring{MIXIT}{MIXIT}}
+{\footnotesize\ttfamily \#define MIXIT(\begin{DoxyParamCaption}\item[{}]{op }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{    \textcolor{keywordflow}{for} (loop = 0; loop < \mbox{\hyperlink{block__blue2_8c_a77e5778dba48d5d75c364f1c6f9f5da4}{slen}}/2; loop++)           \(\backslash\)}
+\DoxyCodeLine{        \{                                           \(\backslash\)}
+\DoxyCodeLine{        aa = \mbox{\hyperlink{trunctest_8c_a53dbc2382caf520f4a511f07d1e77a71}{str}}[loop];                             \(\backslash\)}
+\DoxyCodeLine{        bb = \mbox{\hyperlink{trunctest_8c_a53dbc2382caf520f4a511f07d1e77a71}{str}}[(\mbox{\hyperlink{block__blue2_8c_a77e5778dba48d5d75c364f1c6f9f5da4}{slen}}-\/1) -\/ loop];                  \(\backslash\)}
+\DoxyCodeLine{        aa = aa op bb;                              \(\backslash\)}
+\DoxyCodeLine{        str[loop] = aa;                             \(\backslash\)}
+\DoxyCodeLine{        \}                                           \(\backslash\)}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{bluemac_8h_a3e3de62193701889a715b70ce296ab35}\label{bluemac_8h_a3e3de62193701889a715b70ce296ab35}} 
+\index{bluemac.h@{bluemac.h}!MIXIT2@{MIXIT2}}
+\index{MIXIT2@{MIXIT2}!bluemac.h@{bluemac.h}}
+\doxysubsubsection{\texorpdfstring{MIXIT2}{MIXIT2}}
+{\footnotesize\ttfamily \#define MIXIT2(\begin{DoxyParamCaption}\item[{}]{op }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{    \textcolor{keywordflow}{for} (loop = 0; loop < \mbox{\hyperlink{block__blue2_8c_a77e5778dba48d5d75c364f1c6f9f5da4}{slen}}/2; loop++)           \(\backslash\)}
+\DoxyCodeLine{        \{                                           \(\backslash\)}
+\DoxyCodeLine{        aa = \mbox{\hyperlink{trunctest_8c_a53dbc2382caf520f4a511f07d1e77a71}{str}}[loop];                             \(\backslash\)}
+\DoxyCodeLine{        bb = \mbox{\hyperlink{trunctest_8c_a53dbc2382caf520f4a511f07d1e77a71}{str}}[loop + \mbox{\hyperlink{block__blue2_8c_a77e5778dba48d5d75c364f1c6f9f5da4}{slen}}/2];                    \(\backslash\)}
+\DoxyCodeLine{        aa = aa op bb;                              \(\backslash\)}
+\DoxyCodeLine{        str[loop] = aa;                             \(\backslash\)}
+\DoxyCodeLine{        \}                                           \(\backslash\)}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{bluemac_8h_a576bb5534f7218fbd1a7642e9ad18014}\label{bluemac_8h_a576bb5534f7218fbd1a7642e9ad18014}} 
+\index{bluemac.h@{bluemac.h}!MIXIT2R@{MIXIT2R}}
+\index{MIXIT2R@{MIXIT2R}!bluemac.h@{bluemac.h}}
+\doxysubsubsection{\texorpdfstring{MIXIT2R}{MIXIT2R}}
+{\footnotesize\ttfamily \#define MIXIT2R(\begin{DoxyParamCaption}\item[{}]{op }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{    \textcolor{keywordflow}{for} (loop = \mbox{\hyperlink{block__blue2_8c_a77e5778dba48d5d75c364f1c6f9f5da4}{slen}}/2; loop < \mbox{\hyperlink{block__blue2_8c_a77e5778dba48d5d75c364f1c6f9f5da4}{slen}}; loop++)        \(\backslash\)}
+\DoxyCodeLine{        \{                                           \(\backslash\)}
+\DoxyCodeLine{        aa = \mbox{\hyperlink{trunctest_8c_a53dbc2382caf520f4a511f07d1e77a71}{str}}[loop];                             \(\backslash\)}
+\DoxyCodeLine{        bb = \mbox{\hyperlink{trunctest_8c_a53dbc2382caf520f4a511f07d1e77a71}{str}}[loop -\/ \mbox{\hyperlink{block__blue2_8c_a77e5778dba48d5d75c364f1c6f9f5da4}{slen}}/2];                    \(\backslash\)}
+\DoxyCodeLine{        aa = aa op bb;                              \(\backslash\)}
+\DoxyCodeLine{        str[loop] = aa;                             \(\backslash\)}
+\DoxyCodeLine{        \}                                           \(\backslash\)}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{bluemac_8h_ad54b6f49452822dc2e66a1ed55b1df62}\label{bluemac_8h_ad54b6f49452822dc2e66a1ed55b1df62}} 
+\index{bluemac.h@{bluemac.h}!MIXIT4@{MIXIT4}}
+\index{MIXIT4@{MIXIT4}!bluemac.h@{bluemac.h}}
+\doxysubsubsection{\texorpdfstring{MIXIT4}{MIXIT4}}
+{\footnotesize\ttfamily \#define MIXIT4(\begin{DoxyParamCaption}\item[{}]{op }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{    \textcolor{keywordflow}{for} (loop = 0; loop < \mbox{\hyperlink{block__blue2_8c_a77e5778dba48d5d75c364f1c6f9f5da4}{slen}}/4; loop++)           \(\backslash\)}
+\DoxyCodeLine{        \{                                           \(\backslash\)}
+\DoxyCodeLine{        aa = \mbox{\hyperlink{trunctest_8c_a53dbc2382caf520f4a511f07d1e77a71}{str}}[loop];                             \(\backslash\)}
+\DoxyCodeLine{        bb = \mbox{\hyperlink{trunctest_8c_a53dbc2382caf520f4a511f07d1e77a71}{str}}[loop + \mbox{\hyperlink{block__blue2_8c_a77e5778dba48d5d75c364f1c6f9f5da4}{slen}}/2];                    \(\backslash\)}
+\DoxyCodeLine{        aa = aa op bb;                              \(\backslash\)}
+\DoxyCodeLine{        str[loop] = aa;                             \(\backslash\)}
+\DoxyCodeLine{        \}                                           \(\backslash\)}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{bluemac_8h_a8624e1b63029db8de2413474545c0a49}\label{bluemac_8h_a8624e1b63029db8de2413474545c0a49}} 
+\index{bluemac.h@{bluemac.h}!MIXITR@{MIXITR}}
+\index{MIXITR@{MIXITR}!bluemac.h@{bluemac.h}}
+\doxysubsubsection{\texorpdfstring{MIXITR}{MIXITR}}
+{\footnotesize\ttfamily \#define MIXITR(\begin{DoxyParamCaption}\item[{}]{op }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{    loop2 = \mbox{\hyperlink{block__blue2_8c_a77e5778dba48d5d75c364f1c6f9f5da4}{slen}} / 2;                               \(\backslash\)}
+\DoxyCodeLine{    for (loop = loop2; loop < \mbox{\hyperlink{block__blue2_8c_a77e5778dba48d5d75c364f1c6f9f5da4}{slen}}; loop++)         \(\backslash\)}
+\DoxyCodeLine{        \{                                           \(\backslash\)}
+\DoxyCodeLine{        aa = \mbox{\hyperlink{trunctest_8c_a53dbc2382caf520f4a511f07d1e77a71}{str}}[loop];                             \(\backslash\)}
+\DoxyCodeLine{        bb = \mbox{\hyperlink{trunctest_8c_a53dbc2382caf520f4a511f07d1e77a71}{str}}[loop -\/ loop2];                     \(\backslash\)}
+\DoxyCodeLine{        aa = aa op bb;                              \(\backslash\)}
+\DoxyCodeLine{        str[loop] = aa;                             \(\backslash\)}
+\DoxyCodeLine{        \}                                           \(\backslash\)}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{bluemac_8h_a47ed7587ea460ce5f91ed0837b09ccf8}\label{bluemac_8h_a47ed7587ea460ce5f91ed0837b09ccf8}} 
+\index{bluemac.h@{bluemac.h}!PASSLOOP@{PASSLOOP}}
+\index{PASSLOOP@{PASSLOOP}!bluemac.h@{bluemac.h}}
+\doxysubsubsection{\texorpdfstring{PASSLOOP}{PASSLOOP}}
+{\footnotesize\ttfamily \#define PASSLOOP(\begin{DoxyParamCaption}\item[{}]{op }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{    loop2 = 0;                                      \(\backslash\)}
+\DoxyCodeLine{    for (loop = 0; loop < \mbox{\hyperlink{block__blue2_8c_a77e5778dba48d5d75c364f1c6f9f5da4}{slen}}; loop++)             \(\backslash\)}
+\DoxyCodeLine{        \{                                           \(\backslash\)}
+\DoxyCodeLine{        aa = \mbox{\hyperlink{trunctest_8c_a53dbc2382caf520f4a511f07d1e77a71}{str}}[loop];                             \(\backslash\)}
+\DoxyCodeLine{        aa = aa op \mbox{\hyperlink{block__blue2_8c_a12b3e022c6c3f2c88d5ebfc7fb357613}{pass}}[loop2];                     \(\backslash\)}
+\DoxyCodeLine{        loop2++;                                    \(\backslash\)}
+\DoxyCodeLine{        if(loop2 >= \mbox{\hyperlink{block__blue2_8c_ad29d2259942853507dff3a3e3c05535a}{plen}}) \{loop2 = 0;\}              \(\backslash\)}
+\DoxyCodeLine{        str[loop] = aa;                             \(\backslash\)}
+\DoxyCodeLine{        \}}
+
+\end{DoxyCode}

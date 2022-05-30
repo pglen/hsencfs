@@ -1,0 +1,105 @@
+                               SECURITY
+
+  Security today is nothing short of a black art. With the advent of
+processing power, calculations that once took a month, can be done in minutes.
+My guess is, a couple of years from now, this sentence will read similar,
+but instead of minutes it will say seconds. For example, at the time of writing
+the very computer I am writing this on, (which is several years old) it is
+capable of a half a billion additions a second.
+
+ 1.) Why we need secrecy.
+
+ An important question is why do we need security? Looking around, most
+people are more similar than different. Comparable habits, matching possessions;
+there should be no secrets. To top that, most of our achievements
+- great or small - are only valid after we share it with others.
+
+ For instance, examining the computer that I am using to write this document.
+It is a great testament to sharing and no secrets. How about the interface
+between the software and the machine? The machine and the processor? The video
+output and the display? Looking at these examples, it is a wonder that we
+do need secrets. So what makes us want security? Apparently, we do not really
+need any.
+
+ Real life, however is more complex. While there is enormous power in sharing,
+there is also power in secrecy. Achieving something secretly, presenting it as
+an accomplishment is possibly the number one facet that demands security.
+For instance, look at corporations or governments doing just that. There,
+everything is wrapped in secrecy. While mostly justified, today we know, that
+many of the things that are kept secret where harmful things. This is where
+the most important part of security comes from: PROCESSES.
+
+ In those processes, things that are made secret, at one point in time
+should be made public. Especially, if it has public implications. This is
+why governments have de-classification schedules, corporations have
+reporting obligations. Some countries have legislation(s) that compel it's
+citizenry to use weak encryption.
+
+ 2.) The fear factor.
+
+ Admittedly, the second most important factor in secrecy is fear. What if this
+information gets to be seen by certain (undesirable) people? Fear is a powerful
+motivator. And the level of fear sometimes exceeds the level of rationality.
+But fear is also a paralyzing force. Most compromised data or systems are the
+result of excessive protection, driven by fear.
+
+ 3.) Transactional secrecy.
+
+ Transactional secrecy is the most used type of secrecy with computers. We want
+our transaction details kept private between the transacting parties only.
+As most transactions are initiated between parties that do not have a previous
+arrangement for secret communication, asymmetric (public key) encryption is
+used.
+
+ 4.) Privacy.
+
+ Large part of our privacy is redundant. We are more similar than different.
+In a society with less judgement, privacy is of little concern. However, in
+some cultures judgement is strong, the need for privacy is paramount. While
+cultures change little over time, we can defend ourselves with secrecy.
+
+ 5.) Greed.
+
+  Greed is a mixed trait. It can be motivation for achievement, but it can
+also be a powerful force of malice. Please note, that higher the greed factor,
+the higher need for secrecy. Introspection of the situation is required. 
+Examining the motivation from a new point of view. For example: Is it possible
+to introduce sharing into the chain as part of lessening of the impact of greed.
+(Thus lessening the need for security / secrecy) Think of a luxury house in a
+broken neighborhood. What happens to that house long term? Or corollary. A 
+dilapidated house in Luxury neighborhood. Will it be helped upwards? ...
+
+ 6.) Attacks.
+
+ Malicious attacks against systems are common. However, most of it is done as
+a technological feat, more like a show off. Only a small percentage of the
+attacks are done for monetary gain. The attacks compromise the system in a
+way, that allows the intruder to control key aspects of the system's
+operation. Not to overstate this, but HSENCFS withstands intrusions like
+that, as the data it stores exist in encrypted form only.
+
+ Attacks attempt to get hold of the secret key / pass that is
+used to gain access to the protected data. And this is how most break-ins
+happen. The malicious entity hijacks your password entry dialog, and
+intercepts your key / password. After that, the hijacker can access the
+data just like you do. The only defense to that is vigilance, suspicion
+and keen observation of your system. Remember, if you enter your pass into
+a compromised system, you gave access to the malicious entity for good.
+HSENCFS has measures to check your system integrity, you are encouraged
+to use them.
+
+ 7.) Summary.
+
+  HSENCFS supports most aspects of security. Privacy and secrecy can be
+achieved by encryption. As only a small subset of our information needs
+protection by encryption, HSENCFS is ideally suited for most situations.
+One can specify a single sub directory for all secret data, or a whole
+sub tree, so everything is encrypted that goes under it. The cypher text is
+also accessible as a regular file, so encrypted files can be transported
+across system boundaries. As the file is never decrypted, transport can be
+more secure with HSENCFS than with conventional encryptions.
+
+Please note that entering a password into a compromised computer will expose
+that password. Be alert.
+
+

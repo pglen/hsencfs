@@ -1,0 +1,97 @@
+\hypertarget{hsencsu_8c}{}\doxysection{src/hsencsu.c File Reference}
+\label{hsencsu_8c}\index{src/hsencsu.c@{src/hsencsu.c}}
+{\ttfamily \#include $<$fuse.\+h$>$}\newline
+{\ttfamily \#include $<$ulockmgr.\+h$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$limits.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+{\ttfamily \#include $<$fcntl.\+h$>$}\newline
+{\ttfamily \#include $<$dirent.\+h$>$}\newline
+{\ttfamily \#include $<$errno.\+h$>$}\newline
+{\ttfamily \#include $<$syslog.\+h$>$}\newline
+{\ttfamily \#include $<$sys/time.\+h$>$}\newline
+{\ttfamily \#include $<$signal.\+h$>$}\newline
+{\ttfamily \#include $<$getopt.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}base64.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hsencsb.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hsencfs.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../bluepoint/hs\+\_\+crypt.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../bluepoint/bluepoint2.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../common/hsutils.\+h\char`\"{}}\newline
+Include dependency graph for hsencsu.\+c\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{hsencsu_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{hsencsu_8c_a369266c24eacffb87046522897a570d5}{\+\_\+\+GNU\+\_\+\+SOURCE}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{hsencsu_8c_ab7f9378d524c6983756fdd47c996f3c4}{hslog}} (int lev, char $\ast$fmt,...)
+\item 
+void $\ast$ \mbox{\hyperlink{hsencsu_8c_a577bd3e210995bb6d3749845883fa9b3}{hsalloc}} (int total)
+\item 
+int \mbox{\hyperlink{hsencsu_8c_a4bfbc2b74b1df681af8201e03fb719f2}{is\+\_\+our\+\_\+file}} (const char $\ast$path, int fname\+\_\+only)
+\item 
+off\+\_\+t \mbox{\hyperlink{hsencsu_8c_a9ebf53d7350470848b4b36e18a66a262}{get\+\_\+fsize}} (int fh)
+\item 
+void \mbox{\hyperlink{hsencsu_8c_abf4e6118a34309517207a55ac45fbb4c}{kill\+\_\+buff}} (void $\ast$bbuff, int \mbox{\hyperlink{hsaskpass_8c_a87bfa1d785e54250064a42ccd86bf93c}{xlen}})
+\item 
+int \mbox{\hyperlink{hsencsu_8c_af1bf7ce72fb48a1498c21d3baf0cb423}{openpass}} (const char $\ast$path)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{hsencsu_8c_a369266c24eacffb87046522897a570d5}\label{hsencsu_8c_a369266c24eacffb87046522897a570d5}} 
+\index{hsencsu.c@{hsencsu.c}!\_GNU\_SOURCE@{\_GNU\_SOURCE}}
+\index{\_GNU\_SOURCE@{\_GNU\_SOURCE}!hsencsu.c@{hsencsu.c}}
+\doxysubsubsection{\texorpdfstring{\_GNU\_SOURCE}{\_GNU\_SOURCE}}
+{\footnotesize\ttfamily \#define \+\_\+\+GNU\+\_\+\+SOURCE}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{hsencsu_8c_a9ebf53d7350470848b4b36e18a66a262}\label{hsencsu_8c_a9ebf53d7350470848b4b36e18a66a262}} 
+\index{hsencsu.c@{hsencsu.c}!get\_fsize@{get\_fsize}}
+\index{get\_fsize@{get\_fsize}!hsencsu.c@{hsencsu.c}}
+\doxysubsubsection{\texorpdfstring{get\_fsize()}{get\_fsize()}}
+{\footnotesize\ttfamily off\+\_\+t get\+\_\+fsize (\begin{DoxyParamCaption}\item[{int}]{fh }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hsencsu_8c_a577bd3e210995bb6d3749845883fa9b3}\label{hsencsu_8c_a577bd3e210995bb6d3749845883fa9b3}} 
+\index{hsencsu.c@{hsencsu.c}!hsalloc@{hsalloc}}
+\index{hsalloc@{hsalloc}!hsencsu.c@{hsencsu.c}}
+\doxysubsubsection{\texorpdfstring{hsalloc()}{hsalloc()}}
+{\footnotesize\ttfamily void$\ast$ hsalloc (\begin{DoxyParamCaption}\item[{int}]{total }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hsencsu_8c_ab7f9378d524c6983756fdd47c996f3c4}\label{hsencsu_8c_ab7f9378d524c6983756fdd47c996f3c4}} 
+\index{hsencsu.c@{hsencsu.c}!hslog@{hslog}}
+\index{hslog@{hslog}!hsencsu.c@{hsencsu.c}}
+\doxysubsubsection{\texorpdfstring{hslog()}{hslog()}}
+{\footnotesize\ttfamily void hslog (\begin{DoxyParamCaption}\item[{int}]{lev,  }\item[{char $\ast$}]{fmt,  }\item[{}]{... }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hsencsu_8c_a4bfbc2b74b1df681af8201e03fb719f2}\label{hsencsu_8c_a4bfbc2b74b1df681af8201e03fb719f2}} 
+\index{hsencsu.c@{hsencsu.c}!is\_our\_file@{is\_our\_file}}
+\index{is\_our\_file@{is\_our\_file}!hsencsu.c@{hsencsu.c}}
+\doxysubsubsection{\texorpdfstring{is\_our\_file()}{is\_our\_file()}}
+{\footnotesize\ttfamily int is\+\_\+our\+\_\+file (\begin{DoxyParamCaption}\item[{const char $\ast$}]{path,  }\item[{int}]{fname\+\_\+only }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hsencsu_8c_abf4e6118a34309517207a55ac45fbb4c}\label{hsencsu_8c_abf4e6118a34309517207a55ac45fbb4c}} 
+\index{hsencsu.c@{hsencsu.c}!kill\_buff@{kill\_buff}}
+\index{kill\_buff@{kill\_buff}!hsencsu.c@{hsencsu.c}}
+\doxysubsubsection{\texorpdfstring{kill\_buff()}{kill\_buff()}}
+{\footnotesize\ttfamily void kill\+\_\+buff (\begin{DoxyParamCaption}\item[{void $\ast$}]{bbuff,  }\item[{int}]{xlen }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hsencsu_8c_af1bf7ce72fb48a1498c21d3baf0cb423}\label{hsencsu_8c_af1bf7ce72fb48a1498c21d3baf0cb423}} 
+\index{hsencsu.c@{hsencsu.c}!openpass@{openpass}}
+\index{openpass@{openpass}!hsencsu.c@{hsencsu.c}}
+\doxysubsubsection{\texorpdfstring{openpass()}{openpass()}}
+{\footnotesize\ttfamily int openpass (\begin{DoxyParamCaption}\item[{const char $\ast$}]{path }\end{DoxyParamCaption})}
+
