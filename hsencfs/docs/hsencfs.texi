@@ -176,7 +176,7 @@ video streams.
 
 @section Command Line options and arguments
 
-Usage: hsencfs [options] storagedir mountpoint
+Usage: hsencfs [options]  mountpoint storagedir
 
 @indent  'storageedir' is a storage directory for data.@*
 @indent  'mountpoint' is a directory for user visible data.
@@ -187,7 +187,7 @@ Use dotted name as storagedir for convenient hiding  of data names@.
 
 @subheading Options:
 
-@indent  -l num      -- Use log level  (--loglevel)@*
+@indent   -l num      -- Use log level  (--loglevel)@*
 @indent   -p pass     -- Use pass (!!Warning!! cleartext pass) (--pass)@*
 @indent   -a program  -- Use program for asking pass (--askpass)@*
 @indent   -o          -- On demand pass. Ask on first access (--ondemand)@*

@@ -13,7 +13,9 @@ BONOBO_DIR=/usr/lib/bonobo/servers
 # Docs for distribution
 dist_doc_DATA = PASSES FUSEOPTS QUICKSTART SECURITY PASSHINTS DISCLAIMER\
         hsencfs.spec hsencfs.init compall.sh hard-remove.sh \
-            $(PAN_SERV).in lazy.sh compall.sh
+            lazy.sh
+
+#                $(PAN_SERV).in
 
 # Scripts for askpass and tray
 dist_bin_SCRIPTS =                  \
@@ -25,18 +27,18 @@ EXTRA_DIST = src/hsencrw.c src/hsencop.c
 EXTRA_DIST += common/hspass.c common/hsutils.c
 EXTRA_DIST += images/hsicon.png images/hsicon.svg images/hspadlock.png \
                     images/hspadlock.svg images/screenshot.png
-EXTRA_DIST += study
+#EXTRA_DIST += study
 
 # Fake it into the distribution
 # use: ls *.py *.sh *.server SUMFILE sha*
+
+#GNOME_HSENCApplet.server.in
 
 EXTRA_DIST +=                       \
         checksum.sh                 \
         enctest.sh                  \
         gensum.sh                   \
-        GNOME_HSENCApplet.server.in \
         lazy.sh                     \
-        pack.sh                     \
         sha1.sum                    \
         SUMFILE
 
@@ -65,20 +67,24 @@ check:
 # will fail on tying to create bonobo files, but it is not an error to fail
 # in user mode creating a system file.
 
+#cat $(srcdir)/$(PAN_SERV).in | \
+#        sed s%HSTRAY_BIN%$(bindir)/hstray.py% > $(top_builddir)/$(PAN_SERV)
+
+#	-$(INSTALL) $(top_builddir)/$(PAN_SERV) $(BONOBO_DIR)
+
 install-data-local:
-	cat $(srcdir)/$(PAN_SERV).in | \
-        sed s%HSTRAY_BIN%$(bindir)/hstray.py% > $(top_builddir)/$(PAN_SERV)
 	-$(mkinstalldirs) $(BONOBO_DIR)
-	-$(INSTALL) $(top_builddir)/$(PAN_SERV) $(BONOBO_DIR)
 	$(mkinstalldirs) $(DESTDIR)/$(datarootdir)/pixmaps
-	$(INSTALL) $(srcdir)/hsicon.png  $(DESTDIR)/$(datarootdir)/pixmaps
-	$(INSTALL) $(srcdir)/hspadlock.png $(DESTDIR)/$(datarootdir)/pixmaps
+
+#	$(INSTALL) $(srcdir)/hsicon.png  $(DESTDIR)/$(datarootdir)/pixmaps
+#	$(INSTALL) $(srcdir)/hspadlock.png $(DESTDIR)/$(datarootdir)/pixmaps
 
 uninstall-local:
 	-rm -f $(top_builddir)/$(PAN_SERV)
 	-rm -f $(BONOBO_DIR)/$(PAN_SERV)
-	-rm -f $(DESTDIR)/$(datarootdir)/pixmaps/hsicon.png
-	-rm -f $(DESTDIR)/$(datarootdir)/pixmaps/hspadlock.png
+
+#	-rm -f $(DESTDIR)/$(datarootdir)/pixmaps/hsicon.png
+#	-rm -f $(DESTDIR)/$(datarootdir)/pixmaps/hspadlock.png
 
 gensum:
 	-./gensum.sh

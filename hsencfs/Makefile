@@ -105,7 +105,7 @@ DIST_COMMON = $(srcdir)/Makefile.am $(top_srcdir)/configure \
 	$(am__DIST_COMMON)
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
-mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
+mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
@@ -195,8 +195,7 @@ am__define_uniq_tagged_files = \
 DIST_SUBDIRS = $(SUBDIRS)
 am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/config.h.in AUTHORS \
 	COPYING ChangeLog INSTALL NEWS README TODO compile \
-	config.guess config.sub depcomp install-sh missing \
-	mkinstalldirs
+	config.guess config.sub depcomp install-sh missing
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -249,10 +248,10 @@ AUTOHEADER = ${SHELL} '/home/peterglen/pgsrc/hsencfs/hsencfs/missing' autoheader
 AUTOMAKE = ${SHELL} '/home/peterglen/pgsrc/hsencfs/hsencfs/missing' automake-1.16
 AWK = gawk
 CC = gcc
-CCDEPMODE = depmode=gcc3
+CCDEPMODE = depmode=none
 CFLAGS = 
 CPP = gcc -E
-CPPFLAGS =   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS
+CPPFLAGS = -Wdate-time -D_FORTIFY_SOURCE=2  -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS
 CSCOPE = cscope
 CTAGS = ctags
 CYGPATH_W = echo
@@ -270,7 +269,7 @@ INSTALL_DATA = ${INSTALL} -m 644
 INSTALL_PROGRAM = ${INSTALL}
 INSTALL_SCRIPT = ${INSTALL}
 INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
-LDFLAGS =   
+LDFLAGS = -Wl,-Bsymbolic-functions -flto=auto -ffat-lto-objects -flto=auto -Wl,-z,relro  
 LIBOBJS = 
 LIBS = -lulockmgr 
 LTLIBOBJS = 
@@ -301,7 +300,7 @@ am__tar = $${TAR-tar} chof - "$$tardir"
 am__untar = $${TAR-tar} xf -
 bindir = ${exec_prefix}/bin
 build = x86_64-pc-linux-gnu
-build_alias = 
+build_alias = x86_64-linux-gnu
 build_cpu = x86_64
 build_os = linux-gnu
 build_vendor = pc
@@ -318,24 +317,24 @@ host_os = linux-gnu
 host_vendor = pc
 htmldir = ${docdir}
 includedir = ${prefix}/include
-infodir = ${datarootdir}/info
+infodir = ${prefix}/share/info
 install_sh = ${SHELL} /home/peterglen/pgsrc/hsencfs/hsencfs/install-sh
-libdir = ${exec_prefix}/lib
+libdir = ${prefix}/lib/x86_64-linux-gnu
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
-localstatedir = ${prefix}/var
-mandir = ${datarootdir}/man
+localstatedir = /var
+mandir = ${prefix}/share/man
 mkdir_p = $(MKDIR_P)
 oldincludedir = /usr/include
 pdfdir = ${docdir}
-prefix = /usr/local
+prefix = /usr
 program_transform_name = s,x,x,
 psdir = ${docdir}
-runstatedir = ${localstatedir}/run
+runstatedir = /run
 sbindir = ${exec_prefix}/sbin
 sharedstatedir = ${prefix}/com
 srcdir = .
-sysconfdir = ${prefix}/etc
+sysconfdir = /etc
 target_alias = 
 top_build_prefix = 
 top_builddir = .
@@ -349,8 +348,10 @@ BONOBO_DIR = /usr/lib/bonobo/servers
 # Docs for distribution
 dist_doc_DATA = PASSES FUSEOPTS QUICKSTART SECURITY PASSHINTS DISCLAIMER\
         hsencfs.spec hsencfs.init compall.sh hard-remove.sh \
-            $(PAN_SERV).in lazy.sh compall.sh
+            lazy.sh
 
+
+#                $(PAN_SERV).in
 
 # Scripts for askpass and tray
 dist_bin_SCRIPTS = \
@@ -359,14 +360,17 @@ dist_bin_SCRIPTS = \
 
 
 # Auxiliaries
+#EXTRA_DIST += study
 
 # Fake it into the distribution
 # use: ls *.py *.sh *.server SUMFILE sha*
+
+#GNOME_HSENCApplet.server.in
 EXTRA_DIST = src/hsencrw.c src/hsencop.c common/hspass.c \
 	common/hsutils.c images/hsicon.png images/hsicon.svg \
 	images/hspadlock.png images/hspadlock.svg \
-	images/screenshot.png study checksum.sh enctest.sh gensum.sh \
-	GNOME_HSENCApplet.server.in lazy.sh pack.sh sha1.sum SUMFILE
+	images/screenshot.png checksum.sh enctest.sh gensum.sh lazy.sh \
+	sha1.sum SUMFILE
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 
@@ -934,20 +938,24 @@ check:
 # will fail on tying to create bonobo files, but it is not an error to fail
 # in user mode creating a system file.
 
+#cat $(srcdir)/$(PAN_SERV).in | \
+#        sed s%HSTRAY_BIN%$(bindir)/hstray.py% > $(top_builddir)/$(PAN_SERV)
+
+#	-$(INSTALL) $(top_builddir)/$(PAN_SERV) $(BONOBO_DIR)
+
 install-data-local:
-	cat $(srcdir)/$(PAN_SERV).in | \
-        sed s%HSTRAY_BIN%$(bindir)/hstray.py% > $(top_builddir)/$(PAN_SERV)
 	-$(mkinstalldirs) $(BONOBO_DIR)
-	-$(INSTALL) $(top_builddir)/$(PAN_SERV) $(BONOBO_DIR)
 	$(mkinstalldirs) $(DESTDIR)/$(datarootdir)/pixmaps
-	$(INSTALL) $(srcdir)/hsicon.png  $(DESTDIR)/$(datarootdir)/pixmaps
-	$(INSTALL) $(srcdir)/hspadlock.png $(DESTDIR)/$(datarootdir)/pixmaps
+
+#	$(INSTALL) $(srcdir)/hsicon.png  $(DESTDIR)/$(datarootdir)/pixmaps
+#	$(INSTALL) $(srcdir)/hspadlock.png $(DESTDIR)/$(datarootdir)/pixmaps
 
 uninstall-local:
 	-rm -f $(top_builddir)/$(PAN_SERV)
 	-rm -f $(BONOBO_DIR)/$(PAN_SERV)
-	-rm -f $(DESTDIR)/$(datarootdir)/pixmaps/hsicon.png
-	-rm -f $(DESTDIR)/$(datarootdir)/pixmaps/hspadlock.png
+
+#	-rm -f $(DESTDIR)/$(datarootdir)/pixmaps/hsicon.png
+#	-rm -f $(DESTDIR)/$(datarootdir)/pixmaps/hspadlock.png
 
 gensum:
 	-./gensum.sh

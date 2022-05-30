@@ -163,7 +163,7 @@ File: hsencfs.info,  Node: Command Line,  Next: GNU Free Documentation License, 
 1.6.1 Command Line options and arguments
 ----------------------------------------
 
-Usage: hsencfs [options] storagedir mountpoint
+Usage: hsencfs [options] mountpoint storagedir
 
    'storageedir' is a storage directory for data.
 'mountpoint' is a directory for user visible data.

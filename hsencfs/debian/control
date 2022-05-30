@@ -1,0 +1,18 @@
+Source: hsencfs
+Section: unknown
+Priority: optional
+Maintainer: Peter Glen <peterglen99@gmail.com>
+Build-Depends: debhelper-compat (= 13), autotools-dev
+Standards-Version: 4.6.0
+Homepage: <insert the upstream URL, if relevant>
+Rules-Requires-Root: no
+
+Package: hsencfs
+Architecture: amd64
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: The High Security encrypting File System.
+ HSENCFS is a user space encrypting file system. Simple to set up, seamless
+ to use, fast, safe, secure and maintenance free. It will encrypt data on the
+ fly written to it, decrypt data read from it.
+ HSENCFS uses only storage space for actual data stored, no pre-allocation needed.
+ HSENCFS is classified as a variable key length encryption.

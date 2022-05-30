@@ -71,7 +71,6 @@ AC_CHECK_FUNCS([clock_gettime dup2 fdatasync ftruncate getcwd getpass lchown mem
 
 AC_CONFIG_FILES([Makefile
                  bluepoint/Makefile
-                 tools/Makefile
                  common/Makefile
                  src/Makefile
                  docs/Makefile]
