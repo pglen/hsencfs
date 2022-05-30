@@ -23,16 +23,16 @@ be entered interactively, or on command line or entered into a password
 program.
 
 1.) Interactive:
-    hsencfs mountdata mountroot
+    hsencfs mountdata
 
 2.) Password program:
-    hsencfs -a passprog mountdata mountroot
+    hsencfs -a passprog mountdata
 
 3.) On demand:
-    hsencfs -o -a passprog mountdata mountroot
+    hsencfs -o -a passprog mountdata
 
 4.) Command line:
-    hsencfs -p password mountdata mountroot
+    hsencfs -p password mountdata
 
   The least secure is the command line method. (Even though the pass is
 obfuscated) The interactive prompt and the password program is more secure.
@@ -43,15 +43,14 @@ called 'hsaskpass.py'
 
 Password program examples:
 
-    hsenfs -a `which hsaskpass`     mountdata mountroot
-    hsenfs -a `which hsaskpass.py`  mountdata mountroot
+    hsenfs -a `which hsaskpass`     mountdata
+    hsenfs -a `which hsaskpass.py`  mountdata
 
 On Demand Password examples:
 
-    hsenfs -o -a `which hsaskpass.py`  mountdata mountroot
+    hsenfs -o -a `which hsaskpass.py`  mountdata
 
  The which utility is needed to resolve paths, hsencfs needs full
-executable paths. 
+executable paths.
 
-
-
+// EOF
