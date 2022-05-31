@@ -1,5 +1,5 @@
 \input texinfo @c -*- texinfo -*-
- 
+
 @settitle hsencfs
 @setfilename hsencfs.info
 @finalout
@@ -14,7 +14,7 @@
 
 @copying
 @c man begin COPYRIGHT
-Copyright @copyright{} 2015 Peter Glen
+Copyright @copyright{} 2015, ... 2022 Peter Glen
 
   Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.3
@@ -31,28 +31,25 @@ section entitled ``GNU Free Documentation License''.
 * hsencfs: (hsencfs).                 High Security Encrypting File System
 @end direntry
 
-@dircategory Individual utilities
-@direntry
-* bpdec2: (hsencfs)bpdec2.          HSENCFS Decrypt Files
-* bpenc2: (hsencfs)bpenc2.          HSENCFS Encrypt Files
-* hstray.py: (hsencfs)hstray.py.    HSENCFS GNOME Panel utility
-@end direntry
-
 @contents
- 
+
 @node Top
 @top HSENCFS High Security Encrypted File System
+
+@raisesections
 
 @cindex Introduction
 @section Introduction
 
-HSENCFS is a user space encrypting file system. It is simple to set up, seamless to use,
-fast, safe, secure and maintenance free. It will automatically encrypt data 
-written to it, decrypt data read from it. It only uses storage space for 
-actual data stored, no pre-allocation is needed. It is fast enough for 
+ HSENCFS is a user space encrypting file system. It is simple to set up, seamless to use,
+fast, safe, secure and maintenance free. It will automatically encrypt data
+written to it, decrypt data read from it. It only uses storage space for
+actual data stored, no pre-allocation is needed. It is fast enough for
 real time video encryption, and safe enough for all purposes.
 
 HSENCFS is classified as a variable key length encryption.
+
+@lowersections
 
 @noindent
 An additional and useful feature is auditing. HSENCFS reports file access
@@ -61,11 +58,13 @@ by time and user ID. The report is sent to syslog. The log is sent to facility
 
 @section Quick Usage:
 @example
-    hsencfs ~/.secretdata ~/secrets
+    hsencfs ~/secrets ~/.secrets
 @end example
 
-@noindent The above command exposes the ~/secrets directory with the backing data 
-directory in ~/.secretdata. Will ask for password on startup.
+@noindent The above command exposes the ~/secrets directory with the backing data
+directory in ~/.secrets Will ask for password on startup.
+
+@lowersections
 
 @menu
 * Command Line::                    Options and arguments
@@ -73,11 +72,7 @@ directory in ~/.secretdata. Will ask for password on startup.
 * Safety and Security::             How to use HSENCFS
 * Directories::                     Directory Descriptions
 * Un-mounting::                     Un-Mounting (secret) directories
-* bpdec2::                          Decryption utility
-* bpenc2::                          Encryption utility
-* hstray.py::                       GNOME System tray
 * GNU Free Documentation License::  Copying and Redistributing
-* Further development::             The industrial version
 * Hsencfs Index::                   Hsencfs Index
 @end menu
 
@@ -90,16 +85,12 @@ accessible, and the encrypted data is not legible until it is mounted again
 and the correct password is entered.
 
 @example
-        fusermount -u ~/mysecret
+        fusermount -u ~/secrets
 @end example
-
-You may also use the hstray.py GNOME panel utility to unmount secret 
-directories. The panel utility can only see mounts created by 
-by the panel utility.
 
 All directories are automatically unmounted on system shutdown, so HSENCFS
 content is securely protected.
-                                          
+
 @node Passwords
 @chapter Passwords
 
@@ -132,8 +123,11 @@ deployment, but the console program (hsaskpass) can also be specified.
 An example of on demand password command line:
 
 @example
-hsencfs -o -a 'which hsaskpass.py` ~/.mydata ~/mysecret
+hsencfs -o -a 'which hsaskpass.py` ~/secrets ~/.secrets
 @end example
+
+Please note that one may use any valid directory name, 'secrets' is used as an
+example.
 
 The 'which' utility is executed as HSENCFS does not search the path. An
  additional measure to prevent users from tempering with the askpass path.
@@ -158,25 +152,6 @@ portable across systems.
 @node Directories
 @chapter Directories
 
-@cindex The Data Directory
-@section The Data directory:
-
-Files can be extracted from the backing data directory with the 'bpdec2'
-utility. To extract a single encrypted file by hand:
-
-     bpdec2 ~/secretdata/filename > newname
-
-(Will ask for password.)
-
-Also, files can be copied to the backing data directory with
-the 'bpenc2' utility. To add a single file into the data directory by hand:
-
-     bpdec2 filename > ~/.secretdata/newname
-
-(Will ask for password.)
-
-Both utilities need the correct password to be accessible from the HSENCFS.
-
 Files can be copied out from the backing data directory. They stay encrypted
 when copied directly out of the data directory. This is useful for backup /
 replication / archiving etc ...
@@ -184,7 +159,9 @@ replication / archiving etc ...
 @cindex The Mountpoint directory
 @section The Mountpoint directory:
 
-When the mountpoint is mounted, data is encrypted / decrypted on the fly.
+When the mountpoint is mounted, data written to it is encrypted in line,
+data read from it is decrypted in line, on the fly.
+
 FUSE will warn you if the mount directory is not empty on mount. (it is
 usually undesirable to mount over data)
 
@@ -194,76 +171,12 @@ data to mountpoint ends up encrypted in mountdata. Because of HSENCFS intercept
 concept, encryption / decryption is fast. It is possible to use it to encrypt
 video streams.
 
-@cindex The System Tray / Panel
-@section Controlling HSENCFS
-
-HSENCFS can be controlled from the GNOME System tray with the hstray.py utility. New mounts can be added, mounted or unmounted. The mounts are
-relative to the user's home directory unless absolute path is specified. Deleting mounts from the hstray's list does not effect the data behind it.
-The mounts created from the system tray are visible from the command line,
-but the mounts created on the command line are not visible in the system
-tray. (added protection)
-
-@node bpdec2
-@chapter bpdec2
-
-@cindex bpdec2 Decrypting Utility
-
-@section HSENCFS Decrypting Utility
-
-This utility is intended as a rescue / testing tool for HSENCFS.
-Files can be extracted from the backing data directory with the 'bpdec2' 
-utility. To extract a single encrypted file by hand:
-
-     bpdec2 ~/secretdata/filename > newfilename
-     
-(Will ask for password.)
-
-Please note, that no key management is done, this utility will blindly obey 
-your command to decrypt a file. Entering the wrong 
-password on decryption will generate false clear text. 
-
-     !!! It is your responsibility to use this collection as intended. !!!
-
-@cindex bpenc2 Encrypting Utility
-@node bpenc2
-@chapter bpenc2
-
-@section HSENCFS Encrypting Utility
-
-This utility is intended as a rescue / testing tool for HSENCFS.
-Files can be copied to the backing data directory with 
-the 'bpenc2' utility. To add a single file into the data directory by hand:
-
-     bpdec2 filename > ~/.secretdata/newfilename
-     
-(Will ask for password.)
-
-Please note, that no key management is done, this utility will blindly obey 
-your command to encrypt a file. Entering the wrong password on encryption
-will generate false cypher text.
-
-     !!! It is your responsibility to use this collection as intended. !!!
-
-@node hstray.py
-@chapter hstray.py
-@cindex The Panel Utility
-@section The HSENCFS GNOME System tray / Panel utility
-
-HSENCFS can be controlled from the GNOME System tray with the hstray.py 
-utility. New mounts can be added, mounted or unmounted. The mounts are 
-relative to the user's home directory unless absolute path is specified.
-Deleting mounts from the hstray's list does not effect the data behind it.
-
-The mounts created from the system tray are visible from the command line, 
-but the mounts created on the command line are not visible in the system 
-tray. (added protection)
-
 @node Command Line
 @chapter Command Line
 
 @section Command Line options and arguments
 
-Usage: hsencfs [options] storagedir mountpoint
+Usage: hsencfs [options]  mountpoint storagedir
 
 @indent  'storageedir' is a storage directory for data.@*
 @indent  'mountpoint' is a directory for user visible data.
@@ -274,7 +187,7 @@ Use dotted name as storagedir for convenient hiding  of data names@.
 
 @subheading Options:
 
-@indent  -l num      -- Use log level  (--loglevel)@*
+@indent   -l num      -- Use log level  (--loglevel)@*
 @indent   -p pass     -- Use pass (!!Warning!! cleartext pass) (--pass)@*
 @indent   -a program  -- Use program for asking pass (--askpass)@*
 @indent   -o          -- On demand pass. Ask on first access (--ondemand)@*
@@ -347,8 +260,8 @@ Use -- (double dash) at the end of options for appending fuse options.
 @noindent For example:
 
 @example
-'hsencfs sdata mpoint -- -o ro' # for read only mount.
-'hsencfs sdata mpoint -- -o allow_other' # for multi user visible mount.
+'hsencfs mountpoint -- -o ro' # for read only mount.
+'hsencfs mountpoint -- -o allow_other' # for multi user visible mount.
 @end example
 
 Fuse will not allow most of the allow_other option unless configured
@@ -357,15 +270,8 @@ in /etc/fuse.conf (add a line: 'user_allow_other')
 Typical invocation:
 
 @example
-    hsenc -l 2  ~/.secretdata ~/secret
+    hsenc -l 2 ~/secrets
 @end example
-
-@node Further development
-@chapter Further development
-@section Further development
-
-The industrial / professional version of this project is available upon 
-request. Please send a message to the author. (see Sourceforge page)
 
 @anchor{Notes}
 @section Notes
@@ -377,7 +283,7 @@ hsaskpass source(s) for details.
 @anchor{Verify Notes}
 @section Verification Notes
 
-The HSENCFS project has an md5 sum file for all it's files. One can verify 
+The HSENCFS project has an md5 sum file for all it's files. One can verify
 the project's integrity with the shell utility 'checksum.sh' @*
 The sum is generated with the gensum.sh shell utility. @*
 ^The command 'make installcheck' in the original dir also confirms
