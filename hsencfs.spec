@@ -6,11 +6,11 @@ Summary:        High Security Encrypted File System
 Group:          Encryption
 License:        GPL
 URL:            http://www.sourceforge.net
-Source0:        hsencfs-1.17.tar.gz
+Source0:        hsencfs-1.4.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildRequires:  fuse
-Requires:       fuse
+BuildRequires:  fuse, fuse3
+Requires:       fuse, fuse3
 
 %description
  HSENCFS is a user space encrypting file system. Simple to set up, seamless

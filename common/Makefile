@@ -176,18 +176,18 @@ am__define_uniq_tagged_files = \
 am__DIST_COMMON = $(srcdir)/Makefile.in $(top_srcdir)/depcomp \
 	$(top_srcdir)/mkinstalldirs
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-ACLOCAL = ${SHELL} '/home/peterglen/pgsrc/hsencfs/missing' aclocal-1.16
+ACLOCAL = ${SHELL} '/home/peterglen/pgsrc/hsencfs/hsencfs/missing' aclocal-1.16
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 1
-AUTOCONF = ${SHELL} '/home/peterglen/pgsrc/hsencfs/missing' autoconf
-AUTOHEADER = ${SHELL} '/home/peterglen/pgsrc/hsencfs/missing' autoheader
-AUTOMAKE = ${SHELL} '/home/peterglen/pgsrc/hsencfs/missing' automake-1.16
+AUTOCONF = ${SHELL} '/home/peterglen/pgsrc/hsencfs/hsencfs/missing' autoconf
+AUTOHEADER = ${SHELL} '/home/peterglen/pgsrc/hsencfs/hsencfs/missing' autoheader
+AUTOMAKE = ${SHELL} '/home/peterglen/pgsrc/hsencfs/hsencfs/missing' automake-1.16
 AWK = gawk
 CC = gcc
-CCDEPMODE = depmode=gcc3
+CCDEPMODE = depmode=none
 CFLAGS = 
 CPP = gcc -E
-CPPFLAGS =   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS
+CPPFLAGS = -Wdate-time -D_FORTIFY_SOURCE=2  -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS
 CSCOPE = cscope
 CTAGS = ctags
 CYGPATH_W = echo
@@ -205,11 +205,11 @@ INSTALL_DATA = ${INSTALL} -m 644
 INSTALL_PROGRAM = ${INSTALL}
 INSTALL_SCRIPT = ${INSTALL}
 INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
-LDFLAGS =   
+LDFLAGS = -Wl,-Bsymbolic-functions -flto=auto -ffat-lto-objects -flto=auto -Wl,-z,relro  
 LIBOBJS = 
 LIBS = -lulockmgr 
 LTLIBOBJS = 
-MAKEINFO = ${SHELL} '/home/peterglen/pgsrc/hsencfs/missing' makeinfo
+MAKEINFO = ${SHELL} '/home/peterglen/pgsrc/hsencfs/hsencfs/missing' makeinfo
 MKDIR_P = /usr/bin/mkdir -p
 OBJEXT = o
 PACKAGE = hsencfs
@@ -224,10 +224,10 @@ SET_MAKE =
 SHELL = /bin/bash
 STRIP = 
 VERSION = 1.4.0
-abs_builddir = /home/peterglen/pgsrc/hsencfs/common
-abs_srcdir = /home/peterglen/pgsrc/hsencfs/common
-abs_top_builddir = /home/peterglen/pgsrc/hsencfs
-abs_top_srcdir = /home/peterglen/pgsrc/hsencfs
+abs_builddir = /home/peterglen/pgsrc/hsencfs/hsencfs/common
+abs_srcdir = /home/peterglen/pgsrc/hsencfs/hsencfs/common
+abs_top_builddir = /home/peterglen/pgsrc/hsencfs/hsencfs
+abs_top_srcdir = /home/peterglen/pgsrc/hsencfs/hsencfs
 ac_ct_CC = gcc
 am__include = include
 am__leading_dot = .
@@ -236,7 +236,7 @@ am__tar = $${TAR-tar} chof - "$$tardir"
 am__untar = $${TAR-tar} xf -
 bindir = ${exec_prefix}/bin
 build = x86_64-pc-linux-gnu
-build_alias = 
+build_alias = x86_64-linux-gnu
 build_cpu = x86_64
 build_os = linux-gnu
 build_vendor = pc
@@ -253,24 +253,24 @@ host_os = linux-gnu
 host_vendor = pc
 htmldir = ${docdir}
 includedir = ${prefix}/include
-infodir = ${datarootdir}/info
-install_sh = ${SHELL} /home/peterglen/pgsrc/hsencfs/install-sh
-libdir = ${exec_prefix}/lib
+infodir = ${prefix}/share/info
+install_sh = ${SHELL} /home/peterglen/pgsrc/hsencfs/hsencfs/install-sh
+libdir = ${prefix}/lib/x86_64-linux-gnu
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
-localstatedir = ${prefix}/var
-mandir = ${datarootdir}/man
+localstatedir = /var
+mandir = ${prefix}/share/man
 mkdir_p = $(MKDIR_P)
 oldincludedir = /usr/include
 pdfdir = ${docdir}
-prefix = /usr/local
+prefix = /usr
 program_transform_name = s,x,x,
 psdir = ${docdir}
-runstatedir = ${localstatedir}/run
+runstatedir = /run
 sbindir = ${exec_prefix}/sbin
 sharedstatedir = ${prefix}/com
 srcdir = .
-sysconfdir = ${prefix}/etc
+sysconfdir = /etc
 target_alias = 
 top_build_prefix = ../
 top_builddir = ..
@@ -339,10 +339,10 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-include ../bluepoint/$(DEPDIR)/hsaskpass-bluepoint2.Po # am--include-marker
-include ./$(DEPDIR)/hsaskpass-hsaskpass.Po # am--include-marker
-include ./$(DEPDIR)/hsaskpass-hspass.Po # am--include-marker
-include ./$(DEPDIR)/hsaskpass-hsutils.Po # am--include-marker
+#include ../bluepoint/$(DEPDIR)/hsaskpass-bluepoint2.Po # am--include-marker
+#include ./$(DEPDIR)/hsaskpass-hsaskpass.Po # am--include-marker
+#include ./$(DEPDIR)/hsaskpass-hspass.Po # am--include-marker
+#include ./$(DEPDIR)/hsaskpass-hsutils.Po # am--include-marker
 
 $(am__depfiles_remade):
 	@$(MKDIR_P) $(@D)
@@ -351,76 +351,76 @@ $(am__depfiles_remade):
 am--depfiles: $(am__depfiles_remade)
 
 .c.o:
-	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
-	$(COMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ $< &&\
-	$(am__mv) $$depbase.Tpo $$depbase.Po
-#	$(AM_V_CC)source='$<' object='$@' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(COMPILE) -c -o $@ $<
+#	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
+#	$(COMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ $< &&\
+#	$(am__mv) $$depbase.Tpo $$depbase.Po
+#	$(AM_V_CC)source='$<' object='$@' libtool=no 
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) 
+	$(AM_V_CC)$(COMPILE) -c -o $@ $<
 
 .c.obj:
-	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.obj$$||'`;\
-	$(COMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ `$(CYGPATH_W) '$<'` &&\
-	$(am__mv) $$depbase.Tpo $$depbase.Po
-#	$(AM_V_CC)source='$<' object='$@' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(COMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
+#	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.obj$$||'`;\
+#	$(COMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ `$(CYGPATH_W) '$<'` &&\
+#	$(am__mv) $$depbase.Tpo $$depbase.Po
+#	$(AM_V_CC)source='$<' object='$@' libtool=no 
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) 
+	$(AM_V_CC)$(COMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
 
 hsaskpass-hsaskpass.o: hsaskpass.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -MT hsaskpass-hsaskpass.o -MD -MP -MF $(DEPDIR)/hsaskpass-hsaskpass.Tpo -c -o hsaskpass-hsaskpass.o `test -f 'hsaskpass.c' || echo '$(srcdir)/'`hsaskpass.c
-	$(AM_V_at)$(am__mv) $(DEPDIR)/hsaskpass-hsaskpass.Tpo $(DEPDIR)/hsaskpass-hsaskpass.Po
-#	$(AM_V_CC)source='hsaskpass.c' object='hsaskpass-hsaskpass.o' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -c -o hsaskpass-hsaskpass.o `test -f 'hsaskpass.c' || echo '$(srcdir)/'`hsaskpass.c
+#	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -MT hsaskpass-hsaskpass.o -MD -MP -MF $(DEPDIR)/hsaskpass-hsaskpass.Tpo -c -o hsaskpass-hsaskpass.o `test -f 'hsaskpass.c' || echo '$(srcdir)/'`hsaskpass.c
+#	$(AM_V_at)$(am__mv) $(DEPDIR)/hsaskpass-hsaskpass.Tpo $(DEPDIR)/hsaskpass-hsaskpass.Po
+#	$(AM_V_CC)source='hsaskpass.c' object='hsaskpass-hsaskpass.o' libtool=no 
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) 
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -c -o hsaskpass-hsaskpass.o `test -f 'hsaskpass.c' || echo '$(srcdir)/'`hsaskpass.c
 
 hsaskpass-hsaskpass.obj: hsaskpass.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -MT hsaskpass-hsaskpass.obj -MD -MP -MF $(DEPDIR)/hsaskpass-hsaskpass.Tpo -c -o hsaskpass-hsaskpass.obj `if test -f 'hsaskpass.c'; then $(CYGPATH_W) 'hsaskpass.c'; else $(CYGPATH_W) '$(srcdir)/hsaskpass.c'; fi`
-	$(AM_V_at)$(am__mv) $(DEPDIR)/hsaskpass-hsaskpass.Tpo $(DEPDIR)/hsaskpass-hsaskpass.Po
-#	$(AM_V_CC)source='hsaskpass.c' object='hsaskpass-hsaskpass.obj' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -c -o hsaskpass-hsaskpass.obj `if test -f 'hsaskpass.c'; then $(CYGPATH_W) 'hsaskpass.c'; else $(CYGPATH_W) '$(srcdir)/hsaskpass.c'; fi`
+#	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -MT hsaskpass-hsaskpass.obj -MD -MP -MF $(DEPDIR)/hsaskpass-hsaskpass.Tpo -c -o hsaskpass-hsaskpass.obj `if test -f 'hsaskpass.c'; then $(CYGPATH_W) 'hsaskpass.c'; else $(CYGPATH_W) '$(srcdir)/hsaskpass.c'; fi`
+#	$(AM_V_at)$(am__mv) $(DEPDIR)/hsaskpass-hsaskpass.Tpo $(DEPDIR)/hsaskpass-hsaskpass.Po
+#	$(AM_V_CC)source='hsaskpass.c' object='hsaskpass-hsaskpass.obj' libtool=no 
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) 
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -c -o hsaskpass-hsaskpass.obj `if test -f 'hsaskpass.c'; then $(CYGPATH_W) 'hsaskpass.c'; else $(CYGPATH_W) '$(srcdir)/hsaskpass.c'; fi`
 
 hsaskpass-hsutils.o: hsutils.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -MT hsaskpass-hsutils.o -MD -MP -MF $(DEPDIR)/hsaskpass-hsutils.Tpo -c -o hsaskpass-hsutils.o `test -f 'hsutils.c' || echo '$(srcdir)/'`hsutils.c
-	$(AM_V_at)$(am__mv) $(DEPDIR)/hsaskpass-hsutils.Tpo $(DEPDIR)/hsaskpass-hsutils.Po
-#	$(AM_V_CC)source='hsutils.c' object='hsaskpass-hsutils.o' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -c -o hsaskpass-hsutils.o `test -f 'hsutils.c' || echo '$(srcdir)/'`hsutils.c
+#	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -MT hsaskpass-hsutils.o -MD -MP -MF $(DEPDIR)/hsaskpass-hsutils.Tpo -c -o hsaskpass-hsutils.o `test -f 'hsutils.c' || echo '$(srcdir)/'`hsutils.c
+#	$(AM_V_at)$(am__mv) $(DEPDIR)/hsaskpass-hsutils.Tpo $(DEPDIR)/hsaskpass-hsutils.Po
+#	$(AM_V_CC)source='hsutils.c' object='hsaskpass-hsutils.o' libtool=no 
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) 
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -c -o hsaskpass-hsutils.o `test -f 'hsutils.c' || echo '$(srcdir)/'`hsutils.c
 
 hsaskpass-hsutils.obj: hsutils.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -MT hsaskpass-hsutils.obj -MD -MP -MF $(DEPDIR)/hsaskpass-hsutils.Tpo -c -o hsaskpass-hsutils.obj `if test -f 'hsutils.c'; then $(CYGPATH_W) 'hsutils.c'; else $(CYGPATH_W) '$(srcdir)/hsutils.c'; fi`
-	$(AM_V_at)$(am__mv) $(DEPDIR)/hsaskpass-hsutils.Tpo $(DEPDIR)/hsaskpass-hsutils.Po
-#	$(AM_V_CC)source='hsutils.c' object='hsaskpass-hsutils.obj' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -c -o hsaskpass-hsutils.obj `if test -f 'hsutils.c'; then $(CYGPATH_W) 'hsutils.c'; else $(CYGPATH_W) '$(srcdir)/hsutils.c'; fi`
+#	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -MT hsaskpass-hsutils.obj -MD -MP -MF $(DEPDIR)/hsaskpass-hsutils.Tpo -c -o hsaskpass-hsutils.obj `if test -f 'hsutils.c'; then $(CYGPATH_W) 'hsutils.c'; else $(CYGPATH_W) '$(srcdir)/hsutils.c'; fi`
+#	$(AM_V_at)$(am__mv) $(DEPDIR)/hsaskpass-hsutils.Tpo $(DEPDIR)/hsaskpass-hsutils.Po
+#	$(AM_V_CC)source='hsutils.c' object='hsaskpass-hsutils.obj' libtool=no 
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) 
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -c -o hsaskpass-hsutils.obj `if test -f 'hsutils.c'; then $(CYGPATH_W) 'hsutils.c'; else $(CYGPATH_W) '$(srcdir)/hsutils.c'; fi`
 
 hsaskpass-hspass.o: hspass.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -MT hsaskpass-hspass.o -MD -MP -MF $(DEPDIR)/hsaskpass-hspass.Tpo -c -o hsaskpass-hspass.o `test -f 'hspass.c' || echo '$(srcdir)/'`hspass.c
-	$(AM_V_at)$(am__mv) $(DEPDIR)/hsaskpass-hspass.Tpo $(DEPDIR)/hsaskpass-hspass.Po
-#	$(AM_V_CC)source='hspass.c' object='hsaskpass-hspass.o' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -c -o hsaskpass-hspass.o `test -f 'hspass.c' || echo '$(srcdir)/'`hspass.c
+#	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -MT hsaskpass-hspass.o -MD -MP -MF $(DEPDIR)/hsaskpass-hspass.Tpo -c -o hsaskpass-hspass.o `test -f 'hspass.c' || echo '$(srcdir)/'`hspass.c
+#	$(AM_V_at)$(am__mv) $(DEPDIR)/hsaskpass-hspass.Tpo $(DEPDIR)/hsaskpass-hspass.Po
+#	$(AM_V_CC)source='hspass.c' object='hsaskpass-hspass.o' libtool=no 
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) 
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -c -o hsaskpass-hspass.o `test -f 'hspass.c' || echo '$(srcdir)/'`hspass.c
 
 hsaskpass-hspass.obj: hspass.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -MT hsaskpass-hspass.obj -MD -MP -MF $(DEPDIR)/hsaskpass-hspass.Tpo -c -o hsaskpass-hspass.obj `if test -f 'hspass.c'; then $(CYGPATH_W) 'hspass.c'; else $(CYGPATH_W) '$(srcdir)/hspass.c'; fi`
-	$(AM_V_at)$(am__mv) $(DEPDIR)/hsaskpass-hspass.Tpo $(DEPDIR)/hsaskpass-hspass.Po
-#	$(AM_V_CC)source='hspass.c' object='hsaskpass-hspass.obj' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -c -o hsaskpass-hspass.obj `if test -f 'hspass.c'; then $(CYGPATH_W) 'hspass.c'; else $(CYGPATH_W) '$(srcdir)/hspass.c'; fi`
+#	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -MT hsaskpass-hspass.obj -MD -MP -MF $(DEPDIR)/hsaskpass-hspass.Tpo -c -o hsaskpass-hspass.obj `if test -f 'hspass.c'; then $(CYGPATH_W) 'hspass.c'; else $(CYGPATH_W) '$(srcdir)/hspass.c'; fi`
+#	$(AM_V_at)$(am__mv) $(DEPDIR)/hsaskpass-hspass.Tpo $(DEPDIR)/hsaskpass-hspass.Po
+#	$(AM_V_CC)source='hspass.c' object='hsaskpass-hspass.obj' libtool=no 
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) 
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -c -o hsaskpass-hspass.obj `if test -f 'hspass.c'; then $(CYGPATH_W) 'hspass.c'; else $(CYGPATH_W) '$(srcdir)/hspass.c'; fi`
 
 ../bluepoint/hsaskpass-bluepoint2.o: ../bluepoint/bluepoint2.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -MT ../bluepoint/hsaskpass-bluepoint2.o -MD -MP -MF ../bluepoint/$(DEPDIR)/hsaskpass-bluepoint2.Tpo -c -o ../bluepoint/hsaskpass-bluepoint2.o `test -f '../bluepoint/bluepoint2.c' || echo '$(srcdir)/'`../bluepoint/bluepoint2.c
-	$(AM_V_at)$(am__mv) ../bluepoint/$(DEPDIR)/hsaskpass-bluepoint2.Tpo ../bluepoint/$(DEPDIR)/hsaskpass-bluepoint2.Po
-#	$(AM_V_CC)source='../bluepoint/bluepoint2.c' object='../bluepoint/hsaskpass-bluepoint2.o' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -c -o ../bluepoint/hsaskpass-bluepoint2.o `test -f '../bluepoint/bluepoint2.c' || echo '$(srcdir)/'`../bluepoint/bluepoint2.c
+#	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -MT ../bluepoint/hsaskpass-bluepoint2.o -MD -MP -MF ../bluepoint/$(DEPDIR)/hsaskpass-bluepoint2.Tpo -c -o ../bluepoint/hsaskpass-bluepoint2.o `test -f '../bluepoint/bluepoint2.c' || echo '$(srcdir)/'`../bluepoint/bluepoint2.c
+#	$(AM_V_at)$(am__mv) ../bluepoint/$(DEPDIR)/hsaskpass-bluepoint2.Tpo ../bluepoint/$(DEPDIR)/hsaskpass-bluepoint2.Po
+#	$(AM_V_CC)source='../bluepoint/bluepoint2.c' object='../bluepoint/hsaskpass-bluepoint2.o' libtool=no 
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) 
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -c -o ../bluepoint/hsaskpass-bluepoint2.o `test -f '../bluepoint/bluepoint2.c' || echo '$(srcdir)/'`../bluepoint/bluepoint2.c
 
 ../bluepoint/hsaskpass-bluepoint2.obj: ../bluepoint/bluepoint2.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -MT ../bluepoint/hsaskpass-bluepoint2.obj -MD -MP -MF ../bluepoint/$(DEPDIR)/hsaskpass-bluepoint2.Tpo -c -o ../bluepoint/hsaskpass-bluepoint2.obj `if test -f '../bluepoint/bluepoint2.c'; then $(CYGPATH_W) '../bluepoint/bluepoint2.c'; else $(CYGPATH_W) '$(srcdir)/../bluepoint/bluepoint2.c'; fi`
-	$(AM_V_at)$(am__mv) ../bluepoint/$(DEPDIR)/hsaskpass-bluepoint2.Tpo ../bluepoint/$(DEPDIR)/hsaskpass-bluepoint2.Po
-#	$(AM_V_CC)source='../bluepoint/bluepoint2.c' object='../bluepoint/hsaskpass-bluepoint2.obj' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -c -o ../bluepoint/hsaskpass-bluepoint2.obj `if test -f '../bluepoint/bluepoint2.c'; then $(CYGPATH_W) '../bluepoint/bluepoint2.c'; else $(CYGPATH_W) '$(srcdir)/../bluepoint/bluepoint2.c'; fi`
+#	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -MT ../bluepoint/hsaskpass-bluepoint2.obj -MD -MP -MF ../bluepoint/$(DEPDIR)/hsaskpass-bluepoint2.Tpo -c -o ../bluepoint/hsaskpass-bluepoint2.obj `if test -f '../bluepoint/bluepoint2.c'; then $(CYGPATH_W) '../bluepoint/bluepoint2.c'; else $(CYGPATH_W) '$(srcdir)/../bluepoint/bluepoint2.c'; fi`
+#	$(AM_V_at)$(am__mv) ../bluepoint/$(DEPDIR)/hsaskpass-bluepoint2.Tpo ../bluepoint/$(DEPDIR)/hsaskpass-bluepoint2.Po
+#	$(AM_V_CC)source='../bluepoint/bluepoint2.c' object='../bluepoint/hsaskpass-bluepoint2.obj' libtool=no 
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) 
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -c -o ../bluepoint/hsaskpass-bluepoint2.obj `if test -f '../bluepoint/bluepoint2.c'; then $(CYGPATH_W) '../bluepoint/bluepoint2.c'; else $(CYGPATH_W) '$(srcdir)/../bluepoint/bluepoint2.c'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique

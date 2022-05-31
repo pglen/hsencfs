@@ -2,23 +2,12 @@
 
 ##  The High Security encrypting File System.
 
-  Progress:
-
-  ...  some working parts; almost ready to deploy
-
-### Announcements / History
-
-        Tue 06.Jul.2021     dummy encryption is intercepted correctly
-        Tue 06.Jul.2021     dummy encryption intercepted, working OK
-        Tue 12.Apr.2022     started virtual based encryption (simpler algorithm)
-        Tue 10.May.2022     real encryption operational
-        Tue 10.May.2022     hsaskpass.py ported, tested
-
  HSENCFS is a user space encrypting file system. Simple to set up, seamless
-to use, fast, safe, secure and maintenance free. It will encrypt
-data on the fly written to it, decrypt data read from it. HSENCFS uses only
-storage space for actual data stored, no pre-allocation needed. It is fast
-enough for real time Video Encryption. HSENCFS is classified as a variable
+to use, fast, safe, secure and maintenance free. It will encrypt data on the
+ fly written to it, decrypt data read from it.
+
+ HSENCFS uses only storage space for actual data stored, no pre-allocation needed.
+It is fast enough for real time Video Encryption. HSENCFS is classified as a variable
 key length encryption.
 
  An additional (and useful) feature is auditing. HSENCFS reports file access
@@ -37,14 +26,13 @@ For added convenience, one may specify a dotted (hidden) file for mount data.
 
       hsencfs  ~/secrets ~/.secrets
 
-(in this example the storage dir becomes: ~/.secrets  (note the leading dot)
+(in both examples the storage dir becomes: ~/.secrets  (note the leading dot)
 
  You may un-mount your secret directory with the normal umount(8) utility
 or the fusermount -u option. After un-mounting, the mounted data is not
 accessible, and the encrypted data is not legible until it is mounted again.
 
-(example: fusermount ~/secrets) The tilde '~' expands to the user's home dir.
-
+(example: fusermount -u ~/secrets) The tilde '~' expands to the user's home dir.
 
 ## Password / Key management.
 
@@ -60,7 +48,7 @@ legal length.
 
  HSENCFS mount can be mounted (started) with the on-demand (-o) password
 option. This allows the encryption to ask for a password when any
-encrypted file is first accessed.
+encrypted file is first accessed or listed.
 
  The on-demand option requires the use of an ask-pass program. The
 hsaskpass.py is supplied for GUI deployment. HSENCFS will start the ask-pass
@@ -69,7 +57,7 @@ deployment, but the console program (hsaskpass) can also be specified.
 
 An example of on-demand command line:
 
-        hsencfs -o -a `which hsaskpass.py` .mydata mysecret
+        hsencfs -o -a `which hsaskpass.py` mysecretdir .mysecretdir
 
    Note the backticks and the 'which' utility, as HSENCFS needs the absolute
 path of the askpass program. In real deployment, specify the askpass program's absolute path.
@@ -100,7 +88,7 @@ files as usual.
 when copied directly out of the backing/data directory. This is useful for backup /
 replication / archiving / transport etc ... make sure you copy them with hidden
 (.nnn.datx) files included. Use: shopt -s dotglob before copy. Warning: the
-copied data will be unreadable without the dot files.
+copied data will be unlegible without the dot files.
 
 ## Going to the Cloud.
 
@@ -126,7 +114,7 @@ command line. Fuse will not allow the allow_other option unless configured in
 /etc/fuse.conf (add a line: 'user_allow_other')
 
  Example:
-        hsencfs .mydata mymount -- -o allow_other
+        hsencfs mymount -- -o allow_other
 
 ## Technical Description:
 
@@ -177,7 +165,6 @@ or the whole system.
  The industrial version of this project is available upon request.
 Please send a message to the author. (see github page)
 
-
 ## Configuring syslog
 
 Useful trick to see the logs in a separate file. Edit (Create) /etc/rsyslog/rsyslog.d/10-custom.conf
@@ -217,12 +204,9 @@ One can copy encrypted files out:
         2.) enable copying all files; use: shopt -s dotglob
         2.) copy as usual
 
-        example:     shopt -s dotglob
-                     cp -a  ~/.secret/*  where_the_encrypted_backup_goes
-                     shopt -s dotglob
-
-
-  Thanks:
+        example:     shopt -s dotglob    # all files, including dot files
+                     cp -a  ~/.secret/*  "where_the_encrypted_backup_goes"
+                     shopt -u dotglob    # restore flag, no dot files any more
 
 Peter Glen
 
