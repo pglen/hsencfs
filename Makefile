@@ -105,7 +105,7 @@ DIST_COMMON = $(srcdir)/Makefile.am $(top_srcdir)/configure \
 	$(am__DIST_COMMON)
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
-mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
+mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
@@ -195,8 +195,7 @@ am__define_uniq_tagged_files = \
 DIST_SUBDIRS = $(SUBDIRS)
 am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/config.h.in AUTHORS \
 	COPYING ChangeLog INSTALL NEWS README TODO compile \
-	config.guess config.sub depcomp install-sh missing \
-	mkinstalldirs
+	config.guess config.sub depcomp install-sh missing
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -249,10 +248,10 @@ AUTOHEADER = ${SHELL} '/home/peterglen/pgsrc/hsencfs/hsencfs/missing' autoheader
 AUTOMAKE = ${SHELL} '/home/peterglen/pgsrc/hsencfs/hsencfs/missing' automake-1.16
 AWK = gawk
 CC = gcc
-CCDEPMODE = depmode=gcc3
+CCDEPMODE = depmode=none
 CFLAGS = 
 CPP = gcc -E
-CPPFLAGS =   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS
+CPPFLAGS = -Wdate-time -D_FORTIFY_SOURCE=2  -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS
 CSCOPE = cscope
 CTAGS = ctags
 CYGPATH_W = echo
@@ -270,7 +269,7 @@ INSTALL_DATA = ${INSTALL} -m 644
 INSTALL_PROGRAM = ${INSTALL}
 INSTALL_SCRIPT = ${INSTALL}
 INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
-LDFLAGS =   
+LDFLAGS = -Wl,-Bsymbolic-functions -flto=auto -ffat-lto-objects -flto=auto -Wl,-z,relro  
 LIBOBJS = 
 LIBS = -lulockmgr 
 LTLIBOBJS = 
@@ -301,7 +300,7 @@ am__tar = $${TAR-tar} chof - "$$tardir"
 am__untar = $${TAR-tar} xf -
 bindir = ${exec_prefix}/bin
 build = x86_64-pc-linux-gnu
-build_alias = 
+build_alias = x86_64-linux-gnu
 build_cpu = x86_64
 build_os = linux-gnu
 build_vendor = pc
@@ -318,24 +317,24 @@ host_os = linux-gnu
 host_vendor = pc
 htmldir = ${docdir}
 includedir = ${prefix}/include
-infodir = ${datarootdir}/info
+infodir = ${prefix}/share/info
 install_sh = ${SHELL} /home/peterglen/pgsrc/hsencfs/hsencfs/install-sh
-libdir = ${exec_prefix}/lib
-libexecdir = ${exec_prefix}/libexec
+libdir = ${prefix}/lib/x86_64-linux-gnu
+libexecdir = ${prefix}/lib/x86_64-linux-gnu
 localedir = ${datarootdir}/locale
-localstatedir = ${prefix}/var
-mandir = ${datarootdir}/man
+localstatedir = /var
+mandir = ${prefix}/share/man
 mkdir_p = $(MKDIR_P)
 oldincludedir = /usr/include
 pdfdir = ${docdir}
-prefix = /usr/local
+prefix = /usr
 program_transform_name = s,x,x,
 psdir = ${docdir}
 runstatedir = ${localstatedir}/run
 sbindir = ${exec_prefix}/sbin
 sharedstatedir = ${prefix}/com
 srcdir = .
-sysconfdir = ${prefix}/etc
+sysconfdir = /etc
 target_alias = 
 top_build_prefix = 
 top_builddir = .
@@ -914,13 +913,13 @@ uninstall-am: uninstall-dist_binSCRIPTS uninstall-dist_docDATA \
 .PRECIOUS: Makefile
 
 
-check:
-    # Create new folder, destroy at end. Good example of installation-less
-    # creation of a secret folder with the force option
-	@./src/hsencfs -q -l 2 -f -p 1234 ~/.testdata ~/testsecrets
-	@-$(srcdir)/enctest.sh
-	@-fusermount -u ~/testsecrets
-	@-rm -rf ~/testsecrets ~/.testdata
+#check:
+#    # Create new folder, destroy at end. Good example of installation-less
+#    # creation of a secret folder with the force option
+#	@./src/hsencfs -q -l 2 -f -p 1234 ~/.testdata ~/testsecrets
+#	@-$(srcdir)/enctest.sh
+#	@-fusermount -u ~/testsecrets
+#	@-rm -rf ~/testsecrets ~/.testdata
 
 #clean-local:
 #	@-chmod -R u+w src/hsencfs-*   > /dev/null 2>&1

@@ -42,13 +42,13 @@ EXTRA_DIST +=                       \
         sha1.sum                    \
         SUMFILE
 
-check:
-    # Create new folder, destroy at end. Good example of installation-less
-    # creation of a secret folder with the force option
-	@./src/hsencfs -q -l 2 -f -p 1234 ~/.testdata ~/testsecrets
-	@-$(srcdir)/enctest.sh
-	@-fusermount -u ~/testsecrets
-	@-rm -rf ~/testsecrets ~/.testdata
+#check:
+#    # Create new folder, destroy at end. Good example of installation-less
+#    # creation of a secret folder with the force option
+#	@./src/hsencfs -q -l 2 -f -p 1234 ~/.testdata ~/testsecrets
+#	@-$(srcdir)/enctest.sh
+#	@-fusermount -u ~/testsecrets
+#	@-rm -rf ~/testsecrets ~/.testdata
 
 #clean-local:
 #	@-chmod -R u+w src/hsencfs-*   > /dev/null 2>&1

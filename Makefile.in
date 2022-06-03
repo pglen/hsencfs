@@ -105,7 +105,7 @@ DIST_COMMON = $(srcdir)/Makefile.am $(top_srcdir)/configure \
 	$(am__DIST_COMMON)
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
-mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
+mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
@@ -195,8 +195,7 @@ am__define_uniq_tagged_files = \
 DIST_SUBDIRS = $(SUBDIRS)
 am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/config.h.in AUTHORS \
 	COPYING ChangeLog INSTALL NEWS README TODO compile \
-	config.guess config.sub depcomp install-sh missing \
-	mkinstalldirs
+	config.guess config.sub depcomp install-sh missing
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -914,13 +913,13 @@ uninstall-am: uninstall-dist_binSCRIPTS uninstall-dist_docDATA \
 .PRECIOUS: Makefile
 
 
-check:
-    # Create new folder, destroy at end. Good example of installation-less
-    # creation of a secret folder with the force option
-	@./src/hsencfs -q -l 2 -f -p 1234 ~/.testdata ~/testsecrets
-	@-$(srcdir)/enctest.sh
-	@-fusermount -u ~/testsecrets
-	@-rm -rf ~/testsecrets ~/.testdata
+#check:
+#    # Create new folder, destroy at end. Good example of installation-less
+#    # creation of a secret folder with the force option
+#	@./src/hsencfs -q -l 2 -f -p 1234 ~/.testdata ~/testsecrets
+#	@-$(srcdir)/enctest.sh
+#	@-fusermount -u ~/testsecrets
+#	@-rm -rf ~/testsecrets ~/.testdata
 
 #clean-local:
 #	@-chmod -R u+w src/hsencfs-*   > /dev/null 2>&1
