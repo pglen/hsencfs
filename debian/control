@@ -1,8 +1,6 @@
 Source: hsencfs
 Section: devel
 Priority: optional
-XS-Testsuite: autopkgtest
-Rules-Requires-Root: no
 Maintainer: Peter Glen <peterglen99@gmail.com>
 
 Package: hsencfs
