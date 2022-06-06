@@ -2,11 +2,12 @@ Source: hsencfs
 Section: devel
 Priority: optional
 Maintainer: Peter Glen <peterglen99@gmail.com>
+Build-Depends: fuse, fuse3
+Standards-Version: 3.8.4
 
 Package: hsencfs
 Architecture: all
-Build-Depends: fuse, fuse3
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: fuse, fuse3, ${shlibs:Depends}, ${misc:Depends}
 Description: High Security Encrypted file system
  The HSENCFS encrypting file system is a resource friendly secure in line
  encrypting file system.

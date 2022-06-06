@@ -3,10 +3,10 @@
 
 # Fuse based encrypted file system, test utilities
 
-bin_PROGRAMS =  hsencfs \
-tests/dualwrite tests/seekcp tests/zigjump tests/zigzag tests/farwrite \
-tests/onejump tests/dualread tests/jumpread
+bin_PROGRAMS =  hsencfs
 
+#tests/dualwrite tests/seekcp tests/zigjump tests/zigzag tests/farwrite
+#tests/onejump tests/dualread tests/jumpread
 #hsaskpass
 
 # The main program

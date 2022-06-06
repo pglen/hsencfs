@@ -1,3 +1,46 @@
+hsencfs (1.4.7) jammy; urgency=medium
+
+  * Packaging training
+
+ -- Peter Glen <peterglen99@gmail.com>  Mon, 6 Jun 2022 16:30:00 +0100
+
+hsencfs (1.4.6) jammy; urgency=medium
+
+  * Packaging training
+
+ -- Peter Glen <peterglen99@gmail.com>  Mon, 6 Jun 2022 16:30:00 +0100
+
+hsencfs (1.4.5) jammy; urgency=medium
+
+  * Packaging training
+
+ -- Peter Glen <peterglen99@gmail.com>  Mon, 6 Jun 2022 16:30:00 +0100
+
+hsencfs (1.4.4) jammy; urgency=medium
+
+  * Test (again) packaging ..
+
+ -- Peter Glen <peterglen99@gmail.com>  Mon, 6 Jun 2022 15:30:00 +0100
+
+hsencfs (1.4.3) jammy; urgency=medium
+
+  * No cigar on packaging ..
+
+ -- Peter Glen <peterglen99@gmail.com>  Mon, 6 Jun 2022 15:30:00 +0100
+
+hsencfs (1.4.2) jammy; urgency=medium
+
+  * Try rebuild
+
+ -- Peter Glen <peterglen99@gmail.com>  Mon, 6 Jun 2022 11:21:00 +0100
+
+hsencfs (1.4.1) jammy; urgency=medium
+
+  * Test new changes
+
+ -- Peter Glen <peterglen99@gmail.com>  Fri, 3 Jun 2022 15:41:00 +0100
+
+
 hsencfs (1.4.0) jammy; urgency=medium
 
   * No-change rebuild

@@ -1,0 +1,25 @@
+#!/usr/bin/make -f
+DH_VERBOSE = 1
+%:
+	dh $@  --with autotools-dev
+
+override_dh_auto_clean:
+
+#	[ ! -f Makefile ] || $(MAKE) distclean
+
+override_dh_installdocs:
+	dh_installdocs NEWS
+
+override_dh_builddeb:
+	dh_builddeb -- -Zzstd
+
+override_dh_auto_configure:
+	./configure --enable-gpl
+
+override_dh_auto_build:
+	$(MAKE) all
+
+override_dh_usrlocal:
+	echo
+
+# EOF
