@@ -2,8 +2,8 @@ Source: hsencfs
 Section: devel
 Priority: optional
 Maintainer: Peter Glen <peterglen99@gmail.com>
-Build-Depends: fuse, fuse3
-Standards-Version: 3.8.4
+Build-Depends: build-essential, debhelper, libfuse3-dev, libfuse-dev
+Standards-Version: 3.9.3
 
 Package: hsencfs
 Architecture: all

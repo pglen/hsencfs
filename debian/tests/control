@@ -1,2 +1,0 @@
-Test-Command: for i in tests/*; do echo "Testing $(basename $i) ..."; $i || [ $? = 77 ]; done
-Depends: hello
