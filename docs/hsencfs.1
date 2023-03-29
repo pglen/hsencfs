@@ -11,70 +11,38 @@
 .\" General Public License for more details.
 .\"
 
-.TH hsencfs 1 "Wed 3 Jun 2015" "Peter Glen"
+.TH hsencfs 1 "Tue 7 Jun 2022" "Peter Glen"
 .SH NAME
 hsencfs \- High Security Encrypting File System
 .SH SYNOPSIS
 .B hsencfs
 [
-.I options 
+.I options
 ]  dataroot mountpoint
 .SH DESCRIPTION
-.B HSENCFS 
+.B HSENCFS
 is a user space encrypting file system. It is simple to set up,
 seamless to use, fast, safe, secure and maintenance free.  It will
 automatically encrypt data written to it, decrypt data read from it. It
 only uses storage space for actual data stored, no pre-allocation
-needed. It is fast enough for real time video encryption. HSENCFS is
-classified as a variable key length encryption.
+needed. It is fast, secure, maintainance free. Classified as a variable key
+length encryption.
 
    An additional and useful feature is auditing. HSENCFS reports file
 access by time and user ID. The report is sent to syslog. The log is
 sent to facility 'daemon' with level 'DEBUG'. See: the -l log option.)
 
 .SH OPTIONS
-    -l num      - Use log level  (-loglevel)
-    -p pass     - Use pass (!!Warning!! clear text pass) (-pass)
-    -a program  - Use program for asking pass (-askpass)
-    -o          - On demand pass. Ask on first access (-ondemand)
-    -f          - Force creation of storagedir/mountpoint (-force)
-    -q          - Quiet (-quiet)
-    -v          - Verbose (-verbose)
-    -V          - Print version (-version)
-    
+    -l num      - Use log level  (--loglevel)
+    -p pass     - Use pass (!!Warning!! clear text pass) (--pass)
+    -a program  - Use program for asking pass (--askpass)
+    -o          - On demand pass. Ask on first access (--ondemand)
+    -f          - Force creation of storagedir/mountpoint (--force)
+    -q          - Quiet (--quiet)
+    -v          - Verbose (--verbose)
+    -V          - Print version (--version)
+
 See the info page for more details.
-
-.SH The System Tray / GNOME Panel
-
-.b Controlling HSENCFS
-
-HSENCFS can be controlled from the GNOME Panel / System Tray with the hstray.py utility. 
-New mounts can be added, mounted or unmounted. The mounts are
-relative to the user's home directory unless absolute path is specified. Deleting 
-mounts from the hstray's list does not effect the data behind it.
-The mounts created from the system tray are visible from the command line,
-but the mounts created on the command line are not visible in the system
-tray. (added protection)
-
-.SH Encryption / Decryption Utilites
-
-Files can be extracted from the backing data directory with the 'bpdec2' 
-utility. To extract a single encrypted file by hand:
-
-     bpdec2 ~/secretdata/filename > newname
-     
-(Will ask for password.)
-
-Also, files can be copied to the backing data directory with 
-the 'bpenc2' utility. To add a single file into the data directory by hand:
-
-     bpdec2 filename > ~/.secretdata/newname
-     
-(Will ask for password.)
-
-Both utilities need the correct password to be accessible from the HSENCFS realm.
-Entering the wrong pass will produce false cypher text or decrypt to garbage.
-!You have been warned! These utilities are supplied as recovery tools only.
 
 .SH "SEE ALSO"
 See the hsencfs info page for more details.

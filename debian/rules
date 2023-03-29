@@ -1,9 +1,21 @@
 #!/usr/bin/make -f
-export DH_VERBOSE = 1
+#export DH_VERBOSE = 1
 package=hsencfs
 
 %:
 	dh $@
+
+override_dh_auto_clean:
+	[ ! -f Makefile ] || $(MAKE) distclean
+
+override_dh_installdocs:
+	dh_installdocs NEWS
+
+override_dh_builddeb:
+	dh_builddeb -- -Zzstd
+
+override_dh_auto_install:
+	$(MAKE) DESTDIR=$$(pwd)/debian/hsencfs prefix=/usr install
 
 #clean:
 #	rm -f build
@@ -21,18 +33,6 @@ package=hsencfs
 #	[ ! -f Makefile ] || $(MAKE) install
 #	echo
 #
-
-override_dh_auto_clean:
-	[ ! -f Makefile ] || $(MAKE) distclean
-
-override_dh_installdocs:
-	dh_installdocs NEWS
-
-override_dh_builddeb:
-	dh_builddeb -- -Zzstd
-
-override_dh_auto_install:
-	$(MAKE) DESTDIR=$$(pwd)/debian/hsencfs prefix=/usr install
 
 ##$(checkdir)
 #

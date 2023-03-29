@@ -42,10 +42,10 @@
 // Nothing defined yields error
 // FULL_ENCRYPT activates the real encryption
 
-#define NONE_ENCRYPT      1
+//#define NONE_ENCRYPT      1
 //#define FAKE_ENCRYPT    1
 //#define HALF_ENCRYPT    1
-//#define FULL_ENCRYPT    1
+#define FULL_ENCRYPT    1
 
 extern  int     plen;
 extern  char    passx[MAXPASSLEN];
