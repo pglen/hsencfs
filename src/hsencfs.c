@@ -67,6 +67,7 @@
 #include <syslog.h>
 #include <libgen.h>
 #include <sys/time.h>
+#include <sys/mount.h>
 
 #include <signal.h>
 #include <getopt.h>
@@ -117,8 +118,6 @@ char  passback[PATH_MAX] ;
 // Flags
 static  int     verbose = 0;
 static  int     quiet = 0;
-static  int     force = 0;
-//static  int     nobg = 0;
 static  int     ondemand = 0;
 
 // Maintain internal count
@@ -217,8 +216,6 @@ int     help()
     printf("                -p pass  (--pass ) Use pass. Note: cleartext pass.\n");
     printf("                -a prog  (--askpass ) Use program to askin pass. \n");
     printf("                -o       (--ondemand) On demand pass. Ask on first access.\n");
-    //printf("                -n       (--nobg) Do not go to background. (removed)\n");
-    printf("                -f       (--force) Force creation of storagedir/mountpoint.\n");
     printf("                -q       (--quiet) Quiet, minimal diagnostics printed.\n");
     printf("                -V       (--version) Print hsencfs version.\n");
     printf("                -d level (--debug ) Debug level 0...10 Default: 0\n");
@@ -412,7 +409,6 @@ static struct option long_options[] =
         {"help",        0,  0,  'h'},
         {"pass",        1,  0,  'p'},
         {"quiet",       0,  0,  'g'},
-        {"force",       0,  0,  'f'},
         {"verbose",     0,  0,  'v'},
         {"version",     0,  0,  'V'},
         {"askpass",     0,  0,  'a'},
@@ -447,25 +443,18 @@ int     test_mountpoint(char *ppp, char *mpdir, char *msg)
 
     if (access(mpdir, R_OK) < 0)
         {
-        if (force)
-            {
-            if(verbose && !quiet)
-                printf("Forcing directory creation.\n");
+        if(!quiet)
+            printf("Creating %s dir: '%s'\n", msg, mpdir);
 
-            if(!quiet)
-                printf("Creating %s dir: '%s'\n", msg, mpdir);
-
-            if (mkdir(mpdir, 0744) < 0)
-                {
-                fprintf(stderr,"Cannot create mount point dir: '%s'\n", mpdir);
-                exit(3);
-                }
-            }
-        else
+        if (mkdir(mpdir, 0740) < 0)
             {
-            printf("Cannot access %s dir: '%s'\n", msg, mpdir);
-            exit(2);
+            fprintf(stderr,"Cannot create mount point dir: '%s'\n", mpdir);
+            exit(3);
             }
+        //{
+        //printf("Cannot access %s dir: '%s'\n", msg, mpdir);
+        //exit(2);
+        //}
 
         stat(mpdir, &sss);
         if(!S_ISDIR(sss.st_mode))
@@ -522,12 +511,16 @@ void    parse_comline(int argc, char *argv[])
         switch (cc)
            {
            case 'a':
-                //if(verbose)
-                //    printf("Getting pass from program: '%s'\n", optarg);
-
                 snprintf(passprog, sizeof(passprog), "%s/%s", startdir, optarg);
+                struct stat statbuf;
+                int ret = stat(passprog, &statbuf);
+                if(ret < 0)
+                    {
+                    printf("Cannot stat passprog: '%s'\n", passprog);
+                    exit(1);
+                    }
                 if(verbose)
-                    printf("Passprog: '%s'\n", passprog);
+                    printf("Setting passprog: '%s'\n", passprog);
                 break;
 
            case 'd':
@@ -535,14 +528,6 @@ void    parse_comline(int argc, char *argv[])
                 if(verbose)
                     printf("Setting debug level: '%d'\n", pg_debug);
                 break;
-
-            case 'f':
-                force = 1;
-                break;
-
-            //case 'n':
-            //    nobg = 1;
-            //    break;
 
            case 'l':
                loglevel = atoi(optarg);
@@ -656,6 +641,16 @@ void split_path(const char *path, char *dir, char *fname, char *ext)
         }
 }
 
+void sigterm(int sig)
+
+{
+    hslog(0, "terminating: %d", sig);
+    // Unmount
+    int ret  = umount2(mountpoint, MNT_FORCE);
+    hslog(0, "terminated: %d umount %d %d", sig, ret, errno);
+    exit(127);
+}
+
 // -----------------------------------------------------------------------
 // Main entry point
 
@@ -667,6 +662,9 @@ int     main(int argc, char *argv[])
 
     clock_gettime(CLOCK_REALTIME, &ts);
     umask(0);
+
+    // Set signal handlers
+    signal(SIGTERM, sigterm);
 
     memset(mountpoint,  0, sizeof(mountpoint));
     memset(mountsecret,   0, sizeof(mountsecret));
@@ -823,14 +821,18 @@ int     main(int argc, char *argv[])
 
     if (ondemand)
         {
-        if(!passprog[0])
-            {
-            if(loglevel > 0)
-                syslog(LOG_DEBUG, "Started with ondemand and no askpass proram");
-            fprintf(stderr,"Must specify askpass program with the ondemand option.\n");
-            exit(1);
-            }
+        //if(!passprog[0])
+        //    {
+        //    if(loglevel > 0)
+        //    hslog(0, "Started with ondemand and no askpass proram");
+        //    fprintf(stderr,"Must specify askpass program with the ondemand option.\n");
+        //    exit(1);
+        //    }
         // no pass asked for now
+        if (verbose)
+            {
+            printf("Ondemand pass option activated\n");
+            }
         }
     else
         {
@@ -846,7 +848,6 @@ int     main(int argc, char *argv[])
                 if (res)
                     {
                     //hslog(2, "Askpass delivered: '%s'\n", res);
-
                     // Empty pass ?
                     int rlen = strlen(res);
                     if(rlen == 0)
@@ -901,6 +902,16 @@ int     main(int argc, char *argv[])
     //syslog(LOG_DEBUG, "hsencfs pass from: len=%d '%s'\n", plen,
     //                            bluepoint2_dumphex(passx, plen));
 
+    // Check access
+    if (access(mountpoint, W_OK) < 0)
+        {
+        printf("No mountpoint access, fixing.\n");
+        struct stat statbuf; memset(&statbuf, 0, sizeof(statbuf));
+        int ret2 = stat(mountpoint, &statbuf);
+        printf("mode2 %d of %s %x\n", ret2, mountpoint, statbuf.st_mode);
+        int ret3 = chmod(mountpoint, statbuf.st_mode | S_IWUSR);
+        printf("ret3 %d", ret3);
+        }
     // Write back expanded paths
     char *argv2[6]; int cnt = 0;
     argv2[cnt++]  = "hsencfs";      argv2[cnt++]  = mountpoint;
@@ -922,14 +933,15 @@ int     main(int argc, char *argv[])
     //        }
     //    }
 
-    if(loglevel > 0)
-        syslog(LOG_DEBUG, "Mounted '%s'", mountsecret);
+    hslog(0, "Mounted '%s'", mountsecret);
 
     // Skip arguments that are parsed already
     // Synthesize new array
     //int ret = fuse_main(2, argv2, &xmp_oper, NULL);
 
     int ret = fuse_main(2, argv2, &xmp_oper, NULL);
+
+    hslog(0, "Fuse returned '%s'", mountpoint);
 
     # if 0
     // Write back expanded paths
