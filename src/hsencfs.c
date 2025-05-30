@@ -65,11 +65,8 @@
 #include <dirent.h>
 #include <errno.h>
 #include <syslog.h>
+#include <libgen.h>
 #include <sys/time.h>
-
-#ifdef HAVE_SETXATTR
-#include <sys/xattr.h>
-#endif
 
 #include <signal.h>
 #include <getopt.h>
@@ -98,12 +95,19 @@ int     plen = sizeof(passx);
 char  mountpoint[PATH_MAX] ;
 char  mountsecret[PATH_MAX] ;
 
+char  fullpath[PATH_MAX] ;
+char  startdir[PATH_MAX];
+
+char  fff[PATH_MAX];
+char  eee[PATH_MAX];
+
 char *myext = ".datx";
 
 /// We use this as a string to obfuscate the password. Do not change.
 char    progname[] =  HS_PROGNAME;
 
 char  passprog[PATH_MAX] ;
+char  passback[PATH_MAX] ;
 
 // -----------------------------------------------------------------------
 
@@ -114,11 +118,11 @@ char  passprog[PATH_MAX] ;
 static  int     verbose = 0;
 static  int     quiet = 0;
 static  int     force = 0;
-static  int     nobg = 0;
+//static  int     nobg = 0;
 static  int     ondemand = 0;
 
 // Maintain internal count
-static  char    version[] = "1.4";
+static  char    version[] = "1.5";
 
 // The decoy employed occasionally to stop spyers
 // from figuring out where it is stored
@@ -213,7 +217,7 @@ int     help()
     printf("                -p pass  (--pass ) Use pass. Note: cleartext pass.\n");
     printf("                -a prog  (--askpass ) Use program to askin pass. \n");
     printf("                -o       (--ondemand) On demand pass. Ask on first access.\n");
-    printf("                -n       (--nobg) Do not go to background. (removed)\n");
+    //printf("                -n       (--nobg) Do not go to background. (removed)\n");
     printf("                -f       (--force) Force creation of storagedir/mountpoint.\n");
     printf("                -q       (--quiet) Quiet, minimal diagnostics printed.\n");
     printf("                -V       (--version) Print hsencfs version.\n");
@@ -230,7 +234,7 @@ int     help()
 // -----------------------------------------------------------------------
 // Read a line from the forked program
 
-static char     *getln(int fd, char *buf, size_t bufsiz)
+static char  *getlinex(int fd, char *buf, size_t bufsiz)
 
 {
     size_t left = bufsiz;
@@ -243,10 +247,10 @@ static char     *getln(int fd, char *buf, size_t bufsiz)
     }
 
     while (--left) {
-	nr = read(fd, &c, 1);
-	if (nr != 1 || c == '\n' || c == '\r')
-	    break;
-	*cp++ = c;
+	   nr = read(fd, &c, 1);
+    	if (nr != 1 || c == '\n' || c == '\r')
+    	    break;
+	   *cp++ = c;
     }
     *cp = '\0';
 
@@ -261,25 +265,36 @@ char *hs_askpass(const char *program, char *buf, int buflen)
 
 {
     struct sigaction  sa, saved_sa_pipe;
-    int pfd[2];   pid_t pid;
+    int pfd[2];  pid_t pid;
+
+    char cwd[PATH_MAX];
+
+    hslog(0, "Asking pass with program: '%s'", program);
+    //hslog(0, "Asking pass in '%s'", getcwd(cwd, sizeof(cwd)));
 
     if (pipe(pfd) == -1)
-	   perror("Unable to create pipe");
-
-	   //perror(1, "Unable to create pipe");
-
+	   {
+        hslog(0, "Unable to create pipe.");
+        //printf("Unable to create pipe.");
+        //perror("Unable to create pipe");
+        //return("");
+        }
     if ((pid = fork()) == -1)
-	   perror("Unable to fork");
-
-        //error(1, "Unable to fork");
-
+        {
+        hslog(0, "Unable to dup2");
+        printf("Unable to dup2");
+        // perror("Unable to fork");
+        return("");
+        }
     if (pid == 0) {
     	/* child, point stdout to output side of the pipe and exec askpass */
     	if (dup2(pfd[1], STDOUT_FILENO) == -1) {
-    	    printf("Unable to dup2");
-    	    _exit(255);
-    	   }
-    	(void) dup2(pfd[1], STDOUT_FILENO);
+                hslog(0, "Unable to dup2");
+                //printf("Unable to dup2");
+                //_exit(255);
+                return("");
+    	       }
+        (void) dup2(pfd[1], STDOUT_FILENO);
         // Redirect error messages:
         int fh = open("/dev/null", O_RDWR );
     	(void) dup2(fh, STDERR_FILENO);
@@ -288,8 +303,17 @@ char *hs_askpass(const char *program, char *buf, int buflen)
     	closefrom(STDERR_FILENO + 1);
     	execl(program, program, NULL);
     	//execl(program, (char *)NULL);
-    	printf("Unable to run %s", program);
-    	_exit(255);
+        hslog(LOG_DEBUG, "Unable to run askpass: '%s'", program);
+        //printf("Unable to run %s", program);
+
+        // Try fallback:
+        //char *fallback = "xfce4-terminal -e hsaskpass.sh";
+        //execl(fallback, fallback, NULL);
+    	//hslog(LOG_DEBUG, "Unable to run2 askpass: '%s'", fallback);
+        //printf("Unable to run2 %s", fallback);
+
+        //_exit(255);
+        return("");
         }
 
     /* Ignore SIGPIPE in case child exits prematurely */
@@ -302,7 +326,7 @@ char *hs_askpass(const char *program, char *buf, int buflen)
     /* Get response from child and restore SIGPIPE handler */
     (void) close(pfd[1]);
 
-    char *xpass = getln(pfd[0], buf, buflen);
+    char *xpass = getlinex(pfd[0], buf, buflen);
     (void) close(pfd[0]);
     (void) sigaction(SIGPIPE, &saved_sa_pipe, NULL);
 
@@ -323,7 +347,7 @@ static struct option long_options[] =
         {"version",     0,  0,  'V'},
         {"askpass",     0,  0,  'a'},
         {"ondemand",    0,  0,  'o'},
-        {"nobg",        0,  0,  'n'},
+        //{"nobg",        0,  0,  'n'},
         {0,             0,  0,   0}
     };
 
@@ -428,9 +452,12 @@ void    parse_comline(int argc, char *argv[])
         switch (cc)
            {
            case 'a':
-                strncpy(passprog, optarg, MAXPASSLEN);
+                //if(verbose)
+                //    printf("Getting pass from program: '%s'\n", optarg);
+
+                snprintf(passprog, sizeof(passprog), "%s/%s", startdir, optarg);
                 if(verbose)
-                    printf("Getting pass from program: '%s'\n", passprog);
+                    printf("Passprog: '%s'\n", passprog);
                 break;
 
            case 'd':
@@ -443,9 +470,9 @@ void    parse_comline(int argc, char *argv[])
                 force = 1;
                 break;
 
-            case 'n':
-                nobg = 1;
-                break;
+            //case 'n':
+            //    nobg = 1;
+            //    break;
 
            case 'l':
                loglevel = atoi(optarg);
@@ -511,6 +538,54 @@ void    parse_comline(int argc, char *argv[])
     }
 }
 
+// It is a shame that no cross platform split exists
+
+void split_path(const char *path, char *dir, char *fname, char *ext)
+
+{
+    int lenx = strlen(path);
+    char const *base_name = strrchr(path, '/');
+    char const *dot = strrchr(path, '.');
+
+    if(base_name)
+        {
+        int offs = base_name - path;
+        strncpy(dir, path, offs);
+        dir[offs] = '\0';
+        if (dot != NULL)
+            {
+            int offs = dot - base_name - 1;
+            strncpy(fname, base_name + 1, offs);
+            fname[offs] = '\0';
+            strcpy(ext, dot + 1);
+            ext[lenx - offs] = '\0';
+            }
+        else
+            {
+            strcpy(fname, base_name+1);
+            strcpy(ext, "");
+            }
+        }
+    else
+        {
+        strcpy(dir, ".");
+        base_name = path;
+        if (dot != NULL)
+            {
+            int offs = dot - base_name;
+            strncpy(fname, base_name, offs);
+            fname[offs] = '\0';
+            strcpy(ext, dot + 1);
+            ext[lenx - offs] = '\0';
+            }
+        else
+            {
+            strcpy(fname, base_name);
+            strcpy(ext, "");
+            }
+        }
+}
+
 // -----------------------------------------------------------------------
 // Main entry point
 
@@ -532,6 +607,20 @@ int     main(int argc, char *argv[])
 
     // Just for development. DO NOT USE!
     //strcpy(passx, "1234"); //plen = strlen(passx);
+
+    char *yy = realpath(argv[0], fullpath);
+
+    split_path(fullpath, startdir, fff, eee);
+
+    snprintf(passprog, sizeof(passprog), "%s/%s", startdir, "hsaskpass.py");
+    //printf("Passprog: '%s'\n", passprog);
+
+    snprintf(passback, sizeof(passback), "/bin/bash %s/%s", startdir, "hsaskpass.sh");
+    //printf("Passback: '%s'\n", passback);
+
+    //printf("dir: '%s'\n", startdir);
+    //printf("fil: '%s'\n", fff);
+    //printf("ext: '%s'\n", eee);
 
     parse_comline(argc, argv);
 
@@ -648,12 +737,11 @@ int     main(int argc, char *argv[])
         fprintf(stderr,"Mount failed. Reason: directory not empty or mounted already.\n");
         exit(5);
         }
-
     if(loglevel > 0)
         {
-        syslog(LOG_DEBUG, "hsencfs started with %s\n", mountpoint);
-        syslog(LOG_DEBUG, "Using data %s\n", mountsecret);
-        syslog(LOG_DEBUG, "Started by uid=%d\n", getuid());
+        syslog(LOG_DEBUG, "Started at '%s'\n", mountpoint);
+        syslog(LOG_DEBUG, "Using data '%s'\n", mountsecret);
+        //syslog(LOG_DEBUG, "Started by uid=%d\n", getuid());
         }
 
     // Note: if you transform the file with a different block size
@@ -687,7 +775,7 @@ int     main(int argc, char *argv[])
                 char *res = hs_askpass(passprog, tmp, MAXPASSLEN);
                 if (res)
                     {
-                    hslog(2, "Askpass delivered: '%s'\n", res);
+                    //hslog(2, "Askpass delivered: '%s'\n", res);
 
                     // Empty pass ?
                     int rlen = strlen(res);
@@ -714,7 +802,6 @@ int     main(int argc, char *argv[])
                     exit(4);
                     }
                 }
-
             }
         // Will ask for pass if not filled
         int ret2 = pass_ritual(mountpoint, mountsecret, passx, &plen);
@@ -766,7 +853,7 @@ int     main(int argc, char *argv[])
     //    }
 
     if(loglevel > 0)
-        syslog(LOG_DEBUG, "*** %x Mounted '%s'", getpid(), mountsecret);
+        syslog(LOG_DEBUG, "Mounted '%s'", mountsecret);
 
     // Skip arguments that are parsed already
     // Synthesize new array
@@ -813,14 +900,14 @@ int     main(int argc, char *argv[])
         //syslog(LOG_AUTH, "unMounted  '%s' by %d", mountpoint, getuid());
         //, mountsecret);
         }
-    if(nobg)
-        {
-        //while(1)
-        //    {
-        //    printf("No background sleep\n");
-        //    sleep(1);
-        //    }
-        }
+    //if(nobg)
+    //    {
+    //    //while(1)
+    //    //    {
+    //    //    printf("No background sleep\n");
+    //    //    sleep(1);
+    //    //    }
+    //    }
     return ret;
 }
 

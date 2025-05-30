@@ -158,11 +158,14 @@ int     openpass(const char *path)
     char *res = hs_askpass(passprog, tmp, MAXPASSLEN);
     if (res == NULL || strlen(res) == 0)
         {
-        if (loglevel > 1)
-            syslog(LOG_DEBUG, "Cannot get pass for %s uid: %d\n", path, getuid());
-        return 1;
+        hslog(0, "Cannot get pass for %s with \n", path, passprog);
+        char *res = hs_askpass(passback, tmp, MAXPASSLEN);
+        if (res == NULL || strlen(res) == 0)
+            {
+            hslog(0, "Cannot get pass for %s with %s\n", path, passback);
+            return 1;
+            }
         }
-
     //hslog(2, "Askpass delivered: '%s'\n", res);
 
     // Empty pass ?

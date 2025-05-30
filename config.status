@@ -430,10 +430,10 @@ Copyright (C) 2021 Free Software Foundation, Inc.
 This config.status script is free software; the Free Software Foundation
 gives unlimited permission to copy, distribute and modify it."
 
-ac_pwd='/home/peterglen/pgsrc/hsenc/hsenc'
+ac_pwd='/home/peterglen/pgsrc/hsencfs/hsencfs'
 srcdir='.'
-INSTALL='/usr/bin/install -c'
-MKDIR_P='/usr/bin/mkdir -p'
+INSTALL='/bin/install -c'
+MKDIR_P='/bin/mkdir -p'
 AWK='gawk'
 test -n "$AWK" || AWK=awk
 # The default lists apply if the user does not specify any file.
@@ -623,8 +623,8 @@ S["build_vendor"]="pc"
 S["build_cpu"]="x86_64"
 S["build"]="x86_64-pc-linux-gnu"
 S["LIBOBJS"]=""
-S["EGREP"]="/usr/bin/grep -E"
-S["GREP"]="/usr/bin/grep"
+S["EGREP"]="/bin/grep -E"
+S["GREP"]="/bin/grep"
 S["CPP"]="gcc -E"
 S["am__fastdepCC_FALSE"]="#"
 S["am__fastdepCC_TRUE"]=""
@@ -658,15 +658,15 @@ S["am__leading_dot"]="."
 S["SET_MAKE"]=""
 S["AWK"]="gawk"
 S["mkdir_p"]="$(MKDIR_P)"
-S["MKDIR_P"]="/usr/bin/mkdir -p"
+S["MKDIR_P"]="/bin/mkdir -p"
 S["INSTALL_STRIP_PROGRAM"]="$(install_sh) -c -s"
 S["STRIP"]=""
-S["install_sh"]="${SHELL} /home/peterglen/pgsrc/hsenc/hsenc/install-sh"
-S["MAKEINFO"]="${SHELL} '/home/peterglen/pgsrc/hsenc/hsenc/missing' makeinfo"
-S["AUTOHEADER"]="${SHELL} '/home/peterglen/pgsrc/hsenc/hsenc/missing' autoheader"
-S["AUTOMAKE"]="${SHELL} '/home/peterglen/pgsrc/hsenc/hsenc/missing' automake-1.16"
-S["AUTOCONF"]="${SHELL} '/home/peterglen/pgsrc/hsenc/hsenc/missing' autoconf"
-S["ACLOCAL"]="${SHELL} '/home/peterglen/pgsrc/hsenc/hsenc/missing' aclocal-1.16"
+S["install_sh"]="${SHELL} /home/peterglen/pgsrc/hsencfs/hsencfs/install-sh"
+S["MAKEINFO"]="${SHELL} '/home/peterglen/pgsrc/hsencfs/hsencfs/missing' makeinfo"
+S["AUTOHEADER"]="${SHELL} '/home/peterglen/pgsrc/hsencfs/hsencfs/missing' autoheader"
+S["AUTOMAKE"]="${SHELL} '/home/peterglen/pgsrc/hsencfs/hsencfs/missing' automake-1.16"
+S["AUTOCONF"]="${SHELL} '/home/peterglen/pgsrc/hsencfs/hsencfs/missing' autoconf"
+S["ACLOCAL"]="${SHELL} '/home/peterglen/pgsrc/hsencfs/hsencfs/missing' aclocal-1.16"
 S["VERSION"]="1.4.0"
 S["PACKAGE"]="hsencfs"
 S["CYGPATH_W"]="echo"

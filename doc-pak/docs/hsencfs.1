@@ -1,0 +1,53 @@
+.\" Copyright (C) 2015 Peter Glen
+.\"
+.\" This is free software; you can redistribute it and/or modify it
+.\" under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation; either version 2 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" This program is distributed in the hope that it will be useful, but
+.\" WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+.\" General Public License for more details.
+.\"
+
+.TH hsencfs 1 "Tue 7 Jun 2022" "Peter Glen"
+.SH NAME
+hsencfs \- High Security Encrypting File System
+.SH SYNOPSIS
+.B hsencfs
+[
+.I options
+]  dataroot mountpoint
+.SH DESCRIPTION
+.B HSENCFS
+is a user space encrypting file system. It is simple to set up,
+seamless to use, fast, safe, secure and maintenance free.  It will
+automatically encrypt data written to it, decrypt data read from it. It
+only uses storage space for actual data stored, no pre-allocation
+needed. It is fast, secure, maintainance free. Classified as a variable key
+length encryption.
+
+   An additional and useful feature is auditing. HSENCFS reports file
+access by time and user ID. The report is sent to syslog. The log is
+sent to facility 'daemon' with level 'DEBUG'. See: the -l log option.)
+
+.SH OPTIONS
+    -l num      - Use log level  (--loglevel)
+    -p pass     - Use pass (!!Warning!! clear text pass) (--pass)
+    -a program  - Use program for asking pass (--askpass)
+    -o          - On demand pass. Ask on first access (--ondemand)
+    -f          - Force creation of storagedir/mountpoint (--force)
+    -q          - Quiet (--quiet)
+    -v          - Verbose (--verbose)
+    -V          - Print version (--version)
+
+See the info page for more details.
+
+.SH "SEE ALSO"
+See the hsencfs info page for more details.
+.SH AUTHOR
+Peter Glen <peterglen99@gmail.com>
+
+
+
