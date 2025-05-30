@@ -156,23 +156,21 @@ int     openpass(const char *path)
         return 1;
         }
     char *res = hs_askpass(passprog, tmp, MAXPASSLEN);
-    if (res == NULL || strlen(res) == 0)
+    // Error ?
+     if (res == NULL)
         {
-        hslog(0, "Cannot get pass for %s with \n", path, passprog);
-        char *res = hs_askpass(passback, tmp, MAXPASSLEN);
-        if (res == NULL || strlen(res) == 0)
-            {
-            hslog(0, "Cannot get pass for %s with %s\n", path, passback);
-            return 1;
-            }
+        hslog(0, "Cannot get pass for '%s' with %s\n", path, passprog);
+        return 1;
         }
-    //hslog(2, "Askpass delivered: '%s'\n", res);
+    // Do not debug sensitive data
+    //hslog(0, "Askpass delivered: '%s'\n", res);
 
-    // Empty pass ?
     int rlen = strlen(res);
+    // Empty pass ?
     if(rlen == 0)
         {
         hslog(2, "Aborted on empty pass from: '%s'\n", passprog);
+        return 1;
         }
     // Decode base64
     unsigned long olen = 0;
@@ -180,6 +178,7 @@ int     openpass(const char *path)
     strncpy(passx, res2, sizeof(passx));
     plen = strlen(passx);
 
+    // Do not debug sensitive data
     //hslog(2, "passx '%s'\n", passx);
 
     int ret2 = pass_ritual(mountpoint, mountsecret, passx, &plen);
@@ -187,8 +186,7 @@ int     openpass(const char *path)
         {
         // Force new pass prompt
         memset(passx, 0, sizeof(passx));
-        if (loglevel > 1)
-            syslog(LOG_DEBUG, "Invalid pass for %s uid: %d\n", path, getuid());
+        hslog(0, "Invalid pass for '%s' by uid: %d\n", path, getuid());
         return ret2;
         }
     return ret;

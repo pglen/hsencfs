@@ -257,6 +257,60 @@ static char  *getlinex(int fd, char *buf, size_t bufsiz)
     return(nr == 1 ? buf : NULL);
 }
 
+// Really dumb parse command line to array
+
+void parse_comstr(char *argx[], int limx, const char *program)
+
+{
+    //printf("parse: '%s'\n", program);
+
+    // Parse command line
+    char aa = 0, bb = 0, cc = 0;
+    argx[cc] = NULL;
+    char curr[128];
+    while(1)
+        {
+        char chh = program[aa];
+        //printf("%c", chh);
+        if(cc >= limx-1)
+            {
+            //printf("Warn: argx limit %d\n", cc);
+            argx[cc] = NULL;
+            break;
+            }
+        if (chh == '\0')
+            {
+            //printf("estr: '%s'\n", curr);
+            if (curr[0] != '\0')
+                {
+                argx[cc] = strdup(curr);
+                cc++;
+                }
+            argx[cc] = NULL;
+            break;
+            }
+        else if (chh == ' ')
+            {
+            //printf("str: '%s'\n", curr);
+            if (curr[0] == '\0')
+                {
+                aa++;
+                continue;
+                }
+            argx[cc] = strdup(curr);
+            cc++; bb = 0;
+            curr[bb] = '\0';
+            }
+        else
+            {
+            curr[bb] = chh;
+            bb++;
+            curr[bb] = '\0';
+            }
+        aa++;
+        }
+}
+
 /*
  * Fork a child and exec progran to get the password from the user.
  */
@@ -267,7 +321,7 @@ char *hs_askpass(const char *program, char *buf, int buflen)
     struct sigaction  sa, saved_sa_pipe;
     int pfd[2];  pid_t pid;
 
-    char cwd[PATH_MAX];
+    //char cwd[PATH_MAX];
 
     hslog(0, "Asking pass with program: '%s'", program);
     //hslog(0, "Asking pass in '%s'", getcwd(cwd, sizeof(cwd)));
@@ -281,10 +335,10 @@ char *hs_askpass(const char *program, char *buf, int buflen)
         }
     if ((pid = fork()) == -1)
         {
-        hslog(0, "Unable to dup2");
-        printf("Unable to dup2");
+        hslog(0, "Unable to fork");
+        //printf("Unable to dup2");
         // perror("Unable to fork");
-        return("");
+        return(NULL);
         }
     if (pid == 0) {
     	/* child, point stdout to output side of the pipe and exec askpass */
@@ -301,19 +355,35 @@ char *hs_askpass(const char *program, char *buf, int buflen)
 
     	//set_perms(PERM_FULL_USER); //TODO
     	closefrom(STDERR_FILENO + 1);
-    	execl(program, program, NULL);
-    	//execl(program, (char *)NULL);
-        hslog(LOG_DEBUG, "Unable to run askpass: '%s'", program);
-        //printf("Unable to run %s", program);
 
+        char *argx[12];
+        parse_comstr(argx, 12, program);
+        int xx = 0; while(1)
+            {
+            //hslog(0, "ptr: '%s'\n", argx[xx]);
+            if(!argx[xx])
+                break;
+            xx++;
+            }
+
+        execvp(argx[0], argx) ;
+        parse_comstr(argx, 12, program);
+        xx = 0; while(1)
+            {
+            if(!argx[xx])
+                break;
+            free(argx[xx]);
+            xx++;
+            }
+        hslog(0, "Unable to run askpass: '%s'", program);
+        //printf("Unable to run %s", program);
         // Try fallback:
         //char *fallback = "xfce4-terminal -e hsaskpass.sh";
         //execl(fallback, fallback, NULL);
     	//hslog(LOG_DEBUG, "Unable to run2 askpass: '%s'", fallback);
         //printf("Unable to run2 %s", fallback);
-
         //_exit(255);
-        return("");
+        return(NULL);
         }
 
     /* Ignore SIGPIPE in case child exits prematurely */
@@ -615,7 +685,7 @@ int     main(int argc, char *argv[])
     snprintf(passprog, sizeof(passprog), "%s/%s", startdir, "hsaskpass.py");
     //printf("Passprog: '%s'\n", passprog);
 
-    snprintf(passback, sizeof(passback), "/bin/bash %s/%s", startdir, "hsaskpass.sh");
+    snprintf(passback, sizeof(passback), "/%s/%s", startdir, "hsaskpass.sh");
     //printf("Passback: '%s'\n", passback);
 
     //printf("dir: '%s'\n", startdir);
