@@ -54,6 +54,8 @@
 #define _GNU_SOURCE
 
 #include <fuse.h>
+#include <fuse_lowlevel.h>
+
 #include <ulockmgr.h>
 
 #include <stdio.h>
@@ -137,6 +139,10 @@ static  int     pg_debug = 0;
 // -----------------------------------------------------------------------
 
 #include "hsencop.c"
+
+
+struct fuse *fuse_op;
+struct fuse_session *fuse_sess;
 
 static struct fuse_operations xmp_oper = {
 	.init       = xmp_init,
@@ -644,11 +650,9 @@ void split_path(const char *path, char *dir, char *fname, char *ext)
 void sigterm(int sig)
 
 {
-    hslog(0, "terminating: %d", sig);
-    // Unmount
-    int ret  = umount2(mountpoint, MNT_FORCE);
-    hslog(0, "terminated: %d umount %d %d", sig, ret, errno);
-    exit(127);
+    hslog(0, "Receved signal: %d", sig);
+    fuse_session_unmount(fuse_sess);
+    fuse_session_exit(fuse_sess);
 }
 
 // -----------------------------------------------------------------------
@@ -939,57 +943,46 @@ int     main(int argc, char *argv[])
     // Synthesize new array
     //int ret = fuse_main(2, argv2, &xmp_oper, NULL);
 
-    int ret = fuse_main(2, argv2, &xmp_oper, NULL);
-
-    hslog(0, "Fuse returned '%s'", mountpoint);
-
-    # if 0
     // Write back expanded paths
     char *argv3[2];
     argv3[0]  = " ";  argv3[1]  = NULL;
     struct fuse_args fa; fa.argc = 1; fa.argv = argv3; fa.allocated = 0;
-    struct fuse *fuse_op = fuse_new(&fa, &xmp_oper, sizeof(xmp_oper), NULL);
-    printf("Fuse op %p\n", fuse_op);
+    fuse_op = fuse_new(&fa, &xmp_oper, sizeof(xmp_oper), NULL);
     int ret = fuse_mount(fuse_op, mountpoint);
-    #endif
+    fuse_sess = fuse_get_session(fuse_op);
+    int ret2 = fuse_daemonize(0);
+    int ret3 = fuse_session_loop(fuse_sess);
 
     // FUSE MAIN terminates ...
+    hslog(0, "Fuse returned '%s'", mountpoint);
+
+    // Check access
+    if (access(mountpoint, W_OK) >=0 )
+        {
+        hslog(0, "Mountpoint write access, fixing.\n");
+        struct stat statbuf; memset(&statbuf, 0, sizeof(statbuf));
+        int ret2 = stat(mountpoint, &statbuf);
+        hslog(0, "mode2 %d of %s %x\n", ret2, mountpoint, statbuf.st_mode);
+        int ret3 = chmod(mountpoint, statbuf.st_mode & ~S_IWUSR );
+        hslog(0, "ret3 %d", ret3);
+        }
 
     // Inform user, make a log entry
     if(ret)
         {
-        if(loglevel > 0)
-            {
-            syslog(LOG_DEBUG, "Mount err '%s'", mountpoint);
-            syslog(LOG_DEBUG, "Mount returned with %d errno=%d", ret, errno);
-            }
+        hslog(0,  "Mount err '%s'", mountpoint);
+        hslog(0,   "Mount returned with %d errno=%d", ret, errno);
 
-        printf("Mounted by uid %d -> %s\n", getuid(), mountpoint);
-        printf("Mount returned with ret=%d errno=%d\n", ret, errno);
-
-        syslog(LOG_AUTH, "Cannot mount, attempt by user %d '%s' -> '%s'",
+        hslog(0, "Mounted by uid %d -> %s\n", getuid(), mountpoint);
+        hslog(0, "Mount returned with ret=%d errno=%d\n", ret, errno);
+        hslog(0, "Cannot mount, attempt by user %d '%s' -> '%s'",
                                          getuid(), mountsecret, mountpoint);
         }
     else
         {
-        if(loglevel > 0)
-            {
-            syslog(LOG_DEBUG, "unMnt '%s'", mountpoint);
-            syslog(LOG_DEBUG, "unMntSec '%s'", mountsecret);
-            syslog(LOG_DEBUG, "hsenfs ended by uid=%d ", getuid());
-            }
-        //printf("unMounted '%s'\n", mountpoint);
-        //syslog(LOG_AUTH, "unMounted  '%s' by %d", mountpoint, getuid());
-        //, mountsecret);
+        hslog(0, "unMnt '%s'", mountpoint);
+        hslog(1, "unMntSec '%s'", mountsecret);
         }
-    //if(nobg)
-    //    {
-    //    //while(1)
-    //    //    {
-    //    //    printf("No background sleep\n");
-    //    //    sleep(1);
-    //    //    }
-    //    }
     return ret;
 }
 
