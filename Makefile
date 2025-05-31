@@ -1031,6 +1031,11 @@ git:
 #clean:
 #	@-rm -f *.old
 
+#if HAVE_SYSTEMD
+#SYSTEMD_DIR_DATA = \
+#  hsencfs.service
+#endif
+
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

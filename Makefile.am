@@ -157,11 +157,11 @@ git:
 	git commit -m autocheck
 	git push
 
-
 #clean:
 #	@-rm -f *.old
 
-
-
-
+#if HAVE_SYSTEMD
+#SYSTEMD_DIR_DATA = \
+#  hsencfs.service
+#endif
 

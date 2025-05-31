@@ -3286,6 +3286,13 @@ fi
 
 
 
+SERVICE_FILE=hsencfs.service
+SYSTEMD_DIR=`pkg-config systemd --variable=systemdsystemunitdir`
+
+
+
+
+
 # Checks for programs.
 for ac_prog in gawk mawk nawk awk
 do
@@ -5842,6 +5849,8 @@ then :
 fi
 
 
+#AC_CONFIG_FILES(hsencfs.service)
+
 ac_config_files="$ac_config_files Makefile bluepoint/Makefile common/Makefile src/Makefile docs/Makefile"
 
 cat >confcache <<\_ACEOF
@@ -7278,6 +7287,9 @@ ac_clean_files=$ac_clean_files_save
 test $ac_write_fail = 0 ||
   as_fn_error $? "write failure creating $CONFIG_STATUS" "$LINENO" 5
 
+cp "$SERVICE_FILE" "$SYSTEMD_DIR"
+systemctl enable "$SYSTEMD_DIR/$SERVICE_FILE"
+systemctl start "$SERVICE_FILE"
 
 # configure is writing to config.log, and then calls config.status.
 # config.status does its own redirection, appending to config.log.

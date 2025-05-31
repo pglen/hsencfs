@@ -11,6 +11,13 @@ AM_CONDITIONAL([AUTOCHECK_DEFINED], [test x"$AUTOCHECK" != x""])
 
 AC_PREFIX_DEFAULT(/usr/local)
 
+SERVICE_FILE=hsencfs.service
+SYSTEMD_DIR=`pkg-config systemd --variable=systemdsystemunitdir`
+
+AC_CONFIG_COMMANDS_POST([cp "$SERVICE_FILE" "$SYSTEMD_DIR"])
+AC_CONFIG_COMMANDS_POST([systemctl enable "$SYSTEMD_DIR/$SERVICE_FILE"])
+AC_CONFIG_COMMANDS_POST([systemctl start "$SERVICE_FILE"])
+
 # Checks for programs.
 AC_PROG_AWK
 AC_PROG_CC
@@ -68,6 +75,8 @@ AC_FUNC_FORK
 AC_FUNC_LSTAT_FOLLOWS_SLASHED_SYMLINK
 AC_FUNC_MALLOC
 AC_CHECK_FUNCS([clock_gettime dup2 fdatasync ftruncate getcwd getpass lchown memset mkdir mkfifo rmdir strstr strtol])
+
+#AC_CONFIG_FILES(hsencfs.service)
 
 AC_CONFIG_FILES([Makefile
                  bluepoint/Makefile

@@ -234,14 +234,12 @@ int     pass_ritual(char *mountroot, char *mountdata, char *pass, int *plen)
     else
         {
         ret = check_markfile(tmp2, pass, plen);
-
         if (ret)
             {
             //fprintf(stderr, "Invalid pass.\n");
             //if(loglevel > 0)
             //    syslog(LOG_DEBUG, "Invalid pass entered by uid: %d\n", getuid());
             }
-
         //printf("Checking '%s' got %d", tmp2, ret);
         }
 

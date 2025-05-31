@@ -2,7 +2,7 @@ Name:           hsencfs
 Version:        1.5.0
 Release:        1
 Summary:        High Security Encrypted File System
-Maintainer:	peterglen99@gmail.com
+Maintainer:	    peterglen99@gmail.com
 Group:          Encryption
 License:        GPL
 URL:            http://www.sourceforge.net
