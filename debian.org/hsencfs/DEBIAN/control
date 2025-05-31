@@ -1,0 +1,11 @@
+Package: hsencfs
+Version: 1.4.25
+Architecture: all
+Maintainer: Peter Glen <peterglen99@gmail.com>
+Installed-Size: 308
+Depends: fuse, fuse3
+Section: devel
+Priority: optional
+Description: High Security Encrypted file system
+ The HSENCFS encrypting file system is a resource friendly secure in line
+ encrypting file system.
