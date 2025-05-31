@@ -489,21 +489,21 @@ void split_path(const char *path, char *dir, char *fname, char *ext)
 void sigterm(int sig)
 
 {
-    hslog(0, "Received signal: %d", sig);
-    printf("Received signal: %d\n", sig);
+    hslog(-1, "Received signal: %d", sig);
+    //printf("Received signal: %d\n", sig);
     fuse_session_unmount(fuse_sess);
     fuse_session_exit(fuse_sess);
-    _exit(127);
+    //_exit(127);
 }
 
 void sigint(int sig)
 
 {
-    hslog(0, "Received signal: %d", sig);
-    printf("Received signal: %d\n", sig);
+    hslog(-1, "Received signal: %d", sig);
+    //printf("Received signal: %d\n", sig);
     fuse_session_unmount(fuse_sess);
     fuse_session_exit(fuse_sess);
-    _exit(127);
+    //_exit(127);
 }
 
 // -----------------------------------------------------------------------
