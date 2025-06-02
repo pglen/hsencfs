@@ -104,20 +104,20 @@ char  startdir[PATH_MAX];
 char  fff[PATH_MAX];
 char  eee[PATH_MAX];
 
+char  passprog[PATH_MAX] ;
+char  passback[PATH_MAX] ;
+
 char *myext = ".datx";
 
 /// We use this as a string to obfuscate the password. Do not change.
 char    progname[] =  HS_PROGNAME;
 
-char  passprog[PATH_MAX] ;
-char  passback[PATH_MAX] ;
 int   pg_debug = 0;
+int   ondemand = 1;
 
 // -----------------------------------------------------------------------
 
-static  int     ondemand = 1;
-
-// Maintain internal count
+// Maintain internal version string
 static  char    version[] = "1.5.0";
 
 // The decoy employed occasionally to stop spyers
@@ -132,7 +132,6 @@ static  char  inodedir[PATH_MAX] ;
 // -----------------------------------------------------------------------
 
 #include "hsencop.c"
-
 
 struct fuse *fuse_op;
 struct fuse_session *fuse_sess;
@@ -830,6 +829,8 @@ int     main(int argc, char *argv[])
         int ret2 = fuse_daemonize(0);
         }
     int ret3 = fuse_session_loop(fuse_sess);
+
+    fuse_opt_free_args(&fa);
 
     // FUSE MAIN terminates ...
     hslog(-1, "Unmounting: '%s'", mountpoint);

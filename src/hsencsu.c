@@ -113,20 +113,38 @@ void  kill_buff(void *bbuff, int xlen)
 int     openpass(const char *path)
 
 {
-    char tmp[MAXPASSLEN];
     int ret = 0;
 
+    char tmp[MAXPASSLEN];
+    char *tmp2 = malloc(PATH_MAX + PATH_MAX + 12);
+    if (!tmp2)
+        {
+        ret = 1;
+        goto endx2;
+        }
     if(passprog[0] == 0)
         {
         hslog(-1, "No pass program specified: %s uid: %d\n", path, getuid());
-        return 1;
+        ret = 1;
+        goto endx;
         }
-    char *res = hs_askpass(passprog, tmp, MAXPASSLEN);
+
+    char tmp3[PATH_MAX + PATH_MAX +  2];
+    strncpy(tmp3, mountsecret, sizeof(tmp3));
+    strcat(tmp3, passfname);
+    printf("tmp3: '%s'\n", tmp3);
+    struct stat ss;
+    int rret = stat(tmp3, &ss);
+
+    snprintf(tmp2, PATH_MAX + PATH_MAX + 12, "%s %s %d",
+                                      passprog, mountpoint, rret);
+    char *res = hs_askpass(tmp2, tmp, MAXPASSLEN);
     // Error ?
      if (res == NULL)
         {
         hslog(0, "Cannot get pass for '%s' with %s\n", path, passprog);
-        return 1;
+        ret = 1;
+        goto endx;
         }
     // Do not debug sensitive data
     //hslog(0, "Askpass delivered: '%s'\n", res);
@@ -135,7 +153,8 @@ int     openpass(const char *path)
     if(rlen == 0)
         {
         hslog(2, "Aborted on empty pass from: '%s'\n", passprog);
-        return 1;
+        ret = 1;
+        goto endx;
         }
     // Decode base64
     unsigned long olen = 0;
@@ -152,8 +171,14 @@ int     openpass(const char *path)
         // Force new pass prompt
         memset(passx, 0, sizeof(passx));
         hslog(-1, "Invalid pass for '%s' by uid: %d\n", mountpoint, getuid());
-        return ret2;
+        ret =  ret2;
+        goto endx;
         }
+
+  endx:
+    if(tmp2)
+        free(tmp2);
+   endx2:
     return ret;
 }
 

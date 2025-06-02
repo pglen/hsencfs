@@ -22,21 +22,17 @@
 #include <sys/time.h>
 #include <signal.h>
 #include <termios.h>
+#include <getopt.h>
 
 #ifdef HAVE_SETXATTR
 #include <sys/xattr.h>
 #endif
 
-#include <getopt.h>
-
-//#include "../src/hsencfs.h"
 #include "hsutils.h"
+#include "../src/hsencfs.h"
 #include "../bluepoint/bluepoint2.h"
 
-const char *passfname = ".passdata.datx";
-
-extern char    progname[];
-extern int     loglevel;
+char  *passfname = ".passdata.datx";
 
 //////////////////////////////////////////////////////////////////////////
 // Create mark file. Random block, one half is encrypted with the
@@ -293,17 +289,12 @@ char *hs_askpass(const char *program, char *buf, int buflen)
 
     char *argx[12];
     parse_comstr(argx, 12, program);
-    //if (pg_debug > 9)
-        {
-        int xx = 0; while(1)
-            {
-            hslog(0, "ptr: '%s'\n", argx[xx]);
-            if(!argx[xx])
-                break;
-            xx++;
-            }
-        }
-    //hslog(0, "Run askpass: '%s'", program);
+    //int xx = 0; while(1)
+    //    {
+    //    hslog(0, "ptr: '%s'\n", argx[xx]);
+    //    if(!argx[xx]) break;
+    //    xx++;
+    //    }
     if (access(argx[0], X_OK) < 0)
         {
         hslog(0, "Askpass is not an executable: '%s'", program);
@@ -350,13 +341,12 @@ char *hs_askpass(const char *program, char *buf, int buflen)
         errno = 0;
 
         // Free array
-        //int xx = 0; while(1)
-        //    {
-        //    if(!argx[xx])
-        //        break;
-        //    free(argx[xx]);
-        //    xx++;
-        //    }
+        int xx = 0; while(1)
+            {
+            if(!argx[xx]) break;
+            free(argx[xx]);
+            xx++;
+            }
 
         //printf("Unable to run %s", program);
         // Try fallback:
@@ -382,17 +372,26 @@ char *hs_askpass(const char *program, char *buf, int buflen)
     (void) close(pfd[0]);
     (void) sigaction(SIGPIPE, &saved_sa_pipe, NULL);
 
+    int xx = 0; while(1)
+        {
+        if(!argx[xx]) break;
+        free(argx[xx]);
+        xx++;
+        }
+    //hslog(0, "Askpass got: '%s'", xpass);
     return(xpass);
 }
 
 // Get the password for the current mount and / or create a new one.
 // Return 0 if all OK.
 
-int pass_ritual(char *mroot, char *mdata, char *pass, int *plen, char *passprog)
+int     pass_ritual(char *mroot, char *mdata, char *pass, int *plen, char *passprog)
 
 {
     char tmp[PATH_MAX]; char *xpass2 = NULL, *xpass = NULL;
     int ret = -1, xlen2 = 0, xlen = strlen(pass);
+
+    hsprint(TO_ERR|TO_LOG, -1, "pass_ritual() '%s'", pass);
 
     int pask = (xlen == 0) ? 1 : 0;
 
@@ -418,8 +417,7 @@ int pass_ritual(char *mroot, char *mdata, char *pass, int *plen, char *passprog)
             xpass = getpassx(tmp);  //printf("password: '%s'\n", pass);
         else
             {
-            hsprint(TO_ERR|TO_LOG, -1, "Not a terminal, asking gui.");
-            char tmp[MAXPASSLEN];
+            //char tmp[MAXPASSLEN];
             //xpass = hs_askpass(passprog, tmp, MAXPASSLEN);
             }
 

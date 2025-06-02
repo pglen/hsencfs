@@ -34,6 +34,8 @@ typedef unsigned char uchar;
 #define  TO_EL  (TO_ERR | TO_LOG)
 #define  TO_OL  (TO_OUT | TO_LOG)
 
+extern  char    *passfname;
+
 // Prototypes shared between components
 
 int     ismounted(char *orig);

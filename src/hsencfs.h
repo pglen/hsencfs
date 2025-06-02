@@ -47,17 +47,22 @@
 //#define HALF_ENCRYPT    1
 #define FULL_ENCRYPT    1
 
-extern  int     plen;
 extern  char    passx[MAXPASSLEN];
-extern  int     loglevel;
+extern  char    mountpoint[PATH_MAX] ;
+extern  char    mountsecret[PATH_MAX] ;
+extern  char    passprog[PATH_MAX] ;
+extern  char    passback[PATH_MAX] ;
+extern  char    passprog[PATH_MAX] ;
+extern  char    passback[PATH_MAX] ;
+extern  char    progname[];
+
 extern  char    *myext;
 
-extern  char  mountpoint[PATH_MAX] ;
-extern  char  mountsecret[PATH_MAX] ;
-extern  char  passprog[PATH_MAX] ;
-extern  char  passback[PATH_MAX] ;
-extern  int   pg_debug;
-extern  int   verbose;
+extern  int     plen;
+extern  int     loglevel;
+extern  int     pg_debug;
+extern  int     verbose;
+extern  int     ondemand;
 
 int xmp_read(const char *path, char *buf, size_t wsize, off_t offset, // )
                          struct fuse_file_info *fi);
@@ -68,7 +73,6 @@ int xmp_write(const char *path, const char *buf, size_t wsize, // )
 int     is_our_file(const char *path, int fname_only);
 off_t   get_fsize(int fh);
 void    kill_buff(void *bbuff, int xlen);
-
 int     openpass(const char *path);
 
 // EOF
