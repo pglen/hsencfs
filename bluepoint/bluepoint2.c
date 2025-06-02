@@ -131,7 +131,7 @@ static  char    addend     = 17;        //# Constant used adding to encrypted va
 //# -------------------------------------------------------------------------
 //# These vars can be set show op details
 
-static int verbose    = 0;              //# Specify this to show working details
+static int bverbose    = 0;              //# Specify this to show working details
 static int debug      = 0;              //# Specify this to show debug strings
 static int functrace  = 0;              //# Specify this to show function args
 
@@ -145,8 +145,8 @@ static  int     rounds = 3;             //# How many rounds
 
 int    bluepoint2_set_verbose(int flag)
 {
-    int old = verbose;
-    verbose = flag;
+    int old = bverbose;
+    bverbose = flag;
     return old;
 }
 
@@ -203,7 +203,7 @@ int    bluepoint2_encrypt(char *buff, int blen, char *pass, int plen)
 
     if (blen % 2)
         {
-        if(verbose)
+        if(bverbose)
             {
             printf("bluepoint2_encrypt odd buffer length %d\n", blen);
             }
@@ -212,7 +212,7 @@ int    bluepoint2_encrypt(char *buff, int blen, char *pass, int plen)
 
     if(plen == 0 || blen == 0)
         {
-        if(verbose)
+        if(bverbose)
             {
             printf("bluepoint2_encrypt zero length pass / data %d %d\n", plen, blen);
             }
@@ -245,7 +245,7 @@ int    bluepoint2_decrypt(char *buff, int blen, char *pass, int plen)
 
     if (blen % 2)
         {
-        if(verbose)
+        if(bverbose)
             {
             printf("bluepoint2_encrypt odd buffer length %d\n", blen);
             }
@@ -254,7 +254,7 @@ int    bluepoint2_decrypt(char *buff, int blen, char *pass, int plen)
 
     if(plen == 0 || blen == 0)
         {
-        if(verbose)
+        if(bverbose)
             {
             printf("bluepoint2_decrypt zero length pass / data %d %d\n", plen, blen);
             }
@@ -312,14 +312,14 @@ void    prep_pass(char *pass, int plen, char *newpass)
     // Terminate
     newpass[passlim] = 0;
 
-    if(verbose)
+    if(bverbose)
         printf("prep_pass() newpass: %s\n", bluepoint2_dumphex(newpass, passlim));
 
 #ifndef NOPASSCRYPT
     do_encrypt(vec2, vlen, vector, vlen);
 #endif
 
-    if(verbose)
+    if(bverbose)
         {
         printf("prep_pass() eVEC: ");
         bluepoint2_dumphex(vec2, vlen);
@@ -489,7 +489,7 @@ char    *bluepoint2_dumphex(char *str, int len)
 {
     buff[0] = 0;  int loop = 0, pos = 0;
 
-    if(verbose)
+    if(bverbose)
         {
         //printf("bluepoint2_dumphex str=%p len=%d ", str, len);
         }
@@ -522,7 +522,7 @@ char    *bluepoint2_dump(char *str, int len)
 {
     buff[0] = 0;  int loop = 0, pos = 0;
 
-    if(verbose)
+    if(bverbose)
         {
         printf("bluepoint2_dump str=%p len=%d ", str, len);
         }
@@ -555,7 +555,7 @@ char    *bluepoint2_undump(char *str, int len)
     buff[0] = 0;  int loop = 0, pos = 0;
     unsigned int val = 0;
 
-    if(verbose)
+    if(bverbose)
         {
         printf("bluepoint2_undump str=%p len=%d ", str, len);
         }

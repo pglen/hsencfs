@@ -56,6 +56,8 @@ extern  char  mountpoint[PATH_MAX] ;
 extern  char  mountsecret[PATH_MAX] ;
 extern  char  passprog[PATH_MAX] ;
 extern  char  passback[PATH_MAX] ;
+extern  int   pg_debug;
+extern  int   verbose;
 
 int xmp_read(const char *path, char *buf, size_t wsize, off_t offset, // )
                          struct fuse_file_info *fi);
@@ -63,8 +65,6 @@ int xmp_read(const char *path, char *buf, size_t wsize, off_t offset, // )
 int xmp_write(const char *path, const char *buf, size_t wsize, // )
                         off_t offset, struct fuse_file_info *fi);
 
-void    hslog(int lev, char *fmt, ...);
-void    *hsalloc(int total);
 int     is_our_file(const char *path, int fname_only);
 off_t   get_fsize(int fh);
 void    kill_buff(void *bbuff, int xlen);

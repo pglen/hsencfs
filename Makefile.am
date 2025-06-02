@@ -5,7 +5,7 @@
 #
 
 #SUBDIRS =  docs tools bluepoint common src
-SUBDIRS =  docs bluepoint common src
+SUBDIRS =  docs bluepoint common src systemd
 
 PAN_SERV=GNOME_HSENCApplet.server
 BONOBO_DIR=/usr/lib/bonobo/servers
@@ -28,6 +28,7 @@ EXTRA_DIST += common/hspass.c common/hsutils.c
 EXTRA_DIST += images/hsicon.png images/hsicon.svg images/hspadlock.png \
                     images/hspadlock.svg images/screenshot.png
 #EXTRA_DIST += study
+EXTRA_DIST  += hsaskpass.py hsaskpass.sh
 
 # Fake it into the distribution
 # use: ls *.py *.sh *.server SUMFILE sha*

@@ -1,0 +1,6 @@
+[Unit]
+Description=A Example Systemd Service
+Wants=
+
+[Service]
+ExecStart=/usr/local/bin/foo

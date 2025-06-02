@@ -4,10 +4,18 @@
 AC_PREREQ([2.68])
 AC_INIT([hsencfs], [1.5.0], [peterglen99@gmail.com])
 AC_CONFIG_SRCDIR([src/hsencop.c])
-#AC_CONFIG_SUBDIRS([src tools])
+#AC_CONFIG_SUBDIRS([src tools common bluepoint])
+#AC_CONFIG_HEADERS([config.h])
+
+AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_HEADERS([config.h])
+
 AM_INIT_AUTOMAKE([subdir-objects])
 AM_CONDITIONAL([AUTOCHECK_DEFINED], [test x"$AUTOCHECK" != x""])
+
+# Checks for programs.
+AC_PROG_CC
+AC_PROG_INSTALL
 
 AC_PREFIX_DEFAULT(/usr/local)
 
@@ -77,13 +85,28 @@ AC_FUNC_MALLOC
 AC_CHECK_FUNCS([clock_gettime dup2 fdatasync ftruncate getcwd getpass lchown memset mkdir mkfifo rmdir strstr strtol])
 
 #AC_CONFIG_FILES(hsencfs.service)
+PKG_PROG_PKG_CONFIG
+AC_ARG_WITH([systemdsystemunitdir],
+     [AS_HELP_STRING([--with-systemdsystemunitdir=DIR], [systemd])],,
+     [with_systemdsystemunitdir=auto])
+AS_IF([test "x$with_systemdsystemunitdir" = "xyes" -o "x$with_systemdsystemunitdir" = "xauto"], [
+     def_systemdsystemunitdir=$($PKG_CONFIG --variable=systemdsystemunitdir systemd)
+
+     AS_IF([test "x$def_systemdsystemunitdir" = "x"],
+   [AS_IF([test "x$with_systemdsystemunitdir" = "xyes"],
+    [AC_MSG_ERROR([systemd support requested but pkg-config unable to query systemd package])])
+    with_systemdsystemunitdir=no],
+   [with_systemdsystemunitdir="$def_systemdsystemunitdir"])])
+AS_IF([test "x$with_systemdsystemunitdir" != "xno"],
+      [AC_SUBST([systemdsystemunitdir], [$with_systemdsystemunitdir])])
+AM_CONDITIONAL([HAVE_SYSTEMD], [test "x$with_systemdsystemunitdir" != "xno"])
 
 AC_CONFIG_FILES([Makefile
                  bluepoint/Makefile
                  common/Makefile
                  src/Makefile
-                 docs/Makefile]
-                 )
+                 docs/Makefile
+                 systemd/Makefile])
 AC_OUTPUT
 
 

@@ -37,8 +37,4 @@ rm -f /usr/local/share/pixmaps/hsicon.png
 rm -f /usr/share/pixmaps/hspadlock.png
 rm -f /usr/share/pixmaps/hsicon.png
 
-
-
-
-
-
+# EOF

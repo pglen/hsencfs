@@ -80,7 +80,15 @@ def area_key(win, event):
 # Start of program:
 if __name__ == '__main__':
 
-    text = getpass("Enter HSENCFS Password", "Enter pass: ");
+    prompt = ": "
+    try:
+        if sys.argv[1]:
+            prompt = " for '" + sys.argv[1] + "':";
+    except:
+        pass
+
+    text = getpass("Enter HSENCFS Password%s" % prompt,
+                           "Enter pass: ");
     # Does not have to be rocket science, just to hide from plaintext view:
     sss = base64.b64encode(text.encode())
 

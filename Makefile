@@ -284,6 +284,9 @@ PACKAGE_TARNAME = hsencfs
 PACKAGE_URL = 
 PACKAGE_VERSION = 1.5.0
 PATH_SEPARATOR = :
+PKG_CONFIG = /usr/bin/pkg-config
+PKG_CONFIG_LIBDIR = 
+PKG_CONFIG_PATH = 
 SET_MAKE = 
 SHELL = /bin/bash
 STRIP = 
@@ -335,13 +338,14 @@ sbindir = ${exec_prefix}/sbin
 sharedstatedir = ${prefix}/com
 srcdir = .
 sysconfdir = ${prefix}/etc
+systemdsystemunitdir = /lib/systemd/system
 target_alias = 
 top_build_prefix = 
 top_builddir = .
 top_srcdir = .
 
 #SUBDIRS =  docs tools bluepoint common src
-SUBDIRS = docs bluepoint common src
+SUBDIRS = docs bluepoint common src systemd
 PAN_SERV = GNOME_HSENCApplet.server
 BONOBO_DIR = /usr/lib/bonobo/servers
 
@@ -369,8 +373,8 @@ dist_bin_SCRIPTS = \
 EXTRA_DIST = src/hsencrw.c src/hsencop.c common/hspass.c \
 	common/hsutils.c images/hsicon.png images/hsicon.svg \
 	images/hspadlock.png images/hspadlock.svg \
-	images/screenshot.png checksum.sh enctest.sh gensum.sh lazy.sh \
-	sha1.sum SUMFILE
+	images/screenshot.png hsaskpass.py hsaskpass.sh checksum.sh \
+	enctest.sh gensum.sh lazy.sh sha1.sum SUMFILE
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 

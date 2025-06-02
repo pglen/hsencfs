@@ -386,7 +386,7 @@ on `(hostname || uname -n) 2>/dev/null | sed 1q`
 "
 
 # Files that config.status was made for.
-config_files=" Makefile bluepoint/Makefile common/Makefile src/Makefile docs/Makefile"
+config_files=" Makefile bluepoint/Makefile common/Makefile src/Makefile docs/Makefile systemd/Makefile"
 config_headers=" config.h"
 config_commands=" depfiles"
 
@@ -546,6 +546,7 @@ do
     "common/Makefile") CONFIG_FILES="$CONFIG_FILES common/Makefile" ;;
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
     "docs/Makefile") CONFIG_FILES="$CONFIG_FILES docs/Makefile" ;;
+    "systemd/Makefile") CONFIG_FILES="$CONFIG_FILES systemd/Makefile" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac
@@ -614,6 +615,12 @@ cat >>"$ac_tmp/subs1.awk" <<\_ACAWK &&
 S["am__EXEEXT_FALSE"]=""
 S["am__EXEEXT_TRUE"]="#"
 S["LTLIBOBJS"]=""
+S["HAVE_SYSTEMD_FALSE"]="#"
+S["HAVE_SYSTEMD_TRUE"]=""
+S["systemdsystemunitdir"]="/lib/systemd/system"
+S["PKG_CONFIG_LIBDIR"]=""
+S["PKG_CONFIG_PATH"]=""
+S["PKG_CONFIG"]="/usr/bin/pkg-config"
 S["host_os"]="linux-gnu"
 S["host_vendor"]="pc"
 S["host_cpu"]="x86_64"
