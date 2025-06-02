@@ -567,12 +567,6 @@ int     main(int argc, char *argv[])
     openlog("HSEncFs",  LOG_PID,  LOG_DAEMON);
     parse_comline(argc, argv);
 
-    // Check if valid askpass
-    if (access(passprog, X_OK) < 0)
-        {
-        hsprint(TO_ERR|TO_LOG, -1, "Askpass program '%s' is not an executable.\n", passprog);
-        exit(2);
-        }
     // Just for development. DO NOT USE!
     //strcpy(passx, "1234"); //plen = strlen(passx);
 
@@ -586,6 +580,13 @@ int     main(int argc, char *argv[])
         {
         printf("Use: %s -h (or --help) for more information.\n", argv[0]);
 		exit(1);
+        }
+
+    // Check if valid askpass
+    if (access(passprog, X_OK) < 0)
+        {
+        hsprint(TO_ERR|TO_LOG, -1, "Askpass program '%s' is not an executable.\n", passprog);
+        exit(2);
         }
     //printf("optind=%d argc=%d\n", optind, argc);
 
@@ -749,7 +750,7 @@ int     main(int argc, char *argv[])
             // Catch abort message
             if(ret2 == 3)
                 hsprint(TO_ERR|TO_LOG, -1, "Passes do not match, aborted.\n");
-            if(ret2 == 2)
+            else if(ret2 == 2)
                hsprint(TO_ERR|TO_LOG, -1,  "Empty pass entered, aborted.\n");
             else
                 hsprint(TO_ERR|TO_LOG, -1,  "Invalid password entered, aborted.\n");

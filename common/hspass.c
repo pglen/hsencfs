@@ -391,7 +391,7 @@ int     pass_ritual(char *mroot, char *mdata, char *pass, int *plen, char *passp
     char tmp[PATH_MAX]; char *xpass2 = NULL, *xpass = NULL;
     int ret = -1, xlen2 = 0, xlen = strlen(pass);
 
-    hsprint(TO_ERR|TO_LOG, -1, "pass_ritual() '%s'", pass);
+    //hsprint(TO_ERR|TO_LOG, -1, "pass_ritual() '%s'", pass);
 
     int pask = (xlen == 0) ? 1 : 0;
 
@@ -448,9 +448,7 @@ int     pass_ritual(char *mroot, char *mdata, char *pass, int *plen, char *passp
         if(pask)
             {
             sprintf(tmp,
-                "\n"
                 "This is a new mount with no password set previously.\n"
-                "\n"
                 "Please re-enter HSENCFS pass: ");
             xpass2 = getpassx(tmp);
             xlen2 = strlen(xpass2);

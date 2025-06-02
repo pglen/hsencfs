@@ -14,7 +14,7 @@
 
 @copying
 @c man begin COPYRIGHT
-Copyright @copyright{} 2015, ... 2022 Peter Glen
+Copyright @copyright{} 2015, ... 2022 2025 Peter Glen
 
   Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.3
@@ -58,11 +58,14 @@ by time and user ID. The report is sent to syslog. The log is sent to facility
 
 @section Quick Usage:
 @example
-    hsencfs ~/secrets ~/.secrets
+    hsencfs ~/secrets
 @end example
 
 @noindent The above command exposes the ~/secrets directory with the backing data
-directory in ~/.secrets Will ask for password on startup.
+directory in ~/.secrets
+Will ask for password and confirmation on first access.
+
+It will ask on startup it the -o option is given. (-ondemand)
 
 @lowersections
 
@@ -176,10 +179,11 @@ video streams.
 
 @section Command Line options and arguments
 
-Usage: hsencfs [options]  mountpoint storagedir
+Usage: hsencfs [options]  MountPoint [StorageDir]
 
-@indent  'storageedir' is a storage directory for data.@*
-@indent  'mountpoint' is a directory for user visible data.
+@indent  'MountPoint' is a directory for user visible data.
+@indent  'StorageDir' is a hidden storage directory for data.@*
+@indent  'StorageDir' is optional.@
 
 @noindent
 Use dotted name as storagedir for convenient hiding  of data names@.
@@ -187,41 +191,57 @@ Use dotted name as storagedir for convenient hiding  of data names@.
 
 @subheading Options:
 
-@indent   -l num      -- Use log level  (--loglevel)@*
-@indent   -p pass     -- Use pass (!!Warning!! cleartext pass) (--pass)@*
-@indent   -a program  -- Use program for asking pass (--askpass)@*
-@indent   -o          -- On demand pass. Ask on first access (--ondemand)@*
-@indent   -f          -- Force creation of storagedir/mountpoint (--force)@*
-@indent   -q          -- Quiet (--quiet)@*
-@indent   -v          -- Verbose (--verbose)@*
-@indent   -V          -- Print version (--version).
+@itemize @w{}
+@item
+ -l num      -- Use log level  (--loglevel)
+@item
+ -p pass     -- Use pass (!!Warning!! cleartext pass) (--pass)
+@item
+ -a program  -- Use program for asking pass (--askpass)
+@item
+ -o          -- Disable on demand pass. Ask on first access (--ondemand)
+@item
+ -v          -- Verbose (--verbose)
+@item
+ -V          -- Print version (--version).
+@end  itemize
 
 @section Option descriptions:
 
-@itemize @bullet
+@itemize @w{}
 @item
     -l num      -- Use log level  (--loglevel num)
 
-Log levels:   1 - start/stop;   2 - open/create
-              3 - read/write;   4 - all (noisy)
+    @itemize @w{}
+    @item
+        Log levels:   1 - start/stop;   2 - open/create
+                  3 - read/write;   4 - all (noisy)  @*
+    @end itemize
+
 @item
     -p pass     -- Use command line pass (--pass pass)
 
-Warning! This is a clear text pass. While hsencfs obfuscates
-your pass from the command line (like: ps xa) it creates
-security gap because of the temporarily visible password.
+    @itemize @w{}
+    @item
+        Warning! This is a clear text pass. While hsencfs obfuscates
+        your pass from the command line (like: ps xa) it creates
+        security gap because of the temporarily visible password.
+    @end itemize
 
 @item
     -a askpass  -- Use a program to ask for pass (--askpass prog)
 
-Hsencfs will start the askpass program will deliver the password
-back to HSENCFS. There are two default askpass programs supplied,
-hsaskpass and hsaskpass.py. The hsaskpass.py is a GUI program to enable
-the system to interact with the user. You may supply a custom
-askpass program to suit your needs. Please note, that the askpass
-mechanism can be the primary means of intercepting your password.
-Make sure you check system integrity regularly. (For example
-verify md5 sinatures - @xref{Verify Notes}.
+    @itemize @w{}
+    @item
+    Hsencfs will start the askpass program will deliver the password
+    back to HSENCFS. There are two default askpass programs supplied,
+    hsaskpass and hsaskpass.py. The hsaskpass.py is a GUI program to enable
+    the system to interact with the user. You may supply a custom
+    askpass program to suit your needs. Please note, that the askpass
+    mechanism can be the primary means of intercepting your password.
+    Make sure you check system integrity regularly. (For example
+    verify md5 sinatures - @xref{Verify Notes}.
+    @end itemize
 
 @item
     -o  -- On demand pass. Ask on first access (--ondemand)
