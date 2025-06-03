@@ -16,4 +16,8 @@ rsa_exa:  rsa_exa.c
 gen_rsa:  gen_rsa.c
 	gcc gen_rsa.c -l crypto -l ssl -o gen_rsa
 
+EVP_PKEY_RSA_keygen: EVP_PKEY_RSA_keygen.c
+	gcc EVP_PKEY_RSA_keygen.c -l crypto -l ssl -o EVP_PKEY_RSA_keygen
+
+
 # EOF
