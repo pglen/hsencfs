@@ -1,6 +1,8 @@
 
 #.c.o:
 
+all:
+
 ecc:
 	gcc ecc_key.c -l crypto -l ssl -o ecc_key
 
