@@ -98,4 +98,12 @@ cleanup:
     return ret;
 }
 
+//const void* getSeedBuffer(int num)
+//{
+//    unsigned char *ret = malloc(num);
+//    for(int aa = 0; aa < num; aa++)
+//        ret[aa] = rand() & 0xff;
+//    return (const void*)ret;
+//}
+
 // EOF

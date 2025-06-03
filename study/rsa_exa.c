@@ -11,13 +11,14 @@
 #include <openssl/rand.h>
 
 #define MIN(aa, bb) aa > bb ? bb : aa
+typedef unsigned char uchar;
 
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 static int padding = RSA_PKCS1_PADDING;
 static const char *propq = NULL;
 
-char* publicKeyToString(EVP_PKEY* pubKey, char *out, int maxlen) {
+static char* publicKeyToString(EVP_PKEY* pubKey, char *out, int maxlen) {
     BIO *bio = BIO_new(BIO_s_mem());
     PEM_write_bio_PUBKEY(bio, pubKey);
 
@@ -31,7 +32,7 @@ char* publicKeyToString(EVP_PKEY* pubKey, char *out, int maxlen) {
     return out;
 }
 
-char* privateKeyToString(EVP_PKEY* Key, char *out, int maxlen) {
+static char* privateKeyToString(EVP_PKEY* Key, char *out, int maxlen) {
     BIO *bio = BIO_new(BIO_s_mem());
     PEM_write_bio_PrivateKey(bio, Key, NULL, NULL, 0, NULL, NULL);
 
@@ -51,6 +52,7 @@ char* privateKeyToString(EVP_PKEY* Key, char *out, int maxlen) {
  *
  * This uses the long way of generating an RSA key.
  */
+
 static EVP_PKEY *generate_rsa_key(OSSL_LIB_CTX *libctx, unsigned int bits)
 {
     EVP_PKEY_CTX *genctx = NULL;
@@ -114,10 +116,9 @@ cleanup:
     return pkey;
 }
 
-
 static unsigned long lasterr = 0;
 
-void printLastError(char *msg)
+static void printLastError(char *msg)
 {
     char * err = malloc(130);;
     ERR_load_crypto_strings();
@@ -127,7 +128,7 @@ void printLastError(char *msg)
     free(err);
 }
 
-RSA *createRSA(unsigned char * key, int public)
+static  RSA *createRSA(uchar * key, int public)
 {
     RSA *rsa = NULL;
     BIO *keybio = BIO_new_mem_buf(key, -1);
@@ -155,60 +156,61 @@ RSA *createRSA(unsigned char * key, int public)
     return rsa;
 }
 
-//const void* getSeedBuffer(int num)
-//{
-//    unsigned char *ret = malloc(num);
-//    for(int aa = 0; aa < num; aa++)
-//        ret[aa] = rand() & 0xff;
-//    return (const void*)ret;
-//}
-
-int public_encrypt(unsigned char * data,int data_len,
-                        unsigned char * key, unsigned char *encrypted)
+int public_encrypt(uchar *data, int data_len, uchar *key, uchar *encrypted)
 {
-    RSA * rsa = createRSA(key, 1);
+    RSA *rsa = createRSA(key, 1);
     if (!rsa)
         return -1;
-    int result = RSA_public_encrypt(data_len,data,encrypted,rsa,padding);
+
+    int maxlen = RSA_size(rsa);
+    //printf("maxlen: %d\n", maxlen);
+    if (data_len > maxlen)
+        {
+        free(rsa);
+        printf("Cannot encrypt. (too long)\n");
+        return -1;
+        }
+    int result = RSA_public_encrypt(data_len, data, encrypted, rsa, padding);
+    free(rsa);
     return result;
 }
 
-int private_decrypt(unsigned char * enc_data, int data_len,
-                            unsigned char * key, unsigned char *decrypted)
+int private_decrypt(uchar * enc_data, int data_len,
+                            uchar *key, uchar *decrypted)
 {
     RSA * rsa = createRSA(key, 0);
     if (!rsa)
         return -1;
-    int  result = RSA_private_decrypt(data_len,enc_data,
-                                        decrypted,rsa,padding);
+    int  result = RSA_private_decrypt(data_len, enc_data,
+                                        decrypted, rsa, padding);
+    free(rsa);
     return result;
 }
 
-int private_encrypt(unsigned char * data, int data_len,
-                    unsigned char * key, unsigned char *encrypted)
+int private_encrypt(uchar * data, int data_len,
+                            uchar * key, uchar *encrypted)
 {
     RSA * rsa = createRSA(key,0);
     if (!rsa)
         return 0;
     int result = RSA_private_encrypt(data_len, data,
                                 encrypted,rsa, padding);
+    free(rsa);
     return result;
 }
 
-int public_decrypt(unsigned char * enc_data,int data_len,
-                        unsigned char * key, unsigned char *decrypted)
+int public_decrypt(uchar * enc_data,int data_len,
+                        uchar * key, uchar *decrypted)
 {
-    RSA * rsa = createRSA(key,1);
+    RSA * rsa = createRSA(key, 1);
     if (!rsa)
         return 0;
-    int  result = RSA_public_decrypt(data_len,enc_data,decrypted,rsa,padding);
+    int  result = RSA_public_decrypt(data_len, enc_data, decrypted, rsa, padding);
+    free(rsa);
     return result;
 }
 
-
-//key length : 2048
-
-char plainText[2048/8] = "\
+char ptext[] = "\
 Hello this is a text this is a text this is a text this is a text.\n\
 Hello this is a text this is a text this is a text this is a text.\n\
 Hello this is a text this is a text this is a text this is a text.\
@@ -219,7 +221,7 @@ void hexdump(char *ptr, int len)
     int llen = 24;
     for (int aa = 0; aa < len; aa++)
         {
-        unsigned char chh = ptr[aa] & 0xff;
+        uchar chh = ptr[aa] & 0xff;
         if(chh > 127 || chh < 32)
             printf("%.2x ", chh);
         else
@@ -230,11 +232,10 @@ void hexdump(char *ptr, int len)
         }
 }
 
-unsigned char  encrypted[4098]={};
-unsigned char  decrypted[4098]={};
-
-unsigned char privkey[4098] = {};
-unsigned char pubkey[4098] = {};
+uchar   encrypted[1024]={};
+uchar   decrypted[1024]={};
+uchar   privkey[2000] = {};
+uchar   pubkey[1000] = {};
 
 unsigned int bits = 2048;
 
@@ -253,31 +254,29 @@ int main(int argc, char *argv[])
     char *pss = privateKeyToString(pkey, privkey, sizeof(privkey));
     //printf("String: '%s'\n", pss);
 
-    printf("'\n%s\n'", privkey);
-    printf("'\n%s\n'", pubkey);
+    printf("privlen: %ld publen: %ld\n",  strlen(privkey), strlen(pubkey));
+    //printf("'\n%s\n'", privkey);
+    //printf("'\n%s\n'", pubkey);
 
     // Create keys on the fly
-    printf("original Text: \n%s\n", plainText);
+    printf("Original Text (%ld bytes): \n%s\n", strlen(ptext), ptext);
 
-    int encrypted_length = public_encrypt(plainText,
-                            strlen(plainText), pubkey, encrypted);
-                            //strlen(plainText), publicKey2, encrypted);
-    if(encrypted_length == -1)
+    int elen = public_encrypt(ptext,
+                            strlen(ptext), pubkey, encrypted);
+    if(elen == -1)
     {
         printLastError("Public Encrypt failed ");
         //printLastError("encrypt  RSA");
         exit(0);
     }
 
-    printf("Encrypted length: %d\n",encrypted_length);
-    //printf("Encrypted Text: \n%s\n", encrypted);
-    hexdump(encrypted, encrypted_length);
+    printf("Encrypted length: %d\n", elen);
+    //hexdump(encrypted, elen);
 
-    int decrypted_length = private_decrypt(encrypted,
-                            encrypted_length, privkey, decrypted);
-                            //encrypted_length, privateKey2, decrypted);
+    int dlen = private_decrypt(encrypted,
+                            elen, privkey, decrypted);
 
-    if(decrypted_length == -1)
+    if(dlen == -1)
     {
         printLastError("Private Decrypt failed");
         exit(0);
@@ -285,24 +284,24 @@ int main(int argc, char *argv[])
 
     printf("\nDecrypted Text: \n%s\n", decrypted);
 
-    //printf("Decrypted Length %d\n",decrypted_length);
-    //encrypted_length= private_encrypt(plainText,
-    //            strlen(plainText),privateKey,encrypted);
-    //if(encrypted_length == -1)
+    //printf("Decrypted Length %d\n",dlen);
+    //elen= private_encrypt(ptext,
+    //            strlen(ptext),privateKey,encrypted);
+    //if(elen == -1)
     //{
     //    printLastError("Private Encrypt failed");
     //    exit(0);
     //}
-    //printf("Encrypted length =%d\n",encrypted_length);
-    //decrypted_length = public_decrypt(encrypted,
-    //                  encrypted_length,publicKey, decrypted);
-    //if(decrypted_length == -1)
+    //printf("Encrypted length =%d\n",elen);
+    //dlen = public_decrypt(encrypted,
+    //                  elen,publicKey, decrypted);
+    //if(dlen == -1)
     //{
     //    printLastError("Public Decrypt failed");
     //    exit(0);
     //}
     //printf("Decrypted Text =%s\n",decrypted);
-    //printf("Decrypted Length =%d\n",decrypted_length);
+    //printf("Decrypted Length =%d\n",dlen);
     //
 
     return 0;
