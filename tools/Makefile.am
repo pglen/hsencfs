@@ -1,6 +1,9 @@
 # ------------------------------------------------------------------------
 # HSENCFS tools. (High Security Encrypted File system)
 
+AUTOMAKE_OPTIONS = subdir-objects
+#SUBDIRS = src tools, common, bluepoint
+
 # Fuse based encrypted file system, test utilities
 
 bin_PROGRAMS =  bpdec2 bpenc2

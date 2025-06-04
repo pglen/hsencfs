@@ -4,8 +4,7 @@
 # It will encrypt data on write, decrypt data on read.
 #
 
-#SUBDIRS =  docs tools bluepoint common src
-SUBDIRS =  docs bluepoint common src systemd
+SUBDIRS = common bluepoint src . tools docs systemd
 
 PAN_SERV=GNOME_HSENCApplet.server
 BONOBO_DIR=/usr/lib/bonobo/servers
@@ -23,19 +22,19 @@ dist_bin_SCRIPTS =                  \
         hstray.py
 
 # Auxiliaries
-EXTRA_DIST = src/hsencrw.c src/hsencop.c
-EXTRA_DIST += common/hspass.c common/hsutils.c
-EXTRA_DIST += images/hsicon.png images/hsicon.svg images/hspadlock.png \
-                    images/hspadlock.svg images/screenshot.png
-#EXTRA_DIST += study
-EXTRA_DIST  += hsaskpass.py hsaskpass.sh
+#EXTRA_DIST = src/hsencrw.c src/hsencop.c
+#EXTRA_DIST += common/hspass.c common/hsutils.c
+#EXTRA_DIST += images/hsicon.png images/hsicon.svg images/hspadlock.png \
+#                    images/hspadlock.svg images/screenshot.png
+##EXTRA_DIST += study
+#EXTRA_DIST  += hsaskpass.py hsaskpass.sh
 
 # Fake it into the distribution
 # use: ls *.py *.sh *.server SUMFILE sha*
 
 #GNOME_HSENCApplet.server.in
 
-EXTRA_DIST +=                       \
+EXTRA_DIST =                       \
         checksum.sh                 \
         enctest.sh                  \
         gensum.sh                   \

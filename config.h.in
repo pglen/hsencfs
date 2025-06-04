@@ -49,6 +49,9 @@
 /* Define to 1 if you have the `mkfifo' function. */
 #undef HAVE_MKFIFO
 
+/* Define to 1 if OpenSSL is available */
+#undef HAVE_OPENSSL
+
 /* Define to 1 if you have the `rmdir' function. */
 #undef HAVE_RMDIR
 

@@ -1,0 +1,15 @@
+autoscan: warning: missing AC_CHECK_FUNCS([realpath]) wanted by: 
+	study/split_path.c:63
+autoscan: warning: missing AC_CHECK_FUNCS([strdup]) wanted by: 
+	study/EVP_PKEY_RSA_keygen.c:332
+	study/getpass.c:90
+	study/getpass.c:104
+	study/comstr.c:33
+	study/comstr.c:47
+autoscan: warning: missing AC_CHECK_FUNCS([strrchr]) wanted by: 
+	study/split_path.c:13
+	study/split_path.c:14
+autoscan: warning: missing AC_CHECK_HEADER_STDBOOL wanted by: 
+	study/ecc_enc.c:50
+autoscan: warning: missing AC_PROG_CXX wanted by: 
+	autogen.sh:99

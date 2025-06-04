@@ -25,6 +25,7 @@
 #include <signal.h>
 #include <syslog.h>
 #include <mntent.h>
+#include <stdarg.h>
 
 #ifdef HAVE_SETXATTR
 #include <sys/xattr.h>

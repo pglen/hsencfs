@@ -15,9 +15,7 @@
 @SET_MAKE@
 
 # ------------------------------------------------------------------------
-# HSENCFS tools. (High Security Encrypted File system)
-
-# Fuse based encrypted file system, test utilities
+# HSENCFS source. (High Security Encrypted File system)
 
 VPATH = @srcdir@
 am__is_gnu_make = { \
@@ -280,12 +278,14 @@ runstatedir = @runstatedir@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 srcdir = @srcdir@
+subdirs = @subdirs@
 sysconfdir = @sysconfdir@
 systemdsystemunitdir = @systemdsystemunitdir@
 target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
+AUTOMAKE_OPTIONS = subdir-objects
 
 #tests/dualwrite tests/seekcp tests/zigjump tests/zigzag tests/farwrite
 #tests/onejump tests/dualread tests/jumpread
@@ -294,19 +294,14 @@ top_srcdir = @top_srcdir@
 # The main program
 hsencfsdir = .
 hsencfs_CFLAGS = -g -D_FILE_OFFSET_BITS=64 -O2 -I$(srcdir)/../bluepoint \
-            -I$(srcdir)/../common
+            -I$(srcdir)/../common  -lfuse3  -lcrypto -lssl
 
 hsencfs_SOURCES = hsencfs.c hsencrr.c hsencrw.c hsencsb.c hsencsu.c base64.c \
                         ../common/hsutils.c ../common/hspass.c \
                             ../bluepoint/bluepoint2.c ../bluepoint/bluepoint2.h \
                                  ../bluepoint/hs_crypt.c  ../bluepoint/hs_crypt.h
 
-
-#hsencfs_DEPENDENCIES  =
-hsencfs_LDADD = -lulockmgr -lfuse3
-
-# Password helper
-hsaskpass_CFLAGS = -D_FILE_OFFSET_BITS=64 -O2 -I$(srcdir)/bluepoint
+hsencfs_LDADD = -lulockmgr -lfuse3  -lcrypto -lssl
 all: all-am
 
 .SUFFIXES:
@@ -320,9 +315,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu src/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign src/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu src/Makefile
+	  $(AUTOMAKE) --foreign src/Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
 	  *config.status*) \
@@ -819,6 +814,12 @@ uninstall-am: uninstall-binPROGRAMS
 
 .PRECIOUS: Makefile
 
+
+#hsencfs_DEPENDENCIES  =
+
+# Password helper
+#hsaskpass_CFLAGS = -D_FILE_OFFSET_BITS=64 -O2 -I$(srcdir)/bluepoint
+#hsaskpass_LDADD = -lulockmgr -lfuse3  -lcrypto -lssl
 
 clean-local:
 	@-rm -f aa bb cc

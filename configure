@@ -616,7 +616,7 @@ PACKAGE_STRING='hsencfs 1.5.0'
 PACKAGE_BUGREPORT='peterglen99@gmail.com'
 PACKAGE_URL=''
 
-ac_unique_file="src/hsencop.c"
+enable_option_checking=no
 ac_unique_file="config.h.in"
 ac_default_prefix=/usr/local
 # Factoring default headers for most tests.
@@ -691,6 +691,7 @@ CFLAGS
 CC
 AUTOCHECK_DEFINED_FALSE
 AUTOCHECK_DEFINED_TRUE
+subdirs
 AM_BACKSLASH
 AM_DEFAULT_VERBOSITY
 AM_DEFAULT_V
@@ -780,7 +781,7 @@ CPP
 PKG_CONFIG
 PKG_CONFIG_PATH
 PKG_CONFIG_LIBDIR'
-
+ac_subdirs_all='src tools common bluepoint'
 
 # Initialize some variables set by options.
 ac_init_help=
@@ -2676,14 +2677,6 @@ ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
-
-#AC_CONFIG_SUBDIRS([src tools common bluepoint])
-#AC_CONFIG_HEADERS([config.h])
-
-
-ac_config_headers="$ac_config_headers config.h"
-
-
 am__api_version='1.16'
 
 
@@ -3300,6 +3293,14 @@ END
     as_fn_error $? "Your 'rm' program is bad, sorry." "$LINENO" 5
   fi
 fi
+
+
+
+subdirs="$subdirs src tools common bluepoint"
+
+
+ac_config_headers="$ac_config_headers config.h"
+
 
  if test x"$AUTOCHECK" != x""; then
   AUTOCHECK_DEFINED_TRUE=
@@ -4564,12 +4565,12 @@ fi
 
 
 
-SERVICE_FILE=hsencfs.service
+SERVICE_FILE=systemd/hsencfs.service
 SYSTEMD_DIR=`pkg-config systemd --variable=systemdsystemunitdir`
 
-
-
-
+#AC_CONFIG_COMMANDS_POST([cp "$SERVICE_FILE" "$SYSTEMD_DIR"])
+#AC_CONFIG_COMMANDS_POST([systemctl enable "$SYSTEMD_DIR/$SERVICE_FILE"])
+#AC_CONFIG_COMMANDS_POST([systemctl start "$SERVICE_FILE"])
 
 # Checks for programs.
 for ac_prog in gawk mawk nawk awk
@@ -5710,7 +5711,6 @@ else $as_nop
 fi
 
 
-
 # Checks for libraries.
 #AC_CHECK_LIB([fuse], [fuse_main])
 # FIXME: Replace `main' with a function in `-lulockmgr':
@@ -6243,6 +6243,104 @@ printf "%s\n" "#define HAVE_STRUCT_STAT_ST_BLKSIZE 1" >>confdefs.h
 
 
 fi
+
+
+ac_fn_c_check_header_compile "$LINENO" "openssl/ssl.h" "ac_cv_header_openssl_ssl_h" "$ac_includes_default"
+if test "x$ac_cv_header_openssl_ssl_h" = xyes
+then :
+
+else $as_nop
+  as_fn_error $? "Missing required header: openssl/ssl.h." "$LINENO" 5
+fi
+
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for OPENSSL_init_ssl in -lssl" >&5
+printf %s "checking for OPENSSL_init_ssl in -lssl... " >&6; }
+if test ${ac_cv_lib_ssl_OPENSSL_init_ssl+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lssl  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+char OPENSSL_init_ssl ();
+int
+main (void)
+{
+return OPENSSL_init_ssl ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"
+then :
+  ac_cv_lib_ssl_OPENSSL_init_ssl=yes
+else $as_nop
+  ac_cv_lib_ssl_OPENSSL_init_ssl=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_ssl_OPENSSL_init_ssl" >&5
+printf "%s\n" "$ac_cv_lib_ssl_OPENSSL_init_ssl" >&6; }
+if test "x$ac_cv_lib_ssl_OPENSSL_init_ssl" = xyes
+then :
+  FOUND_SSL_LIB="yes"
+else $as_nop
+  as_fn_error $? "Missing required lib: openssl/ssl.h." "$LINENO" 5
+fi
+
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for CRYPTO_new_ex_data in -lcrypto" >&5
+printf %s "checking for CRYPTO_new_ex_data in -lcrypto... " >&6; }
+if test ${ac_cv_lib_crypto_CRYPTO_new_ex_data+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lcrypto  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+char CRYPTO_new_ex_data ();
+int
+main (void)
+{
+return CRYPTO_new_ex_data ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"
+then :
+  ac_cv_lib_crypto_CRYPTO_new_ex_data=yes
+else $as_nop
+  ac_cv_lib_crypto_CRYPTO_new_ex_data=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_crypto_CRYPTO_new_ex_data" >&5
+printf "%s\n" "$ac_cv_lib_crypto_CRYPTO_new_ex_data" >&6; }
+if test "x$ac_cv_lib_crypto_CRYPTO_new_ex_data" = xyes
+then :
+  FOUND_CRYPTO_LIB="yes"
+else $as_nop
+  as_fn_error $? "library 'crypto' is required for OpenSSL" "$LINENO" 5
+fi
+
+
+# Set OpenSSL flags
+
+printf "%s\n" "#define HAVE_OPENSSL 1" >>confdefs.h
 
 
 # Checks for library functions.
@@ -6799,7 +6897,9 @@ then :
 fi
 
 
-#AC_CONFIG_FILES(hsencfs.service)
+ac_config_files="$ac_config_files Makefile bluepoint/Makefile common/Makefile src/Makefile docs/Makefile systemd/Makefile"
+
+
 
 
 
@@ -6960,6 +7060,7 @@ then :
   systemdsystemunitdir=$with_systemdsystemunitdir
 
 fi
+
  if test "x$with_systemdsystemunitdir" != "xno"; then
   HAVE_SYSTEMD_TRUE=
   HAVE_SYSTEMD_FALSE='#'
@@ -6968,8 +7069,6 @@ else
   HAVE_SYSTEMD_FALSE=
 fi
 
-
-ac_config_files="$ac_config_files Makefile bluepoint/Makefile common/Makefile src/Makefile docs/Makefile systemd/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -8414,9 +8513,6 @@ ac_clean_files=$ac_clean_files_save
 test $ac_write_fail = 0 ||
   as_fn_error $? "write failure creating $CONFIG_STATUS" "$LINENO" 5
 
-cp "$SERVICE_FILE" "$SYSTEMD_DIR"
-systemctl enable "$SYSTEMD_DIR/$SERVICE_FILE"
-systemctl start "$SERVICE_FILE"
 
 # configure is writing to config.log, and then calls config.status.
 # config.status does its own redirection, appending to config.log.
@@ -8437,6 +8533,149 @@ if test "$no_create" != yes; then
   # Use ||, not &&, to avoid exiting from the if with $? = 1, which
   # would make configure fail if this is the last instruction.
   $ac_cs_success || as_fn_exit 1
+fi
+
+#
+# CONFIG_SUBDIRS section.
+#
+if test "$no_recursion" != yes; then
+
+  # Remove --cache-file, --srcdir, and --disable-option-checking arguments
+  # so they do not pile up.
+  ac_sub_configure_args=
+  ac_prev=
+  eval "set x $ac_configure_args"
+  shift
+  for ac_arg
+  do
+    if test -n "$ac_prev"; then
+      ac_prev=
+      continue
+    fi
+    case $ac_arg in
+    -cache-file | --cache-file | --cache-fil | --cache-fi \
+    | --cache-f | --cache- | --cache | --cach | --cac | --ca | --c)
+      ac_prev=cache_file ;;
+    -cache-file=* | --cache-file=* | --cache-fil=* | --cache-fi=* \
+    | --cache-f=* | --cache-=* | --cache=* | --cach=* | --cac=* | --ca=* \
+    | --c=*)
+      ;;
+    --config-cache | -C)
+      ;;
+    -srcdir | --srcdir | --srcdi | --srcd | --src | --sr)
+      ac_prev=srcdir ;;
+    -srcdir=* | --srcdir=* | --srcdi=* | --srcd=* | --src=* | --sr=*)
+      ;;
+    -prefix | --prefix | --prefi | --pref | --pre | --pr | --p)
+      ac_prev=prefix ;;
+    -prefix=* | --prefix=* | --prefi=* | --pref=* | --pre=* | --pr=* | --p=*)
+      ;;
+    --disable-option-checking)
+      ;;
+    *)
+      case $ac_arg in
+      *\'*) ac_arg=`printf "%s\n" "$ac_arg" | sed "s/'/'\\\\\\\\''/g"` ;;
+      esac
+      as_fn_append ac_sub_configure_args " '$ac_arg'" ;;
+    esac
+  done
+
+  # Always prepend --prefix to ensure using the same prefix
+  # in subdir configurations.
+  ac_arg="--prefix=$prefix"
+  case $ac_arg in
+  *\'*) ac_arg=`printf "%s\n" "$ac_arg" | sed "s/'/'\\\\\\\\''/g"` ;;
+  esac
+  ac_sub_configure_args="'$ac_arg' $ac_sub_configure_args"
+
+  # Pass --silent
+  if test "$silent" = yes; then
+    ac_sub_configure_args="--silent $ac_sub_configure_args"
+  fi
+
+  # Always prepend --disable-option-checking to silence warnings, since
+  # different subdirs can have different --enable and --with options.
+  ac_sub_configure_args="--disable-option-checking $ac_sub_configure_args"
+
+  ac_popdir=`pwd`
+  for ac_dir in : $subdirs; do test "x$ac_dir" = x: && continue
+
+    # Do not complain, so a configure script can configure whichever
+    # parts of a large source tree are present.
+    test -d "$srcdir/$ac_dir" || continue
+
+    ac_msg="=== configuring in $ac_dir (`pwd`/$ac_dir)"
+    printf "%s\n" "$as_me:${as_lineno-$LINENO}: $ac_msg" >&5
+    printf "%s\n" "$ac_msg" >&6
+    as_dir="$ac_dir"; as_fn_mkdir_p
+    ac_builddir=.
+
+case "$ac_dir" in
+.) ac_dir_suffix= ac_top_builddir_sub=. ac_top_build_prefix= ;;
+*)
+  ac_dir_suffix=/`printf "%s\n" "$ac_dir" | sed 's|^\.[\\/]||'`
+  # A ".." for each directory in $ac_dir_suffix.
+  ac_top_builddir_sub=`printf "%s\n" "$ac_dir_suffix" | sed 's|/[^\\/]*|/..|g;s|/||'`
+  case $ac_top_builddir_sub in
+  "") ac_top_builddir_sub=. ac_top_build_prefix= ;;
+  *)  ac_top_build_prefix=$ac_top_builddir_sub/ ;;
+  esac ;;
+esac
+ac_abs_top_builddir=$ac_pwd
+ac_abs_builddir=$ac_pwd$ac_dir_suffix
+# for backward compatibility:
+ac_top_builddir=$ac_top_build_prefix
+
+case $srcdir in
+  .)  # We are building in place.
+    ac_srcdir=.
+    ac_top_srcdir=$ac_top_builddir_sub
+    ac_abs_top_srcdir=$ac_pwd ;;
+  [\\/]* | ?:[\\/]* )  # Absolute name.
+    ac_srcdir=$srcdir$ac_dir_suffix;
+    ac_top_srcdir=$srcdir
+    ac_abs_top_srcdir=$srcdir ;;
+  *) # Relative name.
+    ac_srcdir=$ac_top_build_prefix$srcdir$ac_dir_suffix
+    ac_top_srcdir=$ac_top_build_prefix$srcdir
+    ac_abs_top_srcdir=$ac_pwd/$srcdir ;;
+esac
+ac_abs_srcdir=$ac_abs_top_srcdir$ac_dir_suffix
+
+
+    cd "$ac_dir"
+
+    # Check for configure.gnu first; this name is used for a wrapper for
+    # Metaconfig's "Configure" on case-insensitive file systems.
+    if test -f "$ac_srcdir/configure.gnu"; then
+      ac_sub_configure=$ac_srcdir/configure.gnu
+    elif test -f "$ac_srcdir/configure"; then
+      ac_sub_configure=$ac_srcdir/configure
+    else
+      { printf "%s\n" "$as_me:${as_lineno-$LINENO}: WARNING: no configuration information is in $ac_dir" >&5
+printf "%s\n" "$as_me: WARNING: no configuration information is in $ac_dir" >&2;}
+      ac_sub_configure=
+    fi
+
+    # The recursion is here.
+    if test -n "$ac_sub_configure"; then
+      # Make the cache file name correct relative to the subdirectory.
+      case $cache_file in
+      [\\/]* | ?:[\\/]* ) ac_sub_cache_file=$cache_file ;;
+      *) # Relative name.
+	ac_sub_cache_file=$ac_top_build_prefix$cache_file ;;
+      esac
+
+      { printf "%s\n" "$as_me:${as_lineno-$LINENO}: running $SHELL $ac_sub_configure $ac_sub_configure_args --cache-file=$ac_sub_cache_file --srcdir=$ac_srcdir" >&5
+printf "%s\n" "$as_me: running $SHELL $ac_sub_configure $ac_sub_configure_args --cache-file=$ac_sub_cache_file --srcdir=$ac_srcdir" >&6;}
+      # The eval makes quoting arguments work.
+      eval "\$SHELL \"\$ac_sub_configure\" $ac_sub_configure_args \
+	   --cache-file=\"\$ac_sub_cache_file\" --srcdir=\"\$ac_srcdir\"" ||
+	as_fn_error $? "$ac_sub_configure failed for $ac_dir" "$LINENO" 5
+    fi
+
+    cd "$ac_popdir"
+  done
 fi
 if test -n "$ac_unrecognized_opts" && test "$enable_option_checking" != no; then
   { printf "%s\n" "$as_me:${as_lineno-$LINENO}: WARNING: unrecognized options: $ac_unrecognized_opts" >&5

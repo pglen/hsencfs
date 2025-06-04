@@ -1,6 +1,8 @@
 # Prerequisites
 *.d
 
+*.pem
+
 # Object files
 *.o
 *.ko
