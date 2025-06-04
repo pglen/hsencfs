@@ -112,7 +112,6 @@ am_bpdec2_OBJECTS = bpdec2-bpdec2.$(OBJEXT) bpdec2-bp2com.$(OBJEXT) \
 	../bluepoint/bpdec2-hs_crypt.$(OBJEXT) \
 	../bluepoint/bpdec2-bluepoint2.$(OBJEXT)
 bpdec2_OBJECTS = $(am_bpdec2_OBJECTS)
-bpdec2_LDADD = $(LDADD)
 bpdec2_LINK = $(CCLD) $(bpdec2_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
 am_bpenc2_OBJECTS = bpenc2-bpenc2.$(OBJEXT) bpenc2-bp2com.$(OBJEXT) \
@@ -121,7 +120,6 @@ am_bpenc2_OBJECTS = bpenc2-bpenc2.$(OBJEXT) bpenc2-bp2com.$(OBJEXT) \
 	../bluepoint/bpenc2-hs_crypt.$(OBJEXT) \
 	../bluepoint/bpenc2-bluepoint2.$(OBJEXT)
 bpenc2_OBJECTS = $(am_bpenc2_OBJECTS)
-bpenc2_LDADD = $(LDADD)
 bpenc2_LINK = $(CCLD) $(bpenc2_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
 AM_V_P = $(am__v_P_$(V))
@@ -305,19 +303,28 @@ top_builddir = .
 top_srcdir = .
 AUTOMAKE_OPTIONS = subdir-objects
 bpenc2dir = .
-bpenc2_SOURCES = bpenc2.c  bp2com.c  ../common/hsutils.c ../common/hspass.c \
-                       ../bluepoint/hs_crypt.c  ../bluepoint/hs_crypt.h  \
-                              ../bluepoint/bluepoint2.c ../bluepoint/bluepoint2.h
+bpenc2_SOURCES = bpenc2.c  bp2com.c  ../common/hsutils.c \
+                        ../common/hspass.c        \
+                        ../bluepoint/hs_crypt.c   \
+                        ../bluepoint/hs_crypt.h   \
+                        ../bluepoint/bluepoint2.c \
+                        ../bluepoint/bluepoint2.h
 
-bpenc2_CFLAGS = -I$(srcdir)/../bluepoint -I$(srcdir)/../common
+bpenc2_CFLAGS = -g -D_FILE_OFFSET_BITS=64  -I$(srcdir)/../bluepoint \
+                 -I$(srcdir)/../common -lssl -lcrypt
+
 bpenc2_DEPENDENCIES = 
+bpenc2_LDADD = -lulockmgr -lfuse3  -lcrypto -lssl
 bpdec2dir = .
 bpdec2_SOURCES = bpdec2.c bp2com.c ../common/hsutils.c ../common/hspass.c  \
                        ../bluepoint/hs_crypt.c  ../bluepoint/hs_crypt.h  \
                               ../bluepoint/bluepoint2.c ../bluepoint/bluepoint2.h
 
-bpdec2_CFLAGS = -I$(srcdir)/../bluepoint -I$(srcdir)/../common
+bpdec2_CFLAGS = -g -D_FILE_OFFSET_BITS=64 -I$(srcdir)/../bluepoint \
+                     -lssl -lcrypt -I$(srcdir)/../common
+
 bpdec2_DEPENDENCIES = 
+bpdec2_LDADD = -lulockmgr -lfuse3  -lcrypto -lssl
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 

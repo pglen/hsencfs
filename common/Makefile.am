@@ -3,9 +3,9 @@
 
 AUTOMAKE_OPTIONS = subdir-objects
 
-# Fuse based encrypted file system, test utilities
+# Fuse based encrypted file system
 
-EXTRA_DIST =  hsutils.c  hspass.c
+#EXTRA_DIST =  hsutils.c  hspass.c
 
 noinst_PROGRAMS = hsaskpass
 

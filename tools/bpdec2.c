@@ -16,7 +16,7 @@
 #include <errno.h>
 #include <syslog.h>
 #include <getopt.h>
-
+#include <fuse.h>
 #include <sys/time.h>
 #include <sys/stat.h>
 
@@ -36,10 +36,10 @@ static char tmp[256];
 static FILE *logfp = NULL;
 
 // Flags
-static  int     verbose = 0;
-static  int     quiet = 0;
-static  int     force = 0;
-static  int     ondemand = 0;
+int     verbose = 0;
+int     quiet = 0;
+int     force = 0;
+int     ondemand = 0;
 
 // Shared flags
 int     loglevel = 0;

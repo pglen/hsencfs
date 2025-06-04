@@ -15,6 +15,7 @@
 #include <errno.h>
 #include <syslog.h>
 #include <getopt.h>
+#include <fuse.h>
 
 #include <sys/time.h>
 #include <sys/stat.h>
@@ -31,21 +32,20 @@ static char buff[BLOCKSIZE];
 static FILE *logfp = NULL;
 
 // Flags
-static  int     verbose = 0;
-static  int     quiet = 0;
-static  int     force = 0;
+int     verbose = 0;
+int     quiet = 0;
+int     force = 0;
 
 // Shared flags
 int     loglevel = 0;
 
 // Maintain internal count
 static  char    version[] = "1.17";
-
-static  char    passx[MAXPASSLEN];
-static  int     plen = sizeof(passx);
-static  char    decoy[MAXPASSLEN];
-static  int     plen2 = sizeof(decoy);
-static char     pass[MAXPASSLEN];
+char    passx[MAXPASSLEN];
+int     plen = sizeof(passx);
+char    decoy[MAXPASSLEN];
+int     plen2 = sizeof(decoy);
+char    pass[MAXPASSLEN];
 
 static struct option long_options[] =
     {

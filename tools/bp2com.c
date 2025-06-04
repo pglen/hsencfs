@@ -11,6 +11,7 @@
 #include <syslog.h>
 #include <getopt.h>
 #include <stddef.h>
+#include <fuse.h>
 
 #include <sys/time.h>
 #include <sys/stat.h>

@@ -64,10 +64,10 @@ extern  int     pg_debug;
 extern  int     verbose;
 extern  int     ondemand;
 
-int xmp_read(const char *path, char *buf, size_t wsize, off_t offset, // )
+int xmp_read(const char *path, char *buf, size_t wsize, off_t offset,
                          struct fuse_file_info *fi);
 
-int xmp_write(const char *path, const char *buf, size_t wsize, // )
+int xmp_write(const char *path, const char *buf, size_t wsize,
                         off_t offset, struct fuse_file_info *fi);
 
 int     is_our_file(const char *path, int fname_only);

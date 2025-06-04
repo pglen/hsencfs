@@ -45,7 +45,7 @@
  */
 
 //#define FUSE_USE_VERSION 34
-//#define FUSE_USE_VERSION 31
+#define FUSE_USE_VERSION 31
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -53,8 +53,8 @@
 
 #define _GNU_SOURCE
 
-#include <fuse.h>
-#include <fuse_lowlevel.h>
+#include <fuse3/fuse.h>
+#include <fuse3/fuse_lowlevel.h>
 
 #include <ulockmgr.h>
 
@@ -235,7 +235,7 @@ int     helpfunc()
         printf("Otherwise askpass is assumed to be in the executable's home.\n");
         printf("StorageDir defaults to (dot) .MountPont (ex: ~/.secret)\n");
         printf("Typical invocation: hsencfs  ~/secrets \n");
-        printf("Which mounts ~/secrets with ~/.secrets as storage dir.\n");
+        printf(" ... the bove command mounts ~/secrets with ~/.secrets as storage dir.\n");
         }
 }
 
