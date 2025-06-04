@@ -1,0 +1,87 @@
+\hypertarget{ecc__enc_8c}{}\doxysection{study/ecc\+\_\+enc.c File Reference}
+\label{ecc__enc_8c}\index{study/ecc\_enc.c@{study/ecc\_enc.c}}
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$stddef.\+h$>$}\newline
+{\ttfamily \#include $<$stdbool.\+h$>$}\newline
+{\ttfamily \#include $<$openssl/evp.\+h$>$}\newline
+{\ttfamily \#include $<$openssl/rsa.\+h$>$}\newline
+{\ttfamily \#include $<$openssl/ec.\+h$>$}\newline
+{\ttfamily \#include $<$openssl/pem.\+h$>$}\newline
+{\ttfamily \#include $<$openssl/err.\+h$>$}\newline
+Include dependency graph for ecc\+\_\+enc.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{ecc__enc_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{ecc__enc_8c_a835f1186efd5ef29b9907f42893a0cad}{hexdump}} (char $\ast$ptr, int len)
+\item 
+int \mbox{\hyperlink{ecc__enc_8c_aa0c299ada22dd6c074e48b9cc4c58c81}{Encrypt\+String}} (char $\ast$In\+Str, int Len, char $\ast$In\+Pub, char $\ast$Out\+Str, int Olen)
+\item 
+int \mbox{\hyperlink{ecc__enc_8c_a61d008d378677361f4a40b137cc2534a}{Decrypt\+String}} (char $\ast$In\+Str, int Len, char $\ast$In\+Pri, char $\ast$Out\+Str, int Olen)
+\item 
+int \mbox{\hyperlink{ecc__enc_8c_acb1b98fe4b4002de5d1321df345bb172}{main}} (int argc, char $\ast$argv)
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+char \mbox{\hyperlink{ecc__enc_8c_a2533707c368a549dd7529a3e195e9226}{instr}} \mbox{[}$\,$\mbox{]} = \char`\"{}hello\char`\"{}
+\item 
+char \mbox{\hyperlink{ecc__enc_8c_ab5690fe6c76db0a8e34bbb75a58bdbb3}{outstr}} \mbox{[}3000\mbox{]}
+\item 
+char \mbox{\hyperlink{ecc__enc_8c_ab9710d9b442ca690cdc4355f74e786e1}{outstr2}} \mbox{[}3000\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{ecc__enc_8c_a61d008d378677361f4a40b137cc2534a}\label{ecc__enc_8c_a61d008d378677361f4a40b137cc2534a}} 
+\index{ecc\_enc.c@{ecc\_enc.c}!DecryptString@{DecryptString}}
+\index{DecryptString@{DecryptString}!ecc\_enc.c@{ecc\_enc.c}}
+\doxysubsubsection{\texorpdfstring{DecryptString()}{DecryptString()}}
+{\footnotesize\ttfamily int Decrypt\+String (\begin{DoxyParamCaption}\item[{char $\ast$}]{In\+Str,  }\item[{int}]{Len,  }\item[{char $\ast$}]{In\+Pri,  }\item[{char $\ast$}]{Out\+Str,  }\item[{int}]{Olen }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{ecc__enc_8c_aa0c299ada22dd6c074e48b9cc4c58c81}\label{ecc__enc_8c_aa0c299ada22dd6c074e48b9cc4c58c81}} 
+\index{ecc\_enc.c@{ecc\_enc.c}!EncryptString@{EncryptString}}
+\index{EncryptString@{EncryptString}!ecc\_enc.c@{ecc\_enc.c}}
+\doxysubsubsection{\texorpdfstring{EncryptString()}{EncryptString()}}
+{\footnotesize\ttfamily int Encrypt\+String (\begin{DoxyParamCaption}\item[{char $\ast$}]{In\+Str,  }\item[{int}]{Len,  }\item[{char $\ast$}]{In\+Pub,  }\item[{char $\ast$}]{Out\+Str,  }\item[{int}]{Olen }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{ecc__enc_8c_a835f1186efd5ef29b9907f42893a0cad}\label{ecc__enc_8c_a835f1186efd5ef29b9907f42893a0cad}} 
+\index{ecc\_enc.c@{ecc\_enc.c}!hexdump@{hexdump}}
+\index{hexdump@{hexdump}!ecc\_enc.c@{ecc\_enc.c}}
+\doxysubsubsection{\texorpdfstring{hexdump()}{hexdump()}}
+{\footnotesize\ttfamily void hexdump (\begin{DoxyParamCaption}\item[{char $\ast$}]{ptr,  }\item[{int}]{len }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{ecc__enc_8c_acb1b98fe4b4002de5d1321df345bb172}\label{ecc__enc_8c_acb1b98fe4b4002de5d1321df345bb172}} 
+\index{ecc\_enc.c@{ecc\_enc.c}!main@{main}}
+\index{main@{main}!ecc\_enc.c@{ecc\_enc.c}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{char $\ast$}]{argv }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{ecc__enc_8c_a2533707c368a549dd7529a3e195e9226}\label{ecc__enc_8c_a2533707c368a549dd7529a3e195e9226}} 
+\index{ecc\_enc.c@{ecc\_enc.c}!instr@{instr}}
+\index{instr@{instr}!ecc\_enc.c@{ecc\_enc.c}}
+\doxysubsubsection{\texorpdfstring{instr}{instr}}
+{\footnotesize\ttfamily char instr\mbox{[}$\,$\mbox{]} = \char`\"{}hello\char`\"{}}
+
+\mbox{\Hypertarget{ecc__enc_8c_ab5690fe6c76db0a8e34bbb75a58bdbb3}\label{ecc__enc_8c_ab5690fe6c76db0a8e34bbb75a58bdbb3}} 
+\index{ecc\_enc.c@{ecc\_enc.c}!outstr@{outstr}}
+\index{outstr@{outstr}!ecc\_enc.c@{ecc\_enc.c}}
+\doxysubsubsection{\texorpdfstring{outstr}{outstr}}
+{\footnotesize\ttfamily char outstr\mbox{[}3000\mbox{]}}
+
+\mbox{\Hypertarget{ecc__enc_8c_ab9710d9b442ca690cdc4355f74e786e1}\label{ecc__enc_8c_ab9710d9b442ca690cdc4355f74e786e1}} 
+\index{ecc\_enc.c@{ecc\_enc.c}!outstr2@{outstr2}}
+\index{outstr2@{outstr2}!ecc\_enc.c@{ecc\_enc.c}}
+\doxysubsubsection{\texorpdfstring{outstr2}{outstr2}}
+{\footnotesize\ttfamily char outstr2\mbox{[}3000\mbox{]}}
+

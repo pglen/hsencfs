@@ -1,0 +1,163 @@
+\hypertarget{rsa__exa_8c}{}\doxysection{study/rsa\+\_\+exa.c File Reference}
+\label{rsa__exa_8c}\index{study/rsa\_exa.c@{study/rsa\_exa.c}}
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$openssl/pem.\+h$>$}\newline
+{\ttfamily \#include $<$openssl/ssl.\+h$>$}\newline
+{\ttfamily \#include $<$openssl/rsa.\+h$>$}\newline
+{\ttfamily \#include $<$openssl/evp.\+h$>$}\newline
+{\ttfamily \#include $<$openssl/bio.\+h$>$}\newline
+{\ttfamily \#include $<$openssl/err.\+h$>$}\newline
+{\ttfamily \#include $<$openssl/rand.\+h$>$}\newline
+Include dependency graph for rsa\+\_\+exa.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rsa__exa_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{rsa__exa_8c_a8ed04c05dc518a6df8cfff252279cb89}{MIN}}(aa,  bb)~aa $>$ bb ? bb \+: aa
+\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef unsigned char \mbox{\hyperlink{rsa__exa_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{rsa__exa_8c_a9a8cfbe27587de6d5041941129532137}{public\+\_\+encrypt}} (\mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}} $\ast$data, int data\+\_\+len, \mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}} $\ast$key, \mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}} $\ast$\mbox{\hyperlink{rsa__exa_8c_a5131ad2f88d1a0b6f6a930ab50537547}{ebuf}})
+\item 
+int \mbox{\hyperlink{rsa__exa_8c_a474c4380d87de59b27e78df6e791f722}{private\+\_\+decrypt}} (\mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}} $\ast$enc\+\_\+data, int data\+\_\+len, \mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}} $\ast$key, \mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}} $\ast$\mbox{\hyperlink{rsa__exa_8c_ab9dce071aeb73192814fe7f90178179e}{dbuf}})
+\item 
+int \mbox{\hyperlink{rsa__exa_8c_adbaaba00670f0937b250d8681f2882aa}{private\+\_\+encrypt}} (\mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}} $\ast$data, int data\+\_\+len, \mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}} $\ast$key, \mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}} $\ast$\mbox{\hyperlink{rsa__exa_8c_a5131ad2f88d1a0b6f6a930ab50537547}{ebuf}})
+\item 
+int \mbox{\hyperlink{rsa__exa_8c_a8e057097de5cd3ed49d8ee67ec51c012}{public\+\_\+decrypt}} (\mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}} $\ast$enc\+\_\+data, int data\+\_\+len, \mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}} $\ast$key, \mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}} $\ast$\mbox{\hyperlink{rsa__exa_8c_ab9dce071aeb73192814fe7f90178179e}{dbuf}})
+\item 
+int \mbox{\hyperlink{rsa__exa_8c_a0ddf1224851353fc92bfbff6f499fa97}{main}} (int argc, char $\ast$argv\mbox{[}$\,$\mbox{]})
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+char \mbox{\hyperlink{rsa__exa_8c_ac1c079c8fc94eb19dcc41a7caa071fce}{ptext}} \mbox{[}$\,$\mbox{]}
+\item 
+\mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}} \mbox{\hyperlink{rsa__exa_8c_a5131ad2f88d1a0b6f6a930ab50537547}{ebuf}} \mbox{[}1024\mbox{]} =\{\}
+\item 
+\mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}} \mbox{\hyperlink{rsa__exa_8c_ab9dce071aeb73192814fe7f90178179e}{dbuf}} \mbox{[}1024\mbox{]} =\{\}
+\item 
+\mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}} \mbox{\hyperlink{rsa__exa_8c_abf07c5422ac687b745b881d020c46ca3}{privkey}} \mbox{[}2000\mbox{]} = \{\}
+\item 
+\mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}} \mbox{\hyperlink{rsa__exa_8c_ae4d04646f425b78af0bac05b67601bc4}{pubkey}} \mbox{[}1000\mbox{]} = \{\}
+\item 
+unsigned int \mbox{\hyperlink{rsa__exa_8c_aa6da25dae1e7263af226d4b026811d7f}{bits}} = 2048
+\item 
+EVP\+\_\+\+PKEY $\ast$ \mbox{\hyperlink{rsa__exa_8c_a76a3c5d8ec8f468075eb3e366a35a83c}{pkey}} = NULL
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{rsa__exa_8c_a8ed04c05dc518a6df8cfff252279cb89}\label{rsa__exa_8c_a8ed04c05dc518a6df8cfff252279cb89}} 
+\index{rsa\_exa.c@{rsa\_exa.c}!MIN@{MIN}}
+\index{MIN@{MIN}!rsa\_exa.c@{rsa\_exa.c}}
+\doxysubsubsection{\texorpdfstring{MIN}{MIN}}
+{\footnotesize\ttfamily \#define MIN(\begin{DoxyParamCaption}\item[{}]{aa,  }\item[{}]{bb }\end{DoxyParamCaption})~aa $>$ bb ? bb \+: aa}
+
+
+
+\doxysubsection{Typedef Documentation}
+\mbox{\Hypertarget{rsa__exa_8c_a65f85814a8290f9797005d3b28e7e5fc}\label{rsa__exa_8c_a65f85814a8290f9797005d3b28e7e5fc}} 
+\index{rsa\_exa.c@{rsa\_exa.c}!uchar@{uchar}}
+\index{uchar@{uchar}!rsa\_exa.c@{rsa\_exa.c}}
+\doxysubsubsection{\texorpdfstring{uchar}{uchar}}
+{\footnotesize\ttfamily typedef unsigned char \mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}}}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{rsa__exa_8c_a0ddf1224851353fc92bfbff6f499fa97}\label{rsa__exa_8c_a0ddf1224851353fc92bfbff6f499fa97}} 
+\index{rsa\_exa.c@{rsa\_exa.c}!main@{main}}
+\index{main@{main}!rsa\_exa.c@{rsa\_exa.c}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{char $\ast$}]{argv\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{rsa__exa_8c_a474c4380d87de59b27e78df6e791f722}\label{rsa__exa_8c_a474c4380d87de59b27e78df6e791f722}} 
+\index{rsa\_exa.c@{rsa\_exa.c}!private\_decrypt@{private\_decrypt}}
+\index{private\_decrypt@{private\_decrypt}!rsa\_exa.c@{rsa\_exa.c}}
+\doxysubsubsection{\texorpdfstring{private\_decrypt()}{private\_decrypt()}}
+{\footnotesize\ttfamily int private\+\_\+decrypt (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}} $\ast$}]{enc\+\_\+data,  }\item[{int}]{data\+\_\+len,  }\item[{\mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}} $\ast$}]{key,  }\item[{\mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}} $\ast$}]{dbuf }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{rsa__exa_8c_adbaaba00670f0937b250d8681f2882aa}\label{rsa__exa_8c_adbaaba00670f0937b250d8681f2882aa}} 
+\index{rsa\_exa.c@{rsa\_exa.c}!private\_encrypt@{private\_encrypt}}
+\index{private\_encrypt@{private\_encrypt}!rsa\_exa.c@{rsa\_exa.c}}
+\doxysubsubsection{\texorpdfstring{private\_encrypt()}{private\_encrypt()}}
+{\footnotesize\ttfamily int private\+\_\+encrypt (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}} $\ast$}]{data,  }\item[{int}]{data\+\_\+len,  }\item[{\mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}} $\ast$}]{key,  }\item[{\mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}} $\ast$}]{ebuf }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{rsa__exa_8c_a8e057097de5cd3ed49d8ee67ec51c012}\label{rsa__exa_8c_a8e057097de5cd3ed49d8ee67ec51c012}} 
+\index{rsa\_exa.c@{rsa\_exa.c}!public\_decrypt@{public\_decrypt}}
+\index{public\_decrypt@{public\_decrypt}!rsa\_exa.c@{rsa\_exa.c}}
+\doxysubsubsection{\texorpdfstring{public\_decrypt()}{public\_decrypt()}}
+{\footnotesize\ttfamily int public\+\_\+decrypt (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}} $\ast$}]{enc\+\_\+data,  }\item[{int}]{data\+\_\+len,  }\item[{\mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}} $\ast$}]{key,  }\item[{\mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}} $\ast$}]{dbuf }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{rsa__exa_8c_a9a8cfbe27587de6d5041941129532137}\label{rsa__exa_8c_a9a8cfbe27587de6d5041941129532137}} 
+\index{rsa\_exa.c@{rsa\_exa.c}!public\_encrypt@{public\_encrypt}}
+\index{public\_encrypt@{public\_encrypt}!rsa\_exa.c@{rsa\_exa.c}}
+\doxysubsubsection{\texorpdfstring{public\_encrypt()}{public\_encrypt()}}
+{\footnotesize\ttfamily int public\+\_\+encrypt (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}} $\ast$}]{data,  }\item[{int}]{data\+\_\+len,  }\item[{\mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}} $\ast$}]{key,  }\item[{\mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}} $\ast$}]{ebuf }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{rsa__exa_8c_aa6da25dae1e7263af226d4b026811d7f}\label{rsa__exa_8c_aa6da25dae1e7263af226d4b026811d7f}} 
+\index{rsa\_exa.c@{rsa\_exa.c}!bits@{bits}}
+\index{bits@{bits}!rsa\_exa.c@{rsa\_exa.c}}
+\doxysubsubsection{\texorpdfstring{bits}{bits}}
+{\footnotesize\ttfamily unsigned int bits = 2048}
+
+\mbox{\Hypertarget{rsa__exa_8c_ab9dce071aeb73192814fe7f90178179e}\label{rsa__exa_8c_ab9dce071aeb73192814fe7f90178179e}} 
+\index{rsa\_exa.c@{rsa\_exa.c}!dbuf@{dbuf}}
+\index{dbuf@{dbuf}!rsa\_exa.c@{rsa\_exa.c}}
+\doxysubsubsection{\texorpdfstring{dbuf}{dbuf}}
+{\footnotesize\ttfamily \mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}} dbuf\mbox{[}1024\mbox{]} =\{\}}
+
+\mbox{\Hypertarget{rsa__exa_8c_a5131ad2f88d1a0b6f6a930ab50537547}\label{rsa__exa_8c_a5131ad2f88d1a0b6f6a930ab50537547}} 
+\index{rsa\_exa.c@{rsa\_exa.c}!ebuf@{ebuf}}
+\index{ebuf@{ebuf}!rsa\_exa.c@{rsa\_exa.c}}
+\doxysubsubsection{\texorpdfstring{ebuf}{ebuf}}
+{\footnotesize\ttfamily \mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}} ebuf\mbox{[}1024\mbox{]} =\{\}}
+
+\mbox{\Hypertarget{rsa__exa_8c_a76a3c5d8ec8f468075eb3e366a35a83c}\label{rsa__exa_8c_a76a3c5d8ec8f468075eb3e366a35a83c}} 
+\index{rsa\_exa.c@{rsa\_exa.c}!pkey@{pkey}}
+\index{pkey@{pkey}!rsa\_exa.c@{rsa\_exa.c}}
+\doxysubsubsection{\texorpdfstring{pkey}{pkey}}
+{\footnotesize\ttfamily EVP\+\_\+\+PKEY$\ast$ pkey = NULL}
+
+\mbox{\Hypertarget{rsa__exa_8c_abf07c5422ac687b745b881d020c46ca3}\label{rsa__exa_8c_abf07c5422ac687b745b881d020c46ca3}} 
+\index{rsa\_exa.c@{rsa\_exa.c}!privkey@{privkey}}
+\index{privkey@{privkey}!rsa\_exa.c@{rsa\_exa.c}}
+\doxysubsubsection{\texorpdfstring{privkey}{privkey}}
+{\footnotesize\ttfamily \mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}} privkey\mbox{[}2000\mbox{]} = \{\}}
+
+\mbox{\Hypertarget{rsa__exa_8c_ac1c079c8fc94eb19dcc41a7caa071fce}\label{rsa__exa_8c_ac1c079c8fc94eb19dcc41a7caa071fce}} 
+\index{rsa\_exa.c@{rsa\_exa.c}!ptext@{ptext}}
+\index{ptext@{ptext}!rsa\_exa.c@{rsa\_exa.c}}
+\doxysubsubsection{\texorpdfstring{ptext}{ptext}}
+{\footnotesize\ttfamily char ptext\mbox{[}$\,$\mbox{]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=\ \textcolor{stringliteral}{"{}\(\backslash\)}}
+\DoxyCodeLine{\textcolor{stringliteral}{Hello\ this\ is\ a\ text\ this\ is\ a\ text\ this\ is\ a\ text\ this\ is\ a\ text.\(\backslash\)n\(\backslash\)}}
+\DoxyCodeLine{\textcolor{stringliteral}{Hello\ this\ is\ a\ text\ this\ is\ a\ text\ this\ is\ a\ text\ this\ is\ a\ text.\(\backslash\)n\(\backslash\)}}
+\DoxyCodeLine{\textcolor{stringliteral}{Hello\ this\ is\ a\ text\ this\ is\ a\ text\ this\ is\ a\ text\ this\ is\ a\ text.\(\backslash\)}}
+\DoxyCodeLine{\textcolor{stringliteral}{"{}}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{rsa__exa_8c_ae4d04646f425b78af0bac05b67601bc4}\label{rsa__exa_8c_ae4d04646f425b78af0bac05b67601bc4}} 
+\index{rsa\_exa.c@{rsa\_exa.c}!pubkey@{pubkey}}
+\index{pubkey@{pubkey}!rsa\_exa.c@{rsa\_exa.c}}
+\doxysubsubsection{\texorpdfstring{pubkey}{pubkey}}
+{\footnotesize\ttfamily \mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}} pubkey\mbox{[}1000\mbox{]} = \{\}}
+

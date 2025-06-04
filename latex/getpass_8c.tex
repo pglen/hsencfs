@@ -1,0 +1,99 @@
+\hypertarget{getpass_8c}{}\doxysection{study/getpass.c File Reference}
+\label{getpass_8c}\index{study/getpass.c@{study/getpass.c}}
+{\ttfamily \#include $<$ulockmgr.\+h$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$stdarg.\+h$>$}\newline
+{\ttfamily \#include $<$limits.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+{\ttfamily \#include $<$fcntl.\+h$>$}\newline
+{\ttfamily \#include $<$dirent.\+h$>$}\newline
+{\ttfamily \#include $<$errno.\+h$>$}\newline
+{\ttfamily \#include $<$syslog.\+h$>$}\newline
+{\ttfamily \#include $<$libgen.\+h$>$}\newline
+{\ttfamily \#include $<$sys/time.\+h$>$}\newline
+{\ttfamily \#include $<$signal.\+h$>$}\newline
+{\ttfamily \#include $<$getopt.\+h$>$}\newline
+Include dependency graph for getpass.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{getpass_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{getpass_8c_a369266c24eacffb87046522897a570d5}{\+\_\+\+GNU\+\_\+\+SOURCE}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{getpass_8c_ab7f9378d524c6983756fdd47c996f3c4}{hslog}} (int lev, char $\ast$fmt,...)
+\item 
+void \mbox{\hyperlink{getpass_8c_a35dd597280c8a91d8d14b98ace14b016}{parse\+\_\+comstr}} (char $\ast$argx\mbox{[}$\,$\mbox{]}, int limx, char $\ast$program)
+\item 
+char $\ast$ \mbox{\hyperlink{getpass_8c_a28adf1dc01950f645da136433ea6910e}{hs\+\_\+askpass}} (const char $\ast$program, char $\ast$\mbox{\hyperlink{getpass_8c_a024e65f7d9664cdc767f51c283fd8353}{buf}}, int buflen)
+\item 
+int \mbox{\hyperlink{getpass_8c_a0ddf1224851353fc92bfbff6f499fa97}{main}} (int argc, char $\ast$argv\mbox{[}$\,$\mbox{]})
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{getpass_8c_afb19b851dbcd1447c226a8a98c26979d}{loglevel}} = 10
+\item 
+char \mbox{\hyperlink{getpass_8c_a024e65f7d9664cdc767f51c283fd8353}{buf}} \mbox{[}PATH\+\_\+\+MAX\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{getpass_8c_a369266c24eacffb87046522897a570d5}\label{getpass_8c_a369266c24eacffb87046522897a570d5}} 
+\index{getpass.c@{getpass.c}!\_GNU\_SOURCE@{\_GNU\_SOURCE}}
+\index{\_GNU\_SOURCE@{\_GNU\_SOURCE}!getpass.c@{getpass.c}}
+\doxysubsubsection{\texorpdfstring{\_GNU\_SOURCE}{\_GNU\_SOURCE}}
+{\footnotesize\ttfamily \#define \+\_\+\+GNU\+\_\+\+SOURCE}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{getpass_8c_a28adf1dc01950f645da136433ea6910e}\label{getpass_8c_a28adf1dc01950f645da136433ea6910e}} 
+\index{getpass.c@{getpass.c}!hs\_askpass@{hs\_askpass}}
+\index{hs\_askpass@{hs\_askpass}!getpass.c@{getpass.c}}
+\doxysubsubsection{\texorpdfstring{hs\_askpass()}{hs\_askpass()}}
+{\footnotesize\ttfamily char $\ast$ hs\+\_\+askpass (\begin{DoxyParamCaption}\item[{const char $\ast$}]{program,  }\item[{char $\ast$}]{buf,  }\item[{int}]{buflen }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{getpass_8c_ab7f9378d524c6983756fdd47c996f3c4}\label{getpass_8c_ab7f9378d524c6983756fdd47c996f3c4}} 
+\index{getpass.c@{getpass.c}!hslog@{hslog}}
+\index{hslog@{hslog}!getpass.c@{getpass.c}}
+\doxysubsubsection{\texorpdfstring{hslog()}{hslog()}}
+{\footnotesize\ttfamily void hslog (\begin{DoxyParamCaption}\item[{int}]{lev,  }\item[{char $\ast$}]{fmt,  }\item[{}]{... }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{getpass_8c_a0ddf1224851353fc92bfbff6f499fa97}\label{getpass_8c_a0ddf1224851353fc92bfbff6f499fa97}} 
+\index{getpass.c@{getpass.c}!main@{main}}
+\index{main@{main}!getpass.c@{getpass.c}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{char $\ast$}]{argv\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{getpass_8c_a35dd597280c8a91d8d14b98ace14b016}\label{getpass_8c_a35dd597280c8a91d8d14b98ace14b016}} 
+\index{getpass.c@{getpass.c}!parse\_comstr@{parse\_comstr}}
+\index{parse\_comstr@{parse\_comstr}!getpass.c@{getpass.c}}
+\doxysubsubsection{\texorpdfstring{parse\_comstr()}{parse\_comstr()}}
+{\footnotesize\ttfamily void parse\+\_\+comstr (\begin{DoxyParamCaption}\item[{char $\ast$}]{argx\mbox{[}$\,$\mbox{]},  }\item[{int}]{limx,  }\item[{char $\ast$}]{program }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{getpass_8c_a024e65f7d9664cdc767f51c283fd8353}\label{getpass_8c_a024e65f7d9664cdc767f51c283fd8353}} 
+\index{getpass.c@{getpass.c}!buf@{buf}}
+\index{buf@{buf}!getpass.c@{getpass.c}}
+\doxysubsubsection{\texorpdfstring{buf}{buf}}
+{\footnotesize\ttfamily char buf\mbox{[}PATH\+\_\+\+MAX\mbox{]}}
+
+\mbox{\Hypertarget{getpass_8c_afb19b851dbcd1447c226a8a98c26979d}\label{getpass_8c_afb19b851dbcd1447c226a8a98c26979d}} 
+\index{getpass.c@{getpass.c}!loglevel@{loglevel}}
+\index{loglevel@{loglevel}!getpass.c@{getpass.c}}
+\doxysubsubsection{\texorpdfstring{loglevel}{loglevel}}
+{\footnotesize\ttfamily int loglevel = 10}
+

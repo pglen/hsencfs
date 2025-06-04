@@ -1,0 +1,162 @@
+\hypertarget{hspass_8c}{}\doxysection{common/hspass.c File Reference}
+\label{hspass_8c}\index{common/hspass.c@{common/hspass.c}}
+{\ttfamily \#include $<$fuse.\+h$>$}\newline
+{\ttfamily \#include $<$ulockmgr.\+h$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+{\ttfamily \#include $<$fcntl.\+h$>$}\newline
+{\ttfamily \#include $<$dirent.\+h$>$}\newline
+{\ttfamily \#include $<$errno.\+h$>$}\newline
+{\ttfamily \#include $<$syslog.\+h$>$}\newline
+{\ttfamily \#include $<$sys/time.\+h$>$}\newline
+{\ttfamily \#include $<$signal.\+h$>$}\newline
+{\ttfamily \#include $<$termios.\+h$>$}\newline
+{\ttfamily \#include $<$getopt.\+h$>$}\newline
+{\ttfamily \#include $<$openssl/pem.\+h$>$}\newline
+{\ttfamily \#include $<$openssl/ssl.\+h$>$}\newline
+{\ttfamily \#include $<$openssl/rsa.\+h$>$}\newline
+{\ttfamily \#include $<$openssl/evp.\+h$>$}\newline
+{\ttfamily \#include $<$openssl/bio.\+h$>$}\newline
+{\ttfamily \#include $<$openssl/err.\+h$>$}\newline
+{\ttfamily \#include $<$openssl/rand.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}hsutils.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../src/hsencfs.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../bluepoint/bluepoint2.\+h\char`\"{}}\newline
+Include dependency graph for hspass.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{hspass_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{hspass_8c_a369266c24eacffb87046522897a570d5}{\+\_\+\+GNU\+\_\+\+SOURCE}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef unsigned char \mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{hspass_8c_a25eb5f7534f43f958c5f38f66ae0b62b}{create\+\_\+markfile}} (char $\ast$name, char $\ast$\mbox{\hyperlink{block__blue2_8c_a12b3e022c6c3f2c88d5ebfc7fb357613}{pass}}, int $\ast$\mbox{\hyperlink{block__blue2_8c_ad29d2259942853507dff3a3e3c05535a}{plen}})
+\item 
+int \mbox{\hyperlink{hspass_8c_a3f53c26df5ebbdf63347347d774c994f}{check\+\_\+markfile}} (char $\ast$name, char $\ast$\mbox{\hyperlink{block__blue2_8c_a12b3e022c6c3f2c88d5ebfc7fb357613}{pass}}, int $\ast$\mbox{\hyperlink{block__blue2_8c_ad29d2259942853507dff3a3e3c05535a}{plen}})
+\item 
+int \mbox{\hyperlink{hspass_8c_a9a8cfbe27587de6d5041941129532137}{public\+\_\+encrypt}} (\mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}} $\ast$data, int data\+\_\+len, \mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}} $\ast$key, \mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}} $\ast$\mbox{\hyperlink{rsa__exa_8c_a5131ad2f88d1a0b6f6a930ab50537547}{ebuf}})
+\item 
+int \mbox{\hyperlink{hspass_8c_a474c4380d87de59b27e78df6e791f722}{private\+\_\+decrypt}} (\mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}} $\ast$enc\+\_\+data, int data\+\_\+len, \mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}} $\ast$key, \mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}} $\ast$\mbox{\hyperlink{rsa__exa_8c_ab9dce071aeb73192814fe7f90178179e}{dbuf}})
+\item 
+void \mbox{\hyperlink{hspass_8c_ae87ea6a31b015d9d8ed35273e946631c}{parse\+\_\+comstr}} (char $\ast$argx\mbox{[}$\,$\mbox{]}, int limx, const char $\ast$program)
+\item 
+void \mbox{\hyperlink{hspass_8c_a5dbdfa8cfa3272b229fef4814028689a}{sigint\+\_\+local}} (int sig)
+\item 
+char $\ast$ \mbox{\hyperlink{hspass_8c_a0395c758c919d971c43610054d861c64}{getpassx}} (char $\ast$prompt)
+\item 
+char $\ast$ \mbox{\hyperlink{hspass_8c_a28adf1dc01950f645da136433ea6910e}{hs\+\_\+askpass}} (const char $\ast$program, char $\ast$\mbox{\hyperlink{getpass_8c_a024e65f7d9664cdc767f51c283fd8353}{buf}}, int buflen)
+\item 
+int \mbox{\hyperlink{hspass_8c_a80e5af3deaff1649ab57c251171c9446}{pass\+\_\+ritual}} (char $\ast$mroot, char $\ast$mdata, char $\ast$\mbox{\hyperlink{block__blue2_8c_a12b3e022c6c3f2c88d5ebfc7fb357613}{pass}}, int $\ast$\mbox{\hyperlink{block__blue2_8c_ad29d2259942853507dff3a3e3c05535a}{plen}}, char $\ast$\mbox{\hyperlink{hsencfs_8c_aa862f7f7b6e83fb3986f7be3b09a9caa}{passprog}})
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+char $\ast$ \mbox{\hyperlink{hspass_8c_a7ca7f2172ff2de0209b10fe2a92ad73a}{passfname}} = \char`\"{}.passdata.\+datx\char`\"{}
+\item 
+struct termios \mbox{\hyperlink{hspass_8c_ad449eebef5d35683d8ab61bb10b096bd}{oldt}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{hspass_8c_a369266c24eacffb87046522897a570d5}\label{hspass_8c_a369266c24eacffb87046522897a570d5}} 
+\index{hspass.c@{hspass.c}!\_GNU\_SOURCE@{\_GNU\_SOURCE}}
+\index{\_GNU\_SOURCE@{\_GNU\_SOURCE}!hspass.c@{hspass.c}}
+\doxysubsubsection{\texorpdfstring{\_GNU\_SOURCE}{\_GNU\_SOURCE}}
+{\footnotesize\ttfamily \#define \+\_\+\+GNU\+\_\+\+SOURCE}
+
+
+
+\doxysubsection{Typedef Documentation}
+\mbox{\Hypertarget{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}\label{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}} 
+\index{hspass.c@{hspass.c}!uchar@{uchar}}
+\index{uchar@{uchar}!hspass.c@{hspass.c}}
+\doxysubsubsection{\texorpdfstring{uchar}{uchar}}
+{\footnotesize\ttfamily typedef unsigned char \mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}}}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{hspass_8c_a3f53c26df5ebbdf63347347d774c994f}\label{hspass_8c_a3f53c26df5ebbdf63347347d774c994f}} 
+\index{hspass.c@{hspass.c}!check\_markfile@{check\_markfile}}
+\index{check\_markfile@{check\_markfile}!hspass.c@{hspass.c}}
+\doxysubsubsection{\texorpdfstring{check\_markfile()}{check\_markfile()}}
+{\footnotesize\ttfamily int check\+\_\+markfile (\begin{DoxyParamCaption}\item[{char $\ast$}]{name,  }\item[{char $\ast$}]{pass,  }\item[{int $\ast$}]{plen }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hspass_8c_a25eb5f7534f43f958c5f38f66ae0b62b}\label{hspass_8c_a25eb5f7534f43f958c5f38f66ae0b62b}} 
+\index{hspass.c@{hspass.c}!create\_markfile@{create\_markfile}}
+\index{create\_markfile@{create\_markfile}!hspass.c@{hspass.c}}
+\doxysubsubsection{\texorpdfstring{create\_markfile()}{create\_markfile()}}
+{\footnotesize\ttfamily int create\+\_\+markfile (\begin{DoxyParamCaption}\item[{char $\ast$}]{name,  }\item[{char $\ast$}]{pass,  }\item[{int $\ast$}]{plen }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hspass_8c_a0395c758c919d971c43610054d861c64}\label{hspass_8c_a0395c758c919d971c43610054d861c64}} 
+\index{hspass.c@{hspass.c}!getpassx@{getpassx}}
+\index{getpassx@{getpassx}!hspass.c@{hspass.c}}
+\doxysubsubsection{\texorpdfstring{getpassx()}{getpassx()}}
+{\footnotesize\ttfamily char $\ast$ getpassx (\begin{DoxyParamCaption}\item[{char $\ast$}]{prompt }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hspass_8c_a28adf1dc01950f645da136433ea6910e}\label{hspass_8c_a28adf1dc01950f645da136433ea6910e}} 
+\index{hspass.c@{hspass.c}!hs\_askpass@{hs\_askpass}}
+\index{hs\_askpass@{hs\_askpass}!hspass.c@{hspass.c}}
+\doxysubsubsection{\texorpdfstring{hs\_askpass()}{hs\_askpass()}}
+{\footnotesize\ttfamily char $\ast$ hs\+\_\+askpass (\begin{DoxyParamCaption}\item[{const char $\ast$}]{program,  }\item[{char $\ast$}]{buf,  }\item[{int}]{buflen }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hspass_8c_ae87ea6a31b015d9d8ed35273e946631c}\label{hspass_8c_ae87ea6a31b015d9d8ed35273e946631c}} 
+\index{hspass.c@{hspass.c}!parse\_comstr@{parse\_comstr}}
+\index{parse\_comstr@{parse\_comstr}!hspass.c@{hspass.c}}
+\doxysubsubsection{\texorpdfstring{parse\_comstr()}{parse\_comstr()}}
+{\footnotesize\ttfamily void parse\+\_\+comstr (\begin{DoxyParamCaption}\item[{char $\ast$}]{argx\mbox{[}$\,$\mbox{]},  }\item[{int}]{limx,  }\item[{const char $\ast$}]{program }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hspass_8c_a80e5af3deaff1649ab57c251171c9446}\label{hspass_8c_a80e5af3deaff1649ab57c251171c9446}} 
+\index{hspass.c@{hspass.c}!pass\_ritual@{pass\_ritual}}
+\index{pass\_ritual@{pass\_ritual}!hspass.c@{hspass.c}}
+\doxysubsubsection{\texorpdfstring{pass\_ritual()}{pass\_ritual()}}
+{\footnotesize\ttfamily int pass\+\_\+ritual (\begin{DoxyParamCaption}\item[{char $\ast$}]{mroot,  }\item[{char $\ast$}]{mdata,  }\item[{char $\ast$}]{pass,  }\item[{int $\ast$}]{plen,  }\item[{char $\ast$}]{passprog }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hspass_8c_a474c4380d87de59b27e78df6e791f722}\label{hspass_8c_a474c4380d87de59b27e78df6e791f722}} 
+\index{hspass.c@{hspass.c}!private\_decrypt@{private\_decrypt}}
+\index{private\_decrypt@{private\_decrypt}!hspass.c@{hspass.c}}
+\doxysubsubsection{\texorpdfstring{private\_decrypt()}{private\_decrypt()}}
+{\footnotesize\ttfamily int private\+\_\+decrypt (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}} $\ast$}]{enc\+\_\+data,  }\item[{int}]{data\+\_\+len,  }\item[{\mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}} $\ast$}]{key,  }\item[{\mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}} $\ast$}]{dbuf }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hspass_8c_a9a8cfbe27587de6d5041941129532137}\label{hspass_8c_a9a8cfbe27587de6d5041941129532137}} 
+\index{hspass.c@{hspass.c}!public\_encrypt@{public\_encrypt}}
+\index{public\_encrypt@{public\_encrypt}!hspass.c@{hspass.c}}
+\doxysubsubsection{\texorpdfstring{public\_encrypt()}{public\_encrypt()}}
+{\footnotesize\ttfamily int public\+\_\+encrypt (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}} $\ast$}]{data,  }\item[{int}]{data\+\_\+len,  }\item[{\mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}} $\ast$}]{key,  }\item[{\mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}} $\ast$}]{ebuf }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hspass_8c_a5dbdfa8cfa3272b229fef4814028689a}\label{hspass_8c_a5dbdfa8cfa3272b229fef4814028689a}} 
+\index{hspass.c@{hspass.c}!sigint\_local@{sigint\_local}}
+\index{sigint\_local@{sigint\_local}!hspass.c@{hspass.c}}
+\doxysubsubsection{\texorpdfstring{sigint\_local()}{sigint\_local()}}
+{\footnotesize\ttfamily void sigint\+\_\+local (\begin{DoxyParamCaption}\item[{int}]{sig }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{hspass_8c_ad449eebef5d35683d8ab61bb10b096bd}\label{hspass_8c_ad449eebef5d35683d8ab61bb10b096bd}} 
+\index{hspass.c@{hspass.c}!oldt@{oldt}}
+\index{oldt@{oldt}!hspass.c@{hspass.c}}
+\doxysubsubsection{\texorpdfstring{oldt}{oldt}}
+{\footnotesize\ttfamily struct termios oldt}
+
+\mbox{\Hypertarget{hspass_8c_a7ca7f2172ff2de0209b10fe2a92ad73a}\label{hspass_8c_a7ca7f2172ff2de0209b10fe2a92ad73a}} 
+\index{hspass.c@{hspass.c}!passfname@{passfname}}
+\index{passfname@{passfname}!hspass.c@{hspass.c}}
+\doxysubsubsection{\texorpdfstring{passfname}{passfname}}
+{\footnotesize\ttfamily char$\ast$ passfname = \char`\"{}.passdata.\+datx\char`\"{}}
+

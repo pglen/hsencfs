@@ -1,0 +1,65 @@
+\hypertarget{src_2hsencrr_8c}{}\doxysection{src/hsencrr.c File Reference}
+\label{src_2hsencrr_8c}\index{src/hsencrr.c@{src/hsencrr.c}}
+{\ttfamily \#include $<$fuse.\+h$>$}\newline
+{\ttfamily \#include $<$ulockmgr.\+h$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$limits.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+{\ttfamily \#include $<$fcntl.\+h$>$}\newline
+{\ttfamily \#include $<$dirent.\+h$>$}\newline
+{\ttfamily \#include $<$errno.\+h$>$}\newline
+{\ttfamily \#include $<$syslog.\+h$>$}\newline
+{\ttfamily \#include $<$sys/time.\+h$>$}\newline
+{\ttfamily \#include $<$signal.\+h$>$}\newline
+{\ttfamily \#include $<$getopt.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}hsencsb.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hsencfs.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../bluepoint/hs\+\_\+crypt.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../bluepoint/bluepoint2.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../common/hsutils.\+h\char`\"{}}\newline
+Include dependency graph for hsencrr.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{src_2hsencrr_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{src_2hsencrr_8c_a369266c24eacffb87046522897a570d5}{\+\_\+\+GNU\+\_\+\+SOURCE}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{src_2hsencrr_8c_a038e4c8d4421d86511e266cfbb0806b9}{virt\+\_\+read}} (const char $\ast$path, int fd, char $\ast$\mbox{\hyperlink{getpass_8c_a024e65f7d9664cdc767f51c283fd8353}{buf}}, \mbox{\hyperlink{hsutils_8h_a91ad9478d81a7aaf2593e8d9c3d06a14}{uint}} wsize, \mbox{\hyperlink{hsutils_8h_a91ad9478d81a7aaf2593e8d9c3d06a14}{uint}} offset)
+\item 
+int \mbox{\hyperlink{src_2hsencrr_8c_af8ff0c4185ed9251394f4552b3afe40e}{xmp\+\_\+read}} (const char $\ast$path, char $\ast$\mbox{\hyperlink{getpass_8c_a024e65f7d9664cdc767f51c283fd8353}{buf}}, size\+\_\+t wsize, off\+\_\+t offset, struct fuse\+\_\+file\+\_\+info $\ast$fi)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{src_2hsencrr_8c_a369266c24eacffb87046522897a570d5}\label{src_2hsencrr_8c_a369266c24eacffb87046522897a570d5}} 
+\index{hsencrr.c@{hsencrr.c}!\_GNU\_SOURCE@{\_GNU\_SOURCE}}
+\index{\_GNU\_SOURCE@{\_GNU\_SOURCE}!hsencrr.c@{hsencrr.c}}
+\doxysubsubsection{\texorpdfstring{\_GNU\_SOURCE}{\_GNU\_SOURCE}}
+{\footnotesize\ttfamily \#define \+\_\+\+GNU\+\_\+\+SOURCE}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{src_2hsencrr_8c_a038e4c8d4421d86511e266cfbb0806b9}\label{src_2hsencrr_8c_a038e4c8d4421d86511e266cfbb0806b9}} 
+\index{hsencrr.c@{hsencrr.c}!virt\_read@{virt\_read}}
+\index{virt\_read@{virt\_read}!hsencrr.c@{hsencrr.c}}
+\doxysubsubsection{\texorpdfstring{virt\_read()}{virt\_read()}}
+{\footnotesize\ttfamily int virt\+\_\+read (\begin{DoxyParamCaption}\item[{const char $\ast$}]{path,  }\item[{int}]{fd,  }\item[{char $\ast$}]{buf,  }\item[{\mbox{\hyperlink{hsutils_8h_a91ad9478d81a7aaf2593e8d9c3d06a14}{uint}}}]{wsize,  }\item[{\mbox{\hyperlink{hsutils_8h_a91ad9478d81a7aaf2593e8d9c3d06a14}{uint}}}]{offset }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{src_2hsencrr_8c_af8ff0c4185ed9251394f4552b3afe40e}\label{src_2hsencrr_8c_af8ff0c4185ed9251394f4552b3afe40e}} 
+\index{hsencrr.c@{hsencrr.c}!xmp\_read@{xmp\_read}}
+\index{xmp\_read@{xmp\_read}!hsencrr.c@{hsencrr.c}}
+\doxysubsubsection{\texorpdfstring{xmp\_read()}{xmp\_read()}}
+{\footnotesize\ttfamily int xmp\+\_\+read (\begin{DoxyParamCaption}\item[{const char $\ast$}]{path,  }\item[{char $\ast$}]{buf,  }\item[{size\+\_\+t}]{wsize,  }\item[{off\+\_\+t}]{offset,  }\item[{struct fuse\+\_\+file\+\_\+info $\ast$}]{fi }\end{DoxyParamCaption})}
+

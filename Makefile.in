@@ -361,18 +361,6 @@ dist_bin_SCRIPTS = \
         hsaskpass.py                \
         hstray.py
 
-
-# Auxiliaries
-#EXTRA_DIST = src/hsencrw.c src/hsencop.c
-#EXTRA_DIST += common/hspass.c common/hsutils.c
-#EXTRA_DIST += images/hsicon.png images/hsicon.svg images/hspadlock.png \
-#                    images/hspadlock.svg images/screenshot.png
-#EXTRA_DIST  += hsaskpass.py hsaskpass.sh
-
-# Fake it into the distribution
-# use: ls *.py *.sh *.server SUMFILE sha*
-
-#GNOME_HSENCApplet.server.in
 EXTRA_DIST = \
         checksum.sh                 \
         enctest.sh                  \
@@ -922,6 +910,18 @@ uninstall-am: uninstall-dist_binSCRIPTS uninstall-dist_docDATA \
 
 .PRECIOUS: Makefile
 
+
+# Auxiliaries
+#EXTRA_DIST = src/hsencrw.c src/hsencop.c
+#EXTRA_DIST += common/hspass.c common/hsutils.c
+#EXTRA_DIST += images/hsicon.png images/hsicon.svg images/hspadlock.png \
+#                    images/hspadlock.svg images/screenshot.png
+#EXTRA_DIST  += hsaskpass.py hsaskpass.sh
+
+# Fake it into the distribution
+# use: ls *.py *.sh *.server SUMFILE sha*
+
+#GNOME_HSENCApplet.server.in
 
 #check:
 #    # Create new folder, destroy at end. Good example of installation-less

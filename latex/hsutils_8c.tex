@@ -1,0 +1,86 @@
+\hypertarget{hsutils_8c}{}\doxysection{common/hsutils.c File Reference}
+\label{hsutils_8c}\index{common/hsutils.c@{common/hsutils.c}}
+{\ttfamily \#include $<$fuse.\+h$>$}\newline
+{\ttfamily \#include $<$ulockmgr.\+h$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+{\ttfamily \#include $<$fcntl.\+h$>$}\newline
+{\ttfamily \#include $<$dirent.\+h$>$}\newline
+{\ttfamily \#include $<$errno.\+h$>$}\newline
+{\ttfamily \#include $<$sys/time.\+h$>$}\newline
+{\ttfamily \#include $<$signal.\+h$>$}\newline
+{\ttfamily \#include $<$syslog.\+h$>$}\newline
+{\ttfamily \#include $<$mntent.\+h$>$}\newline
+{\ttfamily \#include $<$stdarg.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}../src/hsencfs.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hsutils.\+h\char`\"{}}\newline
+Include dependency graph for hsutils.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{hsutils_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{hsutils_8c_a369266c24eacffb87046522897a570d5}{\+\_\+\+GNU\+\_\+\+SOURCE}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{hsutils_8c_a3adc52fbad67f57ded43bccddba0956b}{ismounted}} (char $\ast$\mbox{\hyperlink{test__blue2_8c_a9f761e1963cee01a7d0490c491a2c056}{orig}})
+\item 
+int \mbox{\hyperlink{hsutils_8c_a7ddc227464b6cf7f300c3151e77aa5de}{countfiles}} (char $\ast$mpoint)
+\item 
+void \mbox{\hyperlink{hsutils_8c_ad0b8354aa421025178b0b82c44a10082}{hsprint}} (int outs, int lev, char $\ast$fmt,...)
+\item 
+void \mbox{\hyperlink{hsutils_8c_ab7f9378d524c6983756fdd47c996f3c4}{hslog}} (int lev, char $\ast$fmt,...)
+\item 
+void \mbox{\hyperlink{hsutils_8c_acfb56efc8cf2f2fa1921bc6f7be10ded}{expandpath}} (const char $\ast$inp, char $\ast$outp, int maxlen)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{hsutils_8c_a369266c24eacffb87046522897a570d5}\label{hsutils_8c_a369266c24eacffb87046522897a570d5}} 
+\index{hsutils.c@{hsutils.c}!\_GNU\_SOURCE@{\_GNU\_SOURCE}}
+\index{\_GNU\_SOURCE@{\_GNU\_SOURCE}!hsutils.c@{hsutils.c}}
+\doxysubsubsection{\texorpdfstring{\_GNU\_SOURCE}{\_GNU\_SOURCE}}
+{\footnotesize\ttfamily \#define \+\_\+\+GNU\+\_\+\+SOURCE}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{hsutils_8c_a7ddc227464b6cf7f300c3151e77aa5de}\label{hsutils_8c_a7ddc227464b6cf7f300c3151e77aa5de}} 
+\index{hsutils.c@{hsutils.c}!countfiles@{countfiles}}
+\index{countfiles@{countfiles}!hsutils.c@{hsutils.c}}
+\doxysubsubsection{\texorpdfstring{countfiles()}{countfiles()}}
+{\footnotesize\ttfamily int countfiles (\begin{DoxyParamCaption}\item[{char $\ast$}]{mpoint }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hsutils_8c_acfb56efc8cf2f2fa1921bc6f7be10ded}\label{hsutils_8c_acfb56efc8cf2f2fa1921bc6f7be10ded}} 
+\index{hsutils.c@{hsutils.c}!expandpath@{expandpath}}
+\index{expandpath@{expandpath}!hsutils.c@{hsutils.c}}
+\doxysubsubsection{\texorpdfstring{expandpath()}{expandpath()}}
+{\footnotesize\ttfamily void expandpath (\begin{DoxyParamCaption}\item[{const char $\ast$}]{inp,  }\item[{char $\ast$}]{outp,  }\item[{int}]{maxlen }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hsutils_8c_ab7f9378d524c6983756fdd47c996f3c4}\label{hsutils_8c_ab7f9378d524c6983756fdd47c996f3c4}} 
+\index{hsutils.c@{hsutils.c}!hslog@{hslog}}
+\index{hslog@{hslog}!hsutils.c@{hsutils.c}}
+\doxysubsubsection{\texorpdfstring{hslog()}{hslog()}}
+{\footnotesize\ttfamily void hslog (\begin{DoxyParamCaption}\item[{int}]{lev,  }\item[{char $\ast$}]{fmt,  }\item[{}]{... }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hsutils_8c_ad0b8354aa421025178b0b82c44a10082}\label{hsutils_8c_ad0b8354aa421025178b0b82c44a10082}} 
+\index{hsutils.c@{hsutils.c}!hsprint@{hsprint}}
+\index{hsprint@{hsprint}!hsutils.c@{hsutils.c}}
+\doxysubsubsection{\texorpdfstring{hsprint()}{hsprint()}}
+{\footnotesize\ttfamily void hsprint (\begin{DoxyParamCaption}\item[{int}]{outs,  }\item[{int}]{lev,  }\item[{char $\ast$}]{fmt,  }\item[{}]{... }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hsutils_8c_a3adc52fbad67f57ded43bccddba0956b}\label{hsutils_8c_a3adc52fbad67f57ded43bccddba0956b}} 
+\index{hsutils.c@{hsutils.c}!ismounted@{ismounted}}
+\index{ismounted@{ismounted}!hsutils.c@{hsutils.c}}
+\doxysubsubsection{\texorpdfstring{ismounted()}{ismounted()}}
+{\footnotesize\ttfamily int ismounted (\begin{DoxyParamCaption}\item[{char $\ast$}]{orig }\end{DoxyParamCaption})}
+

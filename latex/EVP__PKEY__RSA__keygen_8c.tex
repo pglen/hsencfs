@@ -1,0 +1,105 @@
+\hypertarget{EVP__PKEY__RSA__keygen_8c}{}\doxysection{study/\+EVP\+\_\+\+PKEY\+\_\+\+RSA\+\_\+keygen.c File Reference}
+\label{EVP__PKEY__RSA__keygen_8c}\index{study/EVP\_PKEY\_RSA\_keygen.c@{study/EVP\_PKEY\_RSA\_keygen.c}}
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$getopt.\+h$>$}\newline
+{\ttfamily \#include $<$sys/types.\+h$>$}\newline
+{\ttfamily \#include $<$sys/stat.\+h$>$}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+{\ttfamily \#include $<$openssl/err.\+h$>$}\newline
+{\ttfamily \#include $<$openssl/evp.\+h$>$}\newline
+{\ttfamily \#include $<$openssl/rsa.\+h$>$}\newline
+{\ttfamily \#include $<$openssl/core\+\_\+names.\+h$>$}\newline
+{\ttfamily \#include $<$openssl/pem.\+h$>$}\newline
+Include dependency graph for EVP\+\_\+\+PKEY\+\_\+\+RSA\+\_\+keygen.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{EVP__PKEY__RSA__keygen_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+char $\ast$ \mbox{\hyperlink{EVP__PKEY__RSA__keygen_8c_a825de4fdcf250dd198ebe60341bdc8ac}{public\+Key\+To\+String}} (EVP\+\_\+\+PKEY $\ast$pub\+Key)
+\item 
+char $\ast$ \mbox{\hyperlink{EVP__PKEY__RSA__keygen_8c_a675dd5ac75f643fcc65a66cc132a9423}{private\+Key\+To\+String}} (EVP\+\_\+\+PKEY $\ast$Key)
+\item 
+int \mbox{\hyperlink{EVP__PKEY__RSA__keygen_8c_a3c04138a5bfe5d72780bb7e82a18e627}{main}} (int argc, char $\ast$$\ast$argv)
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{EVP__PKEY__RSA__keygen_8c_a6c46004f72312f6ccff05c7addf491c2}{use\+\_\+long}} = 0
+\item 
+int \mbox{\hyperlink{EVP__PKEY__RSA__keygen_8c_a0be834bce28be3acb084bb0ddf923db7}{dump\+\_\+params}} = 0
+\item 
+int \mbox{\hyperlink{EVP__PKEY__RSA__keygen_8c_a63e32b51cb46f8186f153f2f2aba7ed2}{show\+\_\+keys}} = 0
+\item 
+int \mbox{\hyperlink{EVP__PKEY__RSA__keygen_8c_aaca3d098e27eb6f49d4996f380d406e4}{str\+\_\+keys}} = 0
+\item 
+char $\ast$ \mbox{\hyperlink{EVP__PKEY__RSA__keygen_8c_a1b314d5820b734ab0680b4655e256eb8}{save\+\_\+keys}} = \char`\"{}\char`\"{}
+\item 
+unsigned int \mbox{\hyperlink{EVP__PKEY__RSA__keygen_8c_aa6da25dae1e7263af226d4b026811d7f}{bits}} = 2048
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{EVP__PKEY__RSA__keygen_8c_a3c04138a5bfe5d72780bb7e82a18e627}\label{EVP__PKEY__RSA__keygen_8c_a3c04138a5bfe5d72780bb7e82a18e627}} 
+\index{EVP\_PKEY\_RSA\_keygen.c@{EVP\_PKEY\_RSA\_keygen.c}!main@{main}}
+\index{main@{main}!EVP\_PKEY\_RSA\_keygen.c@{EVP\_PKEY\_RSA\_keygen.c}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{char $\ast$$\ast$}]{argv }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{EVP__PKEY__RSA__keygen_8c_a675dd5ac75f643fcc65a66cc132a9423}\label{EVP__PKEY__RSA__keygen_8c_a675dd5ac75f643fcc65a66cc132a9423}} 
+\index{EVP\_PKEY\_RSA\_keygen.c@{EVP\_PKEY\_RSA\_keygen.c}!privateKeyToString@{privateKeyToString}}
+\index{privateKeyToString@{privateKeyToString}!EVP\_PKEY\_RSA\_keygen.c@{EVP\_PKEY\_RSA\_keygen.c}}
+\doxysubsubsection{\texorpdfstring{privateKeyToString()}{privateKeyToString()}}
+{\footnotesize\ttfamily char $\ast$ private\+Key\+To\+String (\begin{DoxyParamCaption}\item[{EVP\+\_\+\+PKEY $\ast$}]{Key }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{EVP__PKEY__RSA__keygen_8c_a825de4fdcf250dd198ebe60341bdc8ac}\label{EVP__PKEY__RSA__keygen_8c_a825de4fdcf250dd198ebe60341bdc8ac}} 
+\index{EVP\_PKEY\_RSA\_keygen.c@{EVP\_PKEY\_RSA\_keygen.c}!publicKeyToString@{publicKeyToString}}
+\index{publicKeyToString@{publicKeyToString}!EVP\_PKEY\_RSA\_keygen.c@{EVP\_PKEY\_RSA\_keygen.c}}
+\doxysubsubsection{\texorpdfstring{publicKeyToString()}{publicKeyToString()}}
+{\footnotesize\ttfamily char $\ast$ public\+Key\+To\+String (\begin{DoxyParamCaption}\item[{EVP\+\_\+\+PKEY $\ast$}]{pub\+Key }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{EVP__PKEY__RSA__keygen_8c_aa6da25dae1e7263af226d4b026811d7f}\label{EVP__PKEY__RSA__keygen_8c_aa6da25dae1e7263af226d4b026811d7f}} 
+\index{EVP\_PKEY\_RSA\_keygen.c@{EVP\_PKEY\_RSA\_keygen.c}!bits@{bits}}
+\index{bits@{bits}!EVP\_PKEY\_RSA\_keygen.c@{EVP\_PKEY\_RSA\_keygen.c}}
+\doxysubsubsection{\texorpdfstring{bits}{bits}}
+{\footnotesize\ttfamily unsigned int bits = 2048}
+
+\mbox{\Hypertarget{EVP__PKEY__RSA__keygen_8c_a0be834bce28be3acb084bb0ddf923db7}\label{EVP__PKEY__RSA__keygen_8c_a0be834bce28be3acb084bb0ddf923db7}} 
+\index{EVP\_PKEY\_RSA\_keygen.c@{EVP\_PKEY\_RSA\_keygen.c}!dump\_params@{dump\_params}}
+\index{dump\_params@{dump\_params}!EVP\_PKEY\_RSA\_keygen.c@{EVP\_PKEY\_RSA\_keygen.c}}
+\doxysubsubsection{\texorpdfstring{dump\_params}{dump\_params}}
+{\footnotesize\ttfamily int dump\+\_\+params = 0}
+
+\mbox{\Hypertarget{EVP__PKEY__RSA__keygen_8c_a1b314d5820b734ab0680b4655e256eb8}\label{EVP__PKEY__RSA__keygen_8c_a1b314d5820b734ab0680b4655e256eb8}} 
+\index{EVP\_PKEY\_RSA\_keygen.c@{EVP\_PKEY\_RSA\_keygen.c}!save\_keys@{save\_keys}}
+\index{save\_keys@{save\_keys}!EVP\_PKEY\_RSA\_keygen.c@{EVP\_PKEY\_RSA\_keygen.c}}
+\doxysubsubsection{\texorpdfstring{save\_keys}{save\_keys}}
+{\footnotesize\ttfamily char$\ast$ save\+\_\+keys = \char`\"{}\char`\"{}}
+
+\mbox{\Hypertarget{EVP__PKEY__RSA__keygen_8c_a63e32b51cb46f8186f153f2f2aba7ed2}\label{EVP__PKEY__RSA__keygen_8c_a63e32b51cb46f8186f153f2f2aba7ed2}} 
+\index{EVP\_PKEY\_RSA\_keygen.c@{EVP\_PKEY\_RSA\_keygen.c}!show\_keys@{show\_keys}}
+\index{show\_keys@{show\_keys}!EVP\_PKEY\_RSA\_keygen.c@{EVP\_PKEY\_RSA\_keygen.c}}
+\doxysubsubsection{\texorpdfstring{show\_keys}{show\_keys}}
+{\footnotesize\ttfamily int show\+\_\+keys = 0}
+
+\mbox{\Hypertarget{EVP__PKEY__RSA__keygen_8c_aaca3d098e27eb6f49d4996f380d406e4}\label{EVP__PKEY__RSA__keygen_8c_aaca3d098e27eb6f49d4996f380d406e4}} 
+\index{EVP\_PKEY\_RSA\_keygen.c@{EVP\_PKEY\_RSA\_keygen.c}!str\_keys@{str\_keys}}
+\index{str\_keys@{str\_keys}!EVP\_PKEY\_RSA\_keygen.c@{EVP\_PKEY\_RSA\_keygen.c}}
+\doxysubsubsection{\texorpdfstring{str\_keys}{str\_keys}}
+{\footnotesize\ttfamily int str\+\_\+keys = 0}
+
+\mbox{\Hypertarget{EVP__PKEY__RSA__keygen_8c_a6c46004f72312f6ccff05c7addf491c2}\label{EVP__PKEY__RSA__keygen_8c_a6c46004f72312f6ccff05c7addf491c2}} 
+\index{EVP\_PKEY\_RSA\_keygen.c@{EVP\_PKEY\_RSA\_keygen.c}!use\_long@{use\_long}}
+\index{use\_long@{use\_long}!EVP\_PKEY\_RSA\_keygen.c@{EVP\_PKEY\_RSA\_keygen.c}}
+\doxysubsubsection{\texorpdfstring{use\_long}{use\_long}}
+{\footnotesize\ttfamily int use\+\_\+long = 0}
+

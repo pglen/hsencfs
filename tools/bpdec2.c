@@ -200,16 +200,14 @@ int main(int argc, char *argv[])
                printf ("?? getopt returned character code 0%o (%c) ??\n", cc, cc);
         }
     }
-
     FILE *fp2 = NULL;
     if (optind >= argc - 1)
         {
-        //printf("Not enough arguments, out to stdout\n");
+        printf("Not enough arguments, use -h option for more info\n");
         //help();
-        //exit(1);
+        exit(1);
         fp2 = stdout;
         }
-
    if(verbose)
         printf("Infile: '%s' Outfile: '%s'\n", argv[optind], argv[optind+1]);
 
@@ -218,13 +216,11 @@ int main(int argc, char *argv[])
         fprintf(stderr, "File '%s' must exist and must be readable.\n", argv[optind]);
         exit(1);
         }
-
     if(access(argv[optind+1], F_OK) >= 0 && !force)
         {
         fprintf(stderr, "Output file '%s' must not exist.\n", argv[optind+1]);
         exit(1);
         }
-
     if(passx[0] != 0)
         {
         strncpy(pass, passx, sizeof(pass));

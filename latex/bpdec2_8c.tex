@@ -1,0 +1,120 @@
+\hypertarget{bpdec2_8c}{}\doxysection{tools/bpdec2.c File Reference}
+\label{bpdec2_8c}\index{tools/bpdec2.c@{tools/bpdec2.c}}
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$limits.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+{\ttfamily \#include $<$fcntl.\+h$>$}\newline
+{\ttfamily \#include $<$dirent.\+h$>$}\newline
+{\ttfamily \#include $<$errno.\+h$>$}\newline
+{\ttfamily \#include $<$syslog.\+h$>$}\newline
+{\ttfamily \#include $<$getopt.\+h$>$}\newline
+{\ttfamily \#include $<$fuse.\+h$>$}\newline
+{\ttfamily \#include $<$sys/time.\+h$>$}\newline
+{\ttfamily \#include $<$sys/stat.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}../src/hsencfs.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}bluepoint2.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hs\+\_\+crypt.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}bp2com.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../src/hsencsb.\+h\char`\"{}}\newline
+Include dependency graph for bpdec2.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{bpdec2_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{bpdec2_8c_a97ee70a8770dc30d06c744b24eb2fcfc}{help}} ()
+\item 
+int \mbox{\hyperlink{bpdec2_8c_a0ddf1224851353fc92bfbff6f499fa97}{main}} (int argc, char $\ast$argv\mbox{[}$\,$\mbox{]})
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{bpdec2_8c_a0b2caeb4b6f130be43e5a2f0267dd453}{verbose}} = 0
+\item 
+int \mbox{\hyperlink{bpdec2_8c_a55602ca214fb365e8deef9a73c8442e7}{quiet}} = 0
+\item 
+int \mbox{\hyperlink{bpdec2_8c_a52de43b6faa0d9601f10db8b3826f11a}{force}} = 0
+\item 
+int \mbox{\hyperlink{bpdec2_8c_a2b4dcc5b915c5691b740f64b240dcd42}{ondemand}} = 0
+\item 
+int \mbox{\hyperlink{bpdec2_8c_afb19b851dbcd1447c226a8a98c26979d}{loglevel}} = 0
+\item 
+char \mbox{\hyperlink{bpdec2_8c_aeb7fcf49c3dfbcfb1d35684f41383505}{passx}} \mbox{[}\mbox{\hyperlink{hsutils_8h_a42c6d750183b663d674d59240e44f415}{MAXPASSLEN}}\mbox{]}
+\item 
+int \mbox{\hyperlink{bpdec2_8c_ad29d2259942853507dff3a3e3c05535a}{plen}} = sizeof(\mbox{\hyperlink{hsencfs_8c_aeb7fcf49c3dfbcfb1d35684f41383505}{passx}})
+\item 
+\mbox{\hyperlink{hsencsb_8h_a09908504c5dd6e09cf90ebd54634f546}{sideblock\+\_\+t}} \mbox{\hyperlink{bpdec2_8c_a8a3449e2bba4be4e0611d7119819a82d}{sb}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{bpdec2_8c_a97ee70a8770dc30d06c744b24eb2fcfc}\label{bpdec2_8c_a97ee70a8770dc30d06c744b24eb2fcfc}} 
+\index{bpdec2.c@{bpdec2.c}!help@{help}}
+\index{help@{help}!bpdec2.c@{bpdec2.c}}
+\doxysubsubsection{\texorpdfstring{help()}{help()}}
+{\footnotesize\ttfamily void help (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{bpdec2_8c_a0ddf1224851353fc92bfbff6f499fa97}\label{bpdec2_8c_a0ddf1224851353fc92bfbff6f499fa97}} 
+\index{bpdec2.c@{bpdec2.c}!main@{main}}
+\index{main@{main}!bpdec2.c@{bpdec2.c}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{char $\ast$}]{argv\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{bpdec2_8c_a52de43b6faa0d9601f10db8b3826f11a}\label{bpdec2_8c_a52de43b6faa0d9601f10db8b3826f11a}} 
+\index{bpdec2.c@{bpdec2.c}!force@{force}}
+\index{force@{force}!bpdec2.c@{bpdec2.c}}
+\doxysubsubsection{\texorpdfstring{force}{force}}
+{\footnotesize\ttfamily int force = 0}
+
+\mbox{\Hypertarget{bpdec2_8c_afb19b851dbcd1447c226a8a98c26979d}\label{bpdec2_8c_afb19b851dbcd1447c226a8a98c26979d}} 
+\index{bpdec2.c@{bpdec2.c}!loglevel@{loglevel}}
+\index{loglevel@{loglevel}!bpdec2.c@{bpdec2.c}}
+\doxysubsubsection{\texorpdfstring{loglevel}{loglevel}}
+{\footnotesize\ttfamily int loglevel = 0}
+
+\mbox{\Hypertarget{bpdec2_8c_a2b4dcc5b915c5691b740f64b240dcd42}\label{bpdec2_8c_a2b4dcc5b915c5691b740f64b240dcd42}} 
+\index{bpdec2.c@{bpdec2.c}!ondemand@{ondemand}}
+\index{ondemand@{ondemand}!bpdec2.c@{bpdec2.c}}
+\doxysubsubsection{\texorpdfstring{ondemand}{ondemand}}
+{\footnotesize\ttfamily int ondemand = 0}
+
+\mbox{\Hypertarget{bpdec2_8c_aeb7fcf49c3dfbcfb1d35684f41383505}\label{bpdec2_8c_aeb7fcf49c3dfbcfb1d35684f41383505}} 
+\index{bpdec2.c@{bpdec2.c}!passx@{passx}}
+\index{passx@{passx}!bpdec2.c@{bpdec2.c}}
+\doxysubsubsection{\texorpdfstring{passx}{passx}}
+{\footnotesize\ttfamily char passx\mbox{[}\mbox{\hyperlink{hsutils_8h_a42c6d750183b663d674d59240e44f415}{MAXPASSLEN}}\mbox{]}}
+
+\mbox{\Hypertarget{bpdec2_8c_ad29d2259942853507dff3a3e3c05535a}\label{bpdec2_8c_ad29d2259942853507dff3a3e3c05535a}} 
+\index{bpdec2.c@{bpdec2.c}!plen@{plen}}
+\index{plen@{plen}!bpdec2.c@{bpdec2.c}}
+\doxysubsubsection{\texorpdfstring{plen}{plen}}
+{\footnotesize\ttfamily int plen = sizeof(\mbox{\hyperlink{hsencfs_8c_aeb7fcf49c3dfbcfb1d35684f41383505}{passx}})}
+
+\mbox{\Hypertarget{bpdec2_8c_a55602ca214fb365e8deef9a73c8442e7}\label{bpdec2_8c_a55602ca214fb365e8deef9a73c8442e7}} 
+\index{bpdec2.c@{bpdec2.c}!quiet@{quiet}}
+\index{quiet@{quiet}!bpdec2.c@{bpdec2.c}}
+\doxysubsubsection{\texorpdfstring{quiet}{quiet}}
+{\footnotesize\ttfamily int quiet = 0}
+
+\mbox{\Hypertarget{bpdec2_8c_a8a3449e2bba4be4e0611d7119819a82d}\label{bpdec2_8c_a8a3449e2bba4be4e0611d7119819a82d}} 
+\index{bpdec2.c@{bpdec2.c}!sb@{sb}}
+\index{sb@{sb}!bpdec2.c@{bpdec2.c}}
+\doxysubsubsection{\texorpdfstring{sb}{sb}}
+{\footnotesize\ttfamily \mbox{\hyperlink{hsencsb_8h_a09908504c5dd6e09cf90ebd54634f546}{sideblock\+\_\+t}} sb}
+
+\mbox{\Hypertarget{bpdec2_8c_a0b2caeb4b6f130be43e5a2f0267dd453}\label{bpdec2_8c_a0b2caeb4b6f130be43e5a2f0267dd453}} 
+\index{bpdec2.c@{bpdec2.c}!verbose@{verbose}}
+\index{verbose@{verbose}!bpdec2.c@{bpdec2.c}}
+\doxysubsubsection{\texorpdfstring{verbose}{verbose}}
+{\footnotesize\ttfamily int verbose = 0}
+

@@ -21,6 +21,14 @@ dist_bin_SCRIPTS =                  \
         hsaskpass.py                \
         hstray.py
 
+EXTRA_DIST =                       \
+        checksum.sh                 \
+        enctest.sh                  \
+        gensum.sh                   \
+        lazy.sh                     \
+        sha1.sum                    \
+        SUMFILE
+
 # Auxiliaries
 #EXTRA_DIST = src/hsencrw.c src/hsencop.c
 #EXTRA_DIST += common/hspass.c common/hsutils.c
@@ -33,14 +41,6 @@ dist_bin_SCRIPTS =                  \
 # use: ls *.py *.sh *.server SUMFILE sha*
 
 #GNOME_HSENCApplet.server.in
-
-EXTRA_DIST =                       \
-        checksum.sh                 \
-        enctest.sh                  \
-        gensum.sh                   \
-        lazy.sh                     \
-        sha1.sum                    \
-        SUMFILE
 
 #check:
 #    # Create new folder, destroy at end. Good example of installation-less

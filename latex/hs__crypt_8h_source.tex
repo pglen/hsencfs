@@ -1,0 +1,81 @@
+\hypertarget{hs__crypt_8h_source}{}\doxysection{hs\+\_\+crypt.\+h}
+\label{hs__crypt_8h_source}\index{bluepoint/hs\_crypt.h@{bluepoint/hs\_crypt.h}}
+\mbox{\hyperlink{hs__crypt_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ HSENCFS\ (High\ Security\ EnCrypting\ File\ System)}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{comment}{//\ High\ security\ block\ encryption}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#define\ HS\_BLOCK\ 4096}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#if\ defined(NONE\_ENCRYPT)\ \&\&\ defined(FAKE\_ENCRYPT)\ \&\&\ defined(HALF\_ENCRYPT)}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\ \ \ \ \#error\ "{}Cannot\ define\ more\ than\ one.\ of\ NONE\ or\ FAKE"{}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#if\ defined(NONE\_ENCRYPT)\ \&\&\ defined(FULL\_ENCRYPT)}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\ \ \ \ \#error\ "{}Cannot\ define\ more\ than\ one.\ of\ NONE\ or\ FULL"{}}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#if\ defined(FAKE\_ENCRYPT)\ \&\&\ defined(FULL\_ENCRYPT)}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\ \ \ \ \#error\ "{}Cannot\ define\ more\ than\ one.\ of\ FAKE\ or\ FULL"{}}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#ifdef\ NONE\_ENCRYPT}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{comment}{//\ Make\ sure\ the\ maintainer\ knows\ this\ is\ a\ NO\ NO}}
+\DoxyCodeLine{00025\ \textcolor{comment}{//\#pragma\ GCC\ error\ "{}This\ is\ for\ testing\ only.\ DO\ NOT\ ENABLE"{}}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ \ \ \ \ hs\_encrypt\ \ hs\_encrypt\_none}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#define\ \ \ \ \ hs\_decrypt\ \ hs\_decrypt\_none}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{keywordtype}{void}\ hs\_encrypt\_none(\textcolor{keywordtype}{void}\ *mem,\ \textcolor{keywordtype}{int}\ size2,\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{block__blue2_8c_a12b3e022c6c3f2c88d5ebfc7fb357613}{pass}},\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{block__blue2_8c_ad29d2259942853507dff3a3e3c05535a}{plen}});}
+\DoxyCodeLine{00031\ \textcolor{keywordtype}{void}\ hs\_decrypt\_none(\textcolor{keywordtype}{void}\ *mem,\ \textcolor{keywordtype}{int}\ size2,\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{block__blue2_8c_a12b3e022c6c3f2c88d5ebfc7fb357613}{pass}},\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{block__blue2_8c_ad29d2259942853507dff3a3e3c05535a}{plen}});}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#elif\ defined(FAKE\_ENCRYPT)}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{comment}{//\ Make\ sure\ the\ maintainer\ knows\ this\ is\ a\ NO\ NO}}
+\DoxyCodeLine{00036\ \textcolor{comment}{//\#pragma\ GCC\ error\ "{}This\ is\ for\ testing\ only.\ DO\ NOT\ ENABLE"{}}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#define\ \ \ \ \ hs\_encrypt\ \ hs\_encrypt\_fake}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#define\ \ \ \ \ hs\_decrypt\ \ hs\_decrypt\_fake}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{keywordtype}{void}\ hs\_encrypt\_fake(\textcolor{keywordtype}{void}\ *mem,\ \textcolor{keywordtype}{int}\ size2,\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{block__blue2_8c_a12b3e022c6c3f2c88d5ebfc7fb357613}{pass}},\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{block__blue2_8c_ad29d2259942853507dff3a3e3c05535a}{plen}});}
+\DoxyCodeLine{00042\ \textcolor{keywordtype}{void}\ hs\_decrypt\_fake(\textcolor{keywordtype}{void}\ *mem,\ \textcolor{keywordtype}{int}\ size2,\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{block__blue2_8c_a12b3e022c6c3f2c88d5ebfc7fb357613}{pass}},\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{block__blue2_8c_ad29d2259942853507dff3a3e3c05535a}{plen}});}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#elif\ defined(FULL\_ENCRYPT)}}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{comment}{//\ Deploy\ the\ real\ encryption}}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#define\ \ \ \ \ hs\_encrypt\ \ hs\_encrypt\_org}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#define\ \ \ \ \ hs\_decrypt\ \ hs\_decrypt\_org}}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{hs__crypt_8c_aac68d598bc8fd2ba6edc0eadbc29f9e0}{hs\_encrypt\_org}}(\textcolor{keywordtype}{void}\ *mem,\ \textcolor{keywordtype}{int}\ size2,\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{block__blue2_8c_a12b3e022c6c3f2c88d5ebfc7fb357613}{pass}},\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{block__blue2_8c_ad29d2259942853507dff3a3e3c05535a}{plen}});}
+\DoxyCodeLine{00052\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{hs__crypt_8c_a384b715d1d95b50a0ebadf72ee367479}{hs\_decrypt\_org}}(\textcolor{keywordtype}{void}\ *mem,\ \textcolor{keywordtype}{int}\ size2,\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{block__blue2_8c_a12b3e022c6c3f2c88d5ebfc7fb357613}{pass}},\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{block__blue2_8c_ad29d2259942853507dff3a3e3c05535a}{plen}});}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#elif\ defined(HALF\_ENCRYPT)}}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#define\ \ \ \ \ hs\_encrypt\ \ hs\_encrypt\_half}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#define\ \ \ \ \ hs\_decrypt\ \ hs\_decrypt\_half}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{keywordtype}{void}\ hs\_encrypt\_half(\textcolor{keywordtype}{void}\ *mem,\ \textcolor{keywordtype}{int}\ size2,\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{block__blue2_8c_a12b3e022c6c3f2c88d5ebfc7fb357613}{pass}},\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{block__blue2_8c_ad29d2259942853507dff3a3e3c05535a}{plen}});}
+\DoxyCodeLine{00060\ \textcolor{keywordtype}{void}\ hs\_decrypt\_half(\textcolor{keywordtype}{void}\ *mem,\ \textcolor{keywordtype}{int}\ size2,\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{block__blue2_8c_a12b3e022c6c3f2c88d5ebfc7fb357613}{pass}},\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{block__blue2_8c_ad29d2259942853507dff3a3e3c05535a}{plen}});}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#define\ \ \ \ \ hs\_encrypt\ \ hs\_encrypt\_undef}}
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#define\ \ \ \ \ hs\_decrypt\ \ hs\_decrypt\_undef}}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#error\ "{}Must\ define\ encryption\ type:\ FAKE\_ENCRYPT\ NONE\_ENCRYPT\ FULL\_ENCRYPT"{}}}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{hs__crypt_8h_a635bed88c04d827baa42463fd7a22d9d}{hs\_encrypt\_undef}}(\textcolor{keywordtype}{void}\ *mem,\ \textcolor{keywordtype}{int}\ size2,\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{block__blue2_8c_a12b3e022c6c3f2c88d5ebfc7fb357613}{pass}},\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{block__blue2_8c_ad29d2259942853507dff3a3e3c05535a}{plen}})\ \{\};}
+\DoxyCodeLine{00070\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{hs__crypt_8h_ac4f916a7a423853ad4ca311854174c02}{hs\_decrypt\_undef}}(\textcolor{keywordtype}{void}\ *mem,\ \textcolor{keywordtype}{int}\ size2,\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{block__blue2_8c_a12b3e022c6c3f2c88d5ebfc7fb357613}{pass}},\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{block__blue2_8c_ad29d2259942853507dff3a3e3c05535a}{plen}})\ \{\};}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \textcolor{comment}{//\ EOF}}
+
+\end{DoxyCode}

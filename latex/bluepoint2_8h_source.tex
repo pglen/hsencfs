@@ -1,0 +1,76 @@
+\hypertarget{bluepoint2_8h_source}{}\doxysection{bluepoint2.\+h}
+\label{bluepoint2_8h_source}\index{bluepoint/bluepoint2.h@{bluepoint/bluepoint2.h}}
+\mbox{\hyperlink{bluepoint2_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\#\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\#\ Bluepoint\ encryption\ routines.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\#}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\#\ \ \ How\ it\ works:}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//\#}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//\#\ \ \ \ \ Strings\ are\ walked\ chr\ by\ char\ with\ the\ loop:}}
+\DoxyCodeLine{00007\ \textcolor{comment}{//\#\ \ \ \ \ \ \ \ \ \{}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//\#\ \ \ \ \ \ \ \ \ \$aa\ =\ ord(substr(\$\_[0],\ \$loop,\ 1));}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\#\ \ \ \ \ \ \ \ \ do\ something\ with\ \$aa}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//\#\ \ \ \ \ \ \ \ \ substr(\$\_[0],\ \$loop,\ 1)\ =\ pack("{}c"{},\ \$aa);}}
+\DoxyCodeLine{00011\ \textcolor{comment}{//\#\ \ \ \ \ \ \ \ \ \}}}
+\DoxyCodeLine{00012\ \textcolor{comment}{//\#}}
+\DoxyCodeLine{00013\ \textcolor{comment}{//\#\ \ \ Flow:}}
+\DoxyCodeLine{00014\ \textcolor{comment}{//\#\ \ \ \ \ \ \ \ \ generate\ vector}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\#\ \ \ \ \ \ \ \ \ generate\ pass}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{comment}{//\#\ \ \ \ \ \ \ \ \ walk\ forward\ with\ password\ cycling\ loop}}
+\DoxyCodeLine{00018\ \textcolor{comment}{//\#\ \ \ \ \ \ \ \ \ walk\ backwards\ with\ feedback\ encryption}}
+\DoxyCodeLine{00019\ \textcolor{comment}{//\#\ \ \ \ \ \ \ \ \ walk\ forward\ with\ feedback\ encryption}}
+\DoxyCodeLine{00020\ \textcolor{comment}{//\#}}
+\DoxyCodeLine{00021\ \textcolor{comment}{//\#\ \ The\ process\ guarantees\ that\ a\ single\ bit\ change\ in\ the\ original\ text}}
+\DoxyCodeLine{00022\ \textcolor{comment}{//\#\ \ will\ change\ every\ byte\ in\ the\ resulting\ block.}}
+\DoxyCodeLine{00023\ \textcolor{comment}{//\#}}
+\DoxyCodeLine{00024\ \textcolor{comment}{//\#\ \ The\ bit\ propagation\ is\ such\ a\ high\ quality,\ that\ it\ beats\ current}}
+\DoxyCodeLine{00025\ \textcolor{comment}{//\#\ \ industrial\ strength\ encryptions.}}
+\DoxyCodeLine{00026\ \textcolor{comment}{//\#}}
+\DoxyCodeLine{00027\ \textcolor{comment}{//\#\ \ Please\ see\ bit\ distribution\ study.}}
+\DoxyCodeLine{00028\ \textcolor{comment}{//\#}}
+\DoxyCodeLine{00029\ \textcolor{comment}{//\#\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{keyword}{typedef}\ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \mbox{\hyperlink{bluepoint2_8h_a718b4eb2652c286f4d42dc18a8e71a1a}{ulong}};}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{bluepoint2_8h_aca9477c935f448afc7a3f462bdbee2c7}{bluepoint2\_encrypt}}(\textcolor{keywordtype}{char}\ *\mbox{\hyperlink{bluepoint_8c_a0aaeceb2f1ca403a36a2c5c2f4b87a0e}{buff}},\ \textcolor{keywordtype}{int}\ blen,\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{block__blue2_8c_a12b3e022c6c3f2c88d5ebfc7fb357613}{pass}},\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{block__blue2_8c_ad29d2259942853507dff3a3e3c05535a}{plen}});}
+\DoxyCodeLine{00034\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{bluepoint2_8h_ac9b2a06a6f8131ef41710063ae45fd13}{bluepoint2\_decrypt}}(\textcolor{keywordtype}{char}\ *\mbox{\hyperlink{trunctest_8c_a53dbc2382caf520f4a511f07d1e77a71}{str}},\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{block__blue2_8c_a77e5778dba48d5d75c364f1c6f9f5da4}{slen}},\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{block__blue2_8c_a12b3e022c6c3f2c88d5ebfc7fb357613}{pass}},\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{block__blue2_8c_ad29d2259942853507dff3a3e3c05535a}{plen}});}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \mbox{\hyperlink{bluepoint_8h_a718b4eb2652c286f4d42dc18a8e71a1a}{ulong}}\ \ \ \mbox{\hyperlink{bluepoint2_8h_a431f66035f27286781f685bfa99fc728}{bluepoint2\_hash}}(\textcolor{keywordtype}{char}\ *\mbox{\hyperlink{bluepoint_8c_a0aaeceb2f1ca403a36a2c5c2f4b87a0e}{buff}},\ \textcolor{keywordtype}{int}\ blen);}
+\DoxyCodeLine{00037\ \mbox{\hyperlink{bluepoint_8h_a718b4eb2652c286f4d42dc18a8e71a1a}{ulong}}\ \ \ \mbox{\hyperlink{bluepoint2_8h_aaf5f89efce9bb62665e8ea0d57110aed}{bluepoint2\_crypthash}}(\textcolor{keywordtype}{char}\ *\mbox{\hyperlink{bluepoint_8c_a0aaeceb2f1ca403a36a2c5c2f4b87a0e}{buff}},\ \textcolor{keywordtype}{int}\ blen,\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{block__blue2_8c_a12b3e022c6c3f2c88d5ebfc7fb357613}{pass}},\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{block__blue2_8c_ad29d2259942853507dff3a3e3c05535a}{plen}});}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{comment}{//\ New\ Hashes:}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ \mbox{\hyperlink{bluepoint2_8h_a525797c4448da89aaf1443c5fa1d165c}{bluepoint2\_hash64}}(\textcolor{keywordtype}{char}\ *\mbox{\hyperlink{bluepoint_8c_a0aaeceb2f1ca403a36a2c5c2f4b87a0e}{buff}},\ \textcolor{keywordtype}{int}\ blen);}
+\DoxyCodeLine{00042\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ \mbox{\hyperlink{bluepoint2_8h_a18ae23f6e4131768bd0028fe59f233c1}{bluepoint2\_crypthash64}}(\textcolor{keywordtype}{char}\ *\mbox{\hyperlink{bluepoint_8c_a0aaeceb2f1ca403a36a2c5c2f4b87a0e}{buff}},\ \textcolor{keywordtype}{int}\ blen,\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{block__blue2_8c_a12b3e022c6c3f2c88d5ebfc7fb357613}{pass}},\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{block__blue2_8c_ad29d2259942853507dff3a3e3c05535a}{plen}});}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{comment}{//\ These\ return\ the\ same\ buffer,\ move\ data\ before\ second\ call}}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{keywordtype}{char}\ \ \ \ *\mbox{\hyperlink{bluepoint2_8h_a6342e91162ac428085364740f44ff6a2}{bluepoint2\_dumphex}}(\textcolor{keywordtype}{char}\ *\mbox{\hyperlink{trunctest_8c_a53dbc2382caf520f4a511f07d1e77a71}{str}},\ \textcolor{keywordtype}{int}\ len);}
+\DoxyCodeLine{00047\ \textcolor{keywordtype}{char}\ \ \ \ *\mbox{\hyperlink{bluepoint2_8h_aaa6d4fba6b635cc0527da7e0d50c6760}{bluepoint2\_dump}}(\textcolor{keywordtype}{char}\ *\mbox{\hyperlink{trunctest_8c_a53dbc2382caf520f4a511f07d1e77a71}{str}},\ \textcolor{keywordtype}{int}\ len);}
+\DoxyCodeLine{00048\ \textcolor{keywordtype}{char}\ \ \ \ *\mbox{\hyperlink{bluepoint2_8h_a18c4c54d14ddbb7d2ac77be37080aa50}{bluepoint2\_undump}}(\textcolor{keywordtype}{char}\ *\mbox{\hyperlink{trunctest_8c_a53dbc2382caf520f4a511f07d1e77a71}{str}},\ \textcolor{keywordtype}{int}\ len);}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{comment}{//\ Convert\ to\ a\ friendly\ format:}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{keywordtype}{char}\ \ \ \ *\mbox{\hyperlink{bluepoint2_8h_acb36e0e67a80da341cb99bfc476f2808}{bluepoint2\_tohex}}(\textcolor{keywordtype}{char}\ *\mbox{\hyperlink{trunctest_8c_a53dbc2382caf520f4a511f07d1e77a71}{str}},\ \textcolor{keywordtype}{int}\ len,\ \textcolor{keywordtype}{char}\ *out,\ \textcolor{keywordtype}{int}\ *olen);}
+\DoxyCodeLine{00053\ \textcolor{keywordtype}{char}\ \ \ \ *\mbox{\hyperlink{bluepoint2_8h_a5c16a2715c607b4c36fba101152fe7af}{bluepoint2\_fromhex}}(\textcolor{keywordtype}{char}\ *\mbox{\hyperlink{trunctest_8c_a53dbc2382caf520f4a511f07d1e77a71}{str}},\ \textcolor{keywordtype}{int}\ len,\ \textcolor{keywordtype}{char}\ *out,\ \textcolor{keywordtype}{int}\ *olen);}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \textcolor{comment}{//\ Helpers}}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{keywordtype}{int}\ \ \ \ \ \mbox{\hyperlink{bluepoint2_8h_aef2e004257e884c2ef940bea043c87e0}{bluepoint2\_set\_verbose}}(\textcolor{keywordtype}{int}\ flag);}
+\DoxyCodeLine{00058\ \textcolor{keywordtype}{int}\ \ \ \ \ \mbox{\hyperlink{bluepoint2_8h_aaf291d68c67fdc1b9f72767fa1765c01}{bluepoint2\_set\_functrace}}(\textcolor{keywordtype}{int}\ flag);}
+\DoxyCodeLine{00059\ \textcolor{keywordtype}{int}\ \ \ \ \ \mbox{\hyperlink{bluepoint2_8h_a1b10a8a2b2cde8d7bbacf06baac23179}{bluepoint2\_set\_debug}}(\textcolor{keywordtype}{int}\ flag);}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \textcolor{comment}{//\ Encryption\ modifiers}}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \textcolor{keywordtype}{int}\ \ \ \ \ \mbox{\hyperlink{bluepoint2_8h_a52ad23d5c2bb59877937ebecd109c706}{bluepoint2\_set\_rounds}}(\textcolor{keywordtype}{int}\ xrounds);}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \textcolor{comment}{//\ EOF}}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ }
+
+\end{DoxyCode}

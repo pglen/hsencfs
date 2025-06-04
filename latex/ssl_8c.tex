@@ -1,0 +1,75 @@
+\hypertarget{ssl_8c}{}\doxysection{study/ssl.c File Reference}
+\label{ssl_8c}\index{study/ssl.c@{study/ssl.c}}
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$openssl/bio.\+h$>$}\newline
+{\ttfamily \#include $<$openssl/err.\+h$>$}\newline
+{\ttfamily \#include $<$openssl/ssl.\+h$>$}\newline
+Include dependency graph for ssl.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{ssl_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{ssl_8c_a4ae2aa68422d58f668840de4a123cbf6}{Buff\+Size}}~1024
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{ssl_8c_a07bfa4ee0a8978c849423bd0bd5c269f}{report\+\_\+and\+\_\+exit}} (const char $\ast$msg)
+\item 
+void \mbox{\hyperlink{ssl_8c_ac41ccfd485e17e57fe66f32199d5db4f}{init\+\_\+ssl}} ()
+\item 
+void \mbox{\hyperlink{ssl_8c_af32cb66b81f6445c3b0377375dfd653f}{cleanup}} (SSL\+\_\+\+CTX $\ast$ctx, BIO $\ast$bio)
+\item 
+void \mbox{\hyperlink{ssl_8c_ab177fa2d36d57bd2f17c89179d1d410a}{secure\+\_\+connect}} (const char $\ast$hostname)
+\item 
+int \mbox{\hyperlink{ssl_8c_ae66f6b31b5ad750f1fe042a706a4e3d4}{main}} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{ssl_8c_a4ae2aa68422d58f668840de4a123cbf6}\label{ssl_8c_a4ae2aa68422d58f668840de4a123cbf6}} 
+\index{ssl.c@{ssl.c}!BuffSize@{BuffSize}}
+\index{BuffSize@{BuffSize}!ssl.c@{ssl.c}}
+\doxysubsubsection{\texorpdfstring{BuffSize}{BuffSize}}
+{\footnotesize\ttfamily \#define Buff\+Size~1024}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{ssl_8c_af32cb66b81f6445c3b0377375dfd653f}\label{ssl_8c_af32cb66b81f6445c3b0377375dfd653f}} 
+\index{ssl.c@{ssl.c}!cleanup@{cleanup}}
+\index{cleanup@{cleanup}!ssl.c@{ssl.c}}
+\doxysubsubsection{\texorpdfstring{cleanup()}{cleanup()}}
+{\footnotesize\ttfamily void cleanup (\begin{DoxyParamCaption}\item[{SSL\+\_\+\+CTX $\ast$}]{ctx,  }\item[{BIO $\ast$}]{bio }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{ssl_8c_ac41ccfd485e17e57fe66f32199d5db4f}\label{ssl_8c_ac41ccfd485e17e57fe66f32199d5db4f}} 
+\index{ssl.c@{ssl.c}!init\_ssl@{init\_ssl}}
+\index{init\_ssl@{init\_ssl}!ssl.c@{ssl.c}}
+\doxysubsubsection{\texorpdfstring{init\_ssl()}{init\_ssl()}}
+{\footnotesize\ttfamily void init\+\_\+ssl (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{ssl_8c_ae66f6b31b5ad750f1fe042a706a4e3d4}\label{ssl_8c_ae66f6b31b5ad750f1fe042a706a4e3d4}} 
+\index{ssl.c@{ssl.c}!main@{main}}
+\index{main@{main}!ssl.c@{ssl.c}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{ssl_8c_a07bfa4ee0a8978c849423bd0bd5c269f}\label{ssl_8c_a07bfa4ee0a8978c849423bd0bd5c269f}} 
+\index{ssl.c@{ssl.c}!report\_and\_exit@{report\_and\_exit}}
+\index{report\_and\_exit@{report\_and\_exit}!ssl.c@{ssl.c}}
+\doxysubsubsection{\texorpdfstring{report\_and\_exit()}{report\_and\_exit()}}
+{\footnotesize\ttfamily void report\+\_\+and\+\_\+exit (\begin{DoxyParamCaption}\item[{const char $\ast$}]{msg }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{ssl_8c_ab177fa2d36d57bd2f17c89179d1d410a}\label{ssl_8c_ab177fa2d36d57bd2f17c89179d1d410a}} 
+\index{ssl.c@{ssl.c}!secure\_connect@{secure\_connect}}
+\index{secure\_connect@{secure\_connect}!ssl.c@{ssl.c}}
+\doxysubsubsection{\texorpdfstring{secure\_connect()}{secure\_connect()}}
+{\footnotesize\ttfamily void secure\+\_\+connect (\begin{DoxyParamCaption}\item[{const char $\ast$}]{hostname }\end{DoxyParamCaption})}
+

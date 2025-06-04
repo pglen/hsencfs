@@ -1,0 +1,178 @@
+\hypertarget{src_2config_8h_source}{}\doxysection{config.\+h}
+\label{src_2config_8h_source}\index{src/config.h@{src/config.h}}
+\mbox{\hyperlink{src_2config_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*\ config.h.\ \ Generated\ from\ config.h.in\ by\ configure.\ \ */}}
+\DoxyCodeLine{00002\ \textcolor{comment}{/*\ config.h.in.\ \ Generated\ from\ configure.ac\ by\ autoheader.\ \ */}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{comment}{/*\ Define\ to\ 1\ if\ you\ have\ the\ `clock\_gettime'\ function.\ */}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#define\ HAVE\_CLOCK\_GETTIME\ 1}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{comment}{/*\ Define\ to\ 1\ if\ you\ have\ the\ `dup2'\ function.\ */}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#define\ HAVE\_DUP2\ 1}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{comment}{/*\ Define\ to\ 1\ if\ you\ have\ the\ <fcntl.h>\ header\ file.\ */}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#define\ HAVE\_FCNTL\_H\ 1}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{comment}{/*\ Define\ to\ 1\ if\ you\ have\ the\ `fdatasync'\ function.\ */}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ HAVE\_FDATASYNC\ 1}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{comment}{/*\ Define\ to\ 1\ if\ you\ have\ the\ `fork'\ function.\ */}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ HAVE\_FORK\ 1}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{comment}{/*\ Define\ to\ 1\ if\ you\ have\ the\ `ftruncate'\ function.\ */}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#define\ HAVE\_FTRUNCATE\ 1}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{comment}{/*\ Define\ to\ 1\ if\ you\ have\ the\ `getcwd'\ function.\ */}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ HAVE\_GETCWD\ 1}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{comment}{/*\ Define\ to\ 1\ if\ you\ have\ the\ `getpass'\ function.\ */}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ HAVE\_GETPASS\ 1}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{comment}{/*\ Define\ to\ 1\ if\ you\ have\ the\ <inttypes.h>\ header\ file.\ */}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#define\ HAVE\_INTTYPES\_H\ 1}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{comment}{/*\ Define\ to\ 1\ if\ you\ have\ the\ `lchown'\ function.\ */}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#define\ HAVE\_LCHOWN\ 1}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{comment}{/*\ Define\ to\ 1\ if\ you\ have\ the\ `fuse'\ library\ (-\/lfuse).\ */}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#define\ HAVE\_LIBFUSE\ 1}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{comment}{/*\ Define\ to\ 1\ if\ you\ have\ the\ `ulockmgr'\ library\ (-\/lulockmgr).\ */}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#define\ HAVE\_LIBULOCKMGR\ 1}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{comment}{/*\ Define\ to\ 1\ if\ you\ have\ the\ <limits.h>\ header\ file.\ */}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#define\ HAVE\_LIMITS\_H\ 1}}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{comment}{/*\ Define\ to\ 1\ if\ your\ system\ has\ a\ GNU\ libc\ compatible\ `malloc'\ function,\ and}}
+\DoxyCodeLine{00044\ \textcolor{comment}{\ \ \ to\ 0\ otherwise.\ */}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#define\ HAVE\_MALLOC\ 1}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{comment}{/*\ Define\ to\ 1\ if\ you\ have\ the\ <memory.h>\ header\ file.\ */}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#define\ HAVE\_MEMORY\_H\ 1}}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{comment}{/*\ Define\ to\ 1\ if\ you\ have\ the\ `memset'\ function.\ */}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#define\ HAVE\_MEMSET\ 1}}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \textcolor{comment}{/*\ Define\ to\ 1\ if\ you\ have\ the\ `mkdir'\ function.\ */}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#define\ HAVE\_MKDIR\ 1}}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \textcolor{comment}{/*\ Define\ to\ 1\ if\ you\ have\ the\ `mkfifo'\ function.\ */}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#define\ HAVE\_MKFIFO\ 1}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{comment}{/*\ Define\ to\ 1\ if\ you\ have\ the\ `rmdir'\ function.\ */}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#define\ HAVE\_RMDIR\ 1}}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{comment}{/*\ Define\ to\ 1\ if\ you\ have\ the\ <stdint.h>\ header\ file.\ */}}
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\#define\ HAVE\_STDINT\_H\ 1}}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \textcolor{comment}{/*\ Define\ to\ 1\ if\ you\ have\ the\ <stdlib.h>\ header\ file.\ */}}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#define\ HAVE\_STDLIB\_H\ 1}}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{comment}{/*\ Define\ to\ 1\ if\ you\ have\ the\ <strings.h>\ header\ file.\ */}}
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\#define\ HAVE\_STRINGS\_H\ 1}}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \textcolor{comment}{/*\ Define\ to\ 1\ if\ you\ have\ the\ <string.h>\ header\ file.\ */}}
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#define\ HAVE\_STRING\_H\ 1}}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \textcolor{comment}{/*\ Define\ to\ 1\ if\ you\ have\ the\ `strstr'\ function.\ */}}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#define\ HAVE\_STRSTR\ 1}}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \textcolor{comment}{/*\ Define\ to\ 1\ if\ you\ have\ the\ `strtol'\ function.\ */}}
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\#define\ HAVE\_STRTOL\ 1}}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \textcolor{comment}{/*\ Define\ to\ 1\ if\ `st\_blksize'\ is\ a\ member\ of\ `struct\ stat'.\ */}}
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#define\ HAVE\_STRUCT\_STAT\_ST\_BLKSIZE\ 1}}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \textcolor{comment}{/*\ Define\ to\ 1\ if\ you\ have\ the\ <syslog.h>\ header\ file.\ */}}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#define\ HAVE\_SYSLOG\_H\ 1}}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \textcolor{comment}{/*\ Define\ to\ 1\ if\ you\ have\ the\ <sys/stat.h>\ header\ file.\ */}}
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\#define\ HAVE\_SYS\_STAT\_H\ 1}}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \textcolor{comment}{/*\ Define\ to\ 1\ if\ you\ have\ the\ <sys/time.h>\ header\ file.\ */}}
+\DoxyCodeLine{00090\ \textcolor{preprocessor}{\#define\ HAVE\_SYS\_TIME\_H\ 1}}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \textcolor{comment}{/*\ Define\ to\ 1\ if\ you\ have\ the\ <sys/types.h>\ header\ file.\ */}}
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\#define\ HAVE\_SYS\_TYPES\_H\ 1}}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \textcolor{comment}{/*\ Define\ to\ 1\ if\ you\ have\ the\ <unistd.h>\ header\ file.\ */}}
+\DoxyCodeLine{00096\ \textcolor{preprocessor}{\#define\ HAVE\_UNISTD\_H\ 1}}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \textcolor{comment}{/*\ Define\ to\ 1\ if\ you\ have\ the\ `vfork'\ function.\ */}}
+\DoxyCodeLine{00099\ \textcolor{preprocessor}{\#define\ HAVE\_VFORK\ 1}}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \textcolor{comment}{/*\ Define\ to\ 1\ if\ you\ have\ the\ <vfork.h>\ header\ file.\ */}}
+\DoxyCodeLine{00102\ \textcolor{comment}{/*\ \#undef\ HAVE\_VFORK\_H\ */}}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \textcolor{comment}{/*\ Define\ to\ 1\ if\ `fork'\ works.\ */}}
+\DoxyCodeLine{00105\ \textcolor{preprocessor}{\#define\ HAVE\_WORKING\_FORK\ 1}}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \textcolor{comment}{/*\ Define\ to\ 1\ if\ `vfork'\ works.\ */}}
+\DoxyCodeLine{00108\ \textcolor{preprocessor}{\#define\ HAVE\_WORKING\_VFORK\ 1}}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \textcolor{comment}{/*\ Define\ to\ 1\ if\ `lstat'\ dereferences\ a\ symlink\ specified\ with\ a\ trailing}}
+\DoxyCodeLine{00111\ \textcolor{comment}{\ \ \ slash.\ */}}
+\DoxyCodeLine{00112\ \textcolor{preprocessor}{\#define\ LSTAT\_FOLLOWS\_SLASHED\_SYMLINK\ 1}}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \textcolor{comment}{/*\ Name\ of\ package\ */}}
+\DoxyCodeLine{00115\ \textcolor{comment}{/*\ \#undef\ PACKAGE\ */}}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \textcolor{comment}{/*\ Define\ to\ the\ address\ where\ bug\ reports\ for\ this\ package\ should\ be\ sent.\ */}}
+\DoxyCodeLine{00118\ \textcolor{preprocessor}{\#define\ PACKAGE\_BUGREPORT\ "{}bugs@nohost.none"{}}}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \textcolor{comment}{/*\ Define\ to\ the\ full\ name\ of\ this\ package.\ */}}
+\DoxyCodeLine{00121\ \textcolor{preprocessor}{\#define\ PACKAGE\_NAME\ "{}hsencfs"{}}}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \textcolor{comment}{/*\ Define\ to\ the\ full\ name\ and\ version\ of\ this\ package.\ */}}
+\DoxyCodeLine{00124\ \textcolor{preprocessor}{\#define\ PACKAGE\_STRING\ "{}hsencfs\ 1.20"{}}}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \textcolor{comment}{/*\ Define\ to\ the\ one\ symbol\ short\ name\ of\ this\ package.\ */}}
+\DoxyCodeLine{00127\ \textcolor{preprocessor}{\#define\ PACKAGE\_TARNAME\ "{}hsencfs"{}}}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ \textcolor{comment}{/*\ Define\ to\ the\ home\ page\ for\ this\ package.\ */}}
+\DoxyCodeLine{00130\ \textcolor{preprocessor}{\#define\ PACKAGE\_URL\ "{}"{}}}
+\DoxyCodeLine{00131\ }
+\DoxyCodeLine{00132\ \textcolor{comment}{/*\ Define\ to\ the\ version\ of\ this\ package.\ */}}
+\DoxyCodeLine{00133\ \textcolor{preprocessor}{\#define\ PACKAGE\_VERSION\ "{}1.20"{}}}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \textcolor{comment}{/*\ Define\ to\ 1\ if\ you\ have\ the\ ANSI\ C\ header\ files.\ */}}
+\DoxyCodeLine{00136\ \textcolor{preprocessor}{\#define\ STDC\_HEADERS\ 1}}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ \textcolor{comment}{/*\ Version\ number\ of\ package\ */}}
+\DoxyCodeLine{00139\ \textcolor{comment}{/*\ \#undef\ VERSION\ */}}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ \textcolor{comment}{/*\ Define\ to\ `int'\ if\ <sys/types.h>\ doesn't\ define.\ */}}
+\DoxyCodeLine{00142\ \textcolor{comment}{/*\ \#undef\ gid\_t\ */}}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \textcolor{comment}{/*\ Define\ to\ `\_\_inline\_\_'\ or\ `\_\_inline'\ if\ that's\ what\ the\ C\ compiler}}
+\DoxyCodeLine{00145\ \textcolor{comment}{\ \ \ calls\ it,\ or\ to\ nothing\ if\ 'inline'\ is\ not\ supported\ under\ any\ name.\ \ */}}
+\DoxyCodeLine{00146\ \textcolor{preprocessor}{\#ifndef\ \_\_cplusplus}}
+\DoxyCodeLine{00147\ \textcolor{comment}{/*\ \#undef\ inline\ */}}
+\DoxyCodeLine{00148\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ \textcolor{comment}{/*\ Define\ to\ rpl\_malloc\ if\ the\ replacement\ function\ should\ be\ used.\ */}}
+\DoxyCodeLine{00151\ \textcolor{comment}{/*\ \#undef\ malloc\ */}}
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00153\ \textcolor{comment}{/*\ Define\ to\ `int'\ if\ <sys/types.h>\ does\ not\ define.\ */}}
+\DoxyCodeLine{00154\ \textcolor{comment}{/*\ \#undef\ mode\_t\ */}}
+\DoxyCodeLine{00155\ }
+\DoxyCodeLine{00156\ \textcolor{comment}{/*\ Define\ to\ `long\ int'\ if\ <sys/types.h>\ does\ not\ define.\ */}}
+\DoxyCodeLine{00157\ \textcolor{comment}{/*\ \#undef\ off\_t\ */}}
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00159\ \textcolor{comment}{/*\ Define\ to\ `int'\ if\ <sys/types.h>\ does\ not\ define.\ */}}
+\DoxyCodeLine{00160\ \textcolor{comment}{/*\ \#undef\ pid\_t\ */}}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \textcolor{comment}{/*\ Define\ to\ `unsigned\ int'\ if\ <sys/types.h>\ does\ not\ define.\ */}}
+\DoxyCodeLine{00163\ \textcolor{comment}{/*\ \#undef\ size\_t\ */}}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \textcolor{comment}{/*\ Define\ to\ `int'\ if\ <sys/types.h>\ does\ not\ define.\ */}}
+\DoxyCodeLine{00166\ \textcolor{comment}{/*\ \#undef\ ssize\_t\ */}}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ \textcolor{comment}{/*\ Define\ to\ `int'\ if\ <sys/types.h>\ doesn't\ define.\ */}}
+\DoxyCodeLine{00169\ \textcolor{comment}{/*\ \#undef\ uid\_t\ */}}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ \textcolor{comment}{/*\ Define\ as\ `fork'\ if\ `vfork'\ does\ not\ work.\ */}}
+\DoxyCodeLine{00172\ \textcolor{comment}{/*\ \#undef\ vfork\ */}}
+
+\end{DoxyCode}

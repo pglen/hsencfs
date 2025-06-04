@@ -1,0 +1,60 @@
+\hypertarget{gen__rsa_8c}{}\doxysection{study/gen\+\_\+rsa.c File Reference}
+\label{gen__rsa_8c}\index{study/gen\_rsa.c@{study/gen\_rsa.c}}
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$openssl/rsa.\+h$>$}\newline
+{\ttfamily \#include $<$openssl/pem.\+h$>$}\newline
+{\ttfamily \#include $<$openssl/err.\+h$>$}\newline
+{\ttfamily \#include $<$openssl/bio.\+h$>$}\newline
+Include dependency graph for gen\+\_\+rsa.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{gen__rsa_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{gen__rsa_8c_a01912617a1817b796f1c4d54bad6a9eb}{gen\+\_\+keys}} (int \mbox{\hyperlink{EVP__PKEY__RSA__keygen_8c_aa6da25dae1e7263af226d4b026811d7f}{bits}}, char $\ast$\mbox{\hyperlink{rsa__exa_8c_abf07c5422ac687b745b881d020c46ca3}{privkey}}, int privlen, char $\ast$\mbox{\hyperlink{rsa__exa_8c_ae4d04646f425b78af0bac05b67601bc4}{pubkey}}, int publen)
+\item 
+int \mbox{\hyperlink{gen__rsa_8c_ae66f6b31b5ad750f1fe042a706a4e3d4}{main}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+char \mbox{\hyperlink{gen__rsa_8c_a65117d8908dd1216b356192ed65dd8e9}{priv}} \mbox{[}4096\mbox{]}
+\item 
+char \mbox{\hyperlink{gen__rsa_8c_aeec71bce2f0904b6e08bde7819a89ddd}{pub}} \mbox{[}4096\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{gen__rsa_8c_a01912617a1817b796f1c4d54bad6a9eb}\label{gen__rsa_8c_a01912617a1817b796f1c4d54bad6a9eb}} 
+\index{gen\_rsa.c@{gen\_rsa.c}!gen\_keys@{gen\_keys}}
+\index{gen\_keys@{gen\_keys}!gen\_rsa.c@{gen\_rsa.c}}
+\doxysubsubsection{\texorpdfstring{gen\_keys()}{gen\_keys()}}
+{\footnotesize\ttfamily int gen\+\_\+keys (\begin{DoxyParamCaption}\item[{int}]{bits,  }\item[{char $\ast$}]{privkey,  }\item[{int}]{privlen,  }\item[{char $\ast$}]{pubkey,  }\item[{int}]{publen }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{gen__rsa_8c_ae66f6b31b5ad750f1fe042a706a4e3d4}\label{gen__rsa_8c_ae66f6b31b5ad750f1fe042a706a4e3d4}} 
+\index{gen\_rsa.c@{gen\_rsa.c}!main@{main}}
+\index{main@{main}!gen\_rsa.c@{gen\_rsa.c}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{gen__rsa_8c_a65117d8908dd1216b356192ed65dd8e9}\label{gen__rsa_8c_a65117d8908dd1216b356192ed65dd8e9}} 
+\index{gen\_rsa.c@{gen\_rsa.c}!priv@{priv}}
+\index{priv@{priv}!gen\_rsa.c@{gen\_rsa.c}}
+\doxysubsubsection{\texorpdfstring{priv}{priv}}
+{\footnotesize\ttfamily char priv\mbox{[}4096\mbox{]}}
+
+\mbox{\Hypertarget{gen__rsa_8c_aeec71bce2f0904b6e08bde7819a89ddd}\label{gen__rsa_8c_aeec71bce2f0904b6e08bde7819a89ddd}} 
+\index{gen\_rsa.c@{gen\_rsa.c}!pub@{pub}}
+\index{pub@{pub}!gen\_rsa.c@{gen\_rsa.c}}
+\doxysubsubsection{\texorpdfstring{pub}{pub}}
+{\footnotesize\ttfamily char pub\mbox{[}4096\mbox{]}}
+

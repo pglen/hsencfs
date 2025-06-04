@@ -1,0 +1,64 @@
+\hypertarget{hsencsb_8h_source}{}\doxysection{hsencsb.\+h}
+\label{hsencsb_8h_source}\index{src/hsencsb.h@{src/hsencsb.h}}
+\mbox{\hyperlink{hsencsb_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ \textcolor{comment}{/*\ =====[\ hsencsb\ ]========================================================}}
+\DoxyCodeLine{00003\ \textcolor{comment}{}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ \ \ File\ Name:\ \ \ \ \ \ \ hsencsb.h}}
+\DoxyCodeLine{00005\ \textcolor{comment}{}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ \ Description:}}
+\DoxyCodeLine{00007\ \textcolor{comment}{}}
+\DoxyCodeLine{00008\ \textcolor{comment}{\ \ \ Revisions:}}
+\DoxyCodeLine{00009\ \textcolor{comment}{}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ \ \ \ \ REV\ \ \ \ \ \ \ DATE\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ BY\ \ \ \ \ \ \ \ \ \ \ DESCRIPTION}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ \ \ \ \ -\/-\/-\/-\/\ \ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ \ \ \ \ \ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ \ \ \ \ \ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00012\ \textcolor{comment}{\ \ \ \ \ \ 0.00\ \ Sat\ 30.Apr.2022\ \ \ \ \ \ Peter\ Glen\ \ \ \ \ \ Initial\ version.}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ \ \ \ \ 0.00\ \ Sat\ 30.Apr.2022\ \ \ \ \ \ Peter\ Glen\ \ \ \ \ \ moved\ header\ items}}
+\DoxyCodeLine{00014\ \textcolor{comment}{}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ =======================================================================\ */}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ \ HSENCFS\_MAGIC\ \ 0x34231278}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct__sideblock__t}{\_sideblock\_t}}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \{}
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keywordtype}{char}\ \ \ \ \mbox{\hyperlink{struct__sideblock__t_a80ce2b111fcbeef012a7ddf6de652b3c}{sep}}[4];\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ This\ way\ it\ shows\ up\ nicely\ on\ screen\ dumps}}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \mbox{\hyperlink{struct__sideblock__t_a2abfc7c4605a9537d626b0426e0a0a76}{magic}};\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Identify}}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \mbox{\hyperlink{struct__sideblock__t_a53e0910cee73d5f45896704b24019f54}{serial}};\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Belongs\ to\ this\ block}}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \mbox{\hyperlink{struct__sideblock__t_afbf4c5674e99fffcb399c38d3b0a31a7}{protocol}};\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ name\ of\ encryption;\ 0xaa\ for\ bluepoint}}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \mbox{\hyperlink{struct__sideblock__t_a8b99d3c0919658a22c2e7b57b5cd9bc1}{version}};\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Version\ of\ encryption\ 1\ for\ now}}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \mbox{\hyperlink{struct__sideblock__t_a8062e465acaae101205505df731f6c4f}{flen}};}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \mbox{\hyperlink{struct__sideblock__t_a327a728074c4cf7481a0d523a73c1eb0}{misc2}};}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keywordtype}{char}\ \ \ \ \mbox{\hyperlink{struct__sideblock__t_ad4dc777584ace0a179141e2b0d0f3e1a}{sep2}}[4];\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ This\ way\ it\ shows\ up\ nicely\ on\ screen\ dumps}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \}\ \mbox{\hyperlink{hsencsb_8h_a09908504c5dd6e09cf90ebd54634f546}{sideblock\_t}};}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00034\ \textcolor{comment}{//\ Init\ sideblock\ structure,\ unified}}
+\DoxyCodeLine{00035\ \textcolor{comment}{//\ serial\ is\ -\/1\ so\ it\ does\ not\ match\ any\ block}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#define\ INIT\_SIDEBLOCK(sb)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\ \ \ \ memset(\&(sb),\ '\(\backslash\)0',\ sizeof((sb)));\ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\ \ \ \ (sb).magic\ =\ \ HSENCFS\_MAGIC;\ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\ \ \ \ (sb).serial\ \ \ =\ -\/1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\ \ \ \ (sb).protocol\ =\ 0xaa;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\ \ \ \ (sb).version\ =\ 1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\ \ \ \ (sb).flen\ =\ 0;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\ \ \ \ memcpy((sb).sep,\ \ "{}SB0\(\backslash\)n"{}},\ 4);\ \ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{00045\ \ \ \ \ memcpy((sb).sep2,\ "{}SB0\(\backslash\)n"{},\ 4);}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \mbox{\hyperlink{struct__sideblock__t}{sideblock\_t}}\ *\mbox{\hyperlink{hsencsb_8h_ac9dc4ebf89e63d764ca796876a1dfc65}{alloc\_sideblock}}();}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \textcolor{keywordtype}{char}\ \ \ \ *\mbox{\hyperlink{hsencsb_8h_a38041f9fff642695e4bfcacd3cdf4bb3}{get\_sidename}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *path);}
+\DoxyCodeLine{00050\ \textcolor{keywordtype}{size\_t}\ \ \mbox{\hyperlink{hsencsb_8h_a8222070e7217b39cad72f15ffbc0dc3d}{get\_sidelen}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *path);}
+\DoxyCodeLine{00051\ \textcolor{keywordtype}{int}\ \ \ \ \ \mbox{\hyperlink{hsencsb_8h_a8fc245e8b809a0b8f3ac2a355333e201}{read\_sideblock}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *path,\ \mbox{\hyperlink{struct__sideblock__t}{sideblock\_t}}\ *psb);}
+\DoxyCodeLine{00052\ \textcolor{keywordtype}{int}\ \ \ \ \ \mbox{\hyperlink{hsencsb_8h_ae2574dc453c154e349d8998b8ea33f8b}{write\_sideblock}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *path,\ \mbox{\hyperlink{struct__sideblock__t}{sideblock\_t}}\ *psb);}
+\DoxyCodeLine{00053\ \textcolor{keywordtype}{int}\ \ \ \ \ \mbox{\hyperlink{hsencsb_8h_a0423d1ae7528def173fca9666021cab8}{create\_sideblock}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *path);}
+\DoxyCodeLine{00054\ \textcolor{keywordtype}{void}\ \ \ \ \mbox{\hyperlink{hsencsb_8h_af24af2d1b035d5c2e40ccacaa691c068}{kill\_sideblock}}(\mbox{\hyperlink{struct__sideblock__t}{sideblock\_t}}\ *psb);}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{comment}{//\ EOF}}
+\DoxyCodeLine{00058\ }
+
+\end{DoxyCode}

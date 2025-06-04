@@ -1,0 +1,296 @@
+\hypertarget{hsencfs_8c}{}\doxysection{src/hsencfs.c File Reference}
+\label{hsencfs_8c}\index{src/hsencfs.c@{src/hsencfs.c}}
+{\ttfamily \#include $<$fuse3/fuse.\+h$>$}\newline
+{\ttfamily \#include $<$fuse3/fuse\+\_\+lowlevel.\+h$>$}\newline
+{\ttfamily \#include $<$ulockmgr.\+h$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$limits.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+{\ttfamily \#include $<$fcntl.\+h$>$}\newline
+{\ttfamily \#include $<$dirent.\+h$>$}\newline
+{\ttfamily \#include $<$errno.\+h$>$}\newline
+{\ttfamily \#include $<$syslog.\+h$>$}\newline
+{\ttfamily \#include $<$libgen.\+h$>$}\newline
+{\ttfamily \#include $<$sys/time.\+h$>$}\newline
+{\ttfamily \#include $<$sys/mount.\+h$>$}\newline
+{\ttfamily \#include $<$signal.\+h$>$}\newline
+{\ttfamily \#include $<$getopt.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}base64.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hsutils.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hsencsb.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hsencfs.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}bluepoint2.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hs\+\_\+crypt.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hsencop.\+c\char`\"{}}\newline
+Include dependency graph for hsencfs.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{hsencfs_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{hsencfs_8c_a0919197af2e154da2c05727b6d87cbda}{FUSE\+\_\+\+USE\+\_\+\+VERSION}}~31
+\item 
+\#define \mbox{\hyperlink{hsencfs_8c_a369266c24eacffb87046522897a570d5}{\+\_\+\+GNU\+\_\+\+SOURCE}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{hsencfs_8c_aae1c872491c8aaf5d990b5a868cb22ca}{closefrom}} (int lowfd)
+\item 
+int \mbox{\hyperlink{hsencfs_8c_ad672f94f695d37673b01c6220d5009e2}{helpfunc}} ()
+\item 
+int \mbox{\hyperlink{hsencfs_8c_a4150a0f87336cc611a8527024b70fa85}{test\+\_\+mountpoint}} (char $\ast$ppp, char $\ast$mpdir)
+\item 
+int \mbox{\hyperlink{hsencfs_8c_a503ec8f684184119cf87384d733d9243}{test\+\_\+mountsecret}} (char $\ast$ppp, char $\ast$mpdir)
+\item 
+void \mbox{\hyperlink{hsencfs_8c_a0ee60e57f1e2617c4d71812e81f5cddb}{parse\+\_\+comline}} (int argc, char $\ast$argv\mbox{[}$\,$\mbox{]})
+\item 
+void \mbox{\hyperlink{hsencfs_8c_ae5e3941bd368e275474faa2e2b303369}{split\+\_\+path}} (const char $\ast$path, char $\ast$dir, char $\ast$fname, char $\ast$ext)
+\item 
+void \mbox{\hyperlink{hsencfs_8c_a7bb828d0a827efc3d518b2c79b5cc0a7}{sigterm}} (int sig)
+\item 
+void \mbox{\hyperlink{hsencfs_8c_a663893ef10734c0143cbf812c55fcafd}{sigint}} (int sig)
+\item 
+int \mbox{\hyperlink{hsencfs_8c_a0ddf1224851353fc92bfbff6f499fa97}{main}} (int argc, char $\ast$argv\mbox{[}$\,$\mbox{]})
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{hsencfs_8c_a0b2caeb4b6f130be43e5a2f0267dd453}{verbose}} = 0
+\item 
+int \mbox{\hyperlink{hsencfs_8c_afb19b851dbcd1447c226a8a98c26979d}{loglevel}} = 0
+\item 
+int \mbox{\hyperlink{hsencfs_8c_a861004bc28c3cc6b192f9119a47276ab}{nobg}} = 0
+\item 
+char \mbox{\hyperlink{hsencfs_8c_aeb7fcf49c3dfbcfb1d35684f41383505}{passx}} \mbox{[}\mbox{\hyperlink{hsutils_8h_a42c6d750183b663d674d59240e44f415}{MAXPASSLEN}}\mbox{]}
+\item 
+int \mbox{\hyperlink{hsencfs_8c_ad29d2259942853507dff3a3e3c05535a}{plen}} = sizeof(\mbox{\hyperlink{hsencfs_8c_aeb7fcf49c3dfbcfb1d35684f41383505}{passx}})
+\item 
+char \mbox{\hyperlink{hsencfs_8c_aa15929681f30cc2d9cbf2701366c2cef}{mountpoint}} \mbox{[}PATH\+\_\+\+MAX\mbox{]}
+\item 
+char \mbox{\hyperlink{hsencfs_8c_a06d4e4faffab04191cd1d424ad03f1b9}{mountsecret}} \mbox{[}PATH\+\_\+\+MAX\mbox{]}
+\item 
+char \mbox{\hyperlink{hsencfs_8c_ab8ce76650fd4ff85b590ca7d9202ba51}{fullpath}} \mbox{[}PATH\+\_\+\+MAX\mbox{]}
+\item 
+char \mbox{\hyperlink{hsencfs_8c_a08b84623cf75b663c177eaedde2e4f6f}{startdir}} \mbox{[}PATH\+\_\+\+MAX\mbox{]}
+\item 
+char \mbox{\hyperlink{hsencfs_8c_a1dbdb52643dcef651fb7117f16a95439}{fff}} \mbox{[}PATH\+\_\+\+MAX\mbox{]}
+\item 
+char \mbox{\hyperlink{hsencfs_8c_afe9be5c4d54800f0a4e2c4ac65f1da41}{eee}} \mbox{[}PATH\+\_\+\+MAX\mbox{]}
+\item 
+char \mbox{\hyperlink{hsencfs_8c_aa862f7f7b6e83fb3986f7be3b09a9caa}{passprog}} \mbox{[}PATH\+\_\+\+MAX\mbox{]}
+\item 
+char \mbox{\hyperlink{hsencfs_8c_a2afa97fe068cd1250511f46210233c05}{passback}} \mbox{[}PATH\+\_\+\+MAX\mbox{]}
+\item 
+char $\ast$ \mbox{\hyperlink{hsencfs_8c_ac7d203a28558e844ded62b6170031bd2}{myext}} = \char`\"{}.datx\char`\"{}
+\item 
+char \mbox{\hyperlink{hsencfs_8c_a9d22394e80281a076c2d925cdfb132c6}{progname}} \mbox{[}$\,$\mbox{]} = \mbox{\hyperlink{hsutils_8h_a404b155ae7d5d97cf5ffd2257d50d951}{HS\+\_\+\+PROGNAME}}
+\begin{DoxyCompactList}\small\item\em We use this as a string to obfuscate the password. Do not change. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{hsencfs_8c_af6b28a43c47ade53c4964127f3482119}{pg\+\_\+debug}} = 0
+\item 
+int \mbox{\hyperlink{hsencfs_8c_a2b4dcc5b915c5691b740f64b240dcd42}{ondemand}} = 1
+\item 
+struct fuse $\ast$ \mbox{\hyperlink{hsencfs_8c_ada4ac1a8facd49f112d8e20326e8205e}{fuse\+\_\+op}}
+\item 
+struct fuse\+\_\+session $\ast$ \mbox{\hyperlink{hsencfs_8c_aa6e17e691ad1a5a3757b0d0a0c5873ee}{fuse\+\_\+sess}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{hsencfs_8c_a369266c24eacffb87046522897a570d5}\label{hsencfs_8c_a369266c24eacffb87046522897a570d5}} 
+\index{hsencfs.c@{hsencfs.c}!\_GNU\_SOURCE@{\_GNU\_SOURCE}}
+\index{\_GNU\_SOURCE@{\_GNU\_SOURCE}!hsencfs.c@{hsencfs.c}}
+\doxysubsubsection{\texorpdfstring{\_GNU\_SOURCE}{\_GNU\_SOURCE}}
+{\footnotesize\ttfamily \#define \+\_\+\+GNU\+\_\+\+SOURCE}
+
+\mbox{\Hypertarget{hsencfs_8c_a0919197af2e154da2c05727b6d87cbda}\label{hsencfs_8c_a0919197af2e154da2c05727b6d87cbda}} 
+\index{hsencfs.c@{hsencfs.c}!FUSE\_USE\_VERSION@{FUSE\_USE\_VERSION}}
+\index{FUSE\_USE\_VERSION@{FUSE\_USE\_VERSION}!hsencfs.c@{hsencfs.c}}
+\doxysubsubsection{\texorpdfstring{FUSE\_USE\_VERSION}{FUSE\_USE\_VERSION}}
+{\footnotesize\ttfamily \#define FUSE\+\_\+\+USE\+\_\+\+VERSION~31}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{hsencfs_8c_aae1c872491c8aaf5d990b5a868cb22ca}\label{hsencfs_8c_aae1c872491c8aaf5d990b5a868cb22ca}} 
+\index{hsencfs.c@{hsencfs.c}!closefrom@{closefrom}}
+\index{closefrom@{closefrom}!hsencfs.c@{hsencfs.c}}
+\doxysubsubsection{\texorpdfstring{closefrom()}{closefrom()}}
+{\footnotesize\ttfamily void closefrom (\begin{DoxyParamCaption}\item[{int}]{lowfd }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hsencfs_8c_ad672f94f695d37673b01c6220d5009e2}\label{hsencfs_8c_ad672f94f695d37673b01c6220d5009e2}} 
+\index{hsencfs.c@{hsencfs.c}!helpfunc@{helpfunc}}
+\index{helpfunc@{helpfunc}!hsencfs.c@{hsencfs.c}}
+\doxysubsubsection{\texorpdfstring{helpfunc()}{helpfunc()}}
+{\footnotesize\ttfamily int helpfunc (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hsencfs_8c_a0ddf1224851353fc92bfbff6f499fa97}\label{hsencfs_8c_a0ddf1224851353fc92bfbff6f499fa97}} 
+\index{hsencfs.c@{hsencfs.c}!main@{main}}
+\index{main@{main}!hsencfs.c@{hsencfs.c}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{char $\ast$}]{argv\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hsencfs_8c_a0ee60e57f1e2617c4d71812e81f5cddb}\label{hsencfs_8c_a0ee60e57f1e2617c4d71812e81f5cddb}} 
+\index{hsencfs.c@{hsencfs.c}!parse\_comline@{parse\_comline}}
+\index{parse\_comline@{parse\_comline}!hsencfs.c@{hsencfs.c}}
+\doxysubsubsection{\texorpdfstring{parse\_comline()}{parse\_comline()}}
+{\footnotesize\ttfamily void parse\+\_\+comline (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{char $\ast$}]{argv\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hsencfs_8c_a663893ef10734c0143cbf812c55fcafd}\label{hsencfs_8c_a663893ef10734c0143cbf812c55fcafd}} 
+\index{hsencfs.c@{hsencfs.c}!sigint@{sigint}}
+\index{sigint@{sigint}!hsencfs.c@{hsencfs.c}}
+\doxysubsubsection{\texorpdfstring{sigint()}{sigint()}}
+{\footnotesize\ttfamily void sigint (\begin{DoxyParamCaption}\item[{int}]{sig }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hsencfs_8c_a7bb828d0a827efc3d518b2c79b5cc0a7}\label{hsencfs_8c_a7bb828d0a827efc3d518b2c79b5cc0a7}} 
+\index{hsencfs.c@{hsencfs.c}!sigterm@{sigterm}}
+\index{sigterm@{sigterm}!hsencfs.c@{hsencfs.c}}
+\doxysubsubsection{\texorpdfstring{sigterm()}{sigterm()}}
+{\footnotesize\ttfamily void sigterm (\begin{DoxyParamCaption}\item[{int}]{sig }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hsencfs_8c_ae5e3941bd368e275474faa2e2b303369}\label{hsencfs_8c_ae5e3941bd368e275474faa2e2b303369}} 
+\index{hsencfs.c@{hsencfs.c}!split\_path@{split\_path}}
+\index{split\_path@{split\_path}!hsencfs.c@{hsencfs.c}}
+\doxysubsubsection{\texorpdfstring{split\_path()}{split\_path()}}
+{\footnotesize\ttfamily void split\+\_\+path (\begin{DoxyParamCaption}\item[{const char $\ast$}]{path,  }\item[{char $\ast$}]{dir,  }\item[{char $\ast$}]{fname,  }\item[{char $\ast$}]{ext }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hsencfs_8c_a4150a0f87336cc611a8527024b70fa85}\label{hsencfs_8c_a4150a0f87336cc611a8527024b70fa85}} 
+\index{hsencfs.c@{hsencfs.c}!test\_mountpoint@{test\_mountpoint}}
+\index{test\_mountpoint@{test\_mountpoint}!hsencfs.c@{hsencfs.c}}
+\doxysubsubsection{\texorpdfstring{test\_mountpoint()}{test\_mountpoint()}}
+{\footnotesize\ttfamily int test\+\_\+mountpoint (\begin{DoxyParamCaption}\item[{char $\ast$}]{ppp,  }\item[{char $\ast$}]{mpdir }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hsencfs_8c_a503ec8f684184119cf87384d733d9243}\label{hsencfs_8c_a503ec8f684184119cf87384d733d9243}} 
+\index{hsencfs.c@{hsencfs.c}!test\_mountsecret@{test\_mountsecret}}
+\index{test\_mountsecret@{test\_mountsecret}!hsencfs.c@{hsencfs.c}}
+\doxysubsubsection{\texorpdfstring{test\_mountsecret()}{test\_mountsecret()}}
+{\footnotesize\ttfamily int test\+\_\+mountsecret (\begin{DoxyParamCaption}\item[{char $\ast$}]{ppp,  }\item[{char $\ast$}]{mpdir }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{hsencfs_8c_afe9be5c4d54800f0a4e2c4ac65f1da41}\label{hsencfs_8c_afe9be5c4d54800f0a4e2c4ac65f1da41}} 
+\index{hsencfs.c@{hsencfs.c}!eee@{eee}}
+\index{eee@{eee}!hsencfs.c@{hsencfs.c}}
+\doxysubsubsection{\texorpdfstring{eee}{eee}}
+{\footnotesize\ttfamily char eee\mbox{[}PATH\+\_\+\+MAX\mbox{]}}
+
+\mbox{\Hypertarget{hsencfs_8c_a1dbdb52643dcef651fb7117f16a95439}\label{hsencfs_8c_a1dbdb52643dcef651fb7117f16a95439}} 
+\index{hsencfs.c@{hsencfs.c}!fff@{fff}}
+\index{fff@{fff}!hsencfs.c@{hsencfs.c}}
+\doxysubsubsection{\texorpdfstring{fff}{fff}}
+{\footnotesize\ttfamily char fff\mbox{[}PATH\+\_\+\+MAX\mbox{]}}
+
+\mbox{\Hypertarget{hsencfs_8c_ab8ce76650fd4ff85b590ca7d9202ba51}\label{hsencfs_8c_ab8ce76650fd4ff85b590ca7d9202ba51}} 
+\index{hsencfs.c@{hsencfs.c}!fullpath@{fullpath}}
+\index{fullpath@{fullpath}!hsencfs.c@{hsencfs.c}}
+\doxysubsubsection{\texorpdfstring{fullpath}{fullpath}}
+{\footnotesize\ttfamily char fullpath\mbox{[}PATH\+\_\+\+MAX\mbox{]}}
+
+\mbox{\Hypertarget{hsencfs_8c_ada4ac1a8facd49f112d8e20326e8205e}\label{hsencfs_8c_ada4ac1a8facd49f112d8e20326e8205e}} 
+\index{hsencfs.c@{hsencfs.c}!fuse\_op@{fuse\_op}}
+\index{fuse\_op@{fuse\_op}!hsencfs.c@{hsencfs.c}}
+\doxysubsubsection{\texorpdfstring{fuse\_op}{fuse\_op}}
+{\footnotesize\ttfamily struct fuse$\ast$ fuse\+\_\+op}
+
+\mbox{\Hypertarget{hsencfs_8c_aa6e17e691ad1a5a3757b0d0a0c5873ee}\label{hsencfs_8c_aa6e17e691ad1a5a3757b0d0a0c5873ee}} 
+\index{hsencfs.c@{hsencfs.c}!fuse\_sess@{fuse\_sess}}
+\index{fuse\_sess@{fuse\_sess}!hsencfs.c@{hsencfs.c}}
+\doxysubsubsection{\texorpdfstring{fuse\_sess}{fuse\_sess}}
+{\footnotesize\ttfamily struct fuse\+\_\+session$\ast$ fuse\+\_\+sess}
+
+\mbox{\Hypertarget{hsencfs_8c_afb19b851dbcd1447c226a8a98c26979d}\label{hsencfs_8c_afb19b851dbcd1447c226a8a98c26979d}} 
+\index{hsencfs.c@{hsencfs.c}!loglevel@{loglevel}}
+\index{loglevel@{loglevel}!hsencfs.c@{hsencfs.c}}
+\doxysubsubsection{\texorpdfstring{loglevel}{loglevel}}
+{\footnotesize\ttfamily int loglevel = 0}
+
+\mbox{\Hypertarget{hsencfs_8c_aa15929681f30cc2d9cbf2701366c2cef}\label{hsencfs_8c_aa15929681f30cc2d9cbf2701366c2cef}} 
+\index{hsencfs.c@{hsencfs.c}!mountpoint@{mountpoint}}
+\index{mountpoint@{mountpoint}!hsencfs.c@{hsencfs.c}}
+\doxysubsubsection{\texorpdfstring{mountpoint}{mountpoint}}
+{\footnotesize\ttfamily char mountpoint\mbox{[}PATH\+\_\+\+MAX\mbox{]}}
+
+\mbox{\Hypertarget{hsencfs_8c_a06d4e4faffab04191cd1d424ad03f1b9}\label{hsencfs_8c_a06d4e4faffab04191cd1d424ad03f1b9}} 
+\index{hsencfs.c@{hsencfs.c}!mountsecret@{mountsecret}}
+\index{mountsecret@{mountsecret}!hsencfs.c@{hsencfs.c}}
+\doxysubsubsection{\texorpdfstring{mountsecret}{mountsecret}}
+{\footnotesize\ttfamily char mountsecret\mbox{[}PATH\+\_\+\+MAX\mbox{]}}
+
+\mbox{\Hypertarget{hsencfs_8c_ac7d203a28558e844ded62b6170031bd2}\label{hsencfs_8c_ac7d203a28558e844ded62b6170031bd2}} 
+\index{hsencfs.c@{hsencfs.c}!myext@{myext}}
+\index{myext@{myext}!hsencfs.c@{hsencfs.c}}
+\doxysubsubsection{\texorpdfstring{myext}{myext}}
+{\footnotesize\ttfamily char$\ast$ myext = \char`\"{}.datx\char`\"{}}
+
+\mbox{\Hypertarget{hsencfs_8c_a861004bc28c3cc6b192f9119a47276ab}\label{hsencfs_8c_a861004bc28c3cc6b192f9119a47276ab}} 
+\index{hsencfs.c@{hsencfs.c}!nobg@{nobg}}
+\index{nobg@{nobg}!hsencfs.c@{hsencfs.c}}
+\doxysubsubsection{\texorpdfstring{nobg}{nobg}}
+{\footnotesize\ttfamily int nobg = 0}
+
+\mbox{\Hypertarget{hsencfs_8c_a2b4dcc5b915c5691b740f64b240dcd42}\label{hsencfs_8c_a2b4dcc5b915c5691b740f64b240dcd42}} 
+\index{hsencfs.c@{hsencfs.c}!ondemand@{ondemand}}
+\index{ondemand@{ondemand}!hsencfs.c@{hsencfs.c}}
+\doxysubsubsection{\texorpdfstring{ondemand}{ondemand}}
+{\footnotesize\ttfamily int ondemand = 1}
+
+\mbox{\Hypertarget{hsencfs_8c_a2afa97fe068cd1250511f46210233c05}\label{hsencfs_8c_a2afa97fe068cd1250511f46210233c05}} 
+\index{hsencfs.c@{hsencfs.c}!passback@{passback}}
+\index{passback@{passback}!hsencfs.c@{hsencfs.c}}
+\doxysubsubsection{\texorpdfstring{passback}{passback}}
+{\footnotesize\ttfamily char passback}
+
+\mbox{\Hypertarget{hsencfs_8c_aa862f7f7b6e83fb3986f7be3b09a9caa}\label{hsencfs_8c_aa862f7f7b6e83fb3986f7be3b09a9caa}} 
+\index{hsencfs.c@{hsencfs.c}!passprog@{passprog}}
+\index{passprog@{passprog}!hsencfs.c@{hsencfs.c}}
+\doxysubsubsection{\texorpdfstring{passprog}{passprog}}
+{\footnotesize\ttfamily char passprog}
+
+\mbox{\Hypertarget{hsencfs_8c_aeb7fcf49c3dfbcfb1d35684f41383505}\label{hsencfs_8c_aeb7fcf49c3dfbcfb1d35684f41383505}} 
+\index{hsencfs.c@{hsencfs.c}!passx@{passx}}
+\index{passx@{passx}!hsencfs.c@{hsencfs.c}}
+\doxysubsubsection{\texorpdfstring{passx}{passx}}
+{\footnotesize\ttfamily char passx\mbox{[}\mbox{\hyperlink{hsutils_8h_a42c6d750183b663d674d59240e44f415}{MAXPASSLEN}}\mbox{]}}
+
+\mbox{\Hypertarget{hsencfs_8c_af6b28a43c47ade53c4964127f3482119}\label{hsencfs_8c_af6b28a43c47ade53c4964127f3482119}} 
+\index{hsencfs.c@{hsencfs.c}!pg\_debug@{pg\_debug}}
+\index{pg\_debug@{pg\_debug}!hsencfs.c@{hsencfs.c}}
+\doxysubsubsection{\texorpdfstring{pg\_debug}{pg\_debug}}
+{\footnotesize\ttfamily int pg\+\_\+debug = 0}
+
+\mbox{\Hypertarget{hsencfs_8c_ad29d2259942853507dff3a3e3c05535a}\label{hsencfs_8c_ad29d2259942853507dff3a3e3c05535a}} 
+\index{hsencfs.c@{hsencfs.c}!plen@{plen}}
+\index{plen@{plen}!hsencfs.c@{hsencfs.c}}
+\doxysubsubsection{\texorpdfstring{plen}{plen}}
+{\footnotesize\ttfamily int plen = sizeof(\mbox{\hyperlink{hsencfs_8c_aeb7fcf49c3dfbcfb1d35684f41383505}{passx}})}
+
+\mbox{\Hypertarget{hsencfs_8c_a9d22394e80281a076c2d925cdfb132c6}\label{hsencfs_8c_a9d22394e80281a076c2d925cdfb132c6}} 
+\index{hsencfs.c@{hsencfs.c}!progname@{progname}}
+\index{progname@{progname}!hsencfs.c@{hsencfs.c}}
+\doxysubsubsection{\texorpdfstring{progname}{progname}}
+{\footnotesize\ttfamily char progname\mbox{[}$\,$\mbox{]} = \mbox{\hyperlink{hsutils_8h_a404b155ae7d5d97cf5ffd2257d50d951}{HS\+\_\+\+PROGNAME}}}
+
+
+
+We use this as a string to obfuscate the password. Do not change. 
+
+We use this string to obfuscate the password. Do not change. \mbox{\Hypertarget{hsencfs_8c_a08b84623cf75b663c177eaedde2e4f6f}\label{hsencfs_8c_a08b84623cf75b663c177eaedde2e4f6f}} 
+\index{hsencfs.c@{hsencfs.c}!startdir@{startdir}}
+\index{startdir@{startdir}!hsencfs.c@{hsencfs.c}}
+\doxysubsubsection{\texorpdfstring{startdir}{startdir}}
+{\footnotesize\ttfamily char startdir\mbox{[}PATH\+\_\+\+MAX\mbox{]}}
+
+\mbox{\Hypertarget{hsencfs_8c_a0b2caeb4b6f130be43e5a2f0267dd453}\label{hsencfs_8c_a0b2caeb4b6f130be43e5a2f0267dd453}} 
+\index{hsencfs.c@{hsencfs.c}!verbose@{verbose}}
+\index{verbose@{verbose}!hsencfs.c@{hsencfs.c}}
+\doxysubsubsection{\texorpdfstring{verbose}{verbose}}
+{\footnotesize\ttfamily int verbose = 0}
+
