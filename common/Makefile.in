@@ -108,6 +108,7 @@ PROGRAMS = $(bin_PROGRAMS) $(noinst_PROGRAMS)
 am__dirstamp = $(am__leading_dot)dirstamp
 am_bpdec2_OBJECTS = bpdec2-bpdec2.$(OBJEXT) bpdec2-bp2com.$(OBJEXT) \
 	../common/bpdec2-hsutils.$(OBJEXT) \
+	../src/bpdec2-base64.$(OBJEXT) \
 	../common/bpdec2-hspass.$(OBJEXT) \
 	../bluepoint/bpdec2-hs_crypt.$(OBJEXT) \
 	../bluepoint/bpdec2-bluepoint2.$(OBJEXT)
@@ -116,6 +117,7 @@ bpdec2_LINK = $(CCLD) $(bpdec2_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
 am_bpenc2_OBJECTS = bpenc2-bpenc2.$(OBJEXT) bpenc2-bp2com.$(OBJEXT) \
 	../common/bpenc2-hsutils.$(OBJEXT) \
+	../src/bpenc2-base64.$(OBJEXT) \
 	../common/bpenc2-hspass.$(OBJEXT) \
 	../bluepoint/bpenc2-hs_crypt.$(OBJEXT) \
 	../bluepoint/bpenc2-bluepoint2.$(OBJEXT)
@@ -154,6 +156,8 @@ am__depfiles_remade = ../bluepoint/$(DEPDIR)/bpdec2-bluepoint2.Po \
 	../common/$(DEPDIR)/bpdec2-hsutils.Po \
 	../common/$(DEPDIR)/bpenc2-hspass.Po \
 	../common/$(DEPDIR)/bpenc2-hsutils.Po \
+	../src/$(DEPDIR)/bpdec2-base64.Po \
+	../src/$(DEPDIR)/bpenc2-base64.Po \
 	../src/$(DEPDIR)/testpass-base64.Po \
 	./$(DEPDIR)/bpdec2-bp2com.Po ./$(DEPDIR)/bpdec2-bpdec2.Po \
 	./$(DEPDIR)/bpenc2-bp2com.Po ./$(DEPDIR)/bpenc2-bpenc2.Po \
@@ -313,12 +317,14 @@ testpassdir = .
 testpass_CFLAGS = -D_FILE_OFFSET_BITS=64 -O2 -I$(srcdir)/bluepoint
 testpass_LDADD = -lulockmgr -lfuse3  -lcrypto -lssl
 testpass_SOURCES = testpass.c hsutils.c hspass.c \
-          ../bluepoint/bluepoint2.c ../src/base64.c
+          ../src/base64   \
+                        ../bluepoint/bluepoint2.c ../src/base64.c
 
 
 # Was in the tools directory
 bpenc2dir = .
 bpenc2_SOURCES = bpenc2.c  bp2com.c  ../common/hsutils.c \
+                        ../src/base64.c   \
                         ../common/hspass.c        \
                         ../bluepoint/hs_crypt.c   \
                         ../bluepoint/hs_crypt.h   \
@@ -331,7 +337,9 @@ bpenc2_CFLAGS = -g -D_FILE_OFFSET_BITS=64  -I$(srcdir)/../bluepoint \
 bpenc2_DEPENDENCIES = 
 bpenc2_LDADD = -lulockmgr -lfuse3  -lcrypto -lssl
 bpdec2dir = .
-bpdec2_SOURCES = bpdec2.c bp2com.c ../common/hsutils.c ../common/hspass.c  \
+bpdec2_SOURCES = bpdec2.c bp2com.c ../common/hsutils.c \
+                        ../src/base64.c   \
+                        ../common/hspass.c  \
                        ../bluepoint/hs_crypt.c  ../bluepoint/hs_crypt.h  \
                               ../bluepoint/bluepoint2.c ../bluepoint/bluepoint2.h
 
@@ -353,9 +361,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign common/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu common/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --foreign common/Makefile
+	  $(AUTOMAKE) --gnu common/Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
 	  *config.status*) \
@@ -426,6 +434,14 @@ clean-noinstPROGRAMS:
 	@: > ../common/$(DEPDIR)/$(am__dirstamp)
 ../common/bpdec2-hsutils.$(OBJEXT): ../common/$(am__dirstamp) \
 	../common/$(DEPDIR)/$(am__dirstamp)
+../src/$(am__dirstamp):
+	@$(MKDIR_P) ../src
+	@: > ../src/$(am__dirstamp)
+../src/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) ../src/$(DEPDIR)
+	@: > ../src/$(DEPDIR)/$(am__dirstamp)
+../src/bpdec2-base64.$(OBJEXT): ../src/$(am__dirstamp) \
+	../src/$(DEPDIR)/$(am__dirstamp)
 ../common/bpdec2-hspass.$(OBJEXT): ../common/$(am__dirstamp) \
 	../common/$(DEPDIR)/$(am__dirstamp)
 ../bluepoint/$(am__dirstamp):
@@ -445,6 +461,8 @@ bpdec2$(EXEEXT): $(bpdec2_OBJECTS) $(bpdec2_DEPENDENCIES) $(EXTRA_bpdec2_DEPENDE
 	$(AM_V_CCLD)$(bpdec2_LINK) $(bpdec2_OBJECTS) $(bpdec2_LDADD) $(LIBS)
 ../common/bpenc2-hsutils.$(OBJEXT): ../common/$(am__dirstamp) \
 	../common/$(DEPDIR)/$(am__dirstamp)
+../src/bpenc2-base64.$(OBJEXT): ../src/$(am__dirstamp) \
+	../src/$(DEPDIR)/$(am__dirstamp)
 ../common/bpenc2-hspass.$(OBJEXT): ../common/$(am__dirstamp) \
 	../common/$(DEPDIR)/$(am__dirstamp)
 ../bluepoint/bpenc2-hs_crypt.$(OBJEXT): ../bluepoint/$(am__dirstamp) \
@@ -459,12 +477,6 @@ bpenc2$(EXEEXT): $(bpenc2_OBJECTS) $(bpenc2_DEPENDENCIES) $(EXTRA_bpenc2_DEPENDE
 ../bluepoint/testpass-bluepoint2.$(OBJEXT):  \
 	../bluepoint/$(am__dirstamp) \
 	../bluepoint/$(DEPDIR)/$(am__dirstamp)
-../src/$(am__dirstamp):
-	@$(MKDIR_P) ../src
-	@: > ../src/$(am__dirstamp)
-../src/$(DEPDIR)/$(am__dirstamp):
-	@$(MKDIR_P) ../src/$(DEPDIR)
-	@: > ../src/$(DEPDIR)/$(am__dirstamp)
 ../src/testpass-base64.$(OBJEXT): ../src/$(am__dirstamp) \
 	../src/$(DEPDIR)/$(am__dirstamp)
 
@@ -490,6 +502,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@../common/$(DEPDIR)/bpdec2-hsutils.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@../common/$(DEPDIR)/bpenc2-hspass.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@../common/$(DEPDIR)/bpenc2-hsutils.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@../src/$(DEPDIR)/bpdec2-base64.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@../src/$(DEPDIR)/bpenc2-base64.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@../src/$(DEPDIR)/testpass-base64.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bpdec2-bp2com.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bpdec2-bpdec2.Po@am__quote@ # am--include-marker
@@ -562,6 +576,20 @@ bpdec2-bp2com.obj: bp2com.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='../common/hsutils.c' object='../common/bpdec2-hsutils.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpdec2_CFLAGS) $(CFLAGS) -c -o ../common/bpdec2-hsutils.obj `if test -f '../common/hsutils.c'; then $(CYGPATH_W) '../common/hsutils.c'; else $(CYGPATH_W) '$(srcdir)/../common/hsutils.c'; fi`
+
+../src/bpdec2-base64.o: ../src/base64.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpdec2_CFLAGS) $(CFLAGS) -MT ../src/bpdec2-base64.o -MD -MP -MF ../src/$(DEPDIR)/bpdec2-base64.Tpo -c -o ../src/bpdec2-base64.o `test -f '../src/base64.c' || echo '$(srcdir)/'`../src/base64.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ../src/$(DEPDIR)/bpdec2-base64.Tpo ../src/$(DEPDIR)/bpdec2-base64.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='../src/base64.c' object='../src/bpdec2-base64.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpdec2_CFLAGS) $(CFLAGS) -c -o ../src/bpdec2-base64.o `test -f '../src/base64.c' || echo '$(srcdir)/'`../src/base64.c
+
+../src/bpdec2-base64.obj: ../src/base64.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpdec2_CFLAGS) $(CFLAGS) -MT ../src/bpdec2-base64.obj -MD -MP -MF ../src/$(DEPDIR)/bpdec2-base64.Tpo -c -o ../src/bpdec2-base64.obj `if test -f '../src/base64.c'; then $(CYGPATH_W) '../src/base64.c'; else $(CYGPATH_W) '$(srcdir)/../src/base64.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ../src/$(DEPDIR)/bpdec2-base64.Tpo ../src/$(DEPDIR)/bpdec2-base64.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='../src/base64.c' object='../src/bpdec2-base64.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpdec2_CFLAGS) $(CFLAGS) -c -o ../src/bpdec2-base64.obj `if test -f '../src/base64.c'; then $(CYGPATH_W) '../src/base64.c'; else $(CYGPATH_W) '$(srcdir)/../src/base64.c'; fi`
 
 ../common/bpdec2-hspass.o: ../common/hspass.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpdec2_CFLAGS) $(CFLAGS) -MT ../common/bpdec2-hspass.o -MD -MP -MF ../common/$(DEPDIR)/bpdec2-hspass.Tpo -c -o ../common/bpdec2-hspass.o `test -f '../common/hspass.c' || echo '$(srcdir)/'`../common/hspass.c
@@ -646,6 +674,20 @@ bpenc2-bp2com.obj: bp2com.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='../common/hsutils.c' object='../common/bpenc2-hsutils.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpenc2_CFLAGS) $(CFLAGS) -c -o ../common/bpenc2-hsutils.obj `if test -f '../common/hsutils.c'; then $(CYGPATH_W) '../common/hsutils.c'; else $(CYGPATH_W) '$(srcdir)/../common/hsutils.c'; fi`
+
+../src/bpenc2-base64.o: ../src/base64.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpenc2_CFLAGS) $(CFLAGS) -MT ../src/bpenc2-base64.o -MD -MP -MF ../src/$(DEPDIR)/bpenc2-base64.Tpo -c -o ../src/bpenc2-base64.o `test -f '../src/base64.c' || echo '$(srcdir)/'`../src/base64.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ../src/$(DEPDIR)/bpenc2-base64.Tpo ../src/$(DEPDIR)/bpenc2-base64.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='../src/base64.c' object='../src/bpenc2-base64.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpenc2_CFLAGS) $(CFLAGS) -c -o ../src/bpenc2-base64.o `test -f '../src/base64.c' || echo '$(srcdir)/'`../src/base64.c
+
+../src/bpenc2-base64.obj: ../src/base64.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpenc2_CFLAGS) $(CFLAGS) -MT ../src/bpenc2-base64.obj -MD -MP -MF ../src/$(DEPDIR)/bpenc2-base64.Tpo -c -o ../src/bpenc2-base64.obj `if test -f '../src/base64.c'; then $(CYGPATH_W) '../src/base64.c'; else $(CYGPATH_W) '$(srcdir)/../src/base64.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ../src/$(DEPDIR)/bpenc2-base64.Tpo ../src/$(DEPDIR)/bpenc2-base64.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='../src/base64.c' object='../src/bpenc2-base64.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpenc2_CFLAGS) $(CFLAGS) -c -o ../src/bpenc2-base64.obj `if test -f '../src/base64.c'; then $(CYGPATH_W) '../src/base64.c'; else $(CYGPATH_W) '$(srcdir)/../src/base64.c'; fi`
 
 ../common/bpenc2-hspass.o: ../common/hspass.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpenc2_CFLAGS) $(CFLAGS) -MT ../common/bpenc2-hspass.o -MD -MP -MF ../common/$(DEPDIR)/bpenc2-hspass.Tpo -c -o ../common/bpenc2-hspass.o `test -f '../common/hspass.c' || echo '$(srcdir)/'`../common/hspass.c
@@ -899,6 +941,8 @@ distclean: distclean-am
 	-rm -f ../common/$(DEPDIR)/bpdec2-hsutils.Po
 	-rm -f ../common/$(DEPDIR)/bpenc2-hspass.Po
 	-rm -f ../common/$(DEPDIR)/bpenc2-hsutils.Po
+	-rm -f ../src/$(DEPDIR)/bpdec2-base64.Po
+	-rm -f ../src/$(DEPDIR)/bpenc2-base64.Po
 	-rm -f ../src/$(DEPDIR)/testpass-base64.Po
 	-rm -f ./$(DEPDIR)/bpdec2-bp2com.Po
 	-rm -f ./$(DEPDIR)/bpdec2-bpdec2.Po
@@ -961,6 +1005,8 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ../common/$(DEPDIR)/bpdec2-hsutils.Po
 	-rm -f ../common/$(DEPDIR)/bpenc2-hspass.Po
 	-rm -f ../common/$(DEPDIR)/bpenc2-hsutils.Po
+	-rm -f ../src/$(DEPDIR)/bpdec2-base64.Po
+	-rm -f ../src/$(DEPDIR)/bpenc2-base64.Po
 	-rm -f ../src/$(DEPDIR)/testpass-base64.Po
 	-rm -f ./$(DEPDIR)/bpdec2-bp2com.Po
 	-rm -f ./$(DEPDIR)/bpdec2-bpdec2.Po

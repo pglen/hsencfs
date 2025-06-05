@@ -38,11 +38,12 @@
 
 #include "hsutils.h"
 #include "../src/hsencfs.h"
+#include "../src/base64.h"
 #include "../bluepoint/bluepoint2.h"
 
 char  *passfname = ".passdata.datx";
 
-static char  *getlinex(int fd, char *buf, size_t bufsiz)
+static int  getlinex(int fd, char *buf, size_t bufsiz)
 
 {
     size_t left = bufsiz;
@@ -51,18 +52,19 @@ static char  *getlinex(int fd, char *buf, size_t bufsiz)
 
     if (left == 0) {
     	errno = EINVAL;
-    	return(NULL);			/* sanity */
+    	return(0);			/* sanity */
     }
 
     while (--left) {
 	   nr = read(fd, &c, 1);
-    	if (nr != 1 || c == '\n' || c == '\r')
+    	//if (nr != 1 || c == '\n' || c == '\r')
+    	if (nr == 0)
     	    break;
 	   *cp++ = c;
     }
     *cp = '\0';
 
-    return(nr == 1 ? buf : NULL);
+    return 0; //(nr == 1 ? buf : NULL);
 }
 
 // -----------------------------------------------------------------------
@@ -380,7 +382,7 @@ int     check_markfile(char *name, char *pass, int *plen)
 
 // Really dumb parse command line to array
 
-void    parse_comstr(char *argx[], int limx, const char *program)
+int    parse_comstr(char *argx[], int limx, const char *program)
 
 {
     //printf("parse: '%s'\n", program);
@@ -430,6 +432,7 @@ void    parse_comstr(char *argx[], int limx, const char *program)
             }
         aa++;
         }
+    return cc;
 }
 
 struct termios oldt;
@@ -496,22 +499,21 @@ char    *getpassx(char *prompt)
 int     hs_askpass(const char *program, char *buf, int buflen)
 
 {
-    //printf("program: '%s'\n", program);
-
     struct sigaction  sa, saved_sa_pipe;
     int pfd[2];  pid_t pid;
 
     char *argx[12];
-    parse_comstr(argx, 12, program);
-    //int xx = 0; while(1)
-    //    {
-    //    hslog(0, "ptr: '%s'\n", argx[xx]);
-    //    if(!argx[xx]) break;
-    //    xx++;
-    //    }
+    int idx = parse_comstr(argx, 12, program);
+    //printf("idx: %d\n", idx);
+    //{   int xx = 0; while(1) {
+    //        hslog(0, "argx ptr: '%s'\n", argx[xx]);
+    //        printf("argx %d ptr: '%s'\n", xx, argx[xx]);
+    //        if(!argx[xx++]) break;
+    //        }
+    //}
     if (access(argx[0], X_OK) < 0)
         {
-        //printf("no program: '%s'\n", program);
+        printf("no program: '%s'\n", program);
         hsprint(TO_ERR | TO_LOG, -1,
                 "Askpass is not an executable: '%s'\n", program);
         return -1;
@@ -520,22 +522,38 @@ int     hs_askpass(const char *program, char *buf, int buflen)
     //char cwd[PATH_MAX];
     hslog(0, "Asking pass with program: '%s'", program);
 
+    EVP_PKEY *pub = generate_rsa_key(2048);
+    char *tmp3 = malloc(1024);
+    char* ptr = publicKeyToString(pub, tmp3, 1024);
+    //tmp3[11] = 'x';
+    printf("tmp3: %ld '%s'\n", strlen(tmp3), tmp3);
+
+    argx[idx] = tmp3;
+    argx[idx+1] = NULL;
+
+    char *tmp4 = malloc(2000);
+    char* ptr2 = privateKeyToString(pub, tmp4, 2000);
+    printf("tmp4: %ld '%s'\n", strlen(tmp4), tmp4);
+
+    //{   int xx = 0; while(1) {
+    //        hslog(0, "argx ptr: '%s'\n", argx[xx]);
+    //        printf("argx %d ptr: '%s'\n", xx, argx[xx]);
+    //        if(!argx[xx++]) break;
+    //        }
+    //}
     if (pipe(pfd) == -1)
 	   {
         hslog(0, "Unable to create pipe.");
-        //printf("Unable to create pipe.");
-        //perror("Unable to create pipe");
+        printf("Unable to create pipe.");
         //return(-5);
         }
     if ((pid = fork()) == -1)
         {
         hslog(0, "Unable to fork");
-        //printf("Unable to dup2");
-        // perror("Unable to fork");
+        printf("Unable to dup2");
         return(-2);
         }
     if (pid == 0) {
-
         /* child, point stdout to output side of the pipe and exec askpass */
     	if (dup2(pfd[1], STDOUT_FILENO) == -1) {
                 hslog(0, "Unable to dup2");
@@ -552,28 +570,21 @@ int     hs_askpass(const char *program, char *buf, int buflen)
     	closefrom(STDERR_FILENO + 1);
         int ret = execvp(argx[0], argx) ;
 
+        printf("Unable to run askpass: '%s' ret=%d", program, ret);
         hslog(0, "Unable to run askpass: '%s' ret=%d", program, ret);
         // Clear error number so the FS can work
         errno = 0;
 
         // Free array
-        int xx = 0; while(1)
-            {
-            if(!argx[xx]) break;
-            free(argx[xx]);
-            xx++;
-            }
-
-        //printf("Unable to run %s", program);
-        // Try fallback:
-        //char *fallback = "xfce4-terminal -e hsaskpass.sh";
-        //execl(fallback, fallback, NULL);
-    	//hslog(LOG_DEBUG, "Unable to run2 askpass: '%s'", fallback);
-        //printf("Unable to run2 %s", fallback);
-        //_exit(255);
+        //{ int xx = 0; while(1)
+        //    {
+        //    if(!argx[xx]) break;
+        //    free(argx[xx]);
+        //    xx++;
+        //    }
+        //}
         return(-5);
         }
-
     /* Ignore SIGPIPE in case child exits prematurely */
     memset(&sa, 0, sizeof(sa));
     sigemptyset(&sa.sa_mask);
@@ -584,16 +595,34 @@ int     hs_askpass(const char *program, char *buf, int buflen)
     /* Get response from child and restore SIGPIPE handler */
     (void) close(pfd[1]);
 
-    char *xpass = getlinex(pfd[0], buf, buflen);
+    //char *xpass =
+    getlinex(pfd[0], buf, buflen);
+    int lenx = strlen(buf);
+    printf("got: %d '%s'\n", lenx, buf);
+
+    unsigned long olen = 0;
+    unsigned char *res2 = base64_decode(buf, lenx, &olen);
+    if(res2)
+        {
+        strcpy(buf, res2);
+        free(res2);
+        }
+    printf("decoded: '%s'\n", buf);
+
+    char tmp5[1024];
+    int   ret = private_decrypt(buf, olen, tmp4, tmp5);
+    if(ret >= 0)
+        strcpy(buf, tmp5);
+
     (void) close(pfd[0]);
     (void) sigaction(SIGPIPE, &saved_sa_pipe, NULL);
 
-    int xx = 0; while(1)
-        {
-        if(!argx[xx]) break;
-        free(argx[xx]);
-        xx++;
-        }
+    //int xx = 0; while(1)
+    //    {
+    //    if(!argx[xx]) break;
+    //    free(argx[xx]);
+    //    xx++;
+    //    }
     //hslog(0, "Askpass got: '%s'", xpass);
     return(0);
 }

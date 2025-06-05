@@ -22,7 +22,7 @@ int     gui = 0;
 char    *markfile = "markfile";
 char    *defpass = "";
 
-char buff[128];
+char buff[4096];
 
 char    *getpass_local(char *prompt, int *plen)
 {
@@ -34,14 +34,15 @@ char    *getpass_local(char *prompt, int *plen)
         }
     if(gui)
         {
-        int ret = hs_askpass("../hsaskpass.py", buff, sizeof(buff));
+        char *passprog = "../hsaskpass.py Hello 0";
+
+        int ret = hs_askpass(passprog, buff, sizeof(buff));
         if(ret)
             {
             printf("hs_askpass returned: %d\n", ret);
             exit(1);
             }
         int lenx = strlen(buff);
-        //printf("hs_askpass password: '%s'\n", buff);
         if(!lenx)
             {
             printf("No gui pass, aborted.\n");
@@ -49,10 +50,15 @@ char    *getpass_local(char *prompt, int *plen)
             }
         unsigned long olen = 0;
         unsigned char *res2 = base64_decode(buff, lenx, &olen);
-        //printf("res2: %s\n", res2);
-        strcpy(buff, res2);
-        //printf("buff: %s\n", buff);
-        free(res2);
+        if(res2)
+            {
+            strcpy(buff, res2);
+            //printf("buff: %s\n", buff);
+            free(res2);
+            }
+
+        printf("hs_askpass password: lenx=%d '%s'\n", lenx, buff);
+
         *plen = strlen(buff);
         return buff;
         }

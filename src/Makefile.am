@@ -27,9 +27,13 @@ hsencfs_SOURCES = hsencfs.c hsencrr.c hsencrw.c hsencsb.c hsencsu.c base64.c \
 hsencfs_LDADD = -lfuse3 -lulockmgr  -lcrypto -lssl
 
 clean-local:
-	@-rm -f aa bb cc
-	@-rm -f *.obj
+	@-rm -f aa bb cc *~
+	@-rm -f *.o
 	@-rm -f hsencfs dualwrite zigzag zigjump
+
+clean:
+	@-rm -f  *~ *.o
+	@-rm -f dualwrite zigzag zigjump
 
 # Help
 

@@ -316,9 +316,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign src/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu src/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --foreign src/Makefile
+	  $(AUTOMAKE) --gnu src/Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
 	  *config.status*) \
@@ -710,8 +710,6 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
-clean: clean-am
-
 clean-am: clean-binPROGRAMS clean-generic clean-local mostlyclean-am
 
 distclean: distclean-am
@@ -817,9 +815,13 @@ uninstall-am: uninstall-binPROGRAMS
 
 
 clean-local:
-	@-rm -f aa bb cc
-	@-rm -f *.obj
+	@-rm -f aa bb cc *~
+	@-rm -f *.o
 	@-rm -f hsencfs dualwrite zigzag zigjump
+
+clean:
+	@-rm -f  *~ *.o
+	@-rm -f dualwrite zigzag zigjump
 
 # Help
 

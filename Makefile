@@ -379,15 +379,15 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
-	      echo ' cd $(srcdir) && $(AUTOMAKE) --foreign'; \
-	      $(am__cd) $(srcdir) && $(AUTOMAKE) --foreign \
+	      echo ' cd $(srcdir) && $(AUTOMAKE) --gnu'; \
+	      $(am__cd) $(srcdir) && $(AUTOMAKE) --gnu \
 		&& exit 0; \
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --foreign Makefile
+	  $(AUTOMAKE) --gnu Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
 	  *config.status*) \
@@ -820,7 +820,7 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-recursive
 
-clean-am: clean-generic mostlyclean-am
+clean-am: clean-generic clean-local mostlyclean-am
 
 distclean: distclean-recursive
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
@@ -892,21 +892,22 @@ uninstall-am: uninstall-dist_binSCRIPTS uninstall-dist_docDATA \
 
 .PHONY: $(am__recursive_targets) CTAGS GTAGS TAGS all all-am \
 	am--refresh check check-am clean clean-cscope clean-generic \
-	cscope cscopelist-am ctags ctags-am dist dist-all dist-bzip2 \
-	dist-gzip dist-lzip dist-shar dist-tarZ dist-xz dist-zip \
-	dist-zstd distcheck distclean distclean-generic distclean-hdr \
-	distclean-tags distcleancheck distdir distuninstallcheck dvi \
-	dvi-am html html-am info info-am install install-am \
-	install-data install-data-am install-data-local \
-	install-dist_binSCRIPTS install-dist_docDATA install-dvi \
-	install-dvi-am install-exec install-exec-am install-html \
-	install-html-am install-info install-info-am install-man \
-	install-pdf install-pdf-am install-ps install-ps-am \
-	install-strip installcheck installcheck-am installdirs \
-	installdirs-am maintainer-clean maintainer-clean-generic \
-	mostlyclean mostlyclean-generic pdf pdf-am ps ps-am tags \
-	tags-am uninstall uninstall-am uninstall-dist_binSCRIPTS \
-	uninstall-dist_docDATA uninstall-local
+	clean-local cscope cscopelist-am ctags ctags-am dist dist-all \
+	dist-bzip2 dist-gzip dist-lzip dist-shar dist-tarZ dist-xz \
+	dist-zip dist-zstd distcheck distclean distclean-generic \
+	distclean-hdr distclean-tags distcleancheck distdir \
+	distuninstallcheck dvi dvi-am html html-am info info-am \
+	install install-am install-data install-data-am \
+	install-data-local install-dist_binSCRIPTS \
+	install-dist_docDATA install-dvi install-dvi-am install-exec \
+	install-exec-am install-html install-html-am install-info \
+	install-info-am install-man install-pdf install-pdf-am \
+	install-ps install-ps-am install-strip installcheck \
+	installcheck-am installdirs installdirs-am maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-generic pdf \
+	pdf-am ps ps-am tags tags-am uninstall uninstall-am \
+	uninstall-dist_binSCRIPTS uninstall-dist_docDATA \
+	uninstall-local
 
 .PRECIOUS: Makefile
 
@@ -931,7 +932,9 @@ uninstall-am: uninstall-dist_binSCRIPTS uninstall-dist_docDATA \
 #	@-fusermount -u ~/testsecrets
 #	@-rm -rf ~/testsecrets ~/.testdata
 
-#clean-local:
+clean-local:
+	rm -f *.o *~
+
 #	@-chmod -R u+w src/hsencfs-*   > /dev/null 2>&1
 #	@-rm -rf src/hsencfs-*.rpm     > /dev/null 2>&1
 #	@-rm -rf src/hsencfs-*.tar.gz  > /dev/null 2>&1
@@ -969,6 +972,9 @@ uninstall-local:
 
 gensum:
 	-./gensum.sh
+
+chksum:
+	-./chksum.sh
 
 # Make RPMS. To run on an older system, the RPM subsystem needed patching.
 # We patched the files as follows:
@@ -1038,13 +1044,12 @@ git:
 	git commit -m autocheck
 	git push
 
-#clean:
-#	@-rm -f *.old
-
 #if HAVE_SYSTEMD
 #SYSTEMD_DIR_DATA = \
 #  hsencfs.service
 #endif
+
+# EOF
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

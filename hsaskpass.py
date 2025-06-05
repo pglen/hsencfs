@@ -11,6 +11,9 @@ gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
 from gi.repository import Gdk
 
+from Crypto.PublicKey import RSA
+from Crypto.Cipher import AES, PKCS1_OAEP
+
 def message_dialog(strx, header = "Message Dialog" ):
 
     dialog = Gtk.MessageDialog()
@@ -155,6 +158,7 @@ def area_key(win, event, crflag):
 # Start of program:
 if __name__ == '__main__':
 
+    pre = "Enter HSENCFS Password"
     prompt = ": ";  created = 0; keyx = ""
 
     try:
@@ -176,10 +180,11 @@ if __name__ == '__main__':
     #print("prompt:", prompt)
     #print("created:", created)
     #print("keyx:", keyx)
-
+    if keyx:
+        pre = "*" + pre
     while 1:
-        text, text2 = getpass( \
-                "Enter HSENCFS Password%s" % prompt, created);
+        text, text2 = getpass(
+                "%s%s" % (pre, prompt), created);
         if created:
             # Compare
             #print("comparing:", text, text2)
@@ -197,12 +202,35 @@ if __name__ == '__main__':
                 text = ""
             break
 
-    #print("text", "'" + text + "'")
-
     # Does not have to be rocket science ...
     # Just to hide from plaintext view:
-    sss = base64.b64encode(text.encode())
+    #print(sss.decode())
+    #print(enc_text)
 
-    print(sss.decode())
+    #print(mykey)
+    # Turns out rocket science is needed
+    # Create pub key from str:
+    if keyx:
+        try:
+            mykey = RSA.import_key(keyx)
+        except:
+            text = str(sys.exc_info())
+            #print(text)
+            sss = base64.b64encode(text.encode())
+            print(sss.decode(), end = "")
+            sys.exit(0)
+
+        cipher_rsa = PKCS1_OAEP.new(mykey)
+        enc_text = cipher_rsa.encrypt(text.encode())
+        #print("enc_text", enc_text)
+        #dec_text = cipher_rsa.decrypt(enc_text)
+        #print("de_text", b"'" + dec_text + b"'")
+        sss = base64.b64encode(text.encode())
+        #sss = base64.b64encode(enc_text)
+        print(sss.decode(), end = "")
+        #print("text, end = "")
+    else:
+        sss = base64.b64encode(text.encode())
+        print(sss.decode(), end = "")
 
 # EOF

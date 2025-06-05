@@ -50,7 +50,9 @@ EXTRA_DIST =                       \
 #	@-fusermount -u ~/testsecrets
 #	@-rm -rf ~/testsecrets ~/.testdata
 
-#clean-local:
+clean-local:
+	rm -f *.o *~
+
 #	@-chmod -R u+w src/hsencfs-*   > /dev/null 2>&1
 #	@-rm -rf src/hsencfs-*.rpm     > /dev/null 2>&1
 #	@-rm -rf src/hsencfs-*.tar.gz  > /dev/null 2>&1
@@ -88,6 +90,9 @@ uninstall-local:
 
 gensum:
 	-./gensum.sh
+
+chksum:
+	-./chksum.sh
 
 # Make RPMS. To run on an older system, the RPM subsystem needed patching.
 # We patched the files as follows:
@@ -157,11 +162,9 @@ git:
 	git commit -m autocheck
 	git push
 
-#clean:
-#	@-rm -f *.old
-
 #if HAVE_SYSTEMD
 #SYSTEMD_DIR_DATA = \
 #  hsencfs.service
 #endif
 
+# EOF
