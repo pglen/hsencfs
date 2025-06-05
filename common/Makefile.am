@@ -5,17 +5,15 @@ AUTOMAKE_OPTIONS = subdir-objects
 
 # Fuse based encrypted file system
 
-#EXTRA_DIST =  hsutils.c  hspass.c
-
-noinst_PROGRAMS = hsaskpass
+noinst_PROGRAMS = testpass
 
 # Password helper
 
-hsaskpassdir = .
+testpassdir = .
 
-hsaskpass_CFLAGS = -D_FILE_OFFSET_BITS=64 -O2 -I$(srcdir)/bluepoint
-hsaskpass_LDADD = -lulockmgr -lfuse3  -lcrypto -lssl
-hsaskpass_SOURCES = hsaskpass.c hsutils.c hspass.c ../bluepoint/bluepoint2.c
+testpass_CFLAGS = -D_FILE_OFFSET_BITS=64 -O2 -I$(srcdir)/bluepoint
+testpass_LDADD = -lulockmgr -lfuse3  -lcrypto -lssl
+testpass_SOURCES = testpass.c hsutils.c hspass.c ../bluepoint/bluepoint2.c
 
 #clean-local:
 #	@-rm -f aa bb cc *.o  > /dev/null 2>&1

@@ -42,88 +42,27 @@
 
 char  *passfname = ".passdata.datx";
 
-//////////////////////////////////////////////////////////////////////////
-// Create mark file. Random block, one half is encrypted with the
-// password and saved to the other half. Checking is done by
-// decrypting the second half, comparing it to the first.
-// Long enough to have more numbers than the starts in the universe
-//
-
-int     create_markfile(char *name, char *pass, int *plen)
+static char  *getlinex(int fd, char *buf, size_t bufsiz)
 
 {
-    int loop, ret = 0;
-    char *ttt = malloc(MARK_SIZE);
-    if(!ttt)
-        return -errno;
+    size_t left = bufsiz;
+    ssize_t nr = -1;
+    char *cp = buf; char c = '\0';
 
-    //printf("use pass '%s'\n", pass);
+    if (left == 0) {
+    	errno = EINVAL;
+    	return(NULL);			/* sanity */
+    }
 
-    char *ttt2 = malloc(MARK_SIZE / 2);
-    if(!ttt2)
-        { free(ttt); return -errno; }
+    while (--left) {
+	   nr = read(fd, &c, 1);
+    	if (nr != 1 || c == '\n' || c == '\r')
+    	    break;
+	   *cp++ = c;
+    }
+    *cp = '\0';
 
-    srand(time(NULL));
-
-    // Generate crap
-    for(loop = 0; loop < MARK_SIZE; loop++)
-        { ttt[loop] = rand() % 0xff; }
-
-    // Verify:
-    //for(loop = 0; loop < 30; loop++)
-    //    printf("%x ", ttt[loop] & 0xff);
-
-    memcpy(ttt2, ttt, MARK_SIZE / 2);
-    bluepoint2_encrypt(ttt2, MARK_SIZE / 2, pass, *plen);
-    memcpy(ttt + MARK_SIZE / 2, ttt2, MARK_SIZE / 2);
-    if (ttt2) free(ttt2);
-
-    //int fh = open(name, O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR);
-    int fh = open(name, O_CREAT | O_TRUNC | O_WRONLY, S_IRUSR | S_IWUSR);
-    if(fh < 1)
-        { if(ttt) free(ttt); return -errno;}
-
-    if (write(fh, ttt, MARK_SIZE) != MARK_SIZE)
-        { if(ttt) free(ttt); close(fh); return -errno; }
-
-    close(fh);
-
-    if (ttt) free(ttt);
-
-    return ret;
-}
-
-// See notes on create_markfile
-
-int     check_markfile(char *name, char *pass, int *plen)
-
-{
-    int ret = 0;
-
-    //printf("use pass '%s'\n", pass);
-
-    // Checking
-    char *ttt = malloc(MARK_SIZE);
-    if(!ttt)
-        return -errno;
-
-    int fh = open(name, O_RDONLY);
-    if(fh < 1)
-        { if(ttt) free(ttt); return -errno; }
-
-    if (read(fh, ttt, MARK_SIZE) != MARK_SIZE)
-        {
-        if(ttt) free(ttt); close(fh); return -errno;
-        }
-
-    close(fh);
-
-    bluepoint2_decrypt(ttt + MARK_SIZE / 2, MARK_SIZE / 2, pass, *plen);
-    ret = memcmp(ttt, ttt + MARK_SIZE / 2, MARK_SIZE / 2);
-
-    if(ttt) free(ttt);
-
-    return ret;
+    return(nr == 1 ? buf : NULL);
 }
 
 // -----------------------------------------------------------------------
@@ -302,7 +241,7 @@ static  RSA *createRSA(uchar *key, int public)
     return rsa;
 }
 
-int public_encrypt(uchar *data, int data_len, uchar *key, uchar *ebuf)
+int     public_encrypt(uchar *data, int data_len, uchar *key, uchar *ebuf)
 {
     RSA *rsa = createRSA(key, 1);
     if (!rsa)
@@ -321,7 +260,7 @@ int public_encrypt(uchar *data, int data_len, uchar *key, uchar *ebuf)
     return result;
 }
 
-int private_decrypt(uchar * enc_data, int data_len, uchar *key, uchar *dbuf)
+int     private_decrypt(uchar * enc_data, int data_len, uchar *key, uchar *dbuf)
 {
     RSA *rsa = createRSA(key, 0);
     if (!rsa)
@@ -333,44 +272,96 @@ int private_decrypt(uchar * enc_data, int data_len, uchar *key, uchar *dbuf)
 }
 
 
+//////////////////////////////////////////////////////////////////////////
+// Create mark file. Random block, one half is encrypted with the
+// password and saved to the other half. Checking is done by
+// decrypting the second half, comparing it to the first.
+// Long enough to have more numbers than the starts in the universe
+//
 
+int     create_markfile(char *name, char *pass, int *plen)
 
+{
+    int loop, ret = 0;
+    char *ttt = malloc(MARK_SIZE);
+    if(!ttt)
+        return -errno;
 
+    //printf("use pass '%s'\n", pass);
 
+    char *ttt2 = malloc(MARK_SIZE / 2);
+    if(!ttt2)
+        { free(ttt); return -errno; }
 
+    srand(time(NULL));
 
+    // Generate crap
+    for(loop = 0; loop < MARK_SIZE; loop++)
+        { ttt[loop] = rand() % 0xff; }
 
+    // Verify:
+    //for(loop = 0; loop < 30; loop++)
+    //    printf("%x ", ttt[loop] & 0xff);
 
+    memcpy(ttt2, ttt, MARK_SIZE / 2);
+    bluepoint2_encrypt(ttt2, MARK_SIZE / 2, pass, *plen);
+    memcpy(ttt + MARK_SIZE / 2, ttt2, MARK_SIZE / 2);
+    if (ttt2) free(ttt2);
+
+    //int fh = open(name, O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR);
+    int fh = open(name, O_CREAT | O_TRUNC | O_WRONLY, S_IRUSR | S_IWUSR);
+    if(fh < 1)
+        { if(ttt) free(ttt); return -errno;}
+
+    if (write(fh, ttt, MARK_SIZE) != MARK_SIZE)
+        { if(ttt) free(ttt); close(fh); return -errno; }
+
+    close(fh);
+
+    if (ttt) free(ttt);
+
+    return ret;
+}
+
+// See notes on create_markfile
+
+int     check_markfile(char *name, char *pass, int *plen)
+
+{
+    int ret = 0;
+
+    //printf("use pass '%s'\n", pass);
+
+    // Checking
+    char *ttt = malloc(MARK_SIZE);
+    if(!ttt)
+        return -errno;
+
+    int fh = open(name, O_RDONLY);
+    if(fh < 1)
+        { if(ttt) free(ttt); return -errno; }
+
+    if (read(fh, ttt, MARK_SIZE) != MARK_SIZE)
+        {
+        if(ttt) free(ttt); close(fh); return -errno;
+        }
+
+    close(fh);
+
+    bluepoint2_decrypt(ttt + MARK_SIZE / 2, MARK_SIZE / 2, pass, *plen);
+    ret = memcmp(ttt, ttt + MARK_SIZE / 2, MARK_SIZE / 2);
+
+    if(ttt) free(ttt);
+
+    return ret;
+}
 
 // -----------------------------------------------------------------------
 // Read a line from the forked program
 
-static char  *getlinex(int fd, char *buf, size_t bufsiz)
-
-{
-    size_t left = bufsiz;
-    ssize_t nr = -1;
-    char *cp = buf; char c = '\0';
-
-    if (left == 0) {
-    	errno = EINVAL;
-    	return(NULL);			/* sanity */
-    }
-
-    while (--left) {
-	   nr = read(fd, &c, 1);
-    	if (nr != 1 || c == '\n' || c == '\r')
-    	    break;
-	   *cp++ = c;
-    }
-    *cp = '\0';
-
-    return(nr == 1 ? buf : NULL);
-}
-
 // Really dumb parse command line to array
 
-void parse_comstr(char *argx[], int limx, const char *program)
+void    parse_comstr(char *argx[], int limx, const char *program)
 
 {
     //printf("parse: '%s'\n", program);
@@ -433,7 +424,7 @@ void    sigint_local(int sig)
     exit(127);
 }
 
-char *getpassx(char *prompt)
+char    *getpassx(char *prompt)
 
 {
     static char ppp[128];
@@ -483,7 +474,7 @@ char *getpassx(char *prompt)
  * Fork a child and exec progran to get the password from the user.
  */
 
-char *hs_askpass(const char *program, char *buf, int buflen)
+char    *hs_askpass(const char *program, char *buf, int buflen)
 
 {
     struct sigaction  sa, saved_sa_pipe;

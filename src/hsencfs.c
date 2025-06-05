@@ -76,6 +76,7 @@
 
 #include "base64.h"
 #include "hsutils.h"
+#include "hspass.h"
 #include "hsencsb.h"
 
 #include "hsencfs.h"

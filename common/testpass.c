@@ -8,6 +8,7 @@
 #include <unistd.h>
 
 #include "hsutils.h"
+#include "hspass.h"
 
 static char tmp[256];
 int     xlen = 0;

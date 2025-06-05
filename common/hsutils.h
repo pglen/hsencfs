@@ -21,9 +21,6 @@ typedef unsigned char uchar;
 
 // Included in ALl encrypters
 
-#define BLOCKSIZE   4096
-#define MAXPASSLEN      512
-
 #define     HS_PROGNAME    "HSENCFS"
 
 #define  TO_OUT (1 << 0)
@@ -42,12 +39,6 @@ int     ismounted(char *orig);
 int     countfiles(char *mpoint);
 void    hsprint(int outs, int lev, char *fmt, ...);
 void    hslog(int lev, char *fmt, ...);
-
-int     check_markfile(char *name, char *pass, int *plen);
-int     create_markfile(char *name, char *pass, int *plen);
-
-char    *hs_askpass(const char *program, char *buf, int buflen);
 void    expandpath(const char *inp, char *outp, int maxlen);
-int     pass_ritual(char *mountroot, char *mountdata, char *pass, int *plen, char *passprog);
 
 // EOF

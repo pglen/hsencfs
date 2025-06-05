@@ -43,6 +43,7 @@
 #include "../bluepoint/hs_crypt.h"
 #include "../bluepoint/bluepoint2.h"
 #include "../common/hsutils.h"
+#include "../common/hspass.h"
 
 // -----------------------------------------------------------------------
 // Check if it is our internal file

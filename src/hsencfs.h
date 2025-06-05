@@ -24,7 +24,7 @@
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
 #endif
 
-#define MAXPASSLEN      512
+#define MAXPASSLEN      256
 
 // ---------------------------------------------------------------------
 // Debug the FUSE subsystem without (bypass) the encryption

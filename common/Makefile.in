@@ -89,7 +89,7 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-noinst_PROGRAMS = hsaskpass$(EXEEXT)
+noinst_PROGRAMS = testpass$(EXEEXT)
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -104,12 +104,12 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 PROGRAMS = $(noinst_PROGRAMS)
 am__dirstamp = $(am__leading_dot)dirstamp
-am_hsaskpass_OBJECTS = hsaskpass-hsaskpass.$(OBJEXT) \
-	hsaskpass-hsutils.$(OBJEXT) hsaskpass-hspass.$(OBJEXT) \
-	../bluepoint/hsaskpass-bluepoint2.$(OBJEXT)
-hsaskpass_OBJECTS = $(am_hsaskpass_OBJECTS)
-hsaskpass_DEPENDENCIES =
-hsaskpass_LINK = $(CCLD) $(hsaskpass_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
+am_testpass_OBJECTS = testpass-testpass.$(OBJEXT) \
+	testpass-hsutils.$(OBJEXT) testpass-hspass.$(OBJEXT) \
+	../bluepoint/testpass-bluepoint2.$(OBJEXT)
+testpass_OBJECTS = $(am_testpass_OBJECTS)
+testpass_DEPENDENCIES =
+testpass_LINK = $(CCLD) $(testpass_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
@@ -126,10 +126,9 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/../depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = ../bluepoint/$(DEPDIR)/hsaskpass-bluepoint2.Po \
-	./$(DEPDIR)/hsaskpass-hsaskpass.Po \
-	./$(DEPDIR)/hsaskpass-hspass.Po \
-	./$(DEPDIR)/hsaskpass-hsutils.Po
+am__depfiles_remade = ../bluepoint/$(DEPDIR)/testpass-bluepoint2.Po \
+	./$(DEPDIR)/testpass-hspass.Po ./$(DEPDIR)/testpass-hsutils.Po \
+	./$(DEPDIR)/testpass-testpass.Po
 am__mv = mv -f
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -147,8 +146,8 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(hsaskpass_SOURCES)
-DIST_SOURCES = $(hsaskpass_SOURCES)
+SOURCES = $(testpass_SOURCES)
+DIST_SOURCES = $(testpass_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -285,10 +284,10 @@ top_srcdir = @top_srcdir@
 AUTOMAKE_OPTIONS = subdir-objects
 
 # Password helper
-hsaskpassdir = .
-hsaskpass_CFLAGS = -D_FILE_OFFSET_BITS=64 -O2 -I$(srcdir)/bluepoint
-hsaskpass_LDADD = -lulockmgr -lfuse3  -lcrypto -lssl
-hsaskpass_SOURCES = hsaskpass.c hsutils.c hspass.c ../bluepoint/bluepoint2.c
+testpassdir = .
+testpass_CFLAGS = -D_FILE_OFFSET_BITS=64 -O2 -I$(srcdir)/bluepoint
+testpass_LDADD = -lulockmgr -lfuse3  -lcrypto -lssl
+testpass_SOURCES = testpass.c hsutils.c hspass.c ../bluepoint/bluepoint2.c
 all: all-am
 
 .SUFFIXES:
@@ -335,13 +334,13 @@ clean-noinstPROGRAMS:
 ../bluepoint/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) ../bluepoint/$(DEPDIR)
 	@: > ../bluepoint/$(DEPDIR)/$(am__dirstamp)
-../bluepoint/hsaskpass-bluepoint2.$(OBJEXT):  \
+../bluepoint/testpass-bluepoint2.$(OBJEXT):  \
 	../bluepoint/$(am__dirstamp) \
 	../bluepoint/$(DEPDIR)/$(am__dirstamp)
 
-hsaskpass$(EXEEXT): $(hsaskpass_OBJECTS) $(hsaskpass_DEPENDENCIES) $(EXTRA_hsaskpass_DEPENDENCIES) 
-	@rm -f hsaskpass$(EXEEXT)
-	$(AM_V_CCLD)$(hsaskpass_LINK) $(hsaskpass_OBJECTS) $(hsaskpass_LDADD) $(LIBS)
+testpass$(EXEEXT): $(testpass_OBJECTS) $(testpass_DEPENDENCIES) $(EXTRA_testpass_DEPENDENCIES) 
+	@rm -f testpass$(EXEEXT)
+	$(AM_V_CCLD)$(testpass_LINK) $(testpass_OBJECTS) $(testpass_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -350,10 +349,10 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@../bluepoint/$(DEPDIR)/hsaskpass-bluepoint2.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hsaskpass-hsaskpass.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hsaskpass-hspass.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hsaskpass-hsutils.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@../bluepoint/$(DEPDIR)/testpass-bluepoint2.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testpass-hspass.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testpass-hsutils.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testpass-testpass.Po@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
 	@$(MKDIR_P) $(@D)
@@ -377,61 +376,61 @@ am--depfiles: $(am__depfiles_remade)
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(COMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
 
-hsaskpass-hsaskpass.o: hsaskpass.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -MT hsaskpass-hsaskpass.o -MD -MP -MF $(DEPDIR)/hsaskpass-hsaskpass.Tpo -c -o hsaskpass-hsaskpass.o `test -f 'hsaskpass.c' || echo '$(srcdir)/'`hsaskpass.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/hsaskpass-hsaskpass.Tpo $(DEPDIR)/hsaskpass-hsaskpass.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='hsaskpass.c' object='hsaskpass-hsaskpass.o' libtool=no @AMDEPBACKSLASH@
+testpass-testpass.o: testpass.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -MT testpass-testpass.o -MD -MP -MF $(DEPDIR)/testpass-testpass.Tpo -c -o testpass-testpass.o `test -f 'testpass.c' || echo '$(srcdir)/'`testpass.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/testpass-testpass.Tpo $(DEPDIR)/testpass-testpass.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='testpass.c' object='testpass-testpass.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -c -o hsaskpass-hsaskpass.o `test -f 'hsaskpass.c' || echo '$(srcdir)/'`hsaskpass.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -c -o testpass-testpass.o `test -f 'testpass.c' || echo '$(srcdir)/'`testpass.c
 
-hsaskpass-hsaskpass.obj: hsaskpass.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -MT hsaskpass-hsaskpass.obj -MD -MP -MF $(DEPDIR)/hsaskpass-hsaskpass.Tpo -c -o hsaskpass-hsaskpass.obj `if test -f 'hsaskpass.c'; then $(CYGPATH_W) 'hsaskpass.c'; else $(CYGPATH_W) '$(srcdir)/hsaskpass.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/hsaskpass-hsaskpass.Tpo $(DEPDIR)/hsaskpass-hsaskpass.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='hsaskpass.c' object='hsaskpass-hsaskpass.obj' libtool=no @AMDEPBACKSLASH@
+testpass-testpass.obj: testpass.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -MT testpass-testpass.obj -MD -MP -MF $(DEPDIR)/testpass-testpass.Tpo -c -o testpass-testpass.obj `if test -f 'testpass.c'; then $(CYGPATH_W) 'testpass.c'; else $(CYGPATH_W) '$(srcdir)/testpass.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/testpass-testpass.Tpo $(DEPDIR)/testpass-testpass.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='testpass.c' object='testpass-testpass.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -c -o hsaskpass-hsaskpass.obj `if test -f 'hsaskpass.c'; then $(CYGPATH_W) 'hsaskpass.c'; else $(CYGPATH_W) '$(srcdir)/hsaskpass.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -c -o testpass-testpass.obj `if test -f 'testpass.c'; then $(CYGPATH_W) 'testpass.c'; else $(CYGPATH_W) '$(srcdir)/testpass.c'; fi`
 
-hsaskpass-hsutils.o: hsutils.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -MT hsaskpass-hsutils.o -MD -MP -MF $(DEPDIR)/hsaskpass-hsutils.Tpo -c -o hsaskpass-hsutils.o `test -f 'hsutils.c' || echo '$(srcdir)/'`hsutils.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/hsaskpass-hsutils.Tpo $(DEPDIR)/hsaskpass-hsutils.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='hsutils.c' object='hsaskpass-hsutils.o' libtool=no @AMDEPBACKSLASH@
+testpass-hsutils.o: hsutils.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -MT testpass-hsutils.o -MD -MP -MF $(DEPDIR)/testpass-hsutils.Tpo -c -o testpass-hsutils.o `test -f 'hsutils.c' || echo '$(srcdir)/'`hsutils.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/testpass-hsutils.Tpo $(DEPDIR)/testpass-hsutils.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='hsutils.c' object='testpass-hsutils.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -c -o hsaskpass-hsutils.o `test -f 'hsutils.c' || echo '$(srcdir)/'`hsutils.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -c -o testpass-hsutils.o `test -f 'hsutils.c' || echo '$(srcdir)/'`hsutils.c
 
-hsaskpass-hsutils.obj: hsutils.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -MT hsaskpass-hsutils.obj -MD -MP -MF $(DEPDIR)/hsaskpass-hsutils.Tpo -c -o hsaskpass-hsutils.obj `if test -f 'hsutils.c'; then $(CYGPATH_W) 'hsutils.c'; else $(CYGPATH_W) '$(srcdir)/hsutils.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/hsaskpass-hsutils.Tpo $(DEPDIR)/hsaskpass-hsutils.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='hsutils.c' object='hsaskpass-hsutils.obj' libtool=no @AMDEPBACKSLASH@
+testpass-hsutils.obj: hsutils.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -MT testpass-hsutils.obj -MD -MP -MF $(DEPDIR)/testpass-hsutils.Tpo -c -o testpass-hsutils.obj `if test -f 'hsutils.c'; then $(CYGPATH_W) 'hsutils.c'; else $(CYGPATH_W) '$(srcdir)/hsutils.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/testpass-hsutils.Tpo $(DEPDIR)/testpass-hsutils.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='hsutils.c' object='testpass-hsutils.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -c -o hsaskpass-hsutils.obj `if test -f 'hsutils.c'; then $(CYGPATH_W) 'hsutils.c'; else $(CYGPATH_W) '$(srcdir)/hsutils.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -c -o testpass-hsutils.obj `if test -f 'hsutils.c'; then $(CYGPATH_W) 'hsutils.c'; else $(CYGPATH_W) '$(srcdir)/hsutils.c'; fi`
 
-hsaskpass-hspass.o: hspass.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -MT hsaskpass-hspass.o -MD -MP -MF $(DEPDIR)/hsaskpass-hspass.Tpo -c -o hsaskpass-hspass.o `test -f 'hspass.c' || echo '$(srcdir)/'`hspass.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/hsaskpass-hspass.Tpo $(DEPDIR)/hsaskpass-hspass.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='hspass.c' object='hsaskpass-hspass.o' libtool=no @AMDEPBACKSLASH@
+testpass-hspass.o: hspass.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -MT testpass-hspass.o -MD -MP -MF $(DEPDIR)/testpass-hspass.Tpo -c -o testpass-hspass.o `test -f 'hspass.c' || echo '$(srcdir)/'`hspass.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/testpass-hspass.Tpo $(DEPDIR)/testpass-hspass.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='hspass.c' object='testpass-hspass.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -c -o hsaskpass-hspass.o `test -f 'hspass.c' || echo '$(srcdir)/'`hspass.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -c -o testpass-hspass.o `test -f 'hspass.c' || echo '$(srcdir)/'`hspass.c
 
-hsaskpass-hspass.obj: hspass.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -MT hsaskpass-hspass.obj -MD -MP -MF $(DEPDIR)/hsaskpass-hspass.Tpo -c -o hsaskpass-hspass.obj `if test -f 'hspass.c'; then $(CYGPATH_W) 'hspass.c'; else $(CYGPATH_W) '$(srcdir)/hspass.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/hsaskpass-hspass.Tpo $(DEPDIR)/hsaskpass-hspass.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='hspass.c' object='hsaskpass-hspass.obj' libtool=no @AMDEPBACKSLASH@
+testpass-hspass.obj: hspass.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -MT testpass-hspass.obj -MD -MP -MF $(DEPDIR)/testpass-hspass.Tpo -c -o testpass-hspass.obj `if test -f 'hspass.c'; then $(CYGPATH_W) 'hspass.c'; else $(CYGPATH_W) '$(srcdir)/hspass.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/testpass-hspass.Tpo $(DEPDIR)/testpass-hspass.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='hspass.c' object='testpass-hspass.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -c -o hsaskpass-hspass.obj `if test -f 'hspass.c'; then $(CYGPATH_W) 'hspass.c'; else $(CYGPATH_W) '$(srcdir)/hspass.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -c -o testpass-hspass.obj `if test -f 'hspass.c'; then $(CYGPATH_W) 'hspass.c'; else $(CYGPATH_W) '$(srcdir)/hspass.c'; fi`
 
-../bluepoint/hsaskpass-bluepoint2.o: ../bluepoint/bluepoint2.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -MT ../bluepoint/hsaskpass-bluepoint2.o -MD -MP -MF ../bluepoint/$(DEPDIR)/hsaskpass-bluepoint2.Tpo -c -o ../bluepoint/hsaskpass-bluepoint2.o `test -f '../bluepoint/bluepoint2.c' || echo '$(srcdir)/'`../bluepoint/bluepoint2.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ../bluepoint/$(DEPDIR)/hsaskpass-bluepoint2.Tpo ../bluepoint/$(DEPDIR)/hsaskpass-bluepoint2.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='../bluepoint/bluepoint2.c' object='../bluepoint/hsaskpass-bluepoint2.o' libtool=no @AMDEPBACKSLASH@
+../bluepoint/testpass-bluepoint2.o: ../bluepoint/bluepoint2.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -MT ../bluepoint/testpass-bluepoint2.o -MD -MP -MF ../bluepoint/$(DEPDIR)/testpass-bluepoint2.Tpo -c -o ../bluepoint/testpass-bluepoint2.o `test -f '../bluepoint/bluepoint2.c' || echo '$(srcdir)/'`../bluepoint/bluepoint2.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ../bluepoint/$(DEPDIR)/testpass-bluepoint2.Tpo ../bluepoint/$(DEPDIR)/testpass-bluepoint2.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='../bluepoint/bluepoint2.c' object='../bluepoint/testpass-bluepoint2.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -c -o ../bluepoint/hsaskpass-bluepoint2.o `test -f '../bluepoint/bluepoint2.c' || echo '$(srcdir)/'`../bluepoint/bluepoint2.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -c -o ../bluepoint/testpass-bluepoint2.o `test -f '../bluepoint/bluepoint2.c' || echo '$(srcdir)/'`../bluepoint/bluepoint2.c
 
-../bluepoint/hsaskpass-bluepoint2.obj: ../bluepoint/bluepoint2.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -MT ../bluepoint/hsaskpass-bluepoint2.obj -MD -MP -MF ../bluepoint/$(DEPDIR)/hsaskpass-bluepoint2.Tpo -c -o ../bluepoint/hsaskpass-bluepoint2.obj `if test -f '../bluepoint/bluepoint2.c'; then $(CYGPATH_W) '../bluepoint/bluepoint2.c'; else $(CYGPATH_W) '$(srcdir)/../bluepoint/bluepoint2.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ../bluepoint/$(DEPDIR)/hsaskpass-bluepoint2.Tpo ../bluepoint/$(DEPDIR)/hsaskpass-bluepoint2.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='../bluepoint/bluepoint2.c' object='../bluepoint/hsaskpass-bluepoint2.obj' libtool=no @AMDEPBACKSLASH@
+../bluepoint/testpass-bluepoint2.obj: ../bluepoint/bluepoint2.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -MT ../bluepoint/testpass-bluepoint2.obj -MD -MP -MF ../bluepoint/$(DEPDIR)/testpass-bluepoint2.Tpo -c -o ../bluepoint/testpass-bluepoint2.obj `if test -f '../bluepoint/bluepoint2.c'; then $(CYGPATH_W) '../bluepoint/bluepoint2.c'; else $(CYGPATH_W) '$(srcdir)/../bluepoint/bluepoint2.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ../bluepoint/$(DEPDIR)/testpass-bluepoint2.Tpo ../bluepoint/$(DEPDIR)/testpass-bluepoint2.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='../bluepoint/bluepoint2.c' object='../bluepoint/testpass-bluepoint2.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsaskpass_CFLAGS) $(CFLAGS) -c -o ../bluepoint/hsaskpass-bluepoint2.obj `if test -f '../bluepoint/bluepoint2.c'; then $(CYGPATH_W) '../bluepoint/bluepoint2.c'; else $(CYGPATH_W) '$(srcdir)/../bluepoint/bluepoint2.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -c -o ../bluepoint/testpass-bluepoint2.obj `if test -f '../bluepoint/bluepoint2.c'; then $(CYGPATH_W) '../bluepoint/bluepoint2.c'; else $(CYGPATH_W) '$(srcdir)/../bluepoint/bluepoint2.c'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique
@@ -703,10 +702,10 @@ clean-am: clean-generic clean-noinstPROGRAMS mostlyclean-am
 
 distclean: distclean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
-		-rm -f ../bluepoint/$(DEPDIR)/hsaskpass-bluepoint2.Po
-	-rm -f ./$(DEPDIR)/hsaskpass-hsaskpass.Po
-	-rm -f ./$(DEPDIR)/hsaskpass-hspass.Po
-	-rm -f ./$(DEPDIR)/hsaskpass-hsutils.Po
+		-rm -f ../bluepoint/$(DEPDIR)/testpass-bluepoint2.Po
+	-rm -f ./$(DEPDIR)/testpass-hspass.Po
+	-rm -f ./$(DEPDIR)/testpass-hsutils.Po
+	-rm -f ./$(DEPDIR)/testpass-testpass.Po
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
@@ -754,10 +753,10 @@ installcheck-am:
 maintainer-clean: maintainer-clean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf $(top_srcdir)/autom4te.cache
-		-rm -f ../bluepoint/$(DEPDIR)/hsaskpass-bluepoint2.Po
-	-rm -f ./$(DEPDIR)/hsaskpass-hsaskpass.Po
-	-rm -f ./$(DEPDIR)/hsaskpass-hspass.Po
-	-rm -f ./$(DEPDIR)/hsaskpass-hsutils.Po
+		-rm -f ../bluepoint/$(DEPDIR)/testpass-bluepoint2.Po
+	-rm -f ./$(DEPDIR)/testpass-hspass.Po
+	-rm -f ./$(DEPDIR)/testpass-hsutils.Po
+	-rm -f ./$(DEPDIR)/testpass-testpass.Po
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 

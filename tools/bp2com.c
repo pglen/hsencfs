@@ -24,6 +24,7 @@
 #include "../src/hsencsb.h"
 
 char    progname[] = "HSENCFS";
+
 static char     tmp[256];
 
 int     bpgetpass(const char *fname, char *pass, int *plenx)
@@ -93,8 +94,11 @@ char    *mk_backup_path(const char *path)
 int     mk_block_file(const char *path)
 
 {
-    int fdi = 0;  char *ptmp2 = NULL, *ptmp3 = NULL;
+    int fdi = 0;
     int old_errno = errno;
+
+    char *ptmp3 = NULL;
+    char *ptmp2 = malloc(PATH_MAX);
 
     ///printf("Block file for '%s'\n", path);
 
@@ -142,9 +146,4 @@ int     mk_block_file(const char *path)
     return(fdi);
 }
 
-
-
-
-
-
-
+//# EOF

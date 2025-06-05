@@ -1,6 +1,6 @@
-bluepoint2.o: bluepoint2.c /usr/include/stdc-predef.h /usr/include/fuse.h \
- /usr/include/fuse/fuse.h /usr/include/fuse/fuse_common.h \
- /usr/include/fuse/fuse_opt.h \
+../bluepoint/bluepoint2.o: ../bluepoint/bluepoint2.c \
+ /usr/include/stdc-predef.h /usr/include/fuse.h /usr/include/fuse/fuse.h \
+ /usr/include/fuse/fuse_common.h /usr/include/fuse/fuse_opt.h \
  /usr/lib/gcc/x86_64-linux-gnu/12/include/stdint.h /usr/include/stdint.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/features-time64.h \
@@ -119,8 +119,9 @@ bluepoint2.o: bluepoint2.c /usr/include/stdc-predef.h /usr/include/fuse.h \
  /usr/include/x86_64-linux-gnu/sys/syslog.h \
  /usr/include/x86_64-linux-gnu/bits/syslog-path.h \
  /usr/include/x86_64-linux-gnu/bits/syslog.h \
- /usr/include/x86_64-linux-gnu/sys/time.h bluepoint2.h ../src/hsencfs.h \
- hs_crypt.h bluemac.h
+ /usr/include/x86_64-linux-gnu/sys/time.h ../bluepoint/bluepoint2.h \
+ ../bluepoint/../src/hsencfs.h ../bluepoint/hs_crypt.h \
+ ../bluepoint/bluemac.h
 /usr/include/stdc-predef.h:
 /usr/include/fuse.h:
 /usr/include/fuse/fuse.h:
@@ -268,7 +269,7 @@ bluepoint2.o: bluepoint2.c /usr/include/stdc-predef.h /usr/include/fuse.h \
 /usr/include/x86_64-linux-gnu/bits/syslog-path.h:
 /usr/include/x86_64-linux-gnu/bits/syslog.h:
 /usr/include/x86_64-linux-gnu/sys/time.h:
-bluepoint2.h:
-../src/hsencfs.h:
-hs_crypt.h:
-bluemac.h:
+../bluepoint/bluepoint2.h:
+../bluepoint/../src/hsencfs.h:
+../bluepoint/hs_crypt.h:
+../bluepoint/bluemac.h:

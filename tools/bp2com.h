@@ -2,7 +2,7 @@
 
 extern char    progname[];
 
-#include "../common/hsutils.h"
+#define BLOCKSIZE       4096
 
 int     bpgetpass(const char *fname, char *pass, int *plenx);
 char    *mk_backup_path(const char *path);
