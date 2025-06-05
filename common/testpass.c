@@ -6,7 +6,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <syslog.h>
 
+#include "../src/base64.h"
 #include "hsutils.h"
 #include "hspass.h"
 
@@ -15,37 +17,134 @@ int     xlen = 0;
 
 int     loglevel = 0;
 char    progname[] = "HSENCFS";
+int     create = 0;
+int     gui = 0;
+char    *markfile = "markfile";
+char    *defpass = "";
+
+char buff[128];
+
+char    *getpass_local(char *prompt, int *plen)
+{
+    int xlen = strlen(defpass);
+    if(xlen)
+        {
+        *plen = xlen;
+        return defpass;
+        }
+    if(gui)
+        {
+        int ret = hs_askpass("../hsaskpass.py", buff, sizeof(buff));
+        if(ret)
+            {
+            printf("hs_askpass returned: %d\n", ret);
+            exit(1);
+            }
+        int lenx = strlen(buff);
+        //printf("hs_askpass password: '%s'\n", buff);
+        if(!lenx)
+            {
+            printf("No gui pass, aborted.\n");
+            exit(1);
+            }
+        unsigned long olen = 0;
+        unsigned char *res2 = base64_decode(buff, lenx, &olen);
+        //printf("res2: %s\n", res2);
+        strcpy(buff, res2);
+        //printf("buff: %s\n", buff);
+        free(res2);
+        *plen = strlen(buff);
+        return buff;
+        }
+    //"Enter new pass for HSENCFS: ");
+    char *xpass = getpassx(prompt);
+    *plen = strlen(xpass);
+    //printf("password: '%s'\n", xpass);
+    if(! *plen)
+        {
+        printf("No pass, aborted.\n");
+        exit(1);
+        }
+    return xpass;
+}
 
 int main(int argc, char *argv[])
 
 {
     //bluepoint2_set_verbose(2);
+    char *opts = "gachm:p:";
 
-    char *xpass = getpass("Enter pass for HSENCFS: ");
-    //printf("password: '%s'\n", xpass);
-    xlen = strlen(xpass);
-    if(xlen)
+    openlog("HSEncFs",  LOG_PID,  LOG_DAEMON);
+
+    while (1)
         {
-        if(argc > 1)
+        opterr = 0;
+    	char cc = getopt(argc, argv, opts);
+        if (cc == -1)
             {
-            //printf("%s\n", xpass);
-            create_markfile("markfile", xpass, &xlen);
-            printf("Created new markfile\n");
+            //printf("option bailed\n");
+            break;
             }
-        else
+        switch (cc)
             {
-            int ret = check_markfile("markfile", xpass, &xlen);
-            printf("Check %d\n", ret);
+            case ':':
+                printf("Missing option arg: -%c \n", optopt);
+                exit(1);
+                break;
+
+            case '?':
+                printf("Invalid option: -%c \n", optopt);
+                exit(1);
+                break;
+
+            case 'h':
+                printf("options: %s\n", opts);
+                exit(0);
+                break;
+
+            case 'g':
+                //printf("option a\n");
+                gui = 1;
+                break;
+
+            case 'c':
+                //printf("option c\n");
+                create = 1;
+                break;
+
+            case 'm':
+                //printf("option m %s\n", optarg);
+                markfile = strdup(optarg);
+                break;
+
+            case 'p':
+                //printf("option m %s\n", optarg);
+                defpass = strdup(optarg);
+                break;
             }
+        }
+    if(create)
+        {
+        int xlen = 0;
+        char *xpass = getpass_local("Enter new pass for HSENCFS: ", &xlen);
+        create_markfile(markfile, xpass, &xlen);
+        printf("Created new markfile with: %s\n", xpass);
+        exit(0);
         }
     else
         {
-        printf("No pass, aborted.\n");
+        if(access(markfile, R_OK) < 0)
+            {
+            printf("Cannot access mark file: '%s'\n", markfile);
+            exit(1);
+            }
+        int xlen = 0;
+        char *xpass = getpass_local("Enter pass for HSENCFS: ", &xlen);
+        int ret = check_markfile(markfile, xpass, &xlen);
+        printf("Check returned: %d.\n", ret);
         }
-    memset(xpass, 0, xlen);
+    //memset(xpass, 0, xlen);
     exit(0);
 }
 
-
-
-
+//# EOF

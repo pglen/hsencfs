@@ -78,7 +78,6 @@
 #include "hsutils.h"
 #include "hspass.h"
 #include "hsencsb.h"
-
 #include "hsencfs.h"
 #include "bluepoint2.h"
 
@@ -452,7 +451,8 @@ void    parse_comline(int argc, char *argv[])
                 break;
 
            default:
-               printf ("?? getopt returned character code 0%o (%c) ??\n", cc, cc);
+               printf ("Invalid option: '%c'\n", cc);
+               exit(1);
         }
     }
 }
@@ -694,7 +694,7 @@ int     main(int argc, char *argv[])
         }
     hsprint(TO_ERR|TO_LOG, 1, "Started at '%s'\n", mountpoint);
     hsprint(TO_ERR|TO_LOG, 1, "Using data '%s'\n", mountsecret);
-    hsprint(TO_ERR|TO_LOG, 2, "Started by uid=%d\n", getuid());
+    //hsprint(TO_ERR|TO_LOG, 2, "Started by uid=%d\n", getuid());
 
     // Note: if you transform the file with a different block size
     // it will not decrypt.
@@ -712,7 +712,6 @@ int     main(int argc, char *argv[])
         if(passx[0] == 0)
             {
             char tmp[MAXPASSLEN];
-
             // if we are at the terminal, get pass
             if (!isatty(STDOUT_FILENO))
                 {
@@ -720,12 +719,12 @@ int     main(int argc, char *argv[])
                     {
                     hslog(2, "Getting pass from program: '%s'\n", passprog);
 
-                    char *res = hs_askpass(passprog, tmp, MAXPASSLEN);
-                    if (res)
+                    int ret = hs_askpass(passprog, tmp, sizeof(tmp));
+                    if (ret == 0)
                         {
                         //hslog(2, "Askpass delivered: '%s'\n", res);
                         // Empty pass ?
-                        int rlen = strlen(res);
+                        int rlen = strlen(tmp);
                         if(rlen == 0)
                             {
                             if(verbose)
@@ -734,11 +733,12 @@ int     main(int argc, char *argv[])
                             }
                         // Decode base64
                         unsigned long olen = 0;
-                        unsigned char *res2 = base64_decode(res, rlen, &olen);
+                        unsigned char *res2 = base64_decode(tmp, rlen, &olen);
                         strncpy(passx, res2, sizeof(passx));
                         plen = strlen(passx);
+                        free(res2);
 
-                        //hslog(2, "passx '%s'\n", passx);
+                        hslog(2, "passx '%s'\n", passx);
                         }
                     }
                 }

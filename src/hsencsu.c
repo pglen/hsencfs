@@ -129,19 +129,18 @@ int     openpass(const char *path)
         ret = 1;
         goto endx;
         }
-
     char tmp3[PATH_MAX + PATH_MAX +  2];
     strncpy(tmp3, mountsecret, sizeof(tmp3));
     strcat(tmp3, passfname);
-    printf("tmp3: '%s'\n", tmp3);
+    //printf("tmp3: '%s'\n", tmp3);
     struct stat ss;
     int rret = stat(tmp3, &ss);
 
     snprintf(tmp2, PATH_MAX + PATH_MAX + 12, "%s %s %d",
                                       passprog, mountpoint, rret);
-    char *res = hs_askpass(tmp2, tmp, MAXPASSLEN);
+    ret = hs_askpass(tmp2, tmp, MAXPASSLEN);
     // Error ?
-     if (res == NULL)
+     if (ret != 0)
         {
         hslog(0, "Cannot get pass for '%s' with %s\n", path, passprog);
         ret = 1;
@@ -149,7 +148,7 @@ int     openpass(const char *path)
         }
     // Do not debug sensitive data
     //hslog(0, "Askpass delivered: '%s'\n", res);
-    int rlen = strlen(res);
+    int rlen = strlen(tmp);
     // Empty pass ?
     if(rlen == 0)
         {
@@ -159,9 +158,10 @@ int     openpass(const char *path)
         }
     // Decode base64
     unsigned long olen = 0;
-    unsigned char *res2 = base64_decode(res, rlen, &olen);
+    unsigned char *res2 = base64_decode(tmp, rlen, &olen);
     strncpy(passx, res2, sizeof(passx));
     plen = strlen(passx);
+    free(res2);
 
     // Do not log sensitive data
     //hslog(2, "passx '%s'\n", passx);

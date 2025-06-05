@@ -323,6 +323,25 @@ int     create_markfile(char *name, char *pass, int *plen)
     return ret;
 }
 
+// Updated for constant time search
+
+int     seccomp(const char *s1, const char *s2, int len)
+
+{
+    int ret = 0, ret2 = 0;
+    for(int aa = 0; aa < len; aa++)
+        {
+        //printf("%d %d ", *s1, *s2);
+        char cret = *s1++ - *s2++;
+        //printf("%d  ", (int)cret);
+        if(cret && ret == 0)
+            ret = (int)cret;
+        else
+            ret2 = (int)cret;
+        }
+    return ret;
+}
+
 // See notes on create_markfile
 
 int     check_markfile(char *name, char *pass, int *plen)
@@ -349,7 +368,7 @@ int     check_markfile(char *name, char *pass, int *plen)
     close(fh);
 
     bluepoint2_decrypt(ttt + MARK_SIZE / 2, MARK_SIZE / 2, pass, *plen);
-    ret = memcmp(ttt, ttt + MARK_SIZE / 2, MARK_SIZE / 2);
+    ret = seccomp(ttt, ttt + MARK_SIZE / 2, MARK_SIZE / 2);
 
     if(ttt) free(ttt);
 
@@ -474,9 +493,11 @@ char    *getpassx(char *prompt)
  * Fork a child and exec progran to get the password from the user.
  */
 
-char    *hs_askpass(const char *program, char *buf, int buflen)
+int     hs_askpass(const char *program, char *buf, int buflen)
 
 {
+    //printf("program: '%s'\n", program);
+
     struct sigaction  sa, saved_sa_pipe;
     int pfd[2];  pid_t pid;
 
@@ -490,8 +511,10 @@ char    *hs_askpass(const char *program, char *buf, int buflen)
     //    }
     if (access(argx[0], X_OK) < 0)
         {
-        hslog(0, "Askpass is not an executable: '%s'", program);
-        return "";
+        //printf("no program: '%s'\n", program);
+        hsprint(TO_ERR | TO_LOG, -1,
+                "Askpass is not an executable: '%s'\n", program);
+        return -1;
         }
 
     //char cwd[PATH_MAX];
@@ -502,14 +525,14 @@ char    *hs_askpass(const char *program, char *buf, int buflen)
         hslog(0, "Unable to create pipe.");
         //printf("Unable to create pipe.");
         //perror("Unable to create pipe");
-        //return("");
+        //return(-5);
         }
     if ((pid = fork()) == -1)
         {
         hslog(0, "Unable to fork");
         //printf("Unable to dup2");
         // perror("Unable to fork");
-        return("");
+        return(-2);
         }
     if (pid == 0) {
 
@@ -518,7 +541,7 @@ char    *hs_askpass(const char *program, char *buf, int buflen)
                 hslog(0, "Unable to dup2");
                 //printf("Unable to dup2");
                 //_exit(255);
-                return("");
+                return(-4);
     	       }
         //(void) dup2(pfd[1], STDOUT_FILENO);
         // Redirect error messages:
@@ -548,7 +571,7 @@ char    *hs_askpass(const char *program, char *buf, int buflen)
     	//hslog(LOG_DEBUG, "Unable to run2 askpass: '%s'", fallback);
         //printf("Unable to run2 %s", fallback);
         //_exit(255);
-        return("");
+        return(-5);
         }
 
     /* Ignore SIGPIPE in case child exits prematurely */
@@ -572,7 +595,7 @@ char    *hs_askpass(const char *program, char *buf, int buflen)
         xx++;
         }
     //hslog(0, "Askpass got: '%s'", xpass);
-    return(xpass);
+    return(0);
 }
 
 // Get the password for the current mount and / or create a new one.

@@ -781,7 +781,7 @@ CPP
 PKG_CONFIG
 PKG_CONFIG_PATH
 PKG_CONFIG_LIBDIR'
-ac_subdirs_all='src tools common bluepoint'
+ac_subdirs_all='bluepoint common src'
 
 # Initialize some variables set by options.
 ac_init_help=
@@ -3293,10 +3293,10 @@ END
     as_fn_error $? "Your 'rm' program is bad, sorry." "$LINENO" 5
   fi
 fi
+ #1.16.5 foreign])
 
 
-
-subdirs="$subdirs src tools common bluepoint"
+subdirs="$subdirs bluepoint common src"
 
 
 ac_config_headers="$ac_config_headers config.h"

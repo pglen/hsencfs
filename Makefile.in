@@ -344,7 +344,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-SUBDIRS = common bluepoint src . tools docs systemd
+SUBDIRS = common bluepoint src . docs systemd
 PAN_SERV = GNOME_HSENCApplet.server
 BONOBO_DIR = /usr/lib/bonobo/servers
 

@@ -4,7 +4,7 @@
 # It will encrypt data on write, decrypt data on read.
 #
 
-SUBDIRS = common bluepoint src . tools docs systemd
+SUBDIRS = common bluepoint src . docs systemd
 
 PAN_SERV=GNOME_HSENCApplet.server
 BONOBO_DIR=/usr/lib/bonobo/servers

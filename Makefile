@@ -337,14 +337,14 @@ runstatedir = ${localstatedir}/run
 sbindir = ${exec_prefix}/sbin
 sharedstatedir = ${prefix}/com
 srcdir = .
-subdirs =  src tools common bluepoint
+subdirs =  bluepoint common src
 sysconfdir = ${prefix}/etc
 systemdsystemunitdir = /lib/systemd/system
 target_alias = 
 top_build_prefix = 
 top_builddir = .
 top_srcdir = .
-SUBDIRS = common bluepoint src . tools docs systemd
+SUBDIRS = common bluepoint src . docs systemd
 PAN_SERV = GNOME_HSENCApplet.server
 BONOBO_DIR = /usr/lib/bonobo/servers
 

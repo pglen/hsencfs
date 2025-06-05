@@ -155,7 +155,7 @@ def area_key(win, event, crflag):
 # Start of program:
 if __name__ == '__main__':
 
-    prompt = ": ";  created = 0
+    prompt = ": ";  created = 0; keyx = ""
 
     try:
         if sys.argv[1]:
@@ -167,6 +167,15 @@ if __name__ == '__main__':
             created = int(sys.argv[2])
     except:
         pass
+    try:
+        if sys.argv[3]:
+            keyx = sys.argv[3]
+    except:
+        pass
+
+    #print("prompt:", prompt)
+    #print("created:", created)
+    #print("keyx:", keyx)
 
     while 1:
         text, text2 = getpass( \

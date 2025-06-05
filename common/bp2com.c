@@ -91,6 +91,8 @@ char    *mk_backup_path(const char *path)
 //////////////////////////////////////////////////////////////////////////
 // Create block backup file. Calle must close it.
 
+#if 0
+
 int     mk_block_file(const char *path)
 
 {
@@ -113,6 +115,7 @@ int     mk_block_file(const char *path)
 
     //if (loglevel > 2)
     //    syslog(LOG_DEBUG, "Creating '%s'\n", ptmp2);
+
     printf("Creating '%s'\n", ptmp2);
 
     fdi = open(ptmp2, O_TRUNC | O_RDWR , S_IRUSR | S_IWUSR);
@@ -145,5 +148,7 @@ int     mk_block_file(const char *path)
     if(ptmp3) free(ptmp3);
     return(fdi);
 }
+
+#endif
 
 //# EOF

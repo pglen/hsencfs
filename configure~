@@ -5711,7 +5711,6 @@ else $as_nop
 fi
 
 
-
 # Checks for libraries.
 #AC_CHECK_LIB([fuse], [fuse_main])
 # FIXME: Replace `main' with a function in `-lulockmgr':

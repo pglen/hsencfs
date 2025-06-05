@@ -4,8 +4,8 @@
 
 AC_PREREQ([2.68])
 AC_INIT([hsencfs], [1.5.0], [peterglen99@gmail.com])
-AM_INIT_AUTOMAKE([1.16.5 foreign])
-AC_CONFIG_SUBDIRS([src tools common bluepoint])
+AM_INIT_AUTOMAKE([]) #1.16.5 foreign])
+AC_CONFIG_SUBDIRS([ bluepoint common src ])
 AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_HEADERS([config.h])
 
