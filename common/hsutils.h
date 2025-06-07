@@ -40,5 +40,6 @@ int     countfiles(char *mpoint);
 void    hsprint(int outs, int lev, char *fmt, ...);
 void    hslog(int lev, char *fmt, ...);
 void    expandpath(const char *inp, char *outp, int maxlen);
+void    hsfree(void *mem, int size);
 
 // EOF

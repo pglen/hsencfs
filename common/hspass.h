@@ -14,8 +14,8 @@
    ======================================================================= */
 
 int     seccomp(const uchar *s1, const uchar *s2, int len);
-int     create_markfile(char *name, char *pass, int *plen);
-int     check_markfile(char *name, char *pass, int *plen);
+int     create_markfile(char *name, char *pass, int plen);
+int     check_markfile(char *name, char *pass, int plen);
 int     public_encrypt(uchar *data, int data_len, uchar *key, uchar *ebuf);
 int     private_decrypt(uchar * enc_data, int data_len, uchar *key, uchar *dbuf);
 void    parse_comstr(char *argx[], int limx, const char *program);

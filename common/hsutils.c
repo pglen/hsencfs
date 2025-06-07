@@ -167,4 +167,20 @@ void    expandpath(const char *inp, char *outp, int maxlen)
         }
 }
 
+void    hsfree(void *mem, int size)
+
+{
+    if (!mem)
+        {
+        printf("Warn: free null\n");
+        return;
+        }
+    char *ptr = (char *)mem;
+    for(int aa = 0; aa < size; aa++)
+        {
+        ptr[aa] = (char)rand();
+        }
+    free(mem);
+}
+
 // EOF

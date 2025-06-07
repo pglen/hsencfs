@@ -14,7 +14,7 @@ from gi.repository import Gdk
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import AES, PKCS1_OAEP
 
-import ssl
+#import ssl
 
 def mylog(*args):
 
@@ -189,7 +189,7 @@ if __name__ == '__main__':
         except:
             pass
 
-        mylog("Started hsakpass.py", prompt)
+        #mylog("Started hsakpass.py", prompt)
 
         #print("prompt:", prompt)
         #print("created:", created)
@@ -226,7 +226,7 @@ if __name__ == '__main__':
         if keyx:
             try:
                 mykey = RSA.import_key(keyx)
-                mylog("mykey", mykey)
+                #mylog("mykey", mykey)
             except:
                 text = str(sys.exc_info())
                 #print(text)

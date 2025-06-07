@@ -19,10 +19,13 @@
 #include <dirent.h>
 #include <errno.h>
 #include <syslog.h>
-#include <sys/time.h>
 #include <signal.h>
 #include <termios.h>
 #include <getopt.h>
+#include <stdarg.h>
+
+#include <sys/time.h>
+#include <sys/wait.h>
 
 #include <openssl/pem.h>
 #include <openssl/ssl.h>
@@ -283,7 +286,7 @@ int     private_decrypt(uchar * enc_data, int data_len, uchar *key, uchar *dbuf)
 // Long enough to have more numbers than the starts in the universe
 //
 
-int     create_markfile(char *name, char *pass, int *plen)
+int     create_markfile(char *name, char *pass, int plen)
 
 {
     int loop, ret = 0;
@@ -308,7 +311,7 @@ int     create_markfile(char *name, char *pass, int *plen)
     //    printf("%x ", ttt[loop] & 0xff);
 
     memcpy(ttt2, ttt, MARK_SIZE / 2);
-    bluepoint2_encrypt(ttt2, MARK_SIZE / 2, pass, *plen);
+    bluepoint2_encrypt(ttt2, MARK_SIZE / 2, pass, plen);
     memcpy(ttt + MARK_SIZE / 2, ttt2, MARK_SIZE / 2);
     if (ttt2) free(ttt2);
 
@@ -348,7 +351,7 @@ int     seccomp(const char *s1, const char *s2, int len)
 
 // See notes on create_markfile
 
-int     check_markfile(char *name, char *pass, int *plen)
+int     check_markfile(char *name, char *pass, int plen)
 
 {
     int ret = 0;
@@ -371,7 +374,7 @@ int     check_markfile(char *name, char *pass, int *plen)
 
     close(fh);
 
-    bluepoint2_decrypt(ttt + MARK_SIZE / 2, MARK_SIZE / 2, pass, *plen);
+    bluepoint2_decrypt(ttt + MARK_SIZE / 2, MARK_SIZE / 2, pass, plen);
     ret = seccomp(ttt, ttt + MARK_SIZE / 2, MARK_SIZE / 2);
 
     if(ttt) free(ttt);
@@ -503,8 +506,9 @@ int     hs_askpass(const char *program, char *buf, int buflen)
 {
     struct sigaction  sa, saved_sa_pipe;
     int pfd[2];  pid_t pid;
+    int mainret = 0;
 
-    char *argx[12];
+    char *argx[12]; argx[0] = NULL;
     int idx = parse_comstr(argx, 12, program);
     //printf("idx: %d\n", idx);
     //{   int xx = 0; while(1) {
@@ -513,14 +517,16 @@ int     hs_askpass(const char *program, char *buf, int buflen)
     //        if(!argx[xx++]) break;
     //        }
     //}
-    if (access(argx[0], X_OK) < 0)
-        {
-        printf("no program: '%s'\n", program);
-        hsprint(TO_ERR | TO_LOG, -1,
-                "Askpass is not an executable: '%s'\n", program);
-        return -1;
-        }
+    //if (access(argx[0], X_OK) < 0)
+    //    {
+    //    printf("no program: '%s'\n", program);
+    //    hsprint(TO_ERR | TO_LOG, -1,
+    //            "Askpass is not an executable: '%s'\n", program);
+    //    mainret = -1;
+    //    goto cleanup;
+    //    }
     //char cwd[PATH_MAX];
+
     hslog(0, "Asking pass with program: '%s'", program);
 
     EVP_PKEY *pub = generate_rsa_key(2048);
@@ -528,31 +534,23 @@ int     hs_askpass(const char *program, char *buf, int buflen)
     char* ptr = publicKeyToString(pub, tmp3, 1024);
     //tmp3[11] = 'x';
     //printf("tmp3: %ld '%s'\n", strlen(tmp3), tmp3);
-
-    argx[idx] = tmp3;
-    argx[idx+1] = NULL;
-
+    argx[idx] = tmp3;  argx[idx+1] = NULL;
     char *tmp4 = malloc(2000);
     char* ptr2 = privateKeyToString(pub, tmp4, 2000);
     //printf("tmp4: %ld '%s'\n", strlen(tmp4), tmp4);
-
-    //{   int xx = 0; while(1) {
-    //        hslog(0, "argx ptr: '%s'\n", argx[xx]);
-    //        printf("argx %d ptr: '%s'\n", xx, argx[xx]);
-    //        if(!argx[xx++]) break;
-    //        }
-    //}
     if (pipe(pfd) == -1)
 	   {
         hslog(0, "Unable to create pipe.");
         printf("Unable to create pipe.");
-        //return(-5);
+        mainret = -1;
+        goto cleanup;
         }
     if ((pid = fork()) == -1)
         {
         hslog(0, "Unable to fork");
         printf("Unable to dup2");
-        return(-2);
+        mainret = -2;
+        goto cleanup;
         }
     if (pid == 0) {
         /* child, point stdout to output side of the pipe and exec askpass */
@@ -560,32 +558,27 @@ int     hs_askpass(const char *program, char *buf, int buflen)
                 hslog(0, "Unable to dup2");
                 //printf("Unable to dup2");
                 //_exit(255);
-                return(-4);
+               mainret = -3;
+               goto cleanup;
     	       }
-        //(void) dup2(pfd[1], STDOUT_FILENO);
+        (void) dup2(pfd[1], STDOUT_FILENO);
         // Redirect error messages:
         int fh = open("/dev/null", O_RDWR );
     	(void) dup2(fh, STDERR_FILENO);
 
     	//set_perms(PERM_FULL_USER); //TODO
     	closefrom(STDERR_FILENO + 1);
-        int ret = execvp(argx[0], argx) ;
+        int retx = execvp(argx[0], argx) ;
 
-        printf("Unable to run askpass: '%s' ret=%d", program, ret);
-        hslog(0, "Unable to run askpass: '%s' ret=%d", program, ret);
+        printf("Unable to run askpass: '%s' ret=%d", program, retx);
+        hslog(-1, "Unable to run askpass: '%s' ret=%d", program, retx);
+
         // Clear error number so the FS can work
         errno = 0;
-
-        // Free array
-        //{ int xx = 0; while(1)
-        //    {
-        //    if(!argx[xx]) break;
-        //    free(argx[xx]);
-        //    xx++;
-        //    }
-        //}
-        return(-5);
+        mainret = -4;
+        goto cleanup;
         }
+
     /* Ignore SIGPIPE in case child exits prematurely */
     memset(&sa, 0, sizeof(sa));
     sigemptyset(&sa.sa_mask);
@@ -593,43 +586,63 @@ int     hs_askpass(const char *program, char *buf, int buflen)
     sa.sa_handler = SIG_IGN;
     (void) sigaction(SIGPIPE, &sa, &saved_sa_pipe);
 
+    int status = 0;
+    pid_t pidx = waitpid(pid, &status, 0);
+    if (status)
+        {
+        printf("exe return status: %d\n", status);
+        mainret = -5;
+        goto cleanup;
+        }
     /* Get response from child and restore SIGPIPE handler */
     (void) close(pfd[1]);
 
-    getlinex(pfd[0], buf, buflen);
-    int lenx = strlen(buf);
-    //printf("hspass() got: %d '%s'\n", lenx, buf);
+    void *tmp6 = malloc(2 * MAXPASSLEN);
+    getlinex(pfd[0], tmp6, 2 * MAXPASSLEN);
+
+    int lenx = strlen(tmp6);
+    //printf("hspass() got: %d '%s'\n", lenx, tmp6);
 
     unsigned long olen = 0;
-    unsigned char *res2 = base64_decode(buf, lenx, &olen);
+    unsigned char *res2 = base64_decode(tmp6, lenx, &olen);
+    free(tmp6);
     if(!res2)
         {
         printf("hspass() cannot decode.\n");
         }
     else
         {
-        printf("hspass() decoded:\n");
-        hexdump(res2, olen); printf("\n");
+        //printf("hspass() decoded:\n");
+        //hexdump(res2, olen); printf("\n");
 
-        char tmp5[1024];
-        memset(tmp5, '\0', sizeof(tmp5));
-        int   ret = private_decrypt(res2, olen, tmp4, tmp5);
-        //free(res2);
-        //printf("decoded: len=%d '%s'\n", ret, buf);
-        if(ret >= 0)
-            strcpy(buf, tmp5);
+        char *tmp5 = malloc(MAXPASSLEN * 2);
+        if(tmp5)
+            {
+            memset(tmp5, '\0', MAXPASSLEN * 2);
+            int   ret = private_decrypt(res2, olen, tmp4, tmp5);
+            //printf("decoded: len=%d '%s'\n", ret, buf);
+            free(res2);
+            if(ret >= 0)
+                strcpy(buf, tmp5);
+            free(tmp5);
+            }
         }
+
     (void) close(pfd[0]);
     (void) sigaction(SIGPIPE, &saved_sa_pipe, NULL);
 
-    //int xx = 0; while(1)
-    //    {
-    //    if(!argx[xx]) break;
-    //    free(argx[xx]);
-    //    xx++;
-    //    }
-    //hslog(0, "Askpass got: '%s'", xpass);
-    return(0);
+
+  cleanup:
+    if( tmp4) free(tmp4);
+    // Free array
+    { int xx = 0; while(1)
+        {
+        if(!argx[xx]) break;
+        free(argx[xx]);
+        xx++;
+        }
+    }
+    return(mainret);
 }
 
 // Get the password for the current mount and / or create a new one.
@@ -727,7 +740,7 @@ int     pass_ritual(char *mroot, char *mdata, char *pass, int *plen, char *passp
                 }
             memset(xpass2, 0, xlen2);
             }
-        ret = create_markfile(tmp2, pass, plen);
+        ret = create_markfile(tmp2, pass, *plen);
         if (ret)
             {
             hsprint(TO_ERR|TO_LOG, -1, "Error on creating markfile.\n");
@@ -735,7 +748,7 @@ int     pass_ritual(char *mroot, char *mdata, char *pass, int *plen, char *passp
         }
     else
         {
-        ret = check_markfile(tmp2, pass, plen);
+        ret = check_markfile(tmp2, pass, *plen);
         //if (ret)
         //    {
         //    hsprint(TO_ERR|TO_LOG, -1, "Invalid pass entered by uid: %d\n", getuid());

@@ -7,7 +7,11 @@
 #include <string.h>
 #include <unistd.h>
 #include <syslog.h>
+#include <stdarg.h>
+#include <dirent.h>
+#include <fuse.h>
 
+#include "../src/hsencfs.h"
 #include "../src/base64.h"
 #include "hsutils.h"
 #include "hspass.h"
@@ -22,45 +26,49 @@ int     gui = 0;
 char    *markfile = "markfile";
 char    *defpass = "";
 
-char buff[4096];
+// Front end for asking pass
 
-char    *getpass_local(char *prompt, int *plen)
+char    *getpass_front(char *prompt, int create)
 {
+    char *retp = malloc(MAXPASSLEN);
+
     int xlen = strlen(defpass);
     if(xlen)
         {
-        *plen = xlen;
-        return defpass;
+        strcpy(retp, defpass);
+        return retp;
         }
     if(gui)
         {
-        char *passprog = "../askpass/hsaskpass.py Hello 0";
-        int ret = hs_askpass(passprog, buff, sizeof(buff));
+        char *passprog = malloc(PATH_MAX);
+        snprintf(passprog, PATH_MAX, "%s %s %d",
+                            "../askpass/hsaskpass.py",  "Hello1", create);
+        //printf("passprog: '%s'\n", passprog);
+        int ret = hs_askpass(passprog, retp, MAXPASSLEN);
+        free(passprog);
         if(ret)
             {
             printf("Error on  pass %d\n", ret);
             exit(1);
             }
-        printf("hs_askpass() returned pass: '%s'\n", buff);
-        int lenx = strlen(buff);
-        if(!lenx)
+        printf("hs_askpass() %d returned pass: '%s'\n", ret, retp);
+        if(!strlen(retp))
             {
             printf("No gui pass, aborted.\n");
             exit(1);
             }
-
-        *plen = strlen(buff);
-        return buff;
+        //*plen = strlen(retp);
+        return retp;
         }
     //"Enter new pass for HSENCFS: ");
     char *xpass = getpassx(prompt);
-    *plen = strlen(xpass);
-    //printf("password: '%s'\n", xpass);
-    if(! *plen)
-        {
-        printf("No pass, aborted.\n");
-        exit(1);
-        }
+    //*plen = strlen(xpass);
+    ////printf("password: '%s'\n", xpass);
+    //if(! plen)
+    //    {
+    //    printf("No pass, aborted.\n");
+    //    exit(1);
+    //    }
     return xpass;
 }
 
@@ -138,9 +146,9 @@ int main(int argc, char *argv[])
     if(create)
         {
         int xlen = 0;
-        char *xpass = getpass_local("Enter new pass for HSENCFS: ", &xlen);
-        create_markfile(markfile, xpass, &xlen);
-        printf("Created new markfile with: %s\n", xpass);
+        char *xpass = getpass_front("Enter new pass for HSENCFS: ", create);
+        create_markfile(markfile, xpass, strlen(xpass));
+        printf("Created new markfile with: '%s'\n", xpass);
         exit(0);
         }
     else
@@ -148,11 +156,13 @@ int main(int argc, char *argv[])
         if(access(markfile, R_OK) < 0)
             {
             printf("Cannot access mark file: '%s'\n", markfile);
-            exit(1);
+            //exit(1);
+            create = 1;
             }
+
         int xlen = 0;
-        char *xpass = getpass_local("Enter pass for HSENCFS: ", &xlen);
-        int ret = check_markfile(markfile, xpass, &xlen);
+        char *xpass = getpass_front("Enter pass for HSENCFS: ", create);
+        int ret = check_markfile(markfile, xpass, (int)strlen(xpass));
         printf("Check returned: %d.\n", ret);
         }
     //memset(xpass, 0, xlen);
