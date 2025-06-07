@@ -34,30 +34,20 @@ char    *getpass_local(char *prompt, int *plen)
         }
     if(gui)
         {
-        char *passprog = "../hsaskpass.py Hello 0";
-
+        char *passprog = "../askpass/hsaskpass.py Hello 0";
         int ret = hs_askpass(passprog, buff, sizeof(buff));
         if(ret)
             {
-            printf("hs_askpass returned: %d\n", ret);
+            printf("Error on  pass %d\n", ret);
             exit(1);
             }
+        printf("hs_askpass() returned pass: '%s'\n", buff);
         int lenx = strlen(buff);
         if(!lenx)
             {
             printf("No gui pass, aborted.\n");
             exit(1);
             }
-        unsigned long olen = 0;
-        unsigned char *res2 = base64_decode(buff, lenx, &olen);
-        if(res2)
-            {
-            strcpy(buff, res2);
-            //printf("buff: %s\n", buff);
-            free(res2);
-            }
-
-        printf("hs_askpass password: lenx=%d '%s'\n", lenx, buff);
 
         *plen = strlen(buff);
         return buff;
@@ -72,6 +62,22 @@ char    *getpass_local(char *prompt, int *plen)
         exit(1);
         }
     return xpass;
+}
+
+static void hexdump(char *ptr, int len)
+{
+    int llen = 24;
+    for (int aa = 0; aa < len; aa++)
+        {
+        uchar chh = ptr[aa] & 0xff;
+        if(chh > 127 || chh < 32)
+            printf("%.2x ", chh);
+        else
+            printf(" %c ", chh);
+
+        if (aa % llen == llen-1)
+            printf("\n");
+        }
 }
 
 int main(int argc, char *argv[])

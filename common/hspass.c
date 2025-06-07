@@ -96,7 +96,10 @@ typedef unsigned char uchar;
 
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
-static int pad = RSA_PKCS1_PADDING;
+//static int pad = RSA_PKCS1_PADDING;
+//static int pad = RSA_NO_PADDING;
+static int pad = RSA_PKCS1_OAEP_PADDING;
+
 static const char *propq = NULL;
 
 static void hexdump(char *ptr, int len)
@@ -272,7 +275,6 @@ int     private_decrypt(uchar * enc_data, int data_len, uchar *key, uchar *dbuf)
     RSA_free(rsa);
     return result;
 }
-
 
 //////////////////////////////////////////////////////////////////////////
 // Create mark file. Random block, one half is encrypted with the
@@ -518,7 +520,6 @@ int     hs_askpass(const char *program, char *buf, int buflen)
                 "Askpass is not an executable: '%s'\n", program);
         return -1;
         }
-
     //char cwd[PATH_MAX];
     hslog(0, "Asking pass with program: '%s'", program);
 
@@ -526,14 +527,14 @@ int     hs_askpass(const char *program, char *buf, int buflen)
     char *tmp3 = malloc(1024);
     char* ptr = publicKeyToString(pub, tmp3, 1024);
     //tmp3[11] = 'x';
-    printf("tmp3: %ld '%s'\n", strlen(tmp3), tmp3);
+    //printf("tmp3: %ld '%s'\n", strlen(tmp3), tmp3);
 
     argx[idx] = tmp3;
     argx[idx+1] = NULL;
 
     char *tmp4 = malloc(2000);
     char* ptr2 = privateKeyToString(pub, tmp4, 2000);
-    printf("tmp4: %ld '%s'\n", strlen(tmp4), tmp4);
+    //printf("tmp4: %ld '%s'\n", strlen(tmp4), tmp4);
 
     //{   int xx = 0; while(1) {
     //        hslog(0, "argx ptr: '%s'\n", argx[xx]);
@@ -595,25 +596,29 @@ int     hs_askpass(const char *program, char *buf, int buflen)
     /* Get response from child and restore SIGPIPE handler */
     (void) close(pfd[1]);
 
-    //char *xpass =
     getlinex(pfd[0], buf, buflen);
     int lenx = strlen(buf);
-    printf("got: %d '%s'\n", lenx, buf);
+    //printf("hspass() got: %d '%s'\n", lenx, buf);
 
     unsigned long olen = 0;
     unsigned char *res2 = base64_decode(buf, lenx, &olen);
-    if(res2)
+    if(!res2)
         {
-        strcpy(buf, res2);
-        free(res2);
+        printf("hspass() cannot decode.\n");
         }
-    printf("decoded: '%s'\n", buf);
+    else
+        {
+        printf("hspass() decoded:\n");
+        hexdump(res2, olen); printf("\n");
 
-    char tmp5[1024];
-    int   ret = private_decrypt(buf, olen, tmp4, tmp5);
-    if(ret >= 0)
-        strcpy(buf, tmp5);
-
+        char tmp5[1024];
+        memset(tmp5, '\0', sizeof(tmp5));
+        int   ret = private_decrypt(res2, olen, tmp4, tmp5);
+        //free(res2);
+        //printf("decoded: len=%d '%s'\n", ret, buf);
+        if(ret >= 0)
+            strcpy(buf, tmp5);
+        }
     (void) close(pfd[0]);
     (void) sigaction(SIGPIPE, &saved_sa_pipe, NULL);
 

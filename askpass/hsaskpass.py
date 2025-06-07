@@ -4,7 +4,7 @@ from __future__ import print_function
 
 # GUI propmt for the user of HSENCFS
 
-import os, sys, getopt, signal, base64
+import os, sys, getopt, signal, base64, syslog, time
 
 import gi
 gi.require_version("Gtk", "3.0")
@@ -13,6 +13,17 @@ from gi.repository import Gdk
 
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import AES, PKCS1_OAEP
+
+import ssl
+
+def mylog(*args):
+
+    sumx = ""
+    for aa in args:
+        sumx += str(aa) + " "
+    syslog.syslog(sumx)
+
+#print(dir(ssl))
 
 def message_dialog(strx, header = "Message Dialog" ):
 
@@ -158,79 +169,92 @@ def area_key(win, event, crflag):
 # Start of program:
 if __name__ == '__main__':
 
-    pre = "Enter HSENCFS Password"
-    prompt = ": ";  created = 0; keyx = ""
-
     try:
-        if sys.argv[1]:
-            prompt = " for '" + sys.argv[1] + "' ";
-    except:
-        pass
-    try:
-        if sys.argv[2]:
-            created = int(sys.argv[2])
-    except:
-        pass
-    try:
-        if sys.argv[3]:
-            keyx = sys.argv[3]
-    except:
-        pass
-
-    #print("prompt:", prompt)
-    #print("created:", created)
-    #print("keyx:", keyx)
-    if keyx:
-        pre = "*" + pre
-    while 1:
-        text, text2 = getpass(
-                "%s%s" % (pre, prompt), created);
-        if created:
-            # Compare
-            #print("comparing:", text, text2)
-            if text == None:
-                text = ""
-                break
-            elif text == "":
-                message_dialog("No empty passwords allowed.", "Passwords Message")
-            elif text == text2:
-                break
-            else:
-                message_dialog("Passwords do not match.", "Passwords Message")
-        else:
-            if text == None:
-                text = ""
-            break
-
-    # Does not have to be rocket science ...
-    # Just to hide from plaintext view:
-    #print(sss.decode())
-    #print(enc_text)
-
-    #print(mykey)
-    # Turns out rocket science is needed
-    # Create pub key from str:
-    if keyx:
+        pre = "Enter HSENCFS Password"
+        prompt = ": ";  created = 0; keyx = ""
+        #syslog.openlog("hsencfs")
         try:
-            mykey = RSA.import_key(keyx)
+            if sys.argv[1]:
+                prompt = " for '" + sys.argv[1] + "' ";
         except:
-            text = str(sys.exc_info())
-            #print(text)
-            sss = base64.b64encode(text.encode())
-            print(sss.decode(), end = "")
-            sys.exit(0)
+            pass
+        try:
+            if sys.argv[2]:
+                created = int(sys.argv[2])
+        except:
+            pass
+        try:
+            if sys.argv[3]:
+                keyx = sys.argv[3]
+        except:
+            pass
 
-        cipher_rsa = PKCS1_OAEP.new(mykey)
-        enc_text = cipher_rsa.encrypt(text.encode())
-        #print("enc_text", enc_text)
-        #dec_text = cipher_rsa.decrypt(enc_text)
-        #print("de_text", b"'" + dec_text + b"'")
-        sss = base64.b64encode(text.encode())
-        #sss = base64.b64encode(enc_text)
-        print(sss.decode(), end = "")
-        #print("text, end = "")
-    else:
-        sss = base64.b64encode(text.encode())
-        print(sss.decode(), end = "")
+        mylog("Started hsakpass.py", prompt)
+
+        #print("prompt:", prompt)
+        #print("created:", created)
+        #print("keyx:", keyx)
+        if keyx:
+            pre = "*" + pre
+        while 1:
+            text, text2 = getpass(
+                    "%s%s" % (pre, prompt), created);
+            if created:
+                # Compare
+                #print("comparing:", text, text2)
+                if text == None:
+                    text = ""
+                    break
+                elif text == "":
+                    message_dialog("No empty passwords allowed.", "Passwords Message")
+                elif text == text2:
+                    break
+                else:
+                    message_dialog("Passwords do not match.", "Passwords Message")
+            else:
+                if text == None:
+                    text = ""
+                break
+
+        # Does not have to be rocket science ...
+        # Just to hide from plaintext view:
+        #print(sss.decode())
+        #print(enc_text)
+
+        # Turns out rocket science is needed
+        # Create pub key from str:
+        if keyx:
+            try:
+                mykey = RSA.import_key(keyx)
+                mylog("mykey", mykey)
+            except:
+                text = str(sys.exc_info())
+                #print(text)
+                sss = base64.b64encode(text.encode())
+                print(sss.decode(), end = "")
+                mylog("Cannot create key.")
+                mykey = None
+                sys.exit(0)
+
+            cipher_rsa = PKCS1_OAEP.new(mykey)
+            ksize = mykey.size_in_bytes()
+            #mylog("keysize", ksize)
+            #text2 = text + (ksize - len(text)) * "*"
+            #mylog("do text", "'" + text2 + "'")
+            enc_text = cipher_rsa.encrypt(text.encode())
+            # This needs private key
+            #dec_text = cipher_rsa.decrypt(enc_text)
+            #mylog("dec_text", dec_text)
+            #print("de_text", b"'" + dec_text + b"'")
+            sss = base64.b64encode(enc_text)
+        else:
+            sss = base64.b64encode(text.encode())
+
+        #mylog("sss: ", len(sss), sss)
+    except:
+        mylog("exception: ", sys.exc_info())
+
+    #mylog("sss:", len(sss), sss.decode())
+    print(sss.decode(), end = "")
 
 # EOF
