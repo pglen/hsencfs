@@ -17,6 +17,9 @@
 # ------------------------------------------------------------------------
 # Makefile for hsaskpass python module.
 
+#all:
+#	echo Making module
+
 am__is_gnu_make = { \
   if test -z '$(MAKELEVEL)'; then \
     false; \
@@ -564,9 +567,6 @@ uninstall-am:
 
 .PRECIOUS: Makefile
 
-
-all:
-	echo Making module
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

@@ -11,8 +11,8 @@
 #include <dirent.h>
 #include <fuse.h>
 
-#include "../src/hsencfs.h"
-#include "../src/base64.h"
+#include "hsencfs.h"
+#include "base64.h"
 #include "hsutils.h"
 #include "hspass.h"
 

@@ -40,9 +40,9 @@
 #endif
 
 #include "hsutils.h"
-#include "../src/hsencfs.h"
-#include "../src/base64.h"
-#include "../bluepoint/bluepoint2.h"
+#include "hsencfs.h"
+#include "base64.h"
+#include "bluepoint2.h"
 
 char  *passfname = ".passdata.datx";
 

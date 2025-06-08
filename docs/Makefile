@@ -88,16 +88,16 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-build_triplet = x86_64-pc-linux-gnu
-host_triplet = x86_64-pc-linux-gnu
-subdir = docs
+subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
-DIST_COMMON = $(srcdir)/Makefile.am $(am__DIST_COMMON)
+DIST_COMMON = $(srcdir)/Makefile.am $(top_srcdir)/configure \
+	$(am__configure_deps) $(am__DIST_COMMON)
+am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
+ configure.lineno config.status.lineno
 mkinstalldirs = $(install_sh) -d
-CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 AM_V_P = $(am__v_P_$(V))
@@ -192,8 +192,27 @@ NROFF = nroff
 MANS = $(dist_man_MANS) $(man1_MANS)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
 am__DIST_COMMON = $(dist_man_MANS) $(hsencfs_TEXINFOS) \
-	$(srcdir)/Makefile.in TODO mdate-sh texinfo.tex
+	$(srcdir)/Makefile.in $(top_srcdir)/../install-sh \
+	$(top_srcdir)/../missing TODO mdate-sh texinfo.tex
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+distdir = $(PACKAGE)-$(VERSION)
+top_distdir = $(distdir)
+am__remove_distdir = \
+  if test -d "$(distdir)"; then \
+    find "$(distdir)" -type d ! -perm -200 -exec chmod u+w {} ';' \
+      && rm -rf "$(distdir)" \
+      || { sleep 5 && rm -rf "$(distdir)"; }; \
+  else :; fi
+am__post_remove_distdir = $(am__remove_distdir)
+DIST_ARCHIVES = $(distdir).tar.gz
+GZIP_ENV = --best
+DIST_TARGETS = dist-gzip
+# Exists only to be overridden by the user if desired.
+AM_DISTCHECK_DVI_TARGET = dvi
+distuninstallcheck_listfiles = find . -type f -print
+am__distuninstallcheck_listfiles = $(distuninstallcheck_listfiles) \
+  | sed 's|^\./|$(prefix)/|' | grep -v '$(infodir)/dir$$'
+distcleancheck_listfiles = find . -type f -print
 ACLOCAL = ${SHELL} '/home/peterglen/pgsrc/hsencfs/hsencfs/missing' aclocal-1.16
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 1
@@ -201,35 +220,24 @@ AUTOCONF = ${SHELL} '/home/peterglen/pgsrc/hsencfs/hsencfs/missing' autoconf
 AUTOHEADER = ${SHELL} '/home/peterglen/pgsrc/hsencfs/hsencfs/missing' autoheader
 AUTOMAKE = ${SHELL} '/home/peterglen/pgsrc/hsencfs/hsencfs/missing' automake-1.16
 AWK = gawk
-CC = gcc
-CCDEPMODE = depmode=gcc3
-CFLAGS = 
-CPP = gcc -E
-CPPFLAGS =   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS
 CSCOPE = cscope
 CTAGS = ctags
 CYGPATH_W = echo
 DEFS = -DHAVE_CONFIG_H
-DEPDIR = .deps
 ECHO_C = 
 ECHO_N = -n
 ECHO_T = 
-EGREP = /bin/grep -E
 ETAGS = etags
-EXEEXT = 
-GREP = /bin/grep
 INSTALL = /bin/install -c
 INSTALL_DATA = ${INSTALL} -m 644
 INSTALL_PROGRAM = ${INSTALL}
 INSTALL_SCRIPT = ${INSTALL}
 INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
-LDFLAGS =   
 LIBOBJS = 
 LIBS = -lulockmgr 
 LTLIBOBJS = 
 MAKEINFO = ${SHELL} '/home/peterglen/pgsrc/hsencfs/hsencfs/missing' makeinfo
 MKDIR_P = /bin/mkdir -p
-OBJEXT = o
 PACKAGE = hsencfs
 PACKAGE_BUGREPORT = peterglen99@gmail.com
 PACKAGE_NAME = hsencfs
@@ -238,9 +246,6 @@ PACKAGE_TARNAME = hsencfs
 PACKAGE_URL = 
 PACKAGE_VERSION = 1.5.0
 PATH_SEPARATOR = :
-PKG_CONFIG = /usr/bin/pkg-config
-PKG_CONFIG_LIBDIR = 
-PKG_CONFIG_PATH = 
 SET_MAKE = 
 SHELL = /bin/bash
 STRIP = 
@@ -249,29 +254,18 @@ abs_builddir = /home/peterglen/pgsrc/hsencfs/hsencfs/docs
 abs_srcdir = /home/peterglen/pgsrc/hsencfs/hsencfs/docs
 abs_top_builddir = /home/peterglen/pgsrc/hsencfs/hsencfs
 abs_top_srcdir = /home/peterglen/pgsrc/hsencfs/hsencfs
-ac_ct_CC = gcc
-am__include = include
 am__leading_dot = .
-am__quote = 
 am__tar = $${TAR-tar} chof - "$$tardir"
 am__untar = $${TAR-tar} xf -
 bindir = ${exec_prefix}/bin
-build = x86_64-pc-linux-gnu
 build_alias = 
-build_cpu = x86_64
-build_os = linux-gnu
-build_vendor = pc
 builddir = .
 datadir = ${datarootdir}
 datarootdir = ${prefix}/share
 docdir = ${datarootdir}/doc/${PACKAGE_TARNAME}
 dvidir = ${docdir}
 exec_prefix = ${prefix}
-host = x86_64-pc-linux-gnu
 host_alias = 
-host_cpu = x86_64
-host_os = linux-gnu
-host_vendor = pc
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
@@ -291,9 +285,7 @@ runstatedir = ${localstatedir}/run
 sbindir = ${exec_prefix}/sbin
 sharedstatedir = ${prefix}/com
 srcdir = .
-subdirs =  bluepoint common src
 sysconfdir = ${prefix}/etc
-systemdsystemunitdir = /lib/systemd/system
 target_alias = 
 top_build_prefix = ../
 top_builddir = ..
@@ -308,34 +300,38 @@ all: all-am
 
 .SUFFIXES:
 .SUFFIXES: .dvi .html .info .pdf .ps .texi
+am--refresh: Makefile
+	@:
 $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
-	      ( cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh ) \
-	        && { if test -f $@; then exit 0; else break; fi; }; \
+	      echo ' cd $(srcdir) && $(AUTOMAKE) --foreign'; \
+	      $(am__cd) $(srcdir) && $(AUTOMAKE) --foreign \
+		&& exit 0; \
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu docs/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu docs/Makefile
+	  $(AUTOMAKE) --foreign Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
 	  *config.status*) \
-	    cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh;; \
+	    echo ' $(SHELL) ./config.status'; \
+	    $(SHELL) ./config.status;; \
 	  *) \
-	    echo ' cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@ $(am__maybe_remake_depfiles)'; \
-	    cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@ $(am__maybe_remake_depfiles);; \
+	    echo ' cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__maybe_remake_depfiles)'; \
+	    cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__maybe_remake_depfiles);; \
 	esac;
 
 $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
-	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
+	$(SHELL) ./config.status --recheck
 
 $(top_srcdir)/configure:  $(am__configure_deps)
-	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
+	$(am__cd) $(srcdir) && $(AUTOCONF)
 $(ACLOCAL_M4):  $(am__aclocal_m4_deps)
-	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
+	$(am__cd) $(srcdir) && $(ACLOCAL) $(ACLOCAL_AMFLAGS)
 $(am__aclocal_m4_deps):
 
 .texi.info:
@@ -531,6 +527,8 @@ distdir: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) distdir-am
 
 distdir-am: $(DISTFILES)
+	$(am__remove_distdir)
+	test -d "$(distdir)" || mkdir "$(distdir)"
 	@srcdirstrip=`echo "$(srcdir)" | sed 's/[].[^$$\\*]/\\\\&/g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's/[].[^$$\\*]/\\\\&/g'`; \
 	list='$(DISTFILES)'; \
@@ -563,6 +561,143 @@ distdir-am: $(DISTFILES)
 	$(MAKE) $(AM_MAKEFLAGS) \
 	  top_distdir="$(top_distdir)" distdir="$(distdir)" \
 	  dist-info
+	-test -n "$(am__skip_mode_fix)" \
+	|| find "$(distdir)" -type d ! -perm -755 \
+		-exec chmod u+rwx,go+rx {} \; -o \
+	  ! -type d ! -perm -444 -links 1 -exec chmod a+r {} \; -o \
+	  ! -type d ! -perm -400 -exec chmod a+r {} \; -o \
+	  ! -type d ! -perm -444 -exec $(install_sh) -c -m a+r {} {} \; \
+	|| chmod -R a+r "$(distdir)"
+dist-gzip: distdir
+	tardir=$(distdir) && $(am__tar) | eval GZIP= gzip $(GZIP_ENV) -c >$(distdir).tar.gz
+	$(am__post_remove_distdir)
+
+dist-bzip2: distdir
+	tardir=$(distdir) && $(am__tar) | BZIP2=$${BZIP2--9} bzip2 -c >$(distdir).tar.bz2
+	$(am__post_remove_distdir)
+
+dist-lzip: distdir
+	tardir=$(distdir) && $(am__tar) | lzip -c $${LZIP_OPT--9} >$(distdir).tar.lz
+	$(am__post_remove_distdir)
+
+dist-xz: distdir
+	tardir=$(distdir) && $(am__tar) | XZ_OPT=$${XZ_OPT--e} xz -c >$(distdir).tar.xz
+	$(am__post_remove_distdir)
+
+dist-zstd: distdir
+	tardir=$(distdir) && $(am__tar) | zstd -c $${ZSTD_CLEVEL-$${ZSTD_OPT--19}} >$(distdir).tar.zst
+	$(am__post_remove_distdir)
+
+dist-tarZ: distdir
+	@echo WARNING: "Support for distribution archives compressed with" \
+		       "legacy program 'compress' is deprecated." >&2
+	@echo WARNING: "It will be removed altogether in Automake 2.0" >&2
+	tardir=$(distdir) && $(am__tar) | compress -c >$(distdir).tar.Z
+	$(am__post_remove_distdir)
+
+dist-shar: distdir
+	@echo WARNING: "Support for shar distribution archives is" \
+	               "deprecated." >&2
+	@echo WARNING: "It will be removed altogether in Automake 2.0" >&2
+	shar $(distdir) | eval GZIP= gzip $(GZIP_ENV) -c >$(distdir).shar.gz
+	$(am__post_remove_distdir)
+
+dist-zip: distdir
+	-rm -f $(distdir).zip
+	zip -rq $(distdir).zip $(distdir)
+	$(am__post_remove_distdir)
+
+dist dist-all:
+	$(MAKE) $(AM_MAKEFLAGS) $(DIST_TARGETS) am__post_remove_distdir='@:'
+	$(am__post_remove_distdir)
+
+# This target untars the dist file and tries a VPATH configuration.  Then
+# it guarantees that the distribution is self-contained by making another
+# tarfile.
+distcheck: dist
+	case '$(DIST_ARCHIVES)' in \
+	*.tar.gz*) \
+	  eval GZIP= gzip $(GZIP_ENV) -dc $(distdir).tar.gz | $(am__untar) ;;\
+	*.tar.bz2*) \
+	  bzip2 -dc $(distdir).tar.bz2 | $(am__untar) ;;\
+	*.tar.lz*) \
+	  lzip -dc $(distdir).tar.lz | $(am__untar) ;;\
+	*.tar.xz*) \
+	  xz -dc $(distdir).tar.xz | $(am__untar) ;;\
+	*.tar.Z*) \
+	  uncompress -c $(distdir).tar.Z | $(am__untar) ;;\
+	*.shar.gz*) \
+	  eval GZIP= gzip $(GZIP_ENV) -dc $(distdir).shar.gz | unshar ;;\
+	*.zip*) \
+	  unzip $(distdir).zip ;;\
+	*.tar.zst*) \
+	  zstd -dc $(distdir).tar.zst | $(am__untar) ;;\
+	esac
+	chmod -R a-w $(distdir)
+	chmod u+w $(distdir)
+	mkdir $(distdir)/_build $(distdir)/_build/sub $(distdir)/_inst
+	chmod a-w $(distdir)
+	test -d $(distdir)/_build || exit 0; \
+	dc_install_base=`$(am__cd) $(distdir)/_inst && pwd | sed -e 's,^[^:\\/]:[\\/],/,'` \
+	  && dc_destdir="$${TMPDIR-/tmp}/am-dc-$$$$/" \
+	  && am__cwd=`pwd` \
+	  && $(am__cd) $(distdir)/_build/sub \
+	  && ../../configure \
+	    $(AM_DISTCHECK_CONFIGURE_FLAGS) \
+	    $(DISTCHECK_CONFIGURE_FLAGS) \
+	    --srcdir=../.. --prefix="$$dc_install_base" \
+	  && $(MAKE) $(AM_MAKEFLAGS) \
+	  && $(MAKE) $(AM_MAKEFLAGS) $(AM_DISTCHECK_DVI_TARGET) \
+	  && $(MAKE) $(AM_MAKEFLAGS) check \
+	  && $(MAKE) $(AM_MAKEFLAGS) install \
+	  && $(MAKE) $(AM_MAKEFLAGS) installcheck \
+	  && $(MAKE) $(AM_MAKEFLAGS) uninstall \
+	  && $(MAKE) $(AM_MAKEFLAGS) distuninstallcheck_dir="$$dc_install_base" \
+	        distuninstallcheck \
+	  && chmod -R a-w "$$dc_install_base" \
+	  && ({ \
+	       (cd ../.. && umask 077 && mkdir "$$dc_destdir") \
+	       && $(MAKE) $(AM_MAKEFLAGS) DESTDIR="$$dc_destdir" install \
+	       && $(MAKE) $(AM_MAKEFLAGS) DESTDIR="$$dc_destdir" uninstall \
+	       && $(MAKE) $(AM_MAKEFLAGS) DESTDIR="$$dc_destdir" \
+	            distuninstallcheck_dir="$$dc_destdir" distuninstallcheck; \
+	      } || { rm -rf "$$dc_destdir"; exit 1; }) \
+	  && rm -rf "$$dc_destdir" \
+	  && $(MAKE) $(AM_MAKEFLAGS) dist \
+	  && rm -rf $(DIST_ARCHIVES) \
+	  && $(MAKE) $(AM_MAKEFLAGS) distcleancheck \
+	  && cd "$$am__cwd" \
+	  || exit 1
+	$(am__post_remove_distdir)
+	@(echo "$(distdir) archives ready for distribution: "; \
+	  list='$(DIST_ARCHIVES)'; for i in $$list; do echo $$i; done) | \
+	  sed -e 1h -e 1s/./=/g -e 1p -e 1x -e '$$p' -e '$$x'
+distuninstallcheck:
+	@test -n '$(distuninstallcheck_dir)' || { \
+	  echo 'ERROR: trying to run $@ with an empty' \
+	       '$$(distuninstallcheck_dir)' >&2; \
+	  exit 1; \
+	}; \
+	$(am__cd) '$(distuninstallcheck_dir)' || { \
+	  echo 'ERROR: cannot chdir into $(distuninstallcheck_dir)' >&2; \
+	  exit 1; \
+	}; \
+	test `$(am__distuninstallcheck_listfiles) | wc -l` -eq 0 \
+	   || { echo "ERROR: files left after uninstall:" ; \
+	        if test -n "$(DESTDIR)"; then \
+	          echo "  (check DESTDIR support)"; \
+	        fi ; \
+	        $(distuninstallcheck_listfiles) ; \
+	        exit 1; } >&2
+distcleancheck: distclean
+	@if test '$(srcdir)' = . ; then \
+	  echo "ERROR: distcleancheck can only run from a VPATH build" ; \
+	  exit 1 ; \
+	fi
+	@test `$(distcleancheck_listfiles) | wc -l` -eq 0 \
+	  || { echo "ERROR: files left in build directory after distclean:" ; \
+	       $(distcleancheck_listfiles) ; \
+	       exit 1; } >&2
 check-am: all-am
 check: check-am
 all-am: Makefile $(INFO_DEPS) $(MANS)
@@ -605,6 +740,7 @@ clean: clean-am
 clean-am: clean-aminfo clean-generic mostlyclean-am
 
 distclean: distclean-am
+	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -f Makefile
 distclean-am: clean-am distclean-generic
 
@@ -740,6 +876,8 @@ install-ps-am: $(PSS)
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
+	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
+	-rm -rf $(top_srcdir)/autom4te.cache
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-aminfo \
 	maintainer-clean-generic
@@ -763,20 +901,22 @@ uninstall-man: uninstall-man1
 
 .MAKE: install-am install-strip
 
-.PHONY: all all-am check check-am clean clean-aminfo clean-generic \
-	cscopelist-am ctags-am dist-info distclean distclean-generic \
-	distdir dvi dvi-am html html-am info info-am install \
-	install-am install-data install-data-am install-dvi \
-	install-dvi-am install-exec install-exec-am install-html \
-	install-html-am install-info install-info-am install-man \
-	install-man1 install-pdf install-pdf-am install-ps \
-	install-ps-am install-strip installcheck installcheck-am \
-	installdirs maintainer-clean maintainer-clean-aminfo \
-	maintainer-clean-generic mostlyclean mostlyclean-aminfo \
-	mostlyclean-generic pdf pdf-am ps ps-am tags-am uninstall \
-	uninstall-am uninstall-dvi-am uninstall-html-am \
-	uninstall-info-am uninstall-man uninstall-man1 \
-	uninstall-pdf-am uninstall-ps-am
+.PHONY: all all-am am--refresh check check-am clean clean-aminfo \
+	clean-generic cscopelist-am ctags-am dist dist-all dist-bzip2 \
+	dist-gzip dist-info dist-lzip dist-shar dist-tarZ dist-xz \
+	dist-zip dist-zstd distcheck distclean distclean-generic \
+	distcleancheck distdir distuninstallcheck dvi dvi-am html \
+	html-am info info-am install install-am install-data \
+	install-data-am install-dvi install-dvi-am install-exec \
+	install-exec-am install-html install-html-am install-info \
+	install-info-am install-man install-man1 install-pdf \
+	install-pdf-am install-ps install-ps-am install-strip \
+	installcheck installcheck-am installdirs maintainer-clean \
+	maintainer-clean-aminfo maintainer-clean-generic mostlyclean \
+	mostlyclean-aminfo mostlyclean-generic pdf pdf-am ps ps-am \
+	tags-am uninstall uninstall-am uninstall-dvi-am \
+	uninstall-html-am uninstall-info-am uninstall-man \
+	uninstall-man1 uninstall-pdf-am uninstall-ps-am
 
 .PRECIOUS: Makefile
 

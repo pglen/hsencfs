@@ -4,7 +4,7 @@
 # It will encrypt data on write, decrypt data on read.
 #
 
-SUBDIRS = common bluepoint src . docs systemd
+SUBDIRS = common bluepoint src  docs systemd
 
 PAN_SERV=GNOME_HSENCApplet.server
 BONOBO_DIR=/usr/lib/bonobo/servers
@@ -18,7 +18,7 @@ dist_doc_DATA = PASSES FUSEOPTS QUICKSTART SECURITY PASSHINTS DISCLAIMER\
 
 # Scripts for askpass and tray
 dist_bin_SCRIPTS =                  \
-        hsaskpass.py                \
+        askpass/hsaskpass.py        \
         hstray.py
 
 EXTRA_DIST =                       \

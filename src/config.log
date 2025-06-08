@@ -32,6 +32,7 @@ PATH: /usr/local/go/bin/
 PATH: /home/peterglen/.cargo/bin/
 PATH: /usr/local/bin/
 PATH: /home/peterglen/pgbin/
+PATH: /home/peterglen/.local/bin/
 PATH: /bin/
 PATH: /usr/bin/
 PATH: /sbin/

@@ -11,41 +11,39 @@ noinst_PROGRAMS = testpass
 
 testpassdir = .
 
-testpass_CFLAGS = -D_FILE_OFFSET_BITS=64 -O2 -I$(srcdir)/bluepoint
+myincs =    -I$(srcdir)/../bluepoint -I$(srcdir)/../src \
+            -I$(srcdir)/../common
+cryptx =    ../bluepoint/hs_crypt.c     \
+            ../bluepoint/bluepoint2.c
+
+testpass_CFLAGS = -D_FILE_OFFSET_BITS=64 -O2  $(myincs)
 testpass_LDADD = -lulockmgr -lfuse3  -lcrypto -lssl
-testpass_SOURCES = testpass.c hsutils.c hspass.c \
-          ../src/base64   \
-                        ../bluepoint/bluepoint2.c ../src/base64.c
+testpass_SOURCES = testpass.c hsutils.c hspass.c base64.c \
+                    $(cryptx)
 
 bin_PROGRAMS =  bpdec2 bpenc2
 
-# Was in the tools directory
+#bpenc2dir = .
+bpenc2_SOURCES  = bpenc2.c  bp2com.c hsutils.c      \
+                            base64.c hspass.c       \
+                            $(cryptx)
 
-bpenc2dir = .
-bpenc2_SOURCES  = bpenc2.c  bp2com.c  ../common/hsutils.c \
-                        ../src/base64.c   \
-                        ../common/hspass.c        \
-                        ../bluepoint/hs_crypt.c   \
-                        ../bluepoint/hs_crypt.h   \
-                        ../bluepoint/bluepoint2.c \
-                        ../bluepoint/bluepoint2.h
+bpenc2_CFLAGS   =  -g -D_FILE_OFFSET_BITS=64  $(myincs) \
+                            -lssl -lcrypt
 
-bpenc2_CFLAGS   =  -g -D_FILE_OFFSET_BITS=64  -I$(srcdir)/../bluepoint \
-                 -I$(srcdir)/../common -lssl -lcrypt
 bpenc2_DEPENDENCIES =
 
 bpenc2_LDADD = -lulockmgr -lfuse3  -lcrypto -lssl
 
-bpdec2dir = .
-bpdec2_SOURCES  =       bpdec2.c bp2com.c ../common/hsutils.c \
-                        ../src/base64.c   \
-                        ../common/hspass.c  \
-                       ../bluepoint/hs_crypt.c  ../bluepoint/hs_crypt.h  \
-                              ../bluepoint/bluepoint2.c ../bluepoint/bluepoint2.h
-
-bpdec2_CFLAGS   =  -g -D_FILE_OFFSET_BITS=64 -I$(srcdir)/../bluepoint \
-                     -lssl -lcrypt -I$(srcdir)/../common
+#bpdec2dir = .
 bpdec2_DEPENDENCIES =
+
+bpdec2_SOURCES  =       bpdec2.c bp2com.c base64.c   \
+                        hsutils.c hspass.c  \
+                        $(cryptx)
+
+bpdec2_CFLAGS = -g -D_FILE_OFFSET_BITS=64 $(myincs)  \
+                     -lssl -lcrypt
 bpdec2_LDADD = -lulockmgr -lfuse3  -lcrypto -lssl
 
 #clean-local:

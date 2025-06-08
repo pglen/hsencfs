@@ -19,10 +19,13 @@ hsencfsdir = .
 hsencfs_CFLAGS = -g -D_FILE_OFFSET_BITS=64 -O2 -I$(srcdir)/../bluepoint \
             -I$(srcdir)/../common
 
-hsencfs_SOURCES = hsencfs.c hsencrr.c hsencrw.c hsencsb.c hsencsu.c base64.c \
+hsencfs_SOURCES = hsencfs.c hsencrr.c hsencrw.c hsencsb.c hsencsu.c \
+                        ../common/base64.c \
                         ../common/hsutils.c ../common/hspass.c \
-                            ../bluepoint/bluepoint2.c ../bluepoint/bluepoint2.h \
-                                 ../bluepoint/hs_crypt.c  ../bluepoint/hs_crypt.h
+                        ../bluepoint/bluepoint2.c \
+                        ../bluepoint/bluepoint2.h \
+                        ../bluepoint/hs_crypt.c  \
+                        ../bluepoint/hs_crypt.h
 
 hsencfs_LDADD = -lfuse3 -lulockmgr  -lcrypto -lssl
 

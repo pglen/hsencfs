@@ -44,7 +44,7 @@
  *  backing directory ~/.secrets
  */
 
-//#define FUSE_USE_VERSION 34
+#define FUSE_USE_VERSION 34
 //#define FUSE_USE_VERSION 31
 
 #ifdef HAVE_CONFIG_H

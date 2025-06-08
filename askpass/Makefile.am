@@ -1,6 +1,6 @@
 # ------------------------------------------------------------------------
 # Makefile for hsaskpass python module.
 
-all:
-	echo Making module
+#all:
+#	echo Making module
 
