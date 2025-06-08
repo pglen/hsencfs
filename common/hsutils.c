@@ -178,9 +178,119 @@ void    hsfree(void *mem, int size)
     char *ptr = (char *)mem;
     for(int aa = 0; aa < size; aa++)
         {
-        ptr[aa] = (char)rand();
+        ptr[aa] = (char)(rand() & 0xff);
         }
     free(mem);
+}
+
+char    *hexdump(char *ptr, int len)
+
+{
+    //printf("len=%d  '%s'\n", len, ptr);
+    char *pret = malloc(len * 5);
+    //memset(pret, '\0', len * 5);
+
+    int prog = 0, llen = 24, plen = 0;
+    for (int aa = 0; aa < len; aa++)
+        {
+        uchar chh = ptr[aa] & 0xff;
+        //printf("%c", chh);
+        if(chh > 127 || chh < 32)
+            plen = sprintf(pret + prog, "%.2x ", chh);
+        else
+            plen = sprintf(pret + prog, " %c ", chh);
+        prog += plen;
+        if (aa % llen == llen-1)
+            {
+            plen = sprintf(pret + prog, "\n");
+            prog += plen;
+            }
+        }
+    return(pret);
+}
+
+// Really dumb parse command line to array
+
+int     parse_comstr(char *argx[], int limx, const char *program)
+
+{
+    //printf("parse: '%s'\n", program);
+
+    // Parse command line
+    char aa = 0, bb = 0, cc = 0;
+    argx[cc] = NULL;
+    char curr[128];
+    int in_quote = FALSE;
+    int in_squote = FALSE;
+
+    while(1)
+        {
+        char chh = program[aa];
+        //printf("%c", chh);
+        if(cc >= limx-1)
+            {
+            //printf("Warn: argx limit %d\n", cc);
+            argx[cc] = NULL;
+            break;
+            }
+        if (chh == '\0')
+            {
+            //printf("estr: '%s'\n", curr);
+            if (curr[0] != '\0')
+                {
+                argx[cc] = strdup(curr);
+                cc++;
+                }
+            argx[cc] = NULL;
+            break;
+            }
+        else if (chh == '\'')
+            {
+            if (in_quote)
+                goto just_char;
+            else
+                if (in_squote)
+                    in_squote = 0;
+                else
+                    in_squote = 1;
+            }
+        else if (chh == '\"')
+            {
+            if (in_squote)
+                goto just_char;
+            else
+                 if (in_quote)
+                    in_quote = 0;
+                else
+                    in_quote = 1;
+            }
+        else if (chh == ' ')
+            {
+            //printf("str: '%s'\n", curr);
+            if (curr[0] == '\0')
+                {
+                aa++;
+                continue;
+                }
+            if(in_quote)
+                goto just_char;
+            if(in_squote)
+                goto just_char;
+
+            argx[cc] = strdup(curr);
+            cc++; bb = 0;
+            curr[bb] = '\0';
+            }
+        else
+            {
+          just_char:
+            curr[bb] = chh;
+            bb++;
+            curr[bb] = '\0';
+            }
+        aa++;
+        }
+    return cc;
 }
 
 // EOF

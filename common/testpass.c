@@ -26,68 +26,6 @@ int     gui = 0;
 char    *markfile = "markfile";
 char    *defpass = "";
 
-// Front end for asking pass
-
-char    *getpass_front(char *prompt, int create)
-{
-    char *retp = malloc(MAXPASSLEN);
-
-    int xlen = strlen(defpass);
-    if(xlen)
-        {
-        strcpy(retp, defpass);
-        return retp;
-        }
-    if(gui)
-        {
-        char *passprog = malloc(PATH_MAX);
-        snprintf(passprog, PATH_MAX, "%s %s %d",
-                            "../askpass/hsaskpass.py",  "Hello1", create);
-        //printf("passprog: '%s'\n", passprog);
-        int ret = hs_askpass(passprog, retp, MAXPASSLEN);
-        free(passprog);
-        if(ret)
-            {
-            printf("Error on  pass %d\n", ret);
-            exit(1);
-            }
-        printf("hs_askpass() %d returned pass: '%s'\n", ret, retp);
-        if(!strlen(retp))
-            {
-            printf("No gui pass, aborted.\n");
-            exit(1);
-            }
-        //*plen = strlen(retp);
-        return retp;
-        }
-    //"Enter new pass for HSENCFS: ");
-    char *xpass = getpassx(prompt);
-    //*plen = strlen(xpass);
-    ////printf("password: '%s'\n", xpass);
-    //if(! plen)
-    //    {
-    //    printf("No pass, aborted.\n");
-    //    exit(1);
-    //    }
-    return xpass;
-}
-
-static void hexdump(char *ptr, int len)
-{
-    int llen = 24;
-    for (int aa = 0; aa < len; aa++)
-        {
-        uchar chh = ptr[aa] & 0xff;
-        if(chh > 127 || chh < 32)
-            printf("%.2x ", chh);
-        else
-            printf(" %c ", chh);
-
-        if (aa % llen == llen-1)
-            printf("\n");
-        }
-}
-
 int main(int argc, char *argv[])
 
 {
@@ -95,6 +33,7 @@ int main(int argc, char *argv[])
     char *opts = "gachm:p:";
 
     openlog("HSEncFs",  LOG_PID,  LOG_DAEMON);
+    srand(time(NULL));
 
     while (1)
         {
@@ -143,15 +82,7 @@ int main(int argc, char *argv[])
                 break;
             }
         }
-    if(create)
-        {
-        int xlen = 0;
-        char *xpass = getpass_front("Enter new pass for HSENCFS: ", create);
-        create_markfile(markfile, xpass, strlen(xpass));
-        printf("Created new markfile with: '%s'\n", xpass);
-        exit(0);
-        }
-    else
+    if(!create)
         {
         if(access(markfile, R_OK) < 0)
             {
@@ -159,13 +90,31 @@ int main(int argc, char *argv[])
             //exit(1);
             create = 1;
             }
-
-        int xlen = 0;
-        char *xpass = getpass_front("Enter pass for HSENCFS: ", create);
-        int ret = check_markfile(markfile, xpass, (int)strlen(xpass));
-        printf("Check returned: %d.\n", ret);
         }
-    //memset(xpass, 0, xlen);
+    char *prompt = "Enter pass for HSENCFS: ";
+    if(create)
+        {
+        prompt = "Enter NEW pass for HSENCFS: ";
+        }
+    int xlen = strlen(defpass);
+    char *xpass;
+    if(xlen)
+        {
+        xpass = strdup(defpass);
+        }
+    else
+        {
+        xpass = getpass_front(prompt, create, gui);
+        }
+    printf("xpass '%s'\n", xpass);
+    if(create)
+        {
+        create_markfile(markfile, xpass, strlen(xpass));
+        printf("Created new markfile '%s'.\n", markfile);
+        }
+    int ret = check_markfile(markfile, xpass, (int)strlen(xpass));
+    printf("Check returned: %d.\n", ret);
+
     exit(0);
 }
 

@@ -41,5 +41,7 @@ void    hsprint(int outs, int lev, char *fmt, ...);
 void    hslog(int lev, char *fmt, ...);
 void    expandpath(const char *inp, char *outp, int maxlen);
 void    hsfree(void *mem, int size);
+char    *hexdump(char *ptr, int len);
+int     parse_comstr(char *argx[], int limx, const char *program);
 
 // EOF

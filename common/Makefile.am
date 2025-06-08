@@ -17,7 +17,6 @@ testpass_SOURCES = testpass.c hsutils.c hspass.c \
           ../src/base64   \
                         ../bluepoint/bluepoint2.c ../src/base64.c
 
-
 bin_PROGRAMS =  bpdec2 bpenc2
 
 # Was in the tools directory

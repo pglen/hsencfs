@@ -5,6 +5,7 @@ from __future__ import print_function
 # GUI propmt for the user of HSENCFS
 
 import os, sys, getopt, signal, base64, syslog, time
+import argparse
 
 import gi
 gi.require_version("Gtk", "3.0")
@@ -87,7 +88,7 @@ def getpass(title, crflag):
     label = Gtk.Label.new("  ");
     grid.attach(label, 1, 0, 1, 1)
 
-    label = Gtk.Label.new("Enter pass:  ");
+    label = Gtk.Label.new(args.prompt);
     grid.attach(label, 0, 1, 1, 1)
 
     entry = xEntry(dialog, precheck_pass)
@@ -166,95 +167,131 @@ def area_key(win, event, crflag):
     #    if event.keyval == Gdk.KEY_Return:
     #        win.response(Gtk.ResponseType.OK)
 
-# Start of program:
-if __name__ == '__main__':
 
-    try:
-        pre = "Enter HSENCFS Password"
-        prompt = ": ";  created = 0; keyx = ""
-        #syslog.openlog("hsencfs")
-        try:
-            if sys.argv[1]:
-                prompt = " for '" + sys.argv[1] + "' ";
-        except:
-            pass
-        try:
-            if sys.argv[2]:
-                created = int(sys.argv[2])
-        except:
-            pass
-        try:
-            if sys.argv[3]:
-                keyx = sys.argv[3]
-        except:
-            pass
+Version = "1.0.0"
+pdesc = 'HSENCFS password GUI. '
+pform = "Use TAB or enter to navigate between fields.\n" \
+        "Press enter key to submit.\n" \
+        "Use quotes to group fields."
 
-        #mylog("Started hsakpass.py", prompt)
+def mainloop():
 
-        #print("prompt:", prompt)
-        #print("created:", created)
-        #print("keyx:", keyx)
-        if keyx:
-            pre = "*" + pre
-        while 1:
-            text, text2 = getpass(
-                    "%s%s" % (pre, prompt), created);
-            if created:
-                # Compare
-                #print("comparing:", text, text2)
-                if text == None:
-                    text = ""
-                    break
-                elif text == "":
-                    message_dialog("No empty passwords allowed.", "Passwords Message")
-                elif text == text2:
-                    break
-                else:
-                    message_dialog("Passwords do not match.", "Passwords Message")
-            else:
-                if text == None:
-                    text = ""
+    global args, xconfig
+    parser = argparse.ArgumentParser( description=pdesc, epilog=pform)
+
+    parser.add_argument("-V", '--version', dest='version',
+                        default=0,  action='store_true',
+                        help='Show version number.')
+
+
+    parser.add_argument("-v", '--verbose', dest='verbose',
+                        default=0,  action='count',
+                        help='Verbose level. Repeat -v for more verbossity.')
+
+    parser.add_argument("-l", '--loglevel', dest='loglevel',
+                        default=0,  action='count',
+                        help='Log to syslog. Repeat -l for more logs.')
+
+    parser.add_argument("-p", '--prompt', dest='prompt', type=str,
+                        default="  Enter Pass:  ",  action='store',
+                        help='Prompt line left of pass string.')
+
+    parser.add_argument("-t", '--title', dest='title', type=str,
+                        default="HSENCFS password",  action='store',
+                        help='Window title, for HSENCFS path.')
+
+    parser.add_argument("-k", '--pubkey', dest='pubkey', type=str,
+                        default="",  action='store',
+                        help='Public key for encrypting results.')
+
+    parser.add_argument("-c", '--create', dest='create', type=int,
+                        default=0,  action='store',
+                        help='Creation flag to double pass prompt.')
+
+    args = parser.parse_args()
+    #print(args)
+
+    if args.version:
+        print("Version: %s" % Version)
+        #self.OnExit(0)
+        sys.exit(0)
+
+    if args.loglevel:
+        mylog("Started hsakpass.py", prompt)
+
+    if args.verbose:
+        print("prompt:", args.prompt)
+        print("created:", args.create)
+        print("pubkey:", args.pubkey)
+
+    star = " "
+    if args.pubkey:
+        star = "*"
+    head = "%s%s" % (star, args.title);
+    while 1:
+        text, text2 = getpass(head, args.create)
+        if args.create:
+            # Compare
+            #print("comparing:", text, text2)
+            if text == None:
+                text = ""
                 break
-
-        # Does not have to be rocket science ...
-        # Just to hide from plaintext view:
-        #print(sss.decode())
-        #print(enc_text)
-
-        # Turns out rocket science is needed
-        # Create pub key from str:
-        if keyx:
-            try:
-                mykey = RSA.import_key(keyx)
-                #mylog("mykey", mykey)
-            except:
-                text = str(sys.exc_info())
-                #print(text)
-                sss = base64.b64encode(text.encode())
-                print(sss.decode(), end = "")
-                mylog("Cannot create key.")
-                mykey = None
-                sys.exit(0)
-
-            cipher_rsa = PKCS1_OAEP.new(mykey)
-            ksize = mykey.size_in_bytes()
-            #mylog("keysize", ksize)
-            #text2 = text + (ksize - len(text)) * "*"
-            #mylog("do text", "'" + text2 + "'")
-            enc_text = cipher_rsa.encrypt(text.encode())
-            # This needs private key
-            #dec_text = cipher_rsa.decrypt(enc_text)
-            #mylog("dec_text", dec_text)
-            #print("de_text", b"'" + dec_text + b"'")
-            sss = base64.b64encode(enc_text)
+            elif text == "":
+                message_dialog("No empty passwords allowed.", "Passwords Message")
+            elif text == text2:
+                break
+            else:
+                message_dialog("Passwords do not match.", "Passwords Message")
         else:
-            sss = base64.b64encode(text.encode())
+            if text == None:
+                text = ""
+            break
 
-        #mylog("sss: ", len(sss), sss)
-    except:
-        mylog("exception: ", sys.exc_info())
+    # Does not have to be rocket science ...
+    # Just to hide from plaintext view:
+    #print(sss.decode())
+    #print(enc_text)
+
+    # Turns out rocket science is needed
+    # Create pub key from str:
+    if args.pubkey:
+        try:
+            mykey = RSA.import_key(args.pubkey)
+            #mylog("mykey", mykey)
+        except:
+            text = str(sys.exc_info())
+            #print(text)
+            sss = base64.b64encode(text.encode())
+            print(sss.decode(), end = "")
+            mylog("Cannot create key.")
+            mykey = None
+            sys.exit(0)
+
+        cipher_rsa = PKCS1_OAEP.new(mykey)
+        ksize = mykey.size_in_bytes()
+        #mylog("keysize", ksize)
+        #text2 = text + (ksize - len(text)) * "*"
+        #mylog("do text", "'" + text2 + "'")
+        enc_text = cipher_rsa.encrypt(text.encode())
+        # This needs private key
+        #dec_text = cipher_rsa.decrypt(enc_text)
+        #mylog("dec_text", dec_text)
+        #print("de_text", b"'" + dec_text + b"'")
+        sss = base64.b64encode(enc_text)
+    else:
+        sss = base64.b64encode(text.encode())
 
     #mylog("sss:", len(sss), sss.decode())
     print(sss.decode(), end = "")
+
+# Start of program:
+if __name__ == '__main__':
+    try:
+        mainloop()
+
+    except SystemExit:
+        pass
+    except:
+        print("mainloop exception: ", sys.exc_info())
 
 # EOF
