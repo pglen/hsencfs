@@ -1,0 +1,54 @@
+\hypertarget{rsamod_8py}{}\doxysection{study/rsamod.py File Reference}
+\label{rsamod_8py}\index{study/rsamod.py@{study/rsamod.py}}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classrsamod_1_1rsamod__c}{rsamod.\+rsamod\+\_\+c}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespacersamod}{rsamod}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \mbox{\hyperlink{namespacersamod_a68732bd595ea52f8d672b2b80d48b807}{rsamod.\+version}} ()
+\item 
+def \mbox{\hyperlink{namespacersamod_aef559adb028bd3ba71c08fd6344e5183}{rsamod.\+builddate}} ()
+\item 
+def \mbox{\hyperlink{namespacersamod_ab6633999e7ec84f7d55e16af589dade8}{rsamod.\+encrypt}} (\mbox{\hyperlink{bluepoint_8c_a0aaeceb2f1ca403a36a2c5c2f4b87a0e}{buff}}, passwd)
+\item 
+def \mbox{\hyperlink{namespacersamod_aaf5b5c1d98950b7f7ebf7bc96aacd9e8}{rsamod.\+decrypt}} (\mbox{\hyperlink{bluepoint_8c_a0aaeceb2f1ca403a36a2c5c2f4b87a0e}{buff}}, passwd)
+\item 
+def \mbox{\hyperlink{namespacersamod_a94b5afacf85cda89ce434322c59254f4}{rsamod.\+tohex}} (\mbox{\hyperlink{bluepoint_8c_a0aaeceb2f1ca403a36a2c5c2f4b87a0e}{buff}})
+\item 
+def \mbox{\hyperlink{namespacersamod_a25edf0dc8c5eaea000d93a171b18a4a5}{rsamod.\+fromhex}} (\mbox{\hyperlink{bluepoint_8c_a0aaeceb2f1ca403a36a2c5c2f4b87a0e}{buff}})
+\item 
+def \mbox{\hyperlink{namespacersamod_a9f3d3e9f5961a84a356ac58558254368}{rsamod.\+destroy}} (\mbox{\hyperlink{bluepoint_8c_a0aaeceb2f1ca403a36a2c5c2f4b87a0e}{buff}}, fill=0)
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{namespacersamod_ac67bf2b0458b69b21ad0ba2d753b9591}{rsamod.\+try}} \+:
+\item 
+ctypes \mbox{\hyperlink{namespacersamod_a0b837b4d04e50210e8a6e1d9fa7e6cc1}{rsamod.\+ssl\+\_\+lib}} = ctypes.\+cdll.\+Load\+Library(\char`\"{}libssl3.\+so\char`\"{})
+\item 
+\mbox{\hyperlink{namespacersamod_a850758632190ebd5c54aadf2aa445f61}{rsamod.\+except}} \+:
+\item 
+ctypes \mbox{\hyperlink{namespacersamod_a640d9d3befca4dcf277f335503239219}{rsamod.\+crypto\+\_\+lib}} = ctypes.\+cdll.\+Load\+Library(\char`\"{}libcrypto.\+so\char`\"{})
+\item 
+\mbox{\hyperlink{trunctest_8c_a53dbc2382caf520f4a511f07d1e77a71}{str}} \mbox{\hyperlink{namespacersamod_afbe275d4f48a26bdd42cc42dfacbe8b3}{rsamod.\+key}}
+\item 
+ctypes \mbox{\hyperlink{namespacersamod_a5e080e98a20eb2ed9b18a304f6a114b4}{rsamod.\+BIO\+\_\+new\+\_\+mem\+\_\+buf}} = crypto\+\_\+lib.\+BIO\+\_\+new\+\_\+mem\+\_\+buf
+\item 
+ctypes \mbox{\hyperlink{namespacersamod_a730d90592d10be2bf1cf0ae8c3e6bd3b}{rsamod.\+ptr}} = BIO\+\_\+new\+\_\+mem\+\_\+buf(key, -\/1)
+\item 
+ctypes \mbox{\hyperlink{namespacersamod_a6685911632bfe47bb9fe84b349ecaf4d}{rsamod.\+PEM\+\_\+read\+\_\+bio\+\_\+\+RSA\+\_\+\+PUBKEY}} = crypto\+\_\+lib.\+PEM\+\_\+read\+\_\+bio\+\_\+\+RSA\+\_\+\+PUBKEY
+\item 
+ctypes \mbox{\hyperlink{namespacersamod_a9aa75727dea0752e5228d70b08a0b2d2}{rsamod.\+i}} = ctypes.\+c\+\_\+int(0)
+\item 
+ctypes \mbox{\hyperlink{namespacersamod_a83be3a50595c180dc02fa16e4ce45b37}{rsamod.\+ptr2}} = ctypes.\+pointer(i)
+\item 
+ctypes \mbox{\hyperlink{namespacersamod_a61a14d53e344276780b2dc30eb099483}{rsamod.\+ret}} = PEM\+\_\+read\+\_\+bio\+\_\+\+RSA\+\_\+\+PUBKEY(ptr, ptr2, None, None)
+\end{DoxyCompactItemize}

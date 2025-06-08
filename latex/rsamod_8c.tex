@@ -1,0 +1,88 @@
+\hypertarget{rsamod_8c}{}\doxysection{study/rsamod.c File Reference}
+\label{rsamod_8c}\index{study/rsamod.c@{study/rsamod.c}}
+{\ttfamily \#include $<$Python.\+h$>$}\newline
+{\ttfamily \#include $<$pygobject.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}rsamod.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../bluepoint2.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}bdate.\+h\char`\"{}}\newline
+Include dependency graph for rsamod.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rsamod_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{rsamod_8c_abf8bd883a89f211750ffc3708b10a712}{OPEN\+\_\+\+IMAGE}}~1
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{rsamod_8c_a9cb6d6fc9c1a488fc3f119a011f6c186}{initrsamod}} (void)
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+Py\+Object $\ast$ \mbox{\hyperlink{rsamod_8c_ad6fdb3f06060b0f8a1da6bd79af22e38}{module}}
+\item 
+Py\+Method\+Def \mbox{\hyperlink{rsamod_8c_abf86d9c1ff070a101cc0c458faefb75e}{rsamod\+\_\+functions}} \mbox{[}$\,$\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{rsamod_8c_abf8bd883a89f211750ffc3708b10a712}\label{rsamod_8c_abf8bd883a89f211750ffc3708b10a712}} 
+\index{rsamod.c@{rsamod.c}!OPEN\_IMAGE@{OPEN\_IMAGE}}
+\index{OPEN\_IMAGE@{OPEN\_IMAGE}!rsamod.c@{rsamod.c}}
+\doxysubsubsection{\texorpdfstring{OPEN\_IMAGE}{OPEN\_IMAGE}}
+{\footnotesize\ttfamily \#define OPEN\+\_\+\+IMAGE~1}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{rsamod_8c_a9cb6d6fc9c1a488fc3f119a011f6c186}\label{rsamod_8c_a9cb6d6fc9c1a488fc3f119a011f6c186}} 
+\index{rsamod.c@{rsamod.c}!initrsamod@{initrsamod}}
+\index{initrsamod@{initrsamod}!rsamod.c@{rsamod.c}}
+\doxysubsubsection{\texorpdfstring{initrsamod()}{initrsamod()}}
+{\footnotesize\ttfamily initrsamod (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{rsamod_8c_ad6fdb3f06060b0f8a1da6bd79af22e38}\label{rsamod_8c_ad6fdb3f06060b0f8a1da6bd79af22e38}} 
+\index{rsamod.c@{rsamod.c}!module@{module}}
+\index{module@{module}!rsamod.c@{rsamod.c}}
+\doxysubsubsection{\texorpdfstring{module}{module}}
+{\footnotesize\ttfamily Py\+Object$\ast$ module}
+
+\mbox{\Hypertarget{rsamod_8c_abf86d9c1ff070a101cc0c458faefb75e}\label{rsamod_8c_abf86d9c1ff070a101cc0c458faefb75e}} 
+\index{rsamod.c@{rsamod.c}!rsamod\_functions@{rsamod\_functions}}
+\index{rsamod\_functions@{rsamod\_functions}!rsamod.c@{rsamod.c}}
+\doxysubsubsection{\texorpdfstring{rsamod\_functions}{rsamod\_functions}}
+{\footnotesize\ttfamily Py\+Method\+Def rsamod\+\_\+functions\mbox{[}$\,$\mbox{]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \{\ \textcolor{stringliteral}{"{}version"{}},\ \ \ (PyCFunction)\_version,\ METH\_VARARGS|METH\_KEYWORDS,\ \textcolor{stringliteral}{"{}rsamod\ version."{}}\},}
+\DoxyCodeLine{\ \ \ \ \{\ \textcolor{stringliteral}{"{}builddate"{}},\ (PyCFunction)\_bdate,\ \ \ METH\_VARARGS|METH\_KEYWORDS,\ \textcolor{stringliteral}{"{}rsamod\ build\ date."{}}\},}
+\DoxyCodeLine{\ \ \ \ \{\ \textcolor{stringliteral}{"{}encrypt"{}},\ \ \ (PyCFunction)\_encrypt,\ METH\_VARARGS|METH\_KEYWORDS,\ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}rsamod\ encryption.\ Pass\ buffer\ and\ pass."{}}\},}
+\DoxyCodeLine{\ \ \ \ \{\ \textcolor{stringliteral}{"{}decrypt"{}},\ \ \ (PyCFunction)\_decrypt,\ METH\_VARARGS|METH\_KEYWORDS,\ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}rsamod\ decryption.\ Pass\ buffer\ and\ pass."{}}\},}
+\DoxyCodeLine{\ \ \ \ \{\ \textcolor{stringliteral}{"{}destroy"{}},\ \ \ (PyCFunction)\_destroy,\ METH\_VARARGS|METH\_KEYWORDS,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}rsamod\ destruction.\ Scramble\ variable.\ Fill\ with\ '0'\ or\ number.\ "{}}\ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Pass\ zero\ to\ randomize."{}}\},}
+\DoxyCodeLine{\ \ \ \ \{\ \textcolor{stringliteral}{"{}tohex"{}},\ \ \ \ \ (PyCFunction)\_tohex,\ \ \ METH\_VARARGS|METH\_KEYWORDS,\ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}rsamod\ tohex.\ Convert\ to\ hex\ string."{}}\},}
+\DoxyCodeLine{\ \ \ \ \{\ \textcolor{stringliteral}{"{}fromhex"{}},\ \ \ (PyCFunction)\_fromhex,\ METH\_VARARGS|METH\_KEYWORDS,\ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}rsamod\ fromhex.\ Convert\ from\ hex\ string."{}}\},}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \{\ \ NULL\ \},}
+\DoxyCodeLine{\ \ \ \ \}}
+
+\end{DoxyCode}

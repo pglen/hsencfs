@@ -1,14 +1,5 @@
-\hypertarget{bp2com_8h}{}\doxysection{tools/bp2com.h File Reference}
-\label{bp2com_8h}\index{tools/bp2com.h@{tools/bp2com.h}}
-{\ttfamily \#include \char`\"{}../common/hsutils.\+h\char`\"{}}\newline
-Include dependency graph for bp2com.\+h\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=183pt]{bp2com_8h__incl}
-\end{center}
-\end{figure}
+\hypertarget{bp2com_8h}{}\doxysection{common/bp2com.h File Reference}
+\label{bp2com_8h}\index{common/bp2com.h@{common/bp2com.h}}
 This graph shows which files directly or indirectly include this file\+:
 \nopagebreak
 \begin{figure}[H]
@@ -17,6 +8,11 @@ This graph shows which files directly or indirectly include this file\+:
 \includegraphics[width=350pt]{bp2com_8h__dep__incl}
 \end{center}
 \end{figure}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{bp2com_8h_afcf795f5a96fd55561abe69f56224630}{BLOCKSIZE}}~4096
+\end{DoxyCompactItemize}
 \doxysubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
@@ -31,6 +27,15 @@ int \mbox{\hyperlink{bp2com_8h_af95ae0664900cb65f392a08228b8bde3}{mk\+\_\+block\
 \item 
 char \mbox{\hyperlink{bp2com_8h_a9d22394e80281a076c2d925cdfb132c6}{progname}} \mbox{[}$\,$\mbox{]}
 \begin{DoxyCompactList}\small\item\em We use this string to obfuscate the password. Do not change. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{bp2com_8h_afcf795f5a96fd55561abe69f56224630}\label{bp2com_8h_afcf795f5a96fd55561abe69f56224630}} 
+\index{bp2com.h@{bp2com.h}!BLOCKSIZE@{BLOCKSIZE}}
+\index{BLOCKSIZE@{BLOCKSIZE}!bp2com.h@{bp2com.h}}
+\doxysubsubsection{\texorpdfstring{BLOCKSIZE}{BLOCKSIZE}}
+{\footnotesize\ttfamily \#define BLOCKSIZE~4096}
+
 
 
 \doxysubsection{Function Documentation}
@@ -52,7 +57,7 @@ char \mbox{\hyperlink{bp2com_8h_a9d22394e80281a076c2d925cdfb132c6}{progname}} \m
 \doxysubsubsection{\texorpdfstring{mk\_block\_file()}{mk\_block\_file()}}
 {\footnotesize\ttfamily int mk\+\_\+block\+\_\+file (\begin{DoxyParamCaption}\item[{const char $\ast$}]{path }\end{DoxyParamCaption})}
 
-printf(\char`\"{}\+Block file for \textquotesingle{}\%s\textquotesingle{}\textbackslash{}n\char`\"{}, path);
+
 
 \doxysubsection{Variable Documentation}
 \mbox{\Hypertarget{bp2com_8h_a9d22394e80281a076c2d925cdfb132c6}\label{bp2com_8h_a9d22394e80281a076c2d925cdfb132c6}} 

@@ -1,0 +1,178 @@
+\hypertarget{namespacersamod}{}\doxysection{rsamod Namespace Reference}
+\label{namespacersamod}\index{rsamod@{rsamod}}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classrsamod_1_1rsamod__c}{rsamod\+\_\+c}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \mbox{\hyperlink{namespacersamod_a68732bd595ea52f8d672b2b80d48b807}{version}} ()
+\item 
+def \mbox{\hyperlink{namespacersamod_aef559adb028bd3ba71c08fd6344e5183}{builddate}} ()
+\item 
+def \mbox{\hyperlink{namespacersamod_ab6633999e7ec84f7d55e16af589dade8}{encrypt}} (\mbox{\hyperlink{bluepoint_8c_a0aaeceb2f1ca403a36a2c5c2f4b87a0e}{buff}}, passwd)
+\item 
+def \mbox{\hyperlink{namespacersamod_aaf5b5c1d98950b7f7ebf7bc96aacd9e8}{decrypt}} (\mbox{\hyperlink{bluepoint_8c_a0aaeceb2f1ca403a36a2c5c2f4b87a0e}{buff}}, passwd)
+\item 
+def \mbox{\hyperlink{namespacersamod_a94b5afacf85cda89ce434322c59254f4}{tohex}} (\mbox{\hyperlink{bluepoint_8c_a0aaeceb2f1ca403a36a2c5c2f4b87a0e}{buff}})
+\item 
+def \mbox{\hyperlink{namespacersamod_a25edf0dc8c5eaea000d93a171b18a4a5}{fromhex}} (\mbox{\hyperlink{bluepoint_8c_a0aaeceb2f1ca403a36a2c5c2f4b87a0e}{buff}})
+\item 
+def \mbox{\hyperlink{namespacersamod_a9f3d3e9f5961a84a356ac58558254368}{destroy}} (\mbox{\hyperlink{bluepoint_8c_a0aaeceb2f1ca403a36a2c5c2f4b87a0e}{buff}}, fill=0)
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{namespacersamod_ac67bf2b0458b69b21ad0ba2d753b9591}{try}} \+:
+\item 
+ctypes \mbox{\hyperlink{namespacersamod_a0b837b4d04e50210e8a6e1d9fa7e6cc1}{ssl\+\_\+lib}} = ctypes.\+cdll.\+Load\+Library(\char`\"{}libssl3.\+so\char`\"{})
+\item 
+\mbox{\hyperlink{namespacersamod_a850758632190ebd5c54aadf2aa445f61}{except}} \+:
+\item 
+ctypes \mbox{\hyperlink{namespacersamod_a640d9d3befca4dcf277f335503239219}{crypto\+\_\+lib}} = ctypes.\+cdll.\+Load\+Library(\char`\"{}libcrypto.\+so\char`\"{})
+\item 
+\mbox{\hyperlink{trunctest_8c_a53dbc2382caf520f4a511f07d1e77a71}{str}} \mbox{\hyperlink{namespacersamod_afbe275d4f48a26bdd42cc42dfacbe8b3}{key}}
+\item 
+ctypes \mbox{\hyperlink{namespacersamod_a5e080e98a20eb2ed9b18a304f6a114b4}{BIO\+\_\+new\+\_\+mem\+\_\+buf}} = crypto\+\_\+lib.\+BIO\+\_\+new\+\_\+mem\+\_\+buf
+\item 
+ctypes \mbox{\hyperlink{namespacersamod_a730d90592d10be2bf1cf0ae8c3e6bd3b}{ptr}} = \mbox{\hyperlink{namespacersamod_a5e080e98a20eb2ed9b18a304f6a114b4}{BIO\+\_\+new\+\_\+mem\+\_\+buf}}(\mbox{\hyperlink{namespacersamod_afbe275d4f48a26bdd42cc42dfacbe8b3}{key}}, -\/1)
+\item 
+ctypes \mbox{\hyperlink{namespacersamod_a6685911632bfe47bb9fe84b349ecaf4d}{PEM\+\_\+read\+\_\+bio\+\_\+\+RSA\+\_\+\+PUBKEY}} = crypto\+\_\+lib.\+PEM\+\_\+read\+\_\+bio\+\_\+\+RSA\+\_\+\+PUBKEY
+\item 
+ctypes \mbox{\hyperlink{namespacersamod_a9aa75727dea0752e5228d70b08a0b2d2}{i}} = ctypes.\+c\+\_\+int(0)
+\item 
+ctypes \mbox{\hyperlink{namespacersamod_a83be3a50595c180dc02fa16e4ce45b37}{ptr2}} = ctypes.\+pointer(\mbox{\hyperlink{namespacersamod_a9aa75727dea0752e5228d70b08a0b2d2}{i}})
+\item 
+ctypes \mbox{\hyperlink{namespacersamod_a61a14d53e344276780b2dc30eb099483}{ret}} = \mbox{\hyperlink{namespacersamod_a6685911632bfe47bb9fe84b349ecaf4d}{PEM\+\_\+read\+\_\+bio\+\_\+\+RSA\+\_\+\+PUBKEY}}(\mbox{\hyperlink{namespacersamod_a730d90592d10be2bf1cf0ae8c3e6bd3b}{ptr}}, \mbox{\hyperlink{namespacersamod_a83be3a50595c180dc02fa16e4ce45b37}{ptr2}}, None, None)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{namespacersamod_aef559adb028bd3ba71c08fd6344e5183}\label{namespacersamod_aef559adb028bd3ba71c08fd6344e5183}} 
+\index{rsamod@{rsamod}!builddate@{builddate}}
+\index{builddate@{builddate}!rsamod@{rsamod}}
+\doxysubsubsection{\texorpdfstring{builddate()}{builddate()}}
+{\footnotesize\ttfamily def rsamod.\+builddate (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacersamod_aaf5b5c1d98950b7f7ebf7bc96aacd9e8}\label{namespacersamod_aaf5b5c1d98950b7f7ebf7bc96aacd9e8}} 
+\index{rsamod@{rsamod}!decrypt@{decrypt}}
+\index{decrypt@{decrypt}!rsamod@{rsamod}}
+\doxysubsubsection{\texorpdfstring{decrypt()}{decrypt()}}
+{\footnotesize\ttfamily def rsamod.\+decrypt (\begin{DoxyParamCaption}\item[{}]{buff,  }\item[{}]{passwd }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacersamod_a9f3d3e9f5961a84a356ac58558254368}\label{namespacersamod_a9f3d3e9f5961a84a356ac58558254368}} 
+\index{rsamod@{rsamod}!destroy@{destroy}}
+\index{destroy@{destroy}!rsamod@{rsamod}}
+\doxysubsubsection{\texorpdfstring{destroy()}{destroy()}}
+{\footnotesize\ttfamily def rsamod.\+destroy (\begin{DoxyParamCaption}\item[{}]{buff,  }\item[{}]{fill = {\ttfamily 0} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacersamod_ab6633999e7ec84f7d55e16af589dade8}\label{namespacersamod_ab6633999e7ec84f7d55e16af589dade8}} 
+\index{rsamod@{rsamod}!encrypt@{encrypt}}
+\index{encrypt@{encrypt}!rsamod@{rsamod}}
+\doxysubsubsection{\texorpdfstring{encrypt()}{encrypt()}}
+{\footnotesize\ttfamily def rsamod.\+encrypt (\begin{DoxyParamCaption}\item[{}]{buff,  }\item[{}]{passwd }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacersamod_a25edf0dc8c5eaea000d93a171b18a4a5}\label{namespacersamod_a25edf0dc8c5eaea000d93a171b18a4a5}} 
+\index{rsamod@{rsamod}!fromhex@{fromhex}}
+\index{fromhex@{fromhex}!rsamod@{rsamod}}
+\doxysubsubsection{\texorpdfstring{fromhex()}{fromhex()}}
+{\footnotesize\ttfamily def rsamod.\+fromhex (\begin{DoxyParamCaption}\item[{}]{buff }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacersamod_a94b5afacf85cda89ce434322c59254f4}\label{namespacersamod_a94b5afacf85cda89ce434322c59254f4}} 
+\index{rsamod@{rsamod}!tohex@{tohex}}
+\index{tohex@{tohex}!rsamod@{rsamod}}
+\doxysubsubsection{\texorpdfstring{tohex()}{tohex()}}
+{\footnotesize\ttfamily def rsamod.\+tohex (\begin{DoxyParamCaption}\item[{}]{buff }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacersamod_a68732bd595ea52f8d672b2b80d48b807}\label{namespacersamod_a68732bd595ea52f8d672b2b80d48b807}} 
+\index{rsamod@{rsamod}!version@{version}}
+\index{version@{version}!rsamod@{rsamod}}
+\doxysubsubsection{\texorpdfstring{version()}{version()}}
+{\footnotesize\ttfamily def rsamod.\+version (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{namespacersamod_a5e080e98a20eb2ed9b18a304f6a114b4}\label{namespacersamod_a5e080e98a20eb2ed9b18a304f6a114b4}} 
+\index{rsamod@{rsamod}!BIO\_new\_mem\_buf@{BIO\_new\_mem\_buf}}
+\index{BIO\_new\_mem\_buf@{BIO\_new\_mem\_buf}!rsamod@{rsamod}}
+\doxysubsubsection{\texorpdfstring{BIO\_new\_mem\_buf}{BIO\_new\_mem\_buf}}
+{\footnotesize\ttfamily ctypes rsamod.\+BIO\+\_\+new\+\_\+mem\+\_\+buf = crypto\+\_\+lib.\+BIO\+\_\+new\+\_\+mem\+\_\+buf}
+
+\mbox{\Hypertarget{namespacersamod_a640d9d3befca4dcf277f335503239219}\label{namespacersamod_a640d9d3befca4dcf277f335503239219}} 
+\index{rsamod@{rsamod}!crypto\_lib@{crypto\_lib}}
+\index{crypto\_lib@{crypto\_lib}!rsamod@{rsamod}}
+\doxysubsubsection{\texorpdfstring{crypto\_lib}{crypto\_lib}}
+{\footnotesize\ttfamily ctypes rsamod.\+crypto\+\_\+lib = ctypes.\+cdll.\+Load\+Library(\char`\"{}libcrypto.\+so\char`\"{})}
+
+\mbox{\Hypertarget{namespacersamod_a850758632190ebd5c54aadf2aa445f61}\label{namespacersamod_a850758632190ebd5c54aadf2aa445f61}} 
+\index{rsamod@{rsamod}!except@{except}}
+\index{except@{except}!rsamod@{rsamod}}
+\doxysubsubsection{\texorpdfstring{except}{except}}
+{\footnotesize\ttfamily rsamod.\+except \+:}
+
+\mbox{\Hypertarget{namespacersamod_a9aa75727dea0752e5228d70b08a0b2d2}\label{namespacersamod_a9aa75727dea0752e5228d70b08a0b2d2}} 
+\index{rsamod@{rsamod}!i@{i}}
+\index{i@{i}!rsamod@{rsamod}}
+\doxysubsubsection{\texorpdfstring{i}{i}}
+{\footnotesize\ttfamily ctypes rsamod.\+i = ctypes.\+c\+\_\+int(0)}
+
+\mbox{\Hypertarget{namespacersamod_afbe275d4f48a26bdd42cc42dfacbe8b3}\label{namespacersamod_afbe275d4f48a26bdd42cc42dfacbe8b3}} 
+\index{rsamod@{rsamod}!key@{key}}
+\index{key@{key}!rsamod@{rsamod}}
+\doxysubsubsection{\texorpdfstring{key}{key}}
+{\footnotesize\ttfamily \mbox{\hyperlink{trunctest_8c_a53dbc2382caf520f4a511f07d1e77a71}{str}} rsamod.\+key}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ =\ \ \(\backslash\)}
+\DoxyCodeLine{00002\ \textcolor{stringliteral}{'-\/-\/-\/-\/-\/BEGIN\ PUBLIC\ KEY-\/-\/-\/-\/-\/\(\backslash\)n\(\backslash\)}}
+\DoxyCodeLine{00003\ \textcolor{stringliteral}{MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApFCQ+JBH3TInlh1PQ3vM\(\backslash\)n\(\backslash\)}}
+\DoxyCodeLine{00004\ \textcolor{stringliteral}{LPqJMQ6nXfJeRdn4kZ3tdfd0luPGrOHZELZjhpxWZuVJa6vyC1xI63Qkm7r4b0EJ\(\backslash\)n\(\backslash\)}}
+\DoxyCodeLine{00005\ \textcolor{stringliteral}{eM/oSbr4DA7T5gT1JYoUKIi7bNgOQ58A/eYpi6/JHtofPnuXeDiZCvGJTZQkkRVO\(\backslash\)n\(\backslash\)}}
+\DoxyCodeLine{00006\ \textcolor{stringliteral}{/uPHOI+itCK0z0qvyCLgQ2BKb7y1b/luAx2Y81myP83sfCvzs6q1w/lgZ9XfsqQq\(\backslash\)n\(\backslash\)}}
+\DoxyCodeLine{00007\ \textcolor{stringliteral}{wWrQZYTX1hD1zRWFfq28vYvU9CGedX/Vguavo56hf0Mms+3CuzC3DunwaGCcrX6c\(\backslash\)n\(\backslash\)}}
+\DoxyCodeLine{00008\ \textcolor{stringliteral}{FoDsvLRChT6m4pA6iZwJP8gDhP6Vggojyl21C1uG0mzdm/adyJsJeik/ub8HlTNW\(\backslash\)n\(\backslash\)}}
+\DoxyCodeLine{00009\ \textcolor{stringliteral}{twIDAQAB\(\backslash\)n\(\backslash\)}}
+\DoxyCodeLine{00010\ \textcolor{stringliteral}{-\/-\/-\/-\/-\/END\ PUBLIC\ KEY-\/-\/-\/-\/-\/\(\backslash\)n\(\backslash\)}}
+\DoxyCodeLine{00011\ \textcolor{stringliteral}{'}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{namespacersamod_a6685911632bfe47bb9fe84b349ecaf4d}\label{namespacersamod_a6685911632bfe47bb9fe84b349ecaf4d}} 
+\index{rsamod@{rsamod}!PEM\_read\_bio\_RSA\_PUBKEY@{PEM\_read\_bio\_RSA\_PUBKEY}}
+\index{PEM\_read\_bio\_RSA\_PUBKEY@{PEM\_read\_bio\_RSA\_PUBKEY}!rsamod@{rsamod}}
+\doxysubsubsection{\texorpdfstring{PEM\_read\_bio\_RSA\_PUBKEY}{PEM\_read\_bio\_RSA\_PUBKEY}}
+{\footnotesize\ttfamily ctypes rsamod.\+PEM\+\_\+read\+\_\+bio\+\_\+\+RSA\+\_\+\+PUBKEY = crypto\+\_\+lib.\+PEM\+\_\+read\+\_\+bio\+\_\+\+RSA\+\_\+\+PUBKEY}
+
+\mbox{\Hypertarget{namespacersamod_a730d90592d10be2bf1cf0ae8c3e6bd3b}\label{namespacersamod_a730d90592d10be2bf1cf0ae8c3e6bd3b}} 
+\index{rsamod@{rsamod}!ptr@{ptr}}
+\index{ptr@{ptr}!rsamod@{rsamod}}
+\doxysubsubsection{\texorpdfstring{ptr}{ptr}}
+{\footnotesize\ttfamily ctypes rsamod.\+ptr = \mbox{\hyperlink{namespacersamod_a5e080e98a20eb2ed9b18a304f6a114b4}{BIO\+\_\+new\+\_\+mem\+\_\+buf}}(\mbox{\hyperlink{namespacersamod_afbe275d4f48a26bdd42cc42dfacbe8b3}{key}}, -\/1)}
+
+\mbox{\Hypertarget{namespacersamod_a83be3a50595c180dc02fa16e4ce45b37}\label{namespacersamod_a83be3a50595c180dc02fa16e4ce45b37}} 
+\index{rsamod@{rsamod}!ptr2@{ptr2}}
+\index{ptr2@{ptr2}!rsamod@{rsamod}}
+\doxysubsubsection{\texorpdfstring{ptr2}{ptr2}}
+{\footnotesize\ttfamily ctypes rsamod.\+ptr2 = ctypes.\+pointer(\mbox{\hyperlink{namespacersamod_a9aa75727dea0752e5228d70b08a0b2d2}{i}})}
+
+\mbox{\Hypertarget{namespacersamod_a61a14d53e344276780b2dc30eb099483}\label{namespacersamod_a61a14d53e344276780b2dc30eb099483}} 
+\index{rsamod@{rsamod}!ret@{ret}}
+\index{ret@{ret}!rsamod@{rsamod}}
+\doxysubsubsection{\texorpdfstring{ret}{ret}}
+{\footnotesize\ttfamily ctypes rsamod.\+ret = \mbox{\hyperlink{namespacersamod_a6685911632bfe47bb9fe84b349ecaf4d}{PEM\+\_\+read\+\_\+bio\+\_\+\+RSA\+\_\+\+PUBKEY}}(\mbox{\hyperlink{namespacersamod_a730d90592d10be2bf1cf0ae8c3e6bd3b}{ptr}}, \mbox{\hyperlink{namespacersamod_a83be3a50595c180dc02fa16e4ce45b37}{ptr2}}, None, None)}
+
+\mbox{\Hypertarget{namespacersamod_a0b837b4d04e50210e8a6e1d9fa7e6cc1}\label{namespacersamod_a0b837b4d04e50210e8a6e1d9fa7e6cc1}} 
+\index{rsamod@{rsamod}!ssl\_lib@{ssl\_lib}}
+\index{ssl\_lib@{ssl\_lib}!rsamod@{rsamod}}
+\doxysubsubsection{\texorpdfstring{ssl\_lib}{ssl\_lib}}
+{\footnotesize\ttfamily ctypes rsamod.\+ssl\+\_\+lib = ctypes.\+cdll.\+Load\+Library(\char`\"{}libssl3.\+so\char`\"{})}
+
+\mbox{\Hypertarget{namespacersamod_ac67bf2b0458b69b21ad0ba2d753b9591}\label{namespacersamod_ac67bf2b0458b69b21ad0ba2d753b9591}} 
+\index{rsamod@{rsamod}!try@{try}}
+\index{try@{try}!rsamod@{rsamod}}
+\doxysubsubsection{\texorpdfstring{try}{try}}
+{\footnotesize\ttfamily rsamod.\+try \+:}
+

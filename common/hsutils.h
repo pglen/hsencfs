@@ -14,12 +14,11 @@
 
    ======================================================================= */
 
-typedef unsigned int  uint;
-typedef unsigned char uchar;
-
 #define MARK_SIZE   4096
 
 // Included in ALl encrypters
+
+extern int loglevel;
 
 #define     HS_PROGNAME    "HSENCFS"
 
@@ -33,6 +32,26 @@ typedef unsigned char uchar;
 
 extern  char    *passfname;
 
+typedef struct _Malloc
+{
+    void    *ptr;
+    int     size;
+    char    freed;
+} Malloc;
+
+typedef struct _Malloc_Store
+{
+    int     curr ;
+    int     size ;
+    Malloc *store;
+} Malloc_Store;
+
+extern int  malloc_verbose;
+
+void    *xmalloc(int size);
+void    xfree(void *ptr);
+void    xmdump(int level);
+
 // Prototypes shared between components
 
 int     ismounted(char *orig);
@@ -43,5 +62,7 @@ void    expandpath(const char *inp, char *outp, int maxlen);
 void    hsfree(void *mem, int size);
 char    *hexdump(char *ptr, int len);
 int     parse_comstr(char *argx[], int limx, const char *program);
+void    arr2log(char *argx[]);
+void    xsfree(void *ptr);
 
 // EOF

@@ -1,0 +1,102 @@
+\hypertarget{testpass_8c}{}\doxysection{common/testpass.c File Reference}
+\label{testpass_8c}\index{common/testpass.c@{common/testpass.c}}
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+{\ttfamily \#include $<$syslog.\+h$>$}\newline
+{\ttfamily \#include $<$stdarg.\+h$>$}\newline
+{\ttfamily \#include $<$dirent.\+h$>$}\newline
+{\ttfamily \#include $<$fuse.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}hsencfs.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}base64.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hsutils.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hspass.\+h\char`\"{}}\newline
+Include dependency graph for testpass.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{testpass_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{testpass_8c_a0ddf1224851353fc92bfbff6f499fa97}{main}} (int argc, char $\ast$argv\mbox{[}$\,$\mbox{]})
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{testpass_8c_a87bfa1d785e54250064a42ccd86bf93c}{xlen}} = 0
+\item 
+int \mbox{\hyperlink{testpass_8c_afb19b851dbcd1447c226a8a98c26979d}{loglevel}} = 0
+\item 
+char \mbox{\hyperlink{testpass_8c_a9d22394e80281a076c2d925cdfb132c6}{progname}} \mbox{[}$\,$\mbox{]} = \char`\"{}HSENCFS\char`\"{}
+\begin{DoxyCompactList}\small\item\em We use this string to obfuscate the password. Do not change. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{testpass_8c_aa1f4cfeee2842f40a2b8dfd94331479f}{create}} = 0
+\item 
+int \mbox{\hyperlink{testpass_8c_a86867ac949b307b5fed9a933e9e26eb9}{gui}} = 0
+\item 
+char $\ast$ \mbox{\hyperlink{testpass_8c_a0a56c074899381706faa63261bd585d3}{markfile}} = \char`\"{}markfile\char`\"{}
+\item 
+char $\ast$ \mbox{\hyperlink{testpass_8c_a2ff80e5310adf78e9fe1be2eda908784}{defpass}} = \char`\"{}\char`\"{}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{testpass_8c_a0ddf1224851353fc92bfbff6f499fa97}\label{testpass_8c_a0ddf1224851353fc92bfbff6f499fa97}} 
+\index{testpass.c@{testpass.c}!main@{main}}
+\index{main@{main}!testpass.c@{testpass.c}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{char $\ast$}]{argv\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{testpass_8c_aa1f4cfeee2842f40a2b8dfd94331479f}\label{testpass_8c_aa1f4cfeee2842f40a2b8dfd94331479f}} 
+\index{testpass.c@{testpass.c}!create@{create}}
+\index{create@{create}!testpass.c@{testpass.c}}
+\doxysubsubsection{\texorpdfstring{create}{create}}
+{\footnotesize\ttfamily int create = 0}
+
+\mbox{\Hypertarget{testpass_8c_a2ff80e5310adf78e9fe1be2eda908784}\label{testpass_8c_a2ff80e5310adf78e9fe1be2eda908784}} 
+\index{testpass.c@{testpass.c}!defpass@{defpass}}
+\index{defpass@{defpass}!testpass.c@{testpass.c}}
+\doxysubsubsection{\texorpdfstring{defpass}{defpass}}
+{\footnotesize\ttfamily char$\ast$ defpass = \char`\"{}\char`\"{}}
+
+\mbox{\Hypertarget{testpass_8c_a86867ac949b307b5fed9a933e9e26eb9}\label{testpass_8c_a86867ac949b307b5fed9a933e9e26eb9}} 
+\index{testpass.c@{testpass.c}!gui@{gui}}
+\index{gui@{gui}!testpass.c@{testpass.c}}
+\doxysubsubsection{\texorpdfstring{gui}{gui}}
+{\footnotesize\ttfamily int gui = 0}
+
+\mbox{\Hypertarget{testpass_8c_afb19b851dbcd1447c226a8a98c26979d}\label{testpass_8c_afb19b851dbcd1447c226a8a98c26979d}} 
+\index{testpass.c@{testpass.c}!loglevel@{loglevel}}
+\index{loglevel@{loglevel}!testpass.c@{testpass.c}}
+\doxysubsubsection{\texorpdfstring{loglevel}{loglevel}}
+{\footnotesize\ttfamily int loglevel = 0}
+
+\mbox{\Hypertarget{testpass_8c_a0a56c074899381706faa63261bd585d3}\label{testpass_8c_a0a56c074899381706faa63261bd585d3}} 
+\index{testpass.c@{testpass.c}!markfile@{markfile}}
+\index{markfile@{markfile}!testpass.c@{testpass.c}}
+\doxysubsubsection{\texorpdfstring{markfile}{markfile}}
+{\footnotesize\ttfamily char$\ast$ markfile = \char`\"{}markfile\char`\"{}}
+
+\mbox{\Hypertarget{testpass_8c_a9d22394e80281a076c2d925cdfb132c6}\label{testpass_8c_a9d22394e80281a076c2d925cdfb132c6}} 
+\index{testpass.c@{testpass.c}!progname@{progname}}
+\index{progname@{progname}!testpass.c@{testpass.c}}
+\doxysubsubsection{\texorpdfstring{progname}{progname}}
+{\footnotesize\ttfamily char progname\mbox{[}$\,$\mbox{]} = \char`\"{}HSENCFS\char`\"{}}
+
+
+
+We use this string to obfuscate the password. Do not change. 
+
+\mbox{\Hypertarget{testpass_8c_a87bfa1d785e54250064a42ccd86bf93c}\label{testpass_8c_a87bfa1d785e54250064a42ccd86bf93c}} 
+\index{testpass.c@{testpass.c}!xlen@{xlen}}
+\index{xlen@{xlen}!testpass.c@{testpass.c}}
+\doxysubsubsection{\texorpdfstring{xlen}{xlen}}
+{\footnotesize\ttfamily int xlen = 0}
+

@@ -19,10 +19,11 @@
 static char tmp[256];
 int     xlen = 0;
 
-int     loglevel = 0;
+//int     loglevel = 0;
 char    progname[] = "HSENCFS";
 int     create = 0;
 int     gui = 0;
+int     verbose = 0;
 char    *markfile = "markfile";
 char    *defpass = "";
 
@@ -30,7 +31,7 @@ int main(int argc, char *argv[])
 
 {
     //bluepoint2_set_verbose(2);
-    char *opts = "gachm:p:";
+    char *opts = "vgachm:p:l:";
 
     openlog("HSEncFs",  LOG_PID,  LOG_DAEMON);
     srand(time(NULL));
@@ -66,6 +67,11 @@ int main(int argc, char *argv[])
                 gui = 1;
                 break;
 
+            case 'v':
+                //printf("option a\n");
+                verbose += 1;
+                break;
+
             case 'c':
                 //printf("option c\n");
                 create = 1;
@@ -76,12 +82,20 @@ int main(int argc, char *argv[])
                 markfile = strdup(optarg);
                 break;
 
+            case 'l':
+                loglevel = atoi(optarg);
+                printf("loglevel: %d\n", loglevel);
+                break;
+
             case 'p':
                 //printf("option m %s\n", optarg);
                 defpass = strdup(optarg);
                 break;
             }
         }
+
+    hsprint(TO_ERR | TO_OUT | TO_LOG, 3, "Starting testpass '%s'", argv[0]);
+
     if(!create)
         {
         if(access(markfile, R_OK) < 0)
@@ -104,9 +118,18 @@ int main(int argc, char *argv[])
         }
     else
         {
-        xpass = getpass_front(prompt, create, gui);
+        PassArg passarg;
+        passarg.prompt = "\'  Enter pass:  \'",
+        passarg.title = "\' Title Here: \'";
+        passarg.gui = gui;
+        passarg.create = create;
+        passarg.passprog = "../askpass/hsaskpass.py";
+        passarg.mountstr = "Mountstr";
+        xpass = getpass_front(&passarg);
         }
-    printf("xpass '%s'\n", xpass);
+
+    //printf("xpass '%s'\n", xpass);
+
     if(create)
         {
         create_markfile(markfile, xpass, strlen(xpass));

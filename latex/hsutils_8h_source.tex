@@ -25,35 +25,29 @@
 \DoxyCodeLine{00021\ }
 \DoxyCodeLine{00022\ \textcolor{comment}{//\ Included\ in\ ALl\ encrypters}}
 \DoxyCodeLine{00023\ }
-\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ BLOCKSIZE\ \ \ 4096}}
-\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ MAXPASSLEN\ \ \ \ \ \ 512}}
-\DoxyCodeLine{00026\ }
-\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ \ \ \ \ HS\_PROGNAME\ \ \ \ "{}HSENCFS"{}}}
-\DoxyCodeLine{00028\ }
-\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#define\ \ TO\_OUT\ (1\ <<\ 0)}}
-\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ \ TO\_ERR\ (1\ <<\ 1)}}
-\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#define\ \ TO\_LOG\ (1\ <<\ 2)}}
-\DoxyCodeLine{00032\ }
-\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#define\ \ TO\_ALL\ (TO\_OUT\ |\ TO\_ERR\ |\ TO\_LOG)}}
-\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#define\ \ TO\_EL\ \ (TO\_ERR\ |\ TO\_LOG)}}
-\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#define\ \ TO\_OL\ \ (TO\_OUT\ |\ TO\_LOG)}}
-\DoxyCodeLine{00036\ }
-\DoxyCodeLine{00037\ \textcolor{keyword}{extern}\ \ \textcolor{keywordtype}{char}\ \ \ \ *\mbox{\hyperlink{hsutils_8h_a7ca7f2172ff2de0209b10fe2a92ad73a}{passfname}};}
-\DoxyCodeLine{00038\ }
-\DoxyCodeLine{00039\ \textcolor{comment}{//\ Prototypes\ shared\ between\ components}}
-\DoxyCodeLine{00040\ }
-\DoxyCodeLine{00041\ \textcolor{keywordtype}{int}\ \ \ \ \ \mbox{\hyperlink{hsutils_8h_a3adc52fbad67f57ded43bccddba0956b}{ismounted}}(\textcolor{keywordtype}{char}\ *\mbox{\hyperlink{test__blue2_8c_a9f761e1963cee01a7d0490c491a2c056}{orig}});}
-\DoxyCodeLine{00042\ \textcolor{keywordtype}{int}\ \ \ \ \ \mbox{\hyperlink{hsutils_8h_a7ddc227464b6cf7f300c3151e77aa5de}{countfiles}}(\textcolor{keywordtype}{char}\ *mpoint);}
-\DoxyCodeLine{00043\ \textcolor{keywordtype}{void}\ \ \ \ \mbox{\hyperlink{hsutils_8h_ad0b8354aa421025178b0b82c44a10082}{hsprint}}(\textcolor{keywordtype}{int}\ outs,\ \textcolor{keywordtype}{int}\ lev,\ \textcolor{keywordtype}{char}\ *fmt,\ ...);}
-\DoxyCodeLine{00044\ \textcolor{keywordtype}{void}\ \ \ \ \mbox{\hyperlink{namespacehslog}{hslog}}(\textcolor{keywordtype}{int}\ lev,\ \textcolor{keywordtype}{char}\ *fmt,\ ...);}
-\DoxyCodeLine{00045\ }
-\DoxyCodeLine{00046\ \textcolor{keywordtype}{int}\ \ \ \ \ \mbox{\hyperlink{hsutils_8h_a3f53c26df5ebbdf63347347d774c994f}{check\_markfile}}(\textcolor{keywordtype}{char}\ *name,\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{block__blue2_8c_a12b3e022c6c3f2c88d5ebfc7fb357613}{pass}},\ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{block__blue2_8c_ad29d2259942853507dff3a3e3c05535a}{plen}});}
-\DoxyCodeLine{00047\ \textcolor{keywordtype}{int}\ \ \ \ \ \mbox{\hyperlink{hsutils_8h_a25eb5f7534f43f958c5f38f66ae0b62b}{create\_markfile}}(\textcolor{keywordtype}{char}\ *name,\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{block__blue2_8c_a12b3e022c6c3f2c88d5ebfc7fb357613}{pass}},\ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{block__blue2_8c_ad29d2259942853507dff3a3e3c05535a}{plen}});}
-\DoxyCodeLine{00048\ }
-\DoxyCodeLine{00049\ \textcolor{keywordtype}{char}\ \ \ \ *\mbox{\hyperlink{hsutils_8h_a28adf1dc01950f645da136433ea6910e}{hs\_askpass}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *program,\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{getpass_8c_a024e65f7d9664cdc767f51c283fd8353}{buf}},\ \textcolor{keywordtype}{int}\ buflen);}
-\DoxyCodeLine{00050\ \textcolor{keywordtype}{void}\ \ \ \ \mbox{\hyperlink{hsutils_8h_acfb56efc8cf2f2fa1921bc6f7be10ded}{expandpath}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *inp,\ \textcolor{keywordtype}{char}\ *outp,\ \textcolor{keywordtype}{int}\ maxlen);}
-\DoxyCodeLine{00051\ \textcolor{keywordtype}{int}\ \ \ \ \ \mbox{\hyperlink{hsutils_8h_a477ec7146ceeadd0690bd2da58f92804}{pass\_ritual}}(\textcolor{keywordtype}{char}\ *mountroot,\ \textcolor{keywordtype}{char}\ *mountdata,\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{block__blue2_8c_a12b3e022c6c3f2c88d5ebfc7fb357613}{pass}},\ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{block__blue2_8c_ad29d2259942853507dff3a3e3c05535a}{plen}},\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{hsencfs_8c_aa862f7f7b6e83fb3986f7be3b09a9caa}{passprog}});}
-\DoxyCodeLine{00052\ }
-\DoxyCodeLine{00053\ \textcolor{comment}{//\ EOF}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ \ \ \ \ HS\_PROGNAME\ \ \ \ "{}HSENCFS"{}}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ \ TO\_OUT\ (1\ <<\ 0)}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ \ TO\_ERR\ (1\ <<\ 1)}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#define\ \ TO\_LOG\ (1\ <<\ 2)}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ \ TO\_ALL\ (TO\_OUT\ |\ TO\_ERR\ |\ TO\_LOG)}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#define\ \ TO\_EL\ \ (TO\_ERR\ |\ TO\_LOG)}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#define\ \ TO\_OL\ \ (TO\_OUT\ |\ TO\_LOG)}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{keyword}{extern}\ \ \textcolor{keywordtype}{char}\ \ \ \ *\mbox{\hyperlink{hsutils_8h_a7ca7f2172ff2de0209b10fe2a92ad73a}{passfname}};}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{comment}{//\ Prototypes\ shared\ between\ components}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{keywordtype}{int}\ \ \ \ \ \mbox{\hyperlink{hsutils_8h_a3adc52fbad67f57ded43bccddba0956b}{ismounted}}(\textcolor{keywordtype}{char}\ *\mbox{\hyperlink{test__blue2_8c_a9f761e1963cee01a7d0490c491a2c056}{orig}});}
+\DoxyCodeLine{00039\ \textcolor{keywordtype}{int}\ \ \ \ \ \mbox{\hyperlink{hsutils_8h_a7ddc227464b6cf7f300c3151e77aa5de}{countfiles}}(\textcolor{keywordtype}{char}\ *mpoint);}
+\DoxyCodeLine{00040\ \textcolor{keywordtype}{void}\ \ \ \ \mbox{\hyperlink{hsutils_8h_ad0b8354aa421025178b0b82c44a10082}{hsprint}}(\textcolor{keywordtype}{int}\ outs,\ \textcolor{keywordtype}{int}\ lev,\ \textcolor{keywordtype}{char}\ *fmt,\ ...);}
+\DoxyCodeLine{00041\ \textcolor{keywordtype}{void}\ \ \ \ \mbox{\hyperlink{namespacehslog}{hslog}}(\textcolor{keywordtype}{int}\ lev,\ \textcolor{keywordtype}{char}\ *fmt,\ ...);}
+\DoxyCodeLine{00042\ \textcolor{keywordtype}{void}\ \ \ \ \mbox{\hyperlink{hsutils_8h_acfb56efc8cf2f2fa1921bc6f7be10ded}{expandpath}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *inp,\ \textcolor{keywordtype}{char}\ *outp,\ \textcolor{keywordtype}{int}\ maxlen);}
+\DoxyCodeLine{00043\ \textcolor{keywordtype}{void}\ \ \ \ \mbox{\hyperlink{hsutils_8h_a035a4be848aecd1c646a2822a9e90ba2}{hsfree}}(\textcolor{keywordtype}{void}\ *mem,\ \textcolor{keywordtype}{int}\ size);}
+\DoxyCodeLine{00044\ \textcolor{keywordtype}{char}\ \ \ \ *\mbox{\hyperlink{hsutils_8h_a75098c8b2035d7be948fef120145d2e1}{hexdump}}(\textcolor{keywordtype}{char}\ *ptr,\ \textcolor{keywordtype}{int}\ len);}
+\DoxyCodeLine{00045\ \textcolor{keywordtype}{int}\ \ \ \ \ \mbox{\hyperlink{hsutils_8h_a5f000ce409a26b41065a9786bb177c60}{parse\_comstr}}(\textcolor{keywordtype}{char}\ *argx[],\ \textcolor{keywordtype}{int}\ limx,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *program);}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{comment}{//\ EOF}}
 
 \end{DoxyCode}

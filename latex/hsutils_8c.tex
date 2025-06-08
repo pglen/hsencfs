@@ -16,8 +16,7 @@
 {\ttfamily \#include $<$stdarg.\+h$>$}\newline
 {\ttfamily \#include \char`\"{}../src/hsencfs.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}hsutils.\+h\char`\"{}}\newline
-Include dependency graph for hsutils.\+c\+:
-\nopagebreak
+Include dependency graph for hsutils.\+c\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -41,6 +40,12 @@ void \mbox{\hyperlink{hsutils_8c_ad0b8354aa421025178b0b82c44a10082}{hsprint}} (i
 void \mbox{\hyperlink{hsutils_8c_ab7f9378d524c6983756fdd47c996f3c4}{hslog}} (int lev, char $\ast$fmt,...)
 \item 
 void \mbox{\hyperlink{hsutils_8c_acfb56efc8cf2f2fa1921bc6f7be10ded}{expandpath}} (const char $\ast$inp, char $\ast$outp, int maxlen)
+\item 
+void \mbox{\hyperlink{hsutils_8c_a035a4be848aecd1c646a2822a9e90ba2}{hsfree}} (void $\ast$mem, int size)
+\item 
+char $\ast$ \mbox{\hyperlink{hsutils_8c_a75098c8b2035d7be948fef120145d2e1}{hexdump}} (char $\ast$ptr, int len)
+\item 
+int \mbox{\hyperlink{hsutils_8c_a5f000ce409a26b41065a9786bb177c60}{parse\+\_\+comstr}} (char $\ast$argx\mbox{[}$\,$\mbox{]}, int limx, const char $\ast$program)
 \end{DoxyCompactItemize}
 
 
@@ -66,6 +71,18 @@ void \mbox{\hyperlink{hsutils_8c_acfb56efc8cf2f2fa1921bc6f7be10ded}{expandpath}}
 \doxysubsubsection{\texorpdfstring{expandpath()}{expandpath()}}
 {\footnotesize\ttfamily void expandpath (\begin{DoxyParamCaption}\item[{const char $\ast$}]{inp,  }\item[{char $\ast$}]{outp,  }\item[{int}]{maxlen }\end{DoxyParamCaption})}
 
+\mbox{\Hypertarget{hsutils_8c_a75098c8b2035d7be948fef120145d2e1}\label{hsutils_8c_a75098c8b2035d7be948fef120145d2e1}} 
+\index{hsutils.c@{hsutils.c}!hexdump@{hexdump}}
+\index{hexdump@{hexdump}!hsutils.c@{hsutils.c}}
+\doxysubsubsection{\texorpdfstring{hexdump()}{hexdump()}}
+{\footnotesize\ttfamily char $\ast$ hexdump (\begin{DoxyParamCaption}\item[{char $\ast$}]{ptr,  }\item[{int}]{len }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hsutils_8c_a035a4be848aecd1c646a2822a9e90ba2}\label{hsutils_8c_a035a4be848aecd1c646a2822a9e90ba2}} 
+\index{hsutils.c@{hsutils.c}!hsfree@{hsfree}}
+\index{hsfree@{hsfree}!hsutils.c@{hsutils.c}}
+\doxysubsubsection{\texorpdfstring{hsfree()}{hsfree()}}
+{\footnotesize\ttfamily void hsfree (\begin{DoxyParamCaption}\item[{void $\ast$}]{mem,  }\item[{int}]{size }\end{DoxyParamCaption})}
+
 \mbox{\Hypertarget{hsutils_8c_ab7f9378d524c6983756fdd47c996f3c4}\label{hsutils_8c_ab7f9378d524c6983756fdd47c996f3c4}} 
 \index{hsutils.c@{hsutils.c}!hslog@{hslog}}
 \index{hslog@{hslog}!hsutils.c@{hsutils.c}}
@@ -83,4 +100,10 @@ void \mbox{\hyperlink{hsutils_8c_acfb56efc8cf2f2fa1921bc6f7be10ded}{expandpath}}
 \index{ismounted@{ismounted}!hsutils.c@{hsutils.c}}
 \doxysubsubsection{\texorpdfstring{ismounted()}{ismounted()}}
 {\footnotesize\ttfamily int ismounted (\begin{DoxyParamCaption}\item[{char $\ast$}]{orig }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hsutils_8c_a5f000ce409a26b41065a9786bb177c60}\label{hsutils_8c_a5f000ce409a26b41065a9786bb177c60}} 
+\index{hsutils.c@{hsutils.c}!parse\_comstr@{parse\_comstr}}
+\index{parse\_comstr@{parse\_comstr}!hsutils.c@{hsutils.c}}
+\doxysubsubsection{\texorpdfstring{parse\_comstr()}{parse\_comstr()}}
+{\footnotesize\ttfamily int parse\+\_\+comstr (\begin{DoxyParamCaption}\item[{char $\ast$}]{argx\mbox{[}$\,$\mbox{]},  }\item[{int}]{limx,  }\item[{const char $\ast$}]{program }\end{DoxyParamCaption})}
 

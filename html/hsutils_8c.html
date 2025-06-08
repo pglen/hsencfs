@@ -137,6 +137,12 @@ Functions</h2></td></tr>
 <tr class="separator:ab7f9378d524c6983756fdd47c996f3c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acfb56efc8cf2f2fa1921bc6f7be10ded"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hsutils_8c.html#acfb56efc8cf2f2fa1921bc6f7be10ded">expandpath</a> (const char *inp, char *outp, int maxlen)</td></tr>
 <tr class="separator:acfb56efc8cf2f2fa1921bc6f7be10ded"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a035a4be848aecd1c646a2822a9e90ba2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hsutils_8c.html#a035a4be848aecd1c646a2822a9e90ba2">hsfree</a> (void *mem, int size)</td></tr>
+<tr class="separator:a035a4be848aecd1c646a2822a9e90ba2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a75098c8b2035d7be948fef120145d2e1"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hsutils_8c.html#a75098c8b2035d7be948fef120145d2e1">hexdump</a> (char *ptr, int len)</td></tr>
+<tr class="separator:a75098c8b2035d7be948fef120145d2e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f000ce409a26b41065a9786bb177c60"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hsutils_8c.html#a5f000ce409a26b41065a9786bb177c60">parse_comstr</a> (char *argx[], int limx, const char *program)</td></tr>
+<tr class="separator:a5f000ce409a26b41065a9786bb177c60"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a369266c24eacffb87046522897a570d5" name="a369266c24eacffb87046522897a570d5"></a>
@@ -195,6 +201,62 @@ Functions</h2></td></tr>
           <td></td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>maxlen</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a75098c8b2035d7be948fef120145d2e1" name="a75098c8b2035d7be948fef120145d2e1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a75098c8b2035d7be948fef120145d2e1">&#9670;&#160;</a></span>hexdump()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char * hexdump </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>len</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a035a4be848aecd1c646a2822a9e90ba2" name="a035a4be848aecd1c646a2822a9e90ba2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a035a4be848aecd1c646a2822a9e90ba2">&#9670;&#160;</a></span>hsfree()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void hsfree </td>
+          <td>(</td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>mem</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>size</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -292,6 +354,40 @@ Functions</h2></td></tr>
           <td class="paramtype">char *&#160;</td>
           <td class="paramname"><em>orig</em></td><td>)</td>
           <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5f000ce409a26b41065a9786bb177c60" name="a5f000ce409a26b41065a9786bb177c60"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5f000ce409a26b41065a9786bb177c60">&#9670;&#160;</a></span>parse_comstr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int parse_comstr </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>argx</em>[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>limx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>program</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">

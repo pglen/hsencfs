@@ -10,10 +10,22 @@
       REV       DATE                BY           DESCRIPTION
       ----  ---------------      ----------      -------------------------
       0.00  Thu 05.Jun.2025      Peter Glen      Initial version.
+      0.00  Sun 08.Jun.2025      Peter Glen      Passarg
 
    ======================================================================= */
 
-int     seccomp(const uchar *s1, const uchar *s2, int len);
+typedef struct _PassArg
+{
+    char *passprog;
+    char *mountstr;
+    char *prompt;
+    char *title;
+    char *res;
+    int create;
+    int gui;
+
+} PassArg;
+
 int     create_markfile(char *name, char *pass, int plen);
 int     check_markfile(char *name, char *pass, int plen);
 int     public_encrypt(uchar *data, int data_len, uchar *key, uchar *ebuf);
@@ -22,7 +34,7 @@ int     parse_comstr(char *argx[], int limx, const char *program);
 void    sigint_local(int sig);
 char    *getpassx(char *prompt);
 int     hs_askpass(const char *program, char *buf, int buflen);
-int     pass_ritual(char *mroot, char *mdata, char *pass, int *plen, char *passprog);
-char    *getpass_front(char *prompt, int create, int gui);
+int     pass_ritual(PassArg *parg);
+char    *getpass_front(PassArg *parg);
 
 //# EOF

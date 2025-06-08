@@ -166,7 +166,7 @@ int     openpass(const char *path)
     // Do not log sensitive data
     //hslog(2, "passx '%s'\n", passx);
 
-    int ret2 = pass_ritual(mountpoint, mountsecret, passx, &plen, passprog);
+    int ret2 = 0; //pass_ritual(mountpoint, mountsecret, passx, &plen, passprog);
     if(ret2)
         {
         // Force new pass prompt

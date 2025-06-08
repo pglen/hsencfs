@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.7"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>HsEncFS: tools/bp2com.h Source File</title>
+<title>HsEncFS: common/bp2com.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -69,7 +69,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_4eeb864c4eec08c7d6b9d3b0352cfdde.html">tools</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_bdd9a5d540de89e9fe90efdfc6973a4f.html">common</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -80,18 +80,18 @@ $(function() {
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="keyword">extern</span> <span class="keywordtype">char</span>    <a class="code hl_variable" href="bp2com_8h.html#a9d22394e80281a076c2d925cdfb132c6">progname</a>[];</div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;../common/hsutils.h&quot;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno"><a class="line" href="bp2com_8h.html#afcf795f5a96fd55561abe69f56224630">    5</a></span><span class="preprocessor">#define BLOCKSIZE       4096</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="keywordtype">int</span>     <a class="code hl_function" href="bp2com_8h.html#ab90d8f7cfbda3b2cb01d82515ce17620">bpgetpass</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *fname, <span class="keywordtype">char</span> *<a class="code hl_variable" href="block__blue2_8c.html#a12b3e022c6c3f2c88d5ebfc7fb357613">pass</a>, <span class="keywordtype">int</span> *plenx);</div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="keywordtype">char</span>    *<a class="code hl_function" href="bp2com_8h.html#a2b9f1e8097c7b06ab6b7b3ae3603c12a">mk_backup_path</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *path);</div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keywordtype">int</span>     <a class="code hl_function" href="bp2com_8h.html#af95ae0664900cb65f392a08228b8bde3">mk_block_file</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *path);</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno"><a class="line" href="bp2com_8h.html#af95ae0664900cb65f392a08228b8bde3">    9</a></span><span class="keywordtype">int</span>     <a class="code hl_function" href="bp2com_8h.html#af95ae0664900cb65f392a08228b8bde3">mk_block_file</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *path);</div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment">// EOF</span></div>
 <div class="ttc" id="ablock__blue2_8c_html_a12b3e022c6c3f2c88d5ebfc7fb357613"><div class="ttname"><a href="block__blue2_8c.html#a12b3e022c6c3f2c88d5ebfc7fb357613">pass</a></div><div class="ttdeci">char pass[128]</div><div class="ttdef"><b>Definition:</b> block_blue2.c:45</div></div>
-<div class="ttc" id="abp2com_8h_html_a2b9f1e8097c7b06ab6b7b3ae3603c12a"><div class="ttname"><a href="bp2com_8h.html#a2b9f1e8097c7b06ab6b7b3ae3603c12a">mk_backup_path</a></div><div class="ttdeci">char * mk_backup_path(const char *path)</div><div class="ttdef"><b>Definition:</b> bp2com.c:65</div></div>
-<div class="ttc" id="abp2com_8h_html_a9d22394e80281a076c2d925cdfb132c6"><div class="ttname"><a href="bp2com_8h.html#a9d22394e80281a076c2d925cdfb132c6">progname</a></div><div class="ttdeci">char progname[]</div><div class="ttdoc">We use this string to obfuscate the password. Do not change.</div><div class="ttdef"><b>Definition:</b> hsaskpass.c:16</div></div>
-<div class="ttc" id="abp2com_8h_html_ab90d8f7cfbda3b2cb01d82515ce17620"><div class="ttname"><a href="bp2com_8h.html#ab90d8f7cfbda3b2cb01d82515ce17620">bpgetpass</a></div><div class="ttdeci">int bpgetpass(const char *fname, char *pass, int *plenx)</div><div class="ttdef"><b>Definition:</b> bp2com.c:29</div></div>
-<div class="ttc" id="abp2com_8h_html_af95ae0664900cb65f392a08228b8bde3"><div class="ttname"><a href="bp2com_8h.html#af95ae0664900cb65f392a08228b8bde3">mk_block_file</a></div><div class="ttdeci">int mk_block_file(const char *path)</div><div class="ttdef"><b>Definition:</b> bp2com.c:93</div></div>
+<div class="ttc" id="abp2com_8h_html_a2b9f1e8097c7b06ab6b7b3ae3603c12a"><div class="ttname"><a href="bp2com_8h.html#a2b9f1e8097c7b06ab6b7b3ae3603c12a">mk_backup_path</a></div><div class="ttdeci">char * mk_backup_path(const char *path)</div><div class="ttdef"><b>Definition:</b> bp2com.c:66</div></div>
+<div class="ttc" id="abp2com_8h_html_a9d22394e80281a076c2d925cdfb132c6"><div class="ttname"><a href="bp2com_8h.html#a9d22394e80281a076c2d925cdfb132c6">progname</a></div><div class="ttdeci">char progname[]</div><div class="ttdoc">We use this string to obfuscate the password. Do not change.</div><div class="ttdef"><b>Definition:</b> bp2com.c:26</div></div>
+<div class="ttc" id="abp2com_8h_html_ab90d8f7cfbda3b2cb01d82515ce17620"><div class="ttname"><a href="bp2com_8h.html#ab90d8f7cfbda3b2cb01d82515ce17620">bpgetpass</a></div><div class="ttdeci">int bpgetpass(const char *fname, char *pass, int *plenx)</div><div class="ttdef"><b>Definition:</b> bp2com.c:30</div></div>
+<div class="ttc" id="abp2com_8h_html_af95ae0664900cb65f392a08228b8bde3"><div class="ttname"><a href="bp2com_8h.html#af95ae0664900cb65f392a08228b8bde3">mk_block_file</a></div><div class="ttdeci">int mk_block_file(const char *path)</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

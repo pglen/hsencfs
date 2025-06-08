@@ -1,0 +1,28 @@
+\hypertarget{test__rsa_8py}{}\doxysection{study/test\+\_\+rsa.py File Reference}
+\label{test__rsa_8py}\index{study/test\_rsa.py@{study/test\_rsa.py}}
+\doxysubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespacetest__rsa}{test\+\_\+rsa}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+b \mbox{\hyperlink{namespacetest__rsa_ae69a50539bc91237612d0696187614d3}{test\+\_\+rsa.\+pub}}
+\item 
+b \mbox{\hyperlink{namespacetest__rsa_a272b40a619c1c8c8a8c2f27949c533f2}{test\+\_\+rsa.\+pri}}
+\item 
+RSA \mbox{\hyperlink{namespacetest__rsa_a77302c57dee850a7a6bf3bd70247d9b8}{test\+\_\+rsa.\+pkey}} = RSA.\+import\+\_\+key(\mbox{\hyperlink{gen__rsa_8c_aeec71bce2f0904b6e08bde7819a89ddd}{pub}})
+\item 
+RSA \mbox{\hyperlink{namespacetest__rsa_a879d8263febd3a11973861cb1e861c2c}{test\+\_\+rsa.\+vkey}} = RSA.\+import\+\_\+key(pri)
+\item 
+\mbox{\hyperlink{trunctest_8c_a53dbc2382caf520f4a511f07d1e77a71}{str}} \mbox{\hyperlink{namespacetest__rsa_a71f37319b3351bcdefc0db34d153500e}{test\+\_\+rsa.\+text}} = \char`\"{}1234123412341234123412341234123412341234123412341234\char`\"{}
+\item 
+PKCS1\+\_\+\+OAEP \mbox{\hyperlink{namespacetest__rsa_a8d3bb57b8cd3698f19e968c533cea5d0}{test\+\_\+rsa.\+cipher\+\_\+rsa}} = PKCS1\+\_\+\+OAEP.\+new(\mbox{\hyperlink{rsa__exa_8c_a76a3c5d8ec8f468075eb3e366a35a83c}{pkey}})
+\item 
+PKCS1\+\_\+\+OAEP \mbox{\hyperlink{namespacetest__rsa_a7716bbcfe0c5d9ecdb4053d2e9babe3a}{test\+\_\+rsa.\+enc\+\_\+text}} = cipher\+\_\+rsa.\+encrypt(text.\+encode())
+\item 
+PKCS1\+\_\+\+OAEP \mbox{\hyperlink{namespacetest__rsa_ab642287918617b76ee02635ae200f344}{test\+\_\+rsa.\+cipher\+\_\+rsa2}} = PKCS1\+\_\+\+OAEP.\+new(vkey)
+\item 
+PKCS1\+\_\+\+OAEP \mbox{\hyperlink{namespacetest__rsa_abdbb30e3b6c3ae1142a505bfc2d0be02}{test\+\_\+rsa.\+dec\+\_\+text}} = cipher\+\_\+rsa2.\+decrypt(enc\+\_\+text)
+\end{DoxyCompactItemize}

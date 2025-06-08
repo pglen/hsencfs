@@ -15,16 +15,19 @@ from gi.repository import Gdk
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import AES, PKCS1_OAEP
 
-#import ssl
+def hslog(lev, *xargs):
 
-def mylog(*args):
+    #print("hslog:", lev, *xargs)
 
-    sumx = ""
-    for aa in args:
-        sumx += str(aa) + " "
-    syslog.syslog(sumx)
+    # Do not turn on unless want to see details
+    if not args.loglevel:
+        return
 
-#print(dir(ssl))
+    if lev <= args.loglevel:
+        sumx = ""
+        for aa in xargs:
+            sumx += str(aa) + " "
+        syslog.syslog(sumx)
 
 def message_dialog(strx, header = "Message Dialog" ):
 
@@ -171,11 +174,10 @@ Version = "1.0.0"
 pdesc = 'HSENCFS password GUI. '
 pform = "Use TAB or enter to navigate between fields.\n" \
         "Press enter key to submit.\n" \
-        "Use quotes to group fields."
+        "Use single or double quotes to group fields."
 
-def mainloop():
+def parseargs():
 
-    global args, xconfig
     parser = argparse.ArgumentParser( description=pdesc, epilog=pform)
 
     parser.add_argument("-V", '--version', dest='version',
@@ -187,9 +189,9 @@ def mainloop():
                         default=0,  action='count',
                         help='Verbose level. Repeat -v for more verbossity.')
 
-    parser.add_argument("-l", '--loglevel', dest='loglevel',
-                        default=0,  action='count',
-                        help='Log to syslog. Repeat -l for more logs.')
+    parser.add_argument("-l", '--loglevel', dest='loglevel', type=int,
+                        default=0,  action='store',
+                        help='Log level to syslog. Value: 0-10. Default: 0')
 
     parser.add_argument("-p", '--prompt', dest='prompt', type=str,
                         default="  Enter Pass:  ",  action='store',
@@ -206,17 +208,23 @@ def mainloop():
     parser.add_argument("-c", '--create', dest='create', type=int,
                         default=0,  action='store',
                         help='Creation flag to double pass prompt.')
+    return parser
 
+def mainloop():
+
+    global args
+
+    parser = parseargs()
     args = parser.parse_args()
     #print(args)
 
     if args.version:
         print("Version: %s" % Version)
+        #print("Crypto Version: %s" % Crypt)
         #self.OnExit(0)
         sys.exit(0)
 
-    if args.loglevel:
-        mylog("Started hsakpass.py", prompt)
+    hslog(1, "Started hsakpass.py", args.prompt)
 
     if args.verbose:
         print("prompt:", args.prompt)
@@ -256,31 +264,24 @@ def mainloop():
     if args.pubkey:
         try:
             mykey = RSA.import_key(args.pubkey)
-            #mylog("mykey", mykey)
+            hslog(2, "mykey", mykey)
         except:
             text = str(sys.exc_info())
             #print(text)
             sss = base64.b64encode(text.encode())
             print(sss.decode(), end = "")
-            mylog("Cannot create key: '%s'." % args.pubkey)
+            hslog(1, "Cannot create key: '%s'." % args.pubkey)
             mykey = None
             sys.exit(1)
 
         cipher_rsa = PKCS1_OAEP.new(mykey)
         ksize = mykey.size_in_bytes()
-        #mylog("keysize", ksize)
-        #text2 = text + (ksize - len(text)) * "*"
-        #mylog("do text", "'" + text2 + "'")
+        hslog(1, "keysize", ksize)
         enc_text = cipher_rsa.encrypt(text.encode())
-        # This needs private key
-        #dec_text = cipher_rsa.decrypt(enc_text)
-        #mylog("dec_text", dec_text)
-        #print("de_text", b"'" + dec_text + b"'")
+        hslog(4, "enc_text", enc_text)
         sss = base64.b64encode(enc_text)
     else:
         sss = base64.b64encode(text.encode())
-
-    #mylog("sss:", len(sss), sss.decode())
     print(sss.decode(), end = "")
 
 # Start of program:
@@ -288,9 +289,10 @@ if __name__ == '__main__':
     try:
         mainloop()
     except SystemExit as xcode:
-        #print("systemexit", xcode)
         sys.exit(xcode)
     except:
+        hslog(1, "Exception: " , sys.exc_info())
         #print("mainloop exception: ", sys.exc_info())
+        raise
         pass
 # EOF

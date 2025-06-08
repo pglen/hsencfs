@@ -91,10 +91,12 @@ $(function() {
 <code>#include &lt;dirent.h&gt;</code><br />
 <code>#include &lt;errno.h&gt;</code><br />
 <code>#include &lt;syslog.h&gt;</code><br />
-<code>#include &lt;sys/time.h&gt;</code><br />
 <code>#include &lt;signal.h&gt;</code><br />
 <code>#include &lt;termios.h&gt;</code><br />
 <code>#include &lt;getopt.h&gt;</code><br />
+<code>#include &lt;stdarg.h&gt;</code><br />
+<code>#include &lt;sys/time.h&gt;</code><br />
+<code>#include &lt;sys/wait.h&gt;</code><br />
 <code>#include &lt;openssl/pem.h&gt;</code><br />
 <code>#include &lt;openssl/ssl.h&gt;</code><br />
 <code>#include &lt;openssl/rsa.h&gt;</code><br />
@@ -103,14 +105,15 @@ $(function() {
 <code>#include &lt;openssl/err.h&gt;</code><br />
 <code>#include &lt;openssl/rand.h&gt;</code><br />
 <code>#include &quot;<a class="el" href="hsutils_8h_source.html">hsutils.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="hsencfs_8h_source.html">../src/hsencfs.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="bluepoint2_8h_source.html">../bluepoint/bluepoint2.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="hsencfs_8h_source.html">hsencfs.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="base64_8h_source.html">base64.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="bluepoint2_8h_source.html">bluepoint2.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for hspass.c:</div>
 <div class="dyncontent">
 <div class="center"><img src="hspass_8c__incl.png" border="0" usemap="#acommon_2hspass_8c" alt=""/></div>
 <map name="acommon_2hspass_8c" id="acommon_2hspass_8c">
-<area shape="rect" title=" " alt="" coords="1031,5,1161,31"/>
+<area shape="rect" title=" " alt="" coords="1163,5,1293,31"/>
 <area shape="rect" title=" " alt="" coords="5,79,64,104"/>
 <area shape="rect" title=" " alt="" coords="88,79,173,104"/>
 <area shape="rect" title=" " alt="" coords="197,79,259,104"/>
@@ -121,20 +124,23 @@ Include dependency graph for hspass.c:</div>
 <area shape="rect" title=" " alt="" coords="637,79,702,104"/>
 <area shape="rect" title=" " alt="" coords="726,79,789,104"/>
 <area shape="rect" title=" " alt="" coords="813,79,883,104"/>
-<area shape="rect" title=" " alt="" coords="908,79,991,104"/>
-<area shape="rect" title=" " alt="" coords="1015,79,1081,104"/>
-<area shape="rect" title=" " alt="" coords="1106,79,1182,104"/>
-<area shape="rect" title=" " alt="" coords="1207,79,1276,104"/>
-<area shape="rect" title=" " alt="" coords="1300,79,1407,104"/>
-<area shape="rect" title=" " alt="" coords="1431,79,1529,104"/>
-<area shape="rect" title=" " alt="" coords="1554,79,1654,104"/>
-<area shape="rect" title=" " alt="" coords="1678,79,1781,104"/>
-<area shape="rect" title=" " alt="" coords="1805,79,1904,104"/>
-<area shape="rect" title=" " alt="" coords="1928,79,2024,104"/>
-<area shape="rect" title=" " alt="" coords="2048,79,2155,104"/>
-<area shape="rect" href="hsutils_8h.html" title=" " alt="" coords="2179,79,2250,104"/>
-<area shape="rect" href="hsencfs_8h.html" title=" " alt="" coords="2274,79,2387,104"/>
-<area shape="rect" href="bluepoint2_8h.html" title=" " alt="" coords="2412,79,2572,104"/>
+<area shape="rect" title=" " alt="" coords="908,79,975,104"/>
+<area shape="rect" title=" " alt="" coords="999,79,1075,104"/>
+<area shape="rect" title=" " alt="" coords="1100,79,1169,104"/>
+<area shape="rect" title=" " alt="" coords="1193,79,1263,104"/>
+<area shape="rect" title=" " alt="" coords="1287,79,1369,104"/>
+<area shape="rect" title=" " alt="" coords="1393,79,1476,104"/>
+<area shape="rect" title=" " alt="" coords="1500,79,1607,104"/>
+<area shape="rect" title=" " alt="" coords="1631,79,1729,104"/>
+<area shape="rect" title=" " alt="" coords="1754,79,1854,104"/>
+<area shape="rect" title=" " alt="" coords="1878,79,1981,104"/>
+<area shape="rect" title=" " alt="" coords="2005,79,2104,104"/>
+<area shape="rect" title=" " alt="" coords="2128,79,2224,104"/>
+<area shape="rect" title=" " alt="" coords="2248,79,2355,104"/>
+<area shape="rect" href="hsutils_8h.html" title=" " alt="" coords="2379,79,2450,104"/>
+<area shape="rect" href="hsencfs_8h.html" title=" " alt="" coords="2474,79,2553,104"/>
+<area shape="rect" href="base64_8h.html" title=" " alt="" coords="2577,79,2652,104"/>
+<area shape="rect" href="bluepoint2_8h.html" title=" " alt="" coords="2677,79,2769,104"/>
 </map>
 </div>
 </div><table class="memberdecls">
@@ -150,24 +156,26 @@ Typedefs</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a25eb5f7534f43f958c5f38f66ae0b62b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hspass_8c.html#a25eb5f7534f43f958c5f38f66ae0b62b">create_markfile</a> (char *name, char *<a class="el" href="block__blue2_8c.html#a12b3e022c6c3f2c88d5ebfc7fb357613">pass</a>, int *<a class="el" href="block__blue2_8c.html#ad29d2259942853507dff3a3e3c05535a">plen</a>)</td></tr>
-<tr class="separator:a25eb5f7534f43f958c5f38f66ae0b62b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3f53c26df5ebbdf63347347d774c994f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hspass_8c.html#a3f53c26df5ebbdf63347347d774c994f">check_markfile</a> (char *name, char *<a class="el" href="block__blue2_8c.html#a12b3e022c6c3f2c88d5ebfc7fb357613">pass</a>, int *<a class="el" href="block__blue2_8c.html#ad29d2259942853507dff3a3e3c05535a">plen</a>)</td></tr>
-<tr class="separator:a3f53c26df5ebbdf63347347d774c994f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9a8cfbe27587de6d5041941129532137"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hspass_8c.html#a9a8cfbe27587de6d5041941129532137">public_encrypt</a> (<a class="el" href="hspass_8c.html#a65f85814a8290f9797005d3b28e7e5fc">uchar</a> *data, int data_len, <a class="el" href="hspass_8c.html#a65f85814a8290f9797005d3b28e7e5fc">uchar</a> *key, <a class="el" href="hspass_8c.html#a65f85814a8290f9797005d3b28e7e5fc">uchar</a> *<a class="el" href="rsa__exa_8c.html#a5131ad2f88d1a0b6f6a930ab50537547">ebuf</a>)</td></tr>
 <tr class="separator:a9a8cfbe27587de6d5041941129532137"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a474c4380d87de59b27e78df6e791f722"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hspass_8c.html#a474c4380d87de59b27e78df6e791f722">private_decrypt</a> (<a class="el" href="hspass_8c.html#a65f85814a8290f9797005d3b28e7e5fc">uchar</a> *enc_data, int data_len, <a class="el" href="hspass_8c.html#a65f85814a8290f9797005d3b28e7e5fc">uchar</a> *key, <a class="el" href="hspass_8c.html#a65f85814a8290f9797005d3b28e7e5fc">uchar</a> *<a class="el" href="rsa__exa_8c.html#ab9dce071aeb73192814fe7f90178179e">dbuf</a>)</td></tr>
 <tr class="separator:a474c4380d87de59b27e78df6e791f722"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae87ea6a31b015d9d8ed35273e946631c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hspass_8c.html#ae87ea6a31b015d9d8ed35273e946631c">parse_comstr</a> (char *argx[], int limx, const char *program)</td></tr>
-<tr class="separator:ae87ea6a31b015d9d8ed35273e946631c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7379b8bd5c4c785fcf6a6752d70a90d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hspass_8c.html#aa7379b8bd5c4c785fcf6a6752d70a90d">create_markfile</a> (char *name, char *<a class="el" href="block__blue2_8c.html#a12b3e022c6c3f2c88d5ebfc7fb357613">pass</a>, int <a class="el" href="block__blue2_8c.html#ad29d2259942853507dff3a3e3c05535a">plen</a>)</td></tr>
+<tr class="separator:aa7379b8bd5c4c785fcf6a6752d70a90d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0920ea6869c2775a7836c23dd1ba0373"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hspass_8c.html#a0920ea6869c2775a7836c23dd1ba0373">seccomp</a> (const char *s1, const char *s2, int len)</td></tr>
+<tr class="separator:a0920ea6869c2775a7836c23dd1ba0373"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a01751f4883dba0ef3e3a4819d3e800"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hspass_8c.html#a3a01751f4883dba0ef3e3a4819d3e800">check_markfile</a> (char *name, char *<a class="el" href="block__blue2_8c.html#a12b3e022c6c3f2c88d5ebfc7fb357613">pass</a>, int <a class="el" href="block__blue2_8c.html#ad29d2259942853507dff3a3e3c05535a">plen</a>)</td></tr>
+<tr class="separator:a3a01751f4883dba0ef3e3a4819d3e800"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5dbdfa8cfa3272b229fef4814028689a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hspass_8c.html#a5dbdfa8cfa3272b229fef4814028689a">sigint_local</a> (int sig)</td></tr>
 <tr class="separator:a5dbdfa8cfa3272b229fef4814028689a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0395c758c919d971c43610054d861c64"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hspass_8c.html#a0395c758c919d971c43610054d861c64">getpassx</a> (char *prompt)</td></tr>
 <tr class="separator:a0395c758c919d971c43610054d861c64"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a28adf1dc01950f645da136433ea6910e"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hspass_8c.html#a28adf1dc01950f645da136433ea6910e">hs_askpass</a> (const char *program, char *<a class="el" href="getpass_8c.html#a024e65f7d9664cdc767f51c283fd8353">buf</a>, int buflen)</td></tr>
-<tr class="separator:a28adf1dc01950f645da136433ea6910e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0bcc1b0a494c46b71ddd5810a0c20228"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hspass_8c.html#a0bcc1b0a494c46b71ddd5810a0c20228">hs_askpass</a> (const char *program, char *<a class="el" href="getpass_8c.html#a024e65f7d9664cdc767f51c283fd8353">buf</a>, int buflen)</td></tr>
+<tr class="separator:a0bcc1b0a494c46b71ddd5810a0c20228"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a80e5af3deaff1649ab57c251171c9446"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hspass_8c.html#a80e5af3deaff1649ab57c251171c9446">pass_ritual</a> (char *mroot, char *mdata, char *<a class="el" href="block__blue2_8c.html#a12b3e022c6c3f2c88d5ebfc7fb357613">pass</a>, int *<a class="el" href="block__blue2_8c.html#ad29d2259942853507dff3a3e3c05535a">plen</a>, char *<a class="el" href="hsencfs_8c.html#aa862f7f7b6e83fb3986f7be3b09a9caa">passprog</a>)</td></tr>
 <tr class="separator:a80e5af3deaff1649ab57c251171c9446"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0aa210e6602a4a6443e21874f5848fe"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hspass_8c.html#af0aa210e6602a4a6443e21874f5848fe">getpass_front</a> (char *prompt, int <a class="el" href="testpass_8c.html#aa1f4cfeee2842f40a2b8dfd94331479f">create</a>, int <a class="el" href="testpass_8c.html#a86867ac949b307b5fed9a933e9e26eb9">gui</a>)</td></tr>
+<tr class="separator:af0aa210e6602a4a6443e21874f5848fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -207,8 +215,8 @@ Variables</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a3f53c26df5ebbdf63347347d774c994f" name="a3f53c26df5ebbdf63347347d774c994f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3f53c26df5ebbdf63347347d774c994f">&#9670;&#160;</a></span>check_markfile()</h2>
+<a id="a3a01751f4883dba0ef3e3a4819d3e800" name="a3a01751f4883dba0ef3e3a4819d3e800"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3a01751f4883dba0ef3e3a4819d3e800">&#9670;&#160;</a></span>check_markfile()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -228,7 +236,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int *&#160;</td>
+          <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>plen</em>&#160;</td>
         </tr>
         <tr>
@@ -241,8 +249,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a25eb5f7534f43f958c5f38f66ae0b62b" name="a25eb5f7534f43f958c5f38f66ae0b62b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a25eb5f7534f43f958c5f38f66ae0b62b">&#9670;&#160;</a></span>create_markfile()</h2>
+<a id="aa7379b8bd5c4c785fcf6a6752d70a90d" name="aa7379b8bd5c4c785fcf6a6752d70a90d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa7379b8bd5c4c785fcf6a6752d70a90d">&#9670;&#160;</a></span>create_markfile()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -262,8 +270,42 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int *&#160;</td>
+          <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>plen</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af0aa210e6602a4a6443e21874f5848fe" name="af0aa210e6602a4a6443e21874f5848fe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af0aa210e6602a4a6443e21874f5848fe">&#9670;&#160;</a></span>getpass_front()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char * getpass_front </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>prompt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>create</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>gui</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -293,14 +335,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a28adf1dc01950f645da136433ea6910e" name="a28adf1dc01950f645da136433ea6910e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a28adf1dc01950f645da136433ea6910e">&#9670;&#160;</a></span>hs_askpass()</h2>
+<a id="a0bcc1b0a494c46b71ddd5810a0c20228" name="a0bcc1b0a494c46b71ddd5810a0c20228"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0bcc1b0a494c46b71ddd5810a0c20228">&#9670;&#160;</a></span>hs_askpass()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">char * hs_askpass </td>
+          <td class="memname">int hs_askpass </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>program</em>, </td>
@@ -316,40 +358,6 @@ Variables</h2></td></tr>
           <td></td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>buflen</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ae87ea6a31b015d9d8ed35273e946631c" name="ae87ea6a31b015d9d8ed35273e946631c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae87ea6a31b015d9d8ed35273e946631c">&#9670;&#160;</a></span>parse_comstr()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void parse_comstr </td>
-          <td>(</td>
-          <td class="paramtype">char *&#160;</td>
-          <td class="paramname"><em>argx</em>[], </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>limx</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>program</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -476,6 +484,40 @@ Variables</h2></td></tr>
           <td></td>
           <td class="paramtype"><a class="el" href="hspass_8c.html#a65f85814a8290f9797005d3b28e7e5fc">uchar</a> *&#160;</td>
           <td class="paramname"><em>ebuf</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0920ea6869c2775a7836c23dd1ba0373" name="a0920ea6869c2775a7836c23dd1ba0373"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0920ea6869c2775a7836c23dd1ba0373">&#9670;&#160;</a></span>seccomp()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int seccomp </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>s1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>s2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>len</em>&#160;</td>
         </tr>
         <tr>
           <td></td>

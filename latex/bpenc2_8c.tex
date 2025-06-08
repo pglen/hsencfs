@@ -1,5 +1,5 @@
-\hypertarget{bpenc2_8c}{}\doxysection{tools/bpenc2.c File Reference}
-\label{bpenc2_8c}\index{tools/bpenc2.c@{tools/bpenc2.c}}
+\hypertarget{bpenc2_8c}{}\doxysection{common/bpenc2.c File Reference}
+\label{bpenc2_8c}\index{common/bpenc2.c@{common/bpenc2.c}}
 {\ttfamily \#include $<$stdio.\+h$>$}\newline
 {\ttfamily \#include $<$stdlib.\+h$>$}\newline
 {\ttfamily \#include $<$limits.\+h$>$}\newline
@@ -44,15 +44,15 @@ int \mbox{\hyperlink{bpenc2_8c_a52de43b6faa0d9601f10db8b3826f11a}{force}} = 0
 \item 
 int \mbox{\hyperlink{bpenc2_8c_afb19b851dbcd1447c226a8a98c26979d}{loglevel}} = 0
 \item 
-char \mbox{\hyperlink{bpenc2_8c_aeb7fcf49c3dfbcfb1d35684f41383505}{passx}} \mbox{[}\mbox{\hyperlink{hsutils_8h_a42c6d750183b663d674d59240e44f415}{MAXPASSLEN}}\mbox{]}
+char \mbox{\hyperlink{bpenc2_8c_aeb7fcf49c3dfbcfb1d35684f41383505}{passx}} \mbox{[}\mbox{\hyperlink{hsencfs_8h_a42c6d750183b663d674d59240e44f415}{MAXPASSLEN}}\mbox{]}
 \item 
-int \mbox{\hyperlink{bpenc2_8c_ad29d2259942853507dff3a3e3c05535a}{plen}} = sizeof(\mbox{\hyperlink{hsencfs_8c_aeb7fcf49c3dfbcfb1d35684f41383505}{passx}})
+int \mbox{\hyperlink{bpenc2_8c_ad29d2259942853507dff3a3e3c05535a}{plen}} = sizeof(\mbox{\hyperlink{bpdec2_8c_aeb7fcf49c3dfbcfb1d35684f41383505}{passx}})
 \item 
-char \mbox{\hyperlink{bpenc2_8c_a77904cea3c5edb19fbb467bc2be36eec}{decoy}} \mbox{[}\mbox{\hyperlink{hsutils_8h_a42c6d750183b663d674d59240e44f415}{MAXPASSLEN}}\mbox{]}
+char \mbox{\hyperlink{bpenc2_8c_a77904cea3c5edb19fbb467bc2be36eec}{decoy}} \mbox{[}\mbox{\hyperlink{hsencfs_8h_a42c6d750183b663d674d59240e44f415}{MAXPASSLEN}}\mbox{]}
 \item 
 int \mbox{\hyperlink{bpenc2_8c_a741aa7cf663854436c40b6a369b8a2c7}{plen2}} = sizeof(decoy)
 \item 
-char \mbox{\hyperlink{bpenc2_8c_a1086a6554d2135c94ea3917c4fa3826c}{pass}} \mbox{[}\mbox{\hyperlink{hsutils_8h_a42c6d750183b663d674d59240e44f415}{MAXPASSLEN}}\mbox{]}
+char \mbox{\hyperlink{bpenc2_8c_a1086a6554d2135c94ea3917c4fa3826c}{pass}} \mbox{[}\mbox{\hyperlink{hsencfs_8h_a42c6d750183b663d674d59240e44f415}{MAXPASSLEN}}\mbox{]}
 \item 
 \mbox{\hyperlink{hsencsb_8h_a09908504c5dd6e09cf90ebd54634f546}{sideblock\+\_\+t}} \mbox{\hyperlink{bpenc2_8c_a8a3449e2bba4be4e0611d7119819a82d}{sb}}
 \end{DoxyCompactItemize}
@@ -78,7 +78,7 @@ char \mbox{\hyperlink{bpenc2_8c_a1086a6554d2135c94ea3917c4fa3826c}{pass}} \mbox{
 \index{bpenc2.c@{bpenc2.c}!decoy@{decoy}}
 \index{decoy@{decoy}!bpenc2.c@{bpenc2.c}}
 \doxysubsubsection{\texorpdfstring{decoy}{decoy}}
-{\footnotesize\ttfamily char decoy\mbox{[}\mbox{\hyperlink{hsutils_8h_a42c6d750183b663d674d59240e44f415}{MAXPASSLEN}}\mbox{]}}
+{\footnotesize\ttfamily char decoy\mbox{[}\mbox{\hyperlink{hsencfs_8h_a42c6d750183b663d674d59240e44f415}{MAXPASSLEN}}\mbox{]}}
 
 \mbox{\Hypertarget{bpenc2_8c_a52de43b6faa0d9601f10db8b3826f11a}\label{bpenc2_8c_a52de43b6faa0d9601f10db8b3826f11a}} 
 \index{bpenc2.c@{bpenc2.c}!force@{force}}
@@ -96,19 +96,19 @@ char \mbox{\hyperlink{bpenc2_8c_a1086a6554d2135c94ea3917c4fa3826c}{pass}} \mbox{
 \index{bpenc2.c@{bpenc2.c}!pass@{pass}}
 \index{pass@{pass}!bpenc2.c@{bpenc2.c}}
 \doxysubsubsection{\texorpdfstring{pass}{pass}}
-{\footnotesize\ttfamily char pass\mbox{[}\mbox{\hyperlink{hsutils_8h_a42c6d750183b663d674d59240e44f415}{MAXPASSLEN}}\mbox{]}}
+{\footnotesize\ttfamily char pass\mbox{[}\mbox{\hyperlink{hsencfs_8h_a42c6d750183b663d674d59240e44f415}{MAXPASSLEN}}\mbox{]}}
 
 \mbox{\Hypertarget{bpenc2_8c_aeb7fcf49c3dfbcfb1d35684f41383505}\label{bpenc2_8c_aeb7fcf49c3dfbcfb1d35684f41383505}} 
 \index{bpenc2.c@{bpenc2.c}!passx@{passx}}
 \index{passx@{passx}!bpenc2.c@{bpenc2.c}}
 \doxysubsubsection{\texorpdfstring{passx}{passx}}
-{\footnotesize\ttfamily char passx\mbox{[}\mbox{\hyperlink{hsutils_8h_a42c6d750183b663d674d59240e44f415}{MAXPASSLEN}}\mbox{]}}
+{\footnotesize\ttfamily char passx\mbox{[}\mbox{\hyperlink{hsencfs_8h_a42c6d750183b663d674d59240e44f415}{MAXPASSLEN}}\mbox{]}}
 
 \mbox{\Hypertarget{bpenc2_8c_ad29d2259942853507dff3a3e3c05535a}\label{bpenc2_8c_ad29d2259942853507dff3a3e3c05535a}} 
 \index{bpenc2.c@{bpenc2.c}!plen@{plen}}
 \index{plen@{plen}!bpenc2.c@{bpenc2.c}}
 \doxysubsubsection{\texorpdfstring{plen}{plen}}
-{\footnotesize\ttfamily int plen = sizeof(\mbox{\hyperlink{hsencfs_8c_aeb7fcf49c3dfbcfb1d35684f41383505}{passx}})}
+{\footnotesize\ttfamily int plen = sizeof(\mbox{\hyperlink{bpdec2_8c_aeb7fcf49c3dfbcfb1d35684f41383505}{passx}})}
 
 \mbox{\Hypertarget{bpenc2_8c_a741aa7cf663854436c40b6a369b8a2c7}\label{bpenc2_8c_a741aa7cf663854436c40b6a369b8a2c7}} 
 \index{bpenc2.c@{bpenc2.c}!plen2@{plen2}}

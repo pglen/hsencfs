@@ -31,8 +31,10 @@
 #include <sys/xattr.h>
 #endif
 
-#include "../src/hsencfs.h"
+#include "hsencfs.h"
 #include "hsutils.h"
+
+int loglevel = 1;
 
 // See if it is mounted already
 
@@ -98,19 +100,26 @@ int     countfiles(char *mpoint)
 void    hsprint(int outs, int lev, char *fmt, ...)
 
 {
-    if (loglevel > lev || lev == -1)
+    //printf("Logging loglevel=%d lev=%d\n", loglevel, lev);
+
+   if(loglevel == 0)
+        return;
+
+     if (lev <= loglevel)
         {
         if (outs & TO_OUT)
             {
             va_list ap; va_start(ap, fmt);
             vfprintf(stdout, fmt, ap);
             va_end(ap);
+            fprintf(stdout, "\n");
             }
         if (outs & TO_ERR)
             {
             va_list ap; va_start(ap, fmt);
             vfprintf(stderr, fmt, ap);
             va_end(ap);
+            fprintf(stderr, "\n");
             }
         if (outs & TO_LOG)
             {
@@ -181,7 +190,7 @@ char    *hexdump(char *ptr, int len)
 
 {
     //printf("len=%d  '%s'\n", len, ptr);
-    char *pret = malloc(len * 5);
+    char *pret = xmalloc(len * 5);
     //memset(pret, '\0', len * 5);
 
     int prog = 0, llen = 24, plen = 0;
@@ -201,6 +210,20 @@ char    *hexdump(char *ptr, int len)
             }
         }
     return(pret);
+}
+
+void    arr2log(char *argx[])
+
+{
+    int xx = 0;
+    while(1)
+        {
+        hsprint(TO_ERR | TO_LOG, 3,
+            "argx[%d] ptr: '%s'\n", xx, argx[xx]);
+        if(!argx[xx++])
+            break;
+        }
+    hsprint(TO_ERR | TO_LOG, 3, "\n");
 }
 
 // Really dumb parse command line to array
@@ -285,6 +308,121 @@ int     parse_comstr(char *argx[], int limx, const char *program)
         aa++;
         }
     return cc;
+}
+
+Malloc_Store malloc_store = {0, 0, NULL };
+static  int malloc_step = 100;
+int  malloc_verbose = 0;
+
+void    *xmalloc(int size)
+
+{
+    char *ptr = malloc(size);
+
+    if(ptr)
+        {
+        if(malloc_verbose > 0)
+            printf("xmalloc: %d %p\n", size, ptr);
+
+        if(malloc_store.curr >= malloc_store.size)
+            {
+            // Realloc
+            int newsize = malloc_store.size + malloc_step;
+            if(malloc_verbose > 1)
+                printf("realloc at %d\n", newsize);
+            malloc_store.store = realloc(malloc_store.store,
+                                        sizeof(Malloc) * newsize);
+            malloc_store.size = newsize;
+            }
+        malloc_store.store[malloc_store.curr].ptr = ptr;
+        malloc_store.store[malloc_store.curr].size = size;
+        malloc_store.store[malloc_store.curr].freed = 0;
+
+        malloc_store.curr++;
+        }
+    return ptr;
+}
+
+void    xmdump(int level)
+
+{
+    for(int aa = 0; aa <  malloc_store.curr; aa++)
+        {
+        if(level)
+            {
+            printf("ptr: %p size: %d freed: %d\n",
+                    malloc_store.store[aa].ptr,
+                            malloc_store.store[aa].size,
+                                malloc_store.store[aa].freed);
+            }
+        else
+            {
+            if(!malloc_store.store[aa].freed)
+                printf("ptr: %p size: %d freed: %d\n",
+                    malloc_store.store[aa].ptr,
+                            malloc_store.store[aa].size,
+                                malloc_store.store[aa].freed);
+            }
+        }
+}
+
+void    xsfree(void *ptr)
+{
+    // safe free
+    int found = -1;
+    for(int aa = 0; aa <  malloc_store.curr; aa++)
+        {
+        if(malloc_store.store[aa].ptr == ptr)
+            {
+            found = aa;
+            }
+       }
+    if (found < 0)
+        {
+        if(malloc_verbose > 0)
+            printf("Error on xfree: %p\n", ptr);
+        }
+    else
+        {
+        //printf("xsfree: %d\n", malloc_store.store[found].size );
+        for(int bb = 0; bb < malloc_store.store[found].size; bb++)
+            {
+            ((char *)ptr)[bb] = rand() & 0xff;
+            }
+        malloc_store.store[found].freed = 1;
+        }
+    free(ptr);
+}
+
+void    xfree(void *ptr)
+
+{
+    if(malloc_verbose > 1)
+        printf("freeing %p ... ", ptr);
+
+    int found = -1;
+    for(int aa = 0; aa <  malloc_store.curr; aa++)
+        {
+        if(malloc_store.store[aa].ptr == ptr)
+            {
+            if(malloc_verbose > 3)
+                printf("ptr: %p size: %d freed: %d\n",
+                    malloc_store.store[aa].ptr,
+                             malloc_store.store[aa].size,
+                                malloc_store.store[aa].freed);
+            found = aa;
+            }
+        }
+    if (found < 0)
+        {
+        if(malloc_verbose > 2)
+            printf("Error on xfree: %p\n", ptr);
+        }
+    else
+        {
+        malloc_store.store[found].freed = 1;
+        }
+    free(ptr);
 }
 
 // EOF

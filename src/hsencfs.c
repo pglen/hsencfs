@@ -74,11 +74,11 @@
 #include <signal.h>
 #include <getopt.h>
 
+#include "hsencfs.h"
 #include "base64.h"
 #include "hsutils.h"
 #include "hspass.h"
 #include "hsencsb.h"
-#include "hsencfs.h"
 #include "bluepoint2.h"
 
 #include "hs_crypt.h"
@@ -87,7 +87,7 @@
 // Shared flags
 
 int     verbose = 0;
-int     loglevel = 0;
+//int     loglevel = 1;
 int     nobg = 0;
 
 char    passx[MAXPASSLEN];
@@ -204,20 +204,19 @@ void    closefrom(int lowfd)
 int     helpfunc()
 
 {
-    printf("\n");
+    //printf("\n");
     printf("Usage: hsencfs [options] MountPoint [StorageDir] \n");
-    printf("\n");
-    printf("MountPoint is a directory for user accessable data. (ex: ~/secret)\n");
-    printf("StorageDir for storing the encrypted data. (ex: ~/.secret)\n");
-    printf(" Options:   -v       (--verbose) Verbose.\n");
-    //printf("            -u       (--unmount) unmount MountPoint\n");
-    printf("            -p pass  (--pass ) Use pass. Note: cleartext pass.\n");
-    printf("            -a prog  (--askpass ) Use this program to ask for pass.\n");
-    printf("            -n       (--nobg) Do not fork to the background.\n");
-    printf("            -o       (--ondemand) Disable on demand pass. Ask on startup..\n");
-    printf("            -V       (--version) Print hsencfs version.\n");
-    printf("            -d level (--debug ) Debug level 0...10 Default: 0\n");
-    printf("            -l level (--loglevel ) Log to syslog/daemon. Default: None\n");
+    printf("MountPoint is a directory for user accessible data. (ex: ~/secret)\n");
+    printf("StorageDir (optional) or storing the encrypted data. (ex: ~/.secret)\n");
+    printf("Options:  (short / long / arg description)\n");
+    printf("    -v --verbose        Verbose. Show more details. (add -v for more)\n");
+    printf("    -n --nobg           Do not fork to the background.\n");
+    printf("    -o --ondemand       Ask pass on command line. Disables 'on-demand' pass. \n");
+    printf("    -V --version        Print hsencfs version.\n");
+    printf("    -p --pass  PASS     Use pass. Note: clear text pass.\n");
+    printf("    -a --askpass PROG   Use this program to ask for pass.\n");
+    printf("    -d --debug LEVEL    Debug level 0...10 Default: 0 (no debug)\n");
+    printf("    -l --log LEVEL      Log to syslog/daemon. Default: 0 (No log)\n");
     printf("Append '--' to the end of command line for FUSE options.\n");
     printf("For example: 'hsencfs ~/secret -- -user-allow-other' for a shared mount.\n");
     printf("Use hsencfs -vh option for more help.\n");
@@ -227,17 +226,19 @@ int     helpfunc()
         //printf("\n");
         printf("Log levels:  1 - start/stop;   2 - open/create     3 - read/write;\n");
         printf("             4 - all (noisy);  5 - show internals  6...10 more details\n");
-        printf("Access errors and mount errors are always reported to the log.\n");
+        printf("Access errors and mount errors are reported stderr and to the log.\n");
         printf("Debug levels: 0 - 10 -- 0 = None  1 = Minimal 10 = Noisy\n");
         printf("The askpass defaults to: 'hsaskpass.py'\n");
         printf("If the askpass starts with '/' it is an absolute path.\n");
         printf("If the askpass starts with '.' it is a relative path\n");
         printf("Otherwise askpass is assumed to be in the executable's home.\n");
-        printf("StorageDir defaults to (dot) .MountPont (ex: ~/.secret)\n");
+        printf("StorageDir defaults to (dot) .MountPontName (ex: ~/.secret)\n");
         printf("Typical invocation: hsencfs  ~/secrets \n");
         printf(" ... the bove command mounts ~/secrets with ~/.secrets as storage dir.\n");
         }
 }
+
+//printf("            -u       (--unmount) unmount MountPoint\n");
 
 // -----------------------------------------------------------------------
 // Process command line options, set up for mount.
@@ -245,7 +246,6 @@ int     helpfunc()
 static struct option long_options[] =
     {
         {"loglevel",    1,  0,  'l'},
-        //{"umount",      0,  0,  'u'},
         {"help",        0,  0,  'h'},
         {"pass",        1,  0,  'p'},
         {"verbose",     0,  0,  'v'},
@@ -745,7 +745,7 @@ int     main(int argc, char *argv[])
             }
 
         // Will ask for pass if not filled
-        int ret2 = pass_ritual(mountpoint, mountsecret, passx, &plen, passprog);
+        int ret2 = 0; //pass_ritual(mountpoint, mountsecret, passx, &plen, passprog);
         if(ret2)
             {
             // Catch abort message

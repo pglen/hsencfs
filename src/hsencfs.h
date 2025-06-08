@@ -26,6 +26,9 @@
 
 #define MAXPASSLEN      256
 
+typedef unsigned int  uint;
+typedef unsigned char uchar;
+
 // ---------------------------------------------------------------------
 // Debug the FUSE subsystem without (bypass) the encryption
 // Debug the FUSE subsystem with simple (fake) encryption

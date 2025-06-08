@@ -1,0 +1,34 @@
+\hypertarget{hspass_8h_source}{}\doxysection{hspass.\+h}
+\label{hspass_8h_source}\index{common/hspass.h@{common/hspass.h}}
+\mbox{\hyperlink{hspass_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ \textcolor{comment}{/*\ =====[\ hspass.h\ ]=====================================================}}
+\DoxyCodeLine{00003\ \textcolor{comment}{}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ \ \ File\ Name:\ \ \ \ \ \ \ hspass.h}}
+\DoxyCodeLine{00005\ \textcolor{comment}{}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ \ Description:}}
+\DoxyCodeLine{00007\ \textcolor{comment}{}}
+\DoxyCodeLine{00008\ \textcolor{comment}{\ \ \ Revisions:}}
+\DoxyCodeLine{00009\ \textcolor{comment}{}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ \ \ \ \ REV\ \ \ \ \ \ \ DATE\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ BY\ \ \ \ \ \ \ \ \ \ \ DESCRIPTION}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ \ \ \ \ -\/-\/-\/-\/\ \ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ \ \ \ \ \ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ \ \ \ \ \ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00012\ \textcolor{comment}{\ \ \ \ \ \ 0.00\ \ Thu\ 05.Jun.2025\ \ \ \ \ \ Peter\ Glen\ \ \ \ \ \ Initial\ version.}}
+\DoxyCodeLine{00013\ \textcolor{comment}{}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ =======================================================================\ */}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{keywordtype}{int}\ \ \ \ \ \mbox{\hyperlink{hspass_8h_afd7d5673cbecc714a80d03c66b61f187}{seccomp}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}}\ *s1,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}}\ *s2,\ \textcolor{keywordtype}{int}\ len);}
+\DoxyCodeLine{00017\ \textcolor{keywordtype}{int}\ \ \ \ \ \mbox{\hyperlink{hspass_8h_aa7379b8bd5c4c785fcf6a6752d70a90d}{create\_markfile}}(\textcolor{keywordtype}{char}\ *name,\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{block__blue2_8c_a12b3e022c6c3f2c88d5ebfc7fb357613}{pass}},\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{block__blue2_8c_ad29d2259942853507dff3a3e3c05535a}{plen}});}
+\DoxyCodeLine{00018\ \textcolor{keywordtype}{int}\ \ \ \ \ \mbox{\hyperlink{hspass_8h_a3a01751f4883dba0ef3e3a4819d3e800}{check\_markfile}}(\textcolor{keywordtype}{char}\ *name,\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{block__blue2_8c_a12b3e022c6c3f2c88d5ebfc7fb357613}{pass}},\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{block__blue2_8c_ad29d2259942853507dff3a3e3c05535a}{plen}});}
+\DoxyCodeLine{00019\ \textcolor{keywordtype}{int}\ \ \ \ \ \mbox{\hyperlink{hspass_8h_a9a8cfbe27587de6d5041941129532137}{public\_encrypt}}(\mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}}\ *data,\ \textcolor{keywordtype}{int}\ data\_len,\ \mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}}\ *key,\ \mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}}\ *\mbox{\hyperlink{rsa__exa_8c_a5131ad2f88d1a0b6f6a930ab50537547}{ebuf}});}
+\DoxyCodeLine{00020\ \textcolor{keywordtype}{int}\ \ \ \ \ \mbox{\hyperlink{hspass_8h_a474c4380d87de59b27e78df6e791f722}{private\_decrypt}}(\mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}}\ *\ enc\_data,\ \textcolor{keywordtype}{int}\ data\_len,\ \mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}}\ *key,\ \mbox{\hyperlink{hspass_8c_a65f85814a8290f9797005d3b28e7e5fc}{uchar}}\ *\mbox{\hyperlink{rsa__exa_8c_ab9dce071aeb73192814fe7f90178179e}{dbuf}});}
+\DoxyCodeLine{00021\ \textcolor{keywordtype}{int}\ \ \ \ \ \mbox{\hyperlink{hspass_8h_a5f000ce409a26b41065a9786bb177c60}{parse\_comstr}}(\textcolor{keywordtype}{char}\ *argx[],\ \textcolor{keywordtype}{int}\ limx,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *program);}
+\DoxyCodeLine{00022\ \textcolor{keywordtype}{void}\ \ \ \ \mbox{\hyperlink{hspass_8h_a5dbdfa8cfa3272b229fef4814028689a}{sigint\_local}}(\textcolor{keywordtype}{int}\ sig);}
+\DoxyCodeLine{00023\ \textcolor{keywordtype}{char}\ \ \ \ *\mbox{\hyperlink{hspass_8h_a0395c758c919d971c43610054d861c64}{getpassx}}(\textcolor{keywordtype}{char}\ *prompt);}
+\DoxyCodeLine{00024\ \textcolor{keywordtype}{int}\ \ \ \ \ \mbox{\hyperlink{hspass_8h_a0bcc1b0a494c46b71ddd5810a0c20228}{hs\_askpass}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *program,\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{getpass_8c_a024e65f7d9664cdc767f51c283fd8353}{buf}},\ \textcolor{keywordtype}{int}\ buflen);}
+\DoxyCodeLine{00025\ \textcolor{keywordtype}{int}\ \ \ \ \ \mbox{\hyperlink{hspass_8h_a80e5af3deaff1649ab57c251171c9446}{pass\_ritual}}(\textcolor{keywordtype}{char}\ *mroot,\ \textcolor{keywordtype}{char}\ *mdata,\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{block__blue2_8c_a12b3e022c6c3f2c88d5ebfc7fb357613}{pass}},\ \textcolor{keywordtype}{int}\ *\mbox{\hyperlink{block__blue2_8c_ad29d2259942853507dff3a3e3c05535a}{plen}},\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{hsencfs_8c_aa862f7f7b6e83fb3986f7be3b09a9caa}{passprog}});}
+\DoxyCodeLine{00026\ \textcolor{keywordtype}{char}\ \ \ \ *\mbox{\hyperlink{hspass_8h_af0aa210e6602a4a6443e21874f5848fe}{getpass\_front}}(\textcolor{keywordtype}{char}\ *prompt,\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{testpass_8c_aa1f4cfeee2842f40a2b8dfd94331479f}{create}},\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{testpass_8c_a86867ac949b307b5fed9a933e9e26eb9}{gui}});}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{comment}{//\#\ EOF}}
+
+\end{DoxyCode}

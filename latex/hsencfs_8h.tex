@@ -19,7 +19,7 @@ This graph shows which files directly or indirectly include this file\+:
 \item 
 \#define \mbox{\hyperlink{hsencfs_8h_a74e75242132eaabbc1c512488a135926}{MIN}}(x,  y)~(((x) $<$ (y)) ? (x) \+: (y))
 \item 
-\#define \mbox{\hyperlink{hsencfs_8h_a42c6d750183b663d674d59240e44f415}{MAXPASSLEN}}~512
+\#define \mbox{\hyperlink{hsencfs_8h_a42c6d750183b663d674d59240e44f415}{MAXPASSLEN}}~256
 \item 
 \#define \mbox{\hyperlink{hsencfs_8h_a6dd04ec3fff7c731cc71d6796699d902}{VIRTUAL}}~1
 \item 
@@ -36,14 +36,14 @@ int \mbox{\hyperlink{hsencfs_8h_a4bfbc2b74b1df681af8201e03fb719f2}{is\+\_\+our\+
 \item 
 off\+\_\+t \mbox{\hyperlink{hsencfs_8h_a9ebf53d7350470848b4b36e18a66a262}{get\+\_\+fsize}} (int fh)
 \item 
-void \mbox{\hyperlink{hsencfs_8h_abf4e6118a34309517207a55ac45fbb4c}{kill\+\_\+buff}} (void $\ast$bbuff, int \mbox{\hyperlink{hsaskpass_8c_a87bfa1d785e54250064a42ccd86bf93c}{xlen}})
+void \mbox{\hyperlink{hsencfs_8h_abf4e6118a34309517207a55ac45fbb4c}{kill\+\_\+buff}} (void $\ast$bbuff, int \mbox{\hyperlink{testpass_8c_a87bfa1d785e54250064a42ccd86bf93c}{xlen}})
 \item 
 int \mbox{\hyperlink{hsencfs_8h_af1bf7ce72fb48a1498c21d3baf0cb423}{openpass}} (const char $\ast$path)
 \end{DoxyCompactItemize}
 \doxysubsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
-char \mbox{\hyperlink{hsencfs_8h_aeb7fcf49c3dfbcfb1d35684f41383505}{passx}} \mbox{[}\mbox{\hyperlink{hsutils_8h_a42c6d750183b663d674d59240e44f415}{MAXPASSLEN}}\mbox{]}
+char \mbox{\hyperlink{hsencfs_8h_aeb7fcf49c3dfbcfb1d35684f41383505}{passx}} \mbox{[}\mbox{\hyperlink{hsencfs_8h_a42c6d750183b663d674d59240e44f415}{MAXPASSLEN}}\mbox{]}
 \item 
 char \mbox{\hyperlink{hsencfs_8h_aa15929681f30cc2d9cbf2701366c2cef}{mountpoint}} \mbox{[}PATH\+\_\+\+MAX\mbox{]}
 \item 
@@ -54,7 +54,7 @@ char \mbox{\hyperlink{hsencfs_8h_ace8b6ffae051e969f71c619c97ba162e}{passprog}} \
 char \mbox{\hyperlink{hsencfs_8h_a5137ef6a332c5340271c16f5ab36089a}{passback}} \mbox{[}PATH\+\_\+\+MAX\mbox{]}
 \item 
 char \mbox{\hyperlink{hsencfs_8h_a9d22394e80281a076c2d925cdfb132c6}{progname}} \mbox{[}$\,$\mbox{]}
-\begin{DoxyCompactList}\small\item\em We use this as a string to obfuscate the password. Do not change. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em We use this string to obfuscate the password. Do not change. \end{DoxyCompactList}\item 
 char $\ast$ \mbox{\hyperlink{hsencfs_8h_ac7d203a28558e844ded62b6170031bd2}{myext}}
 \item 
 int \mbox{\hyperlink{hsencfs_8h_ad29d2259942853507dff3a3e3c05535a}{plen}}
@@ -92,7 +92,7 @@ int \mbox{\hyperlink{hsencfs_8h_a2b4dcc5b915c5691b740f64b240dcd42}{ondemand}}
 \index{hsencfs.h@{hsencfs.h}!MAXPASSLEN@{MAXPASSLEN}}
 \index{MAXPASSLEN@{MAXPASSLEN}!hsencfs.h@{hsencfs.h}}
 \doxysubsubsection{\texorpdfstring{MAXPASSLEN}{MAXPASSLEN}}
-{\footnotesize\ttfamily \#define MAXPASSLEN~512}
+{\footnotesize\ttfamily \#define MAXPASSLEN~256}
 
 \mbox{\Hypertarget{hsencfs_8h_a74e75242132eaabbc1c512488a135926}\label{hsencfs_8h_a74e75242132eaabbc1c512488a135926}} 
 \index{hsencfs.h@{hsencfs.h}!MIN@{MIN}}
@@ -200,7 +200,7 @@ int \mbox{\hyperlink{hsencfs_8h_a2b4dcc5b915c5691b740f64b240dcd42}{ondemand}}
 \index{hsencfs.h@{hsencfs.h}!passx@{passx}}
 \index{passx@{passx}!hsencfs.h@{hsencfs.h}}
 \doxysubsubsection{\texorpdfstring{passx}{passx}}
-{\footnotesize\ttfamily char passx\mbox{[}\mbox{\hyperlink{hsutils_8h_a42c6d750183b663d674d59240e44f415}{MAXPASSLEN}}\mbox{]}\hspace{0.3cm}{\ttfamily [extern]}}
+{\footnotesize\ttfamily char passx\mbox{[}\mbox{\hyperlink{hsencfs_8h_a42c6d750183b663d674d59240e44f415}{MAXPASSLEN}}\mbox{]}\hspace{0.3cm}{\ttfamily [extern]}}
 
 \mbox{\Hypertarget{hsencfs_8h_af6b28a43c47ade53c4964127f3482119}\label{hsencfs_8h_af6b28a43c47ade53c4964127f3482119}} 
 \index{hsencfs.h@{hsencfs.h}!pg\_debug@{pg\_debug}}
@@ -222,9 +222,9 @@ int \mbox{\hyperlink{hsencfs_8h_a2b4dcc5b915c5691b740f64b240dcd42}{ondemand}}
 
 
 
-We use this as a string to obfuscate the password. Do not change. 
+We use this string to obfuscate the password. Do not change. 
 
-\mbox{\Hypertarget{hsencfs_8h_a0b2caeb4b6f130be43e5a2f0267dd453}\label{hsencfs_8h_a0b2caeb4b6f130be43e5a2f0267dd453}} 
+We use this string to obfuscate the password. Do not change. \mbox{\Hypertarget{hsencfs_8h_a0b2caeb4b6f130be43e5a2f0267dd453}\label{hsencfs_8h_a0b2caeb4b6f130be43e5a2f0267dd453}} 
 \index{hsencfs.h@{hsencfs.h}!verbose@{verbose}}
 \index{verbose@{verbose}!hsencfs.h@{hsencfs.h}}
 \doxysubsubsection{\texorpdfstring{verbose}{verbose}}

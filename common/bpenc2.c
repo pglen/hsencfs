@@ -37,7 +37,7 @@ int     quiet = 0;
 int     force = 0;
 
 // Shared flags
-int     loglevel = 0;
+//int     loglevel = 0;
 
 // Maintain internal count
 static  char    version[] = "1.17";

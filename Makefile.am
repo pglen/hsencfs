@@ -21,7 +21,7 @@ dist_bin_SCRIPTS =                  \
         askpass/hsaskpass.py        \
         hstray.py
 
-EXTRA_DIST =                       \
+EXTRA_DIST =                        \
         checksum.sh                 \
         enctest.sh                  \
         gensum.sh                   \

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['xentry_0',['xEntry',['../classhsaskpass_1_1xEntry.html',1,'hsaskpass']]],
-  ['xmp_5fdirp_1',['xmp_dirp',['../structxmp__dirp.html',1,'']]]
+  ['textview_0',['TextView',['../classhstray_1_1TextView.html',1,'hstray']]],
+  ['traysql_1',['traySQL',['../classhstray_1_1traySQL.html',1,'hstray']]]
 ];

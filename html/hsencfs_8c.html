@@ -99,6 +99,7 @@ $(function() {
 <code>#include &lt;getopt.h&gt;</code><br />
 <code>#include &quot;<a class="el" href="base64_8h_source.html">base64.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="hsutils_8h_source.html">hsutils.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="hspass_8h_source.html">hspass.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="hsencsb_8h_source.html">hsencsb.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="hsencfs_8h_source.html">hsencfs.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="bluepoint2_8h_source.html">bluepoint2.h</a>&quot;</code><br />
@@ -109,7 +110,7 @@ Include dependency graph for hsencfs.c:</div>
 <div class="dyncontent">
 <div class="center"><img src="hsencfs_8c__incl.png" border="0" usemap="#asrc_2hsencfs_8c" alt=""/></div>
 <map name="asrc_2hsencfs_8c" id="asrc_2hsencfs_8c">
-<area shape="rect" title=" " alt="" coords="1141,5,1242,31"/>
+<area shape="rect" title=" " alt="" coords="1187,5,1289,31"/>
 <area shape="rect" title=" " alt="" coords="5,79,100,104"/>
 <area shape="rect" title=" " alt="" coords="124,79,272,104"/>
 <area shape="rect" title=" " alt="" coords="297,79,382,104"/>
@@ -129,17 +130,18 @@ Include dependency graph for hsencfs.c:</div>
 <area shape="rect" title=" " alt="" coords="1613,79,1682,104"/>
 <area shape="rect" href="base64_8h.html" title=" " alt="" coords="1706,79,1781,104"/>
 <area shape="rect" href="hsutils_8h.html" title=" " alt="" coords="1805,79,1876,104"/>
-<area shape="rect" href="hsencsb_8h.html" title=" " alt="" coords="1901,79,1983,104"/>
-<area shape="rect" href="hsencfs_8h.html" title=" " alt="" coords="2008,79,2087,104"/>
-<area shape="rect" href="bluepoint2_8h.html" title=" " alt="" coords="2111,79,2203,104"/>
-<area shape="rect" href="hs__crypt_8h.html" title=" " alt="" coords="2227,79,2310,104"/>
-<area shape="rect" href="hsencop_8c.html" title=" " alt="" coords="2334,79,2417,104"/>
+<area shape="rect" href="hspass_8h.html" title=" " alt="" coords="1901,79,1975,104"/>
+<area shape="rect" href="hsencsb_8h.html" title=" " alt="" coords="1999,79,2082,104"/>
+<area shape="rect" href="hsencfs_8h.html" title=" " alt="" coords="2107,79,2185,104"/>
+<area shape="rect" href="bluepoint2_8h.html" title=" " alt="" coords="2209,79,2301,104"/>
+<area shape="rect" href="hs__crypt_8h.html" title=" " alt="" coords="2326,79,2409,104"/>
+<area shape="rect" href="hsencop_8c.html" title=" " alt="" coords="2433,79,2515,104"/>
 </map>
 </div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a0919197af2e154da2c05727b6d87cbda"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hsencfs_8c.html#a0919197af2e154da2c05727b6d87cbda">FUSE_USE_VERSION</a>&#160;&#160;&#160;31</td></tr>
+<tr class="memitem:a0919197af2e154da2c05727b6d87cbda"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hsencfs_8c.html#a0919197af2e154da2c05727b6d87cbda">FUSE_USE_VERSION</a>&#160;&#160;&#160;34</td></tr>
 <tr class="separator:a0919197af2e154da2c05727b6d87cbda"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a369266c24eacffb87046522897a570d5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hsencfs_8c.html#a369266c24eacffb87046522897a570d5">_GNU_SOURCE</a></td></tr>
 <tr class="separator:a369266c24eacffb87046522897a570d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -173,9 +175,9 @@ Variables</h2></td></tr>
 <tr class="separator:afb19b851dbcd1447c226a8a98c26979d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a861004bc28c3cc6b192f9119a47276ab"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hsencfs_8c.html#a861004bc28c3cc6b192f9119a47276ab">nobg</a> = 0</td></tr>
 <tr class="separator:a861004bc28c3cc6b192f9119a47276ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeb7fcf49c3dfbcfb1d35684f41383505"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hsencfs_8c.html#aeb7fcf49c3dfbcfb1d35684f41383505">passx</a> [<a class="el" href="hsutils_8h.html#a42c6d750183b663d674d59240e44f415">MAXPASSLEN</a>]</td></tr>
+<tr class="memitem:aeb7fcf49c3dfbcfb1d35684f41383505"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hsencfs_8c.html#aeb7fcf49c3dfbcfb1d35684f41383505">passx</a> [<a class="el" href="hsencfs_8h.html#a42c6d750183b663d674d59240e44f415">MAXPASSLEN</a>]</td></tr>
 <tr class="separator:aeb7fcf49c3dfbcfb1d35684f41383505"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad29d2259942853507dff3a3e3c05535a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hsencfs_8c.html#ad29d2259942853507dff3a3e3c05535a">plen</a> = sizeof(<a class="el" href="hsencfs_8c.html#aeb7fcf49c3dfbcfb1d35684f41383505">passx</a>)</td></tr>
+<tr class="memitem:ad29d2259942853507dff3a3e3c05535a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hsencfs_8c.html#ad29d2259942853507dff3a3e3c05535a">plen</a> = sizeof(<a class="el" href="bpdec2_8c.html#aeb7fcf49c3dfbcfb1d35684f41383505">passx</a>)</td></tr>
 <tr class="separator:ad29d2259942853507dff3a3e3c05535a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa15929681f30cc2d9cbf2701366c2cef"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="hsencfs_8c.html#aa15929681f30cc2d9cbf2701366c2cef">mountpoint</a> [PATH_MAX]</td></tr>
 <tr class="separator:aa15929681f30cc2d9cbf2701366c2cef"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -229,7 +231,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define FUSE_USE_VERSION&#160;&#160;&#160;31</td>
+          <td class="memname">#define FUSE_USE_VERSION&#160;&#160;&#160;34</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -650,7 +652,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">char passx[<a class="el" href="hsutils_8h.html#a42c6d750183b663d674d59240e44f415">MAXPASSLEN</a>]</td>
+          <td class="memname">char passx[<a class="el" href="hsencfs_8h.html#a42c6d750183b663d674d59240e44f415">MAXPASSLEN</a>]</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -678,7 +680,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int plen = sizeof(<a class="el" href="hsencfs_8c.html#aeb7fcf49c3dfbcfb1d35684f41383505">passx</a>)</td>
+          <td class="memname">int plen = sizeof(<a class="el" href="bpdec2_8c.html#aeb7fcf49c3dfbcfb1d35684f41383505">passx</a>)</td>
         </tr>
       </table>
 </div><div class="memdoc">

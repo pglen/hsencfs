@@ -5,13 +5,15 @@ var searchData=
   ['gen_5frsa_2ec_2',['gen_rsa.c',['../gen__rsa_8c.html',1,'']]],
   ['generate_5fecc_5fkeys_3',['generate_ecc_keys',['../ecc__key_8c.html#aa6a3a38d41952ab1e1a7950d8dca8ea9',1,'ecc_key.c']]],
   ['get_4',['get',['../classhstray_1_1traySQL.html#ab798fbfb508c9bd900ac795c03a5199b',1,'hstray.traySQL.get(self, kkk)'],['../classhstray_1_1traySQL.html#ab798fbfb508c9bd900ac795c03a5199b',1,'hstray.traySQL.get(self, kkk)']]],
-  ['get_5ffsize_5',['get_fsize',['../hsencfs_8h.html#a9ebf53d7350470848b4b36e18a66a262',1,'get_fsize(int fh):&#160;hsencsu.c'],['../hsencsu_8c.html#a9ebf53d7350470848b4b36e18a66a262',1,'get_fsize(int fh):&#160;hsencsu.c']]],
-  ['get_5fsidelen_6',['get_sidelen',['../hsencsb_8h.html#a8222070e7217b39cad72f15ffbc0dc3d',1,'get_sidelen(const char *path):&#160;hsencsb.c'],['../hsencsb_8c.html#a8222070e7217b39cad72f15ffbc0dc3d',1,'get_sidelen(const char *path):&#160;hsencsb.c']]],
+  ['get_5ffsize_5',['get_fsize',['../hsencsu_8c.html#a9ebf53d7350470848b4b36e18a66a262',1,'get_fsize(int fh):&#160;hsencsu.c'],['../hsencfs_8h.html#a9ebf53d7350470848b4b36e18a66a262',1,'get_fsize(int fh):&#160;hsencsu.c']]],
+  ['get_5fsidelen_6',['get_sidelen',['../hsencsb_8c.html#a8222070e7217b39cad72f15ffbc0dc3d',1,'get_sidelen(const char *path):&#160;hsencsb.c'],['../hsencsb_8h.html#a8222070e7217b39cad72f15ffbc0dc3d',1,'get_sidelen(const char *path):&#160;hsencsb.c']]],
   ['get_5fsidename_7',['get_sidename',['../hsencsb_8h.html#a38041f9fff642695e4bfcacd3cdf4bb3',1,'get_sidename(const char *path):&#160;hsencsb.c'],['../hsencsb_8c.html#a38041f9fff642695e4bfcacd3cdf4bb3',1,'get_sidename(const char *path):&#160;hsencsb.c']]],
   ['get_5ftext_8',['get_text',['../classhstray_1_1TextView.html#ad9bf525d330062d0c84c9410ee0b06db',1,'hstray.TextView.get_text(self)'],['../classhstray_1_1TextView.html#ad9bf525d330062d0c84c9410ee0b06db',1,'hstray.TextView.get_text(self)']]],
   ['getall_9',['getall',['../classhstray_1_1traySQL.html#af36ededfba24d5d4ea574864e1f27046',1,'hstray.traySQL.getall(self)'],['../classhstray_1_1traySQL.html#af36ededfba24d5d4ea574864e1f27046',1,'hstray.traySQL.getall(self)']]],
-  ['getpass_10',['getpass',['../namespacehsaskpass.html#adf45a3dde0b7856db01ff557aabda0fa',1,'hsaskpass']]],
+  ['getpass_10',['getpass',['../namespaceaskpass_1_1hsaskpass.html#a9df1df701a8181ca7e4fd7b76ddff345',1,'askpass.hsaskpass.getpass()'],['../namespacehsaskpass.html#a7bfe8c2ea4e76fb8f4f804e4d1ee4b9e',1,'hsaskpass.getpass()']]],
   ['getpass_2ec_11',['getpass.c',['../getpass_8c.html',1,'']]],
-  ['getpassx_12',['getpassx',['../hspass_8c.html#a0395c758c919d971c43610054d861c64',1,'hspass.c']]],
-  ['gnomeapplet_13',['gnomeapplet',['../namespacehstray.html#a99593e14b7388caa0bde161ba7433241',1,'hstray']]]
+  ['getpass_5ffront_12',['getpass_front',['../hspass_8c.html#af0aa210e6602a4a6443e21874f5848fe',1,'getpass_front(char *prompt, int create, int gui):&#160;hspass.c'],['../hspass_8h.html#af0aa210e6602a4a6443e21874f5848fe',1,'getpass_front(char *prompt, int create, int gui):&#160;hspass.c']]],
+  ['getpassx_13',['getpassx',['../hspass_8c.html#a0395c758c919d971c43610054d861c64',1,'getpassx(char *prompt):&#160;hspass.c'],['../hspass_8h.html#a0395c758c919d971c43610054d861c64',1,'getpassx(char *prompt):&#160;hspass.c']]],
+  ['gnomeapplet_14',['gnomeapplet',['../namespacehstray.html#a99593e14b7388caa0bde161ba7433241',1,'hstray']]],
+  ['gui_15',['gui',['../testpass_8c.html#a86867ac949b307b5fed9a933e9e26eb9',1,'testpass.c']]]
 ];
