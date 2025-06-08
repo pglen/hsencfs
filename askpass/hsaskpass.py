@@ -167,7 +167,6 @@ def area_key(win, event, crflag):
     #    if event.keyval == Gdk.KEY_Return:
     #        win.response(Gtk.ResponseType.OK)
 
-
 Version = "1.0.0"
 pdesc = 'HSENCFS password GUI. '
 pform = "Use TAB or enter to navigate between fields.\n" \
@@ -263,9 +262,9 @@ def mainloop():
             #print(text)
             sss = base64.b64encode(text.encode())
             print(sss.decode(), end = "")
-            mylog("Cannot create key.")
+            mylog("Cannot create key: '%s'." % args.pubkey)
             mykey = None
-            sys.exit(0)
+            sys.exit(1)
 
         cipher_rsa = PKCS1_OAEP.new(mykey)
         ksize = mykey.size_in_bytes()
@@ -288,10 +287,10 @@ def mainloop():
 if __name__ == '__main__':
     try:
         mainloop()
-
-    except SystemExit:
-        pass
+    except SystemExit as xcode:
+        #print("systemexit", xcode)
+        sys.exit(xcode)
     except:
-        print("mainloop exception: ", sys.exc_info())
-
+        #print("mainloop exception: ", sys.exc_info())
+        pass
 # EOF

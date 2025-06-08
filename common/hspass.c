@@ -53,7 +53,11 @@ static int  getlinex(int fd, char *buf, size_t bufsiz)
     ssize_t nr = -1;
     char *cp = buf; char c = '\0';
 
+    // Terminator here
+    *cp = c;
+
     if (left == 0) {
+
     	errno = EINVAL;
     	return(0);			/* sanity */
     }
@@ -114,28 +118,34 @@ static void printLastError(char *msg)
     free(err);
 }
 
-static char* publicKeyToString(EVP_PKEY* pubKey, char *out, int maxlen)
+static char* publicKeyToString(EVP_PKEY* pubKey)
 {
     BIO *bio = BIO_new(BIO_s_mem());
     PEM_write_bio_PUBKEY(bio, pubKey);
     char* pem_str;
     long len = BIO_get_mem_data(bio, &pem_str);
-    len = MIN(len, maxlen);
-    memcpy(out, pem_str, len);
-    out[len] = '\0';
+    char *out = malloc(len + 1);
+    if(out)
+        {
+        memcpy(out, pem_str, len);
+        out[len] = '\0';
+        }
     BIO_free(bio);
     return out;
 }
 
-static char* privateKeyToString(EVP_PKEY* Key, char *out, int maxlen)
+static char* privateKeyToString(EVP_PKEY* Key)
 {
     BIO *bio = BIO_new(BIO_s_mem());
     PEM_write_bio_PrivateKey(bio, Key, NULL, NULL, 0, NULL, NULL);
     char* pem_str;
     long len = BIO_get_mem_data(bio, &pem_str);
-    len = MIN(len, maxlen);
-    memcpy(out, pem_str, len);
-    out[len] = '\0';
+    char *out = malloc(len + 1);
+    if(out)
+        {
+        memcpy(out, pem_str, len);
+        out[len] = '\0';
+        }
     BIO_free(bio);
     return out;
 }
@@ -458,61 +468,50 @@ int     hs_askpass(const char *program, char *buf, int buflen)
     //    }
     //char cwd[PATH_MAX];
 
-    hslog(1, "Asking pass with program: '%s'", program);
+    hsprint(TO_ERR | TO_LOG, -1, "Asking pass with program: '%s'", program);
 
-    EVP_PKEY *pub = generate_rsa_key(2048);
-    char *tmp3 = malloc(1024);
-    char* ptr = publicKeyToString(pub, tmp3, 1024);
-    //printf("%s\n", hexdump(tmp3, strlen(tmp3) ));
+    EVP_PKEY *rsa_key = generate_rsa_key(2048);
+    char* pub_ptr = publicKeyToString(rsa_key);
+    //printf("%s\n", hexdump(pub_ptr, strlen(pub_ptr) ));
 
-    //tmp3[11] = 'x';
-    //printf("tmp3: %ld '%s'\n", strlen(tmp3), tmp3);
-    //argx[idx] = strdup("--pubkey");  argx[idx+1] = NULL;  idx++;
-    //argx[idx] = tmp3;  argx[idx+1] = NULL; idx++;
+    argx[idx] = strdup("--pubkey");  argx[idx+1] = NULL;  idx++;
+    argx[idx] = strdup(pub_ptr);  argx[idx+1] = NULL; idx++;
+    //argx[idx] = strdup("badkey");  argx[idx+1] = NULL; idx++;
 
-    char *tmp4 = malloc(2000);
-    char* ptr2 = privateKeyToString(pub, tmp4, 2000);
+    char* priv_ptr = privateKeyToString(rsa_key);
     //printf("tmp4: %ld '%s'\n", strlen(tmp4), tmp4);
     if (pipe(pfd) == -1)
         {
-        hslog(0, "Unable to create pipe.");
-        printf("Unable to create pipe.");
+        hsprint(TO_ERR | TO_LOG, -1, "Unable to create pipe.");
         mainret = -1;
         goto cleanup;
         }
     if ((pid = fork()) == -1)
         {
-        hslog(0, "Unable to fork");
-        printf("Unable to dup2");
+        hsprint(TO_ERR | TO_LOG, -1, "Unable to fork");
         mainret = -2;
         goto cleanup;
         }
-    if (pid == 0) {
+    if (pid == 0)
+        {
         /* child, point stdout to output side of the pipe and exec askpass */
     	if (dup2(pfd[1], STDOUT_FILENO) == -1) {
-                hslog(0, "Unable to dup2");
-                printf("Unable to dup2");
-                //_exit(255);
+                hsprint(TO_ERR | TO_LOG, -1, "Unable to dup2");
                 mainret = -3;
                 goto cleanup;
     	       }
-        (void) dup2(pfd[1], STDOUT_FILENO);
-        // Redirect error messages:
-        //int fh = open("/dev/null", O_RDWR );
-    	//(void) dup2(fh, STDERR_FILENO);
-        (void) dup2(pfd[1], STDERR_FILENO);
-
+        //(void) dup2(pfd[1], STDOUT_FILENO);
+        //(void) dup2(pfd[1], STDERR_FILENO);
     	//set_perms(PERM_FULL_USER); //TODO
-    	//closefrom(STDERR_FILENO + 1);
-        //{   int xx = 0; while(1) {
-        //        hslog(-1, "argx %d ptr: '%s'\n", xx, argx[xx]);
-        //        if(!argx[xx++]) break;
-        //        }
-        //printf("\n");
-        //}
+    	closefrom(STDERR_FILENO + 1);
+            {   int xx = 0; while(1) {
+                hsprint(TO_ERR | TO_LOG, -1, "ch argx %d ptr: '%s'\n", xx, argx[xx]);
+                if(!argx[xx++]) break;
+                }
+            printf("\n");
+            }
         int retx = execvp(argx[0], argx) ;
-        //printf("Unable to run askpass: '%s' ret=%d\n", program, retx);
-        hslog(-1, "Unable to run askpass: '%s' ret=%d", program, retx);
+        hsprint(TO_ERR | TO_LOG, -1, "Unable to run askpass: '%s' ret=%d", program, retx);
         // Clear error number so the FS can work
         errno = 0;
         mainret = -4;
@@ -536,27 +535,26 @@ int     hs_askpass(const char *program, char *buf, int buflen)
 
     int status = 0;
     pid_t pidx = waitpid(pid, &status, 0);
-    if (status)
-        {
-        printf("exe return status: %d\n", status);
-        mainret = -5;
-        goto cleanup;
-        }
-    /* Get response from child and restore SIGPIPE handler */
+
+    /* Get response from child */
     (void) close(pfd[1]);
 
     char *tmp6 = malloc(2 * MAXPASSLEN);
     getlinex(pfd[0], tmp6, 2 * MAXPASSLEN);
-
-    int lenx = strlen(tmp6);
-    printf("hspass() stdout: '%s'\n", tmp6);
-
+    hsprint(TO_ERR | TO_LOG, -1, "hspass() stdout: '%s'\n", tmp6);
+    if (status)
+        {
+        free(tmp6);
+        hsprint(TO_ERR | TO_LOG, -1, "exe askpass return status: %d\n", status);
+        mainret = -5;
+        goto cleanup;
+        }
     unsigned long olen = 0;
-    unsigned char *res2 = base64_decode(tmp6, lenx, &olen);
+    unsigned char *res2 = base64_decode(tmp6, strlen(tmp6), &olen);
     free(tmp6);
     if(!res2)
         {
-        printf("hspass() cannot decode.\n");
+        hsprint(TO_ERR | TO_LOG, -1, "hspass() cannot decode.\n");
         }
     else
         {
@@ -567,7 +565,7 @@ int     hs_askpass(const char *program, char *buf, int buflen)
         if(tmp5)
             {
             memset(tmp5, '\0', MAXPASSLEN * 2);
-            int   ret = private_decrypt(res2, olen, tmp4, tmp5);
+            int   ret = private_decrypt(res2, olen, priv_ptr, tmp5);
             //printf("decoded: len=%d '%s'\n", ret, buf);
             free(res2);
             if(ret >= 0)
@@ -575,12 +573,14 @@ int     hs_askpass(const char *program, char *buf, int buflen)
             free(tmp5);
             }
         }
-
     (void) close(pfd[0]);
+    /* and restore SIGPIPE handler */
     (void) sigaction(SIGPIPE, &saved_sa_pipe, NULL);
 
   cleanup:
-    if( tmp4) free(tmp4);
+    if( pub_ptr)  free(pub_ptr);
+    if( priv_ptr) free(priv_ptr);
+
     // Free array
     { int xx = 0; while(1)
         {
@@ -715,7 +715,7 @@ char    *getpass_front(char *prompt, int create, int gui)
         {
         char *passprog = malloc(PATH_MAX);
         snprintf(passprog, PATH_MAX,
-                    "%s --title %s --create %d",
+                    "%s --title %s --create %d ",
                         "../askpass/hsaskpass.py", "title", create);
 
         //printf("passprog: '%s'\n", passprog);

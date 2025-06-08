@@ -98,27 +98,21 @@ int     countfiles(char *mpoint)
 void    hsprint(int outs, int lev, char *fmt, ...)
 
 {
-    if (outs & TO_OUT)
+    if (loglevel > lev || lev == -1)
         {
-        if (loglevel > lev || lev == -1)
+        if (outs & TO_OUT)
             {
             va_list ap; va_start(ap, fmt);
             vfprintf(stdout, fmt, ap);
             va_end(ap);
             }
-        }
-    if (outs & TO_ERR)
-        {
-        if (loglevel > lev || lev == -1)
+        if (outs & TO_ERR)
             {
             va_list ap; va_start(ap, fmt);
             vfprintf(stderr, fmt, ap);
             va_end(ap);
             }
-        }
-    if (outs & TO_LOG)
-        {
-        if (loglevel > lev || lev == -1)
+        if (outs & TO_LOG)
             {
             va_list ap; va_start(ap, fmt);
             vsyslog(LOG_DEBUG, fmt, ap);
