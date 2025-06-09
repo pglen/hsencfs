@@ -116,6 +116,12 @@ int     openpass(const char *path)
 {
     int ret = 0;
 
+    // Use pre entered password if ondemand is not enabled
+    if(defpassx[0] != '\0')
+        {
+        printf("Using pre made pass '%s'\n", defpassx);
+        }
+
     char tmp[MAXPASSLEN];
     char *tmp2 = malloc(PATH_MAX + PATH_MAX + 12);
     if (!tmp2)
@@ -142,7 +148,8 @@ int     openpass(const char *path)
     // Error ?
      if (ret != 0)
         {
-        hslog(0, "Cannot get pass for '%s' with %s\n", path, passprog);
+        hslog(0, "Cannot get pass for '%s' with %s, err=%d\n",
+                                path, passprog, ret);
         ret = 1;
         goto endx;
         }
@@ -159,18 +166,18 @@ int     openpass(const char *path)
     // Decode base64
     unsigned long olen = 0;
     unsigned char *res2 = base64_decode(tmp, rlen, &olen);
-    strncpy(passx, res2, sizeof(passx));
-    plen = strlen(passx);
+    strncpy(defpassx, res2, sizeof(defpassx));
+    plen = strlen(defpassx);
     free(res2);
 
     // Do not log sensitive data
-    //hslog(2, "passx '%s'\n", passx);
+    //hslog(2, "defpassx '%s'\n", defpassx);
 
-    int ret2 = 0; //pass_ritual(mountpoint, mountsecret, passx, &plen, passprog);
+    int ret2 = 0; //pass_ritual(mountpoint, mountsecret, defpassx, &plen, passprog);
     if(ret2)
         {
         // Force new pass prompt
-        memset(passx, 0, sizeof(passx));
+        memset(defpassx, 0, sizeof(defpassx));
         hslog(-1, "Invalid pass for '%s' by uid: %d\n", mountpoint, getuid());
         ret =  ret2;
         goto endx;

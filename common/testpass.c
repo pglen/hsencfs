@@ -113,18 +113,25 @@ int main(int argc, char *argv[])
             create = 1;
             }
         }
+
+    char tmp[MAXPASSLEN];
     PassArg passarg;
-    passarg.prompt = "\'  Enter pass:  \'",
-    passarg.title = "\' Title Here: \'";
-    passarg.gui = gui;
-    passarg.create = create;
+    passarg.prompt   = "\'  Enter pass:  \'",
+    passarg.title    = "\' Title Here: \'";
+    passarg.gui      = gui;
+    passarg.create   = create;
     passarg.passprog = askprog;
     passarg.mountstr = "Mountstr";
     passarg.markfile = markfile;
+    passarg.result   = tmp;
+    passarg.reslen   = MAXPASSLEN;
     int ret = getpass_front(&passarg);
 
     if(ret == HSPASS_OK)
+        {
         printf("Pass OK.\n");
+        printf("pass '%s'\n", passarg.result);
+        }
     else if(ret == HSPASS_NOPASS)
         printf("Empty pass.\n");
     else if(ret == HSPASS_NOEXEC)

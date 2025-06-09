@@ -63,7 +63,7 @@ typedef unsigned char uchar;
 //#define HALF_ENCRYPT    1
 #define FULL_ENCRYPT    1
 
-extern  char    passx[MAXPASSLEN];
+extern  char    defpassx[MAXPASSLEN];
 extern  char    mountpoint[PATH_MAX] ;
 extern  char    mountsecret[PATH_MAX] ;
 extern  char    passprog[PATH_MAX] ;

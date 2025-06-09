@@ -16,14 +16,15 @@
 
 typedef struct _PassArg
 {
-    char *markfile;
-    char *passprog;
-    char *mountstr;
-    char *prompt;
-    char *title;
-    char *res;
-    int create;
-    int gui;
+    char    *markfile;
+    char    *passprog;
+    char    *mountstr;
+    char    *prompt;
+    char    *title;
+    char    *result;
+    int     reslen;
+    char    create;
+    char    gui;
 
 } PassArg;
 

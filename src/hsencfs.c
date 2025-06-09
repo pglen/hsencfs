@@ -90,8 +90,8 @@
 int     verbose = 0;
 int     nobg = 0;
 
-char    passx[MAXPASSLEN];
-int     plen = sizeof(passx);
+char    defpassx[MAXPASSLEN];
+int     plen = sizeof(defpassx);
 
 // Main directories for data / encryption
 
@@ -397,13 +397,13 @@ void    parse_comline(int argc, char *argv[])
                break;
 
            case 'p':
-                if (passx[0] != 0)
+                if (defpassx[0] != 0)
                     {
                     fprintf(stderr, "%s Error: multiple passes on command line.\n", argv[0]);
                     exit(EXIT_ERROR);
                     }
-                strncpy(passx, optarg, sizeof(passx));
-                plen = strlen(passx);
+                strncpy(defpassx, optarg, sizeof(defpassx));
+                plen = strlen(defpassx);
                 // Randomize optarg
                 for(loop = 0; loop < plen; loop++)
                     {
@@ -413,7 +413,7 @@ void    parse_comline(int argc, char *argv[])
                     printf("Pass provided on command line.\n");
 
                 //if(pg_debug > 5)
-                //    printf("Pass '%s' provided on command line.\n", passx);
+                //    printf("Pass '%s' provided on command line.\n", defpassx);
 
                 break;
 
@@ -549,7 +549,7 @@ int     main(int argc, char *argv[])
     memset(mountsecret,   0, sizeof(mountsecret));
     memset(tmpsecret,   0, sizeof(tmpsecret));
     memset(passprog,    0, sizeof(passprog));
-    memset(passx,       0, sizeof(passx));
+    memset(defpassx,       0, sizeof(defpassx));
     memset(decoy,       0, sizeof(decoy));
 
     // --------------------------------------------------------------------
@@ -571,7 +571,7 @@ int     main(int argc, char *argv[])
     parse_comline(argc, argv);
 
     // Just for development. DO NOT USE!
-    //strcpy(passx, "1234"); //plen = strlen(passx);
+    //strcpy(defpassx, "1234"); //plen = strlen(defpassx);
 
     if(pg_debug > 9)
         {
@@ -713,7 +713,7 @@ int     main(int argc, char *argv[])
     //bufsize = ss.st_blksize;
     //printf("Bufsize = %d\n", bufsize);
 
-    bluepoint2_encrypt(decoy, sizeof(decoy), passx, plen);
+    bluepoint2_encrypt(decoy, sizeof(decoy), defpassx, plen);
 
     if (!ondemand)
         {
@@ -721,40 +721,39 @@ int     main(int argc, char *argv[])
             {
             printf("Ondemand pass option deactivated.\n");
             }
-        if(passx[0] == 0)
+        if(defpassx[0] == 0)
             {
-            char tmp[MAXPASSLEN];
+            //char tmp[MAXPASSLEN];
             // if we are at the terminal, get pass
-            if (!isatty(STDOUT_FILENO))
-                {
-                if(passprog[0] != 0)
-                    {
-                    hsprint(TO_ERR|TO_LOG, 2, "Getting pass from program: '%s'\n", passprog);
-
-                    int ret = hs_askpass(passprog, tmp, sizeof(tmp));
-                    if (ret == 0)
-                        {
-                        //hsprint(TO_ERR|TO_LOG, 2, "Askpass delivered: '%s'\n", res);
-                        // Empty pass ?
-                        int rlen = strlen(tmp);
-                        if(rlen == 0)
-                            {
-                            if(verbose)
-                                fprintf(stderr, "Aborted on empty pass from: '%s'\n", passprog);
-                            exit(EXIT_NOPASS);
-                            }
-                        // Decode base64
-                        unsigned long olen = 0;
-                        unsigned char *res2 = base64_decode(tmp, rlen, &olen);
-                        strncpy(passx, res2, sizeof(passx));
-                        plen = strlen(passx);
-                        free(res2);
-
-                        //hsprint(TO_ERR|TO_LOG, 2, "passx '%s'\n", passx);
-                        }
-                    }
-                }
-            }
+            //if (!isatty(STDOUT_FILENO))
+            //    {
+            //    if(passprog[0] != 0)
+            //        {
+            //        hsprint(TO_ERR|TO_LOG, 2, "Getting pass from program: '%s'\n", passprog);
+            //
+            //        int ret = hs_askpass(passprog, tmp, sizeof(tmp));
+            //        if (ret == 0)
+            //            {
+            //            //hsprint(TO_ERR|TO_LOG, 2, "Askpass delivered: '%s'\n", res);
+            //            // Empty pass ?
+            //            int rlen = strlen(tmp);
+            //            if(rlen == 0)
+            //                {
+            //                if(verbose)
+            //                    fprintf(stderr, "Aborted on empty pass from: '%s'\n", passprog);
+            //                exit(EXIT_NOPASS);
+            //                }
+            //            // Decode base64
+            //            unsigned long olen = 0;
+            //            unsigned char *res2 = base64_decode(tmp, rlen, &olen);
+            //            strncpy(defpassx, res2, sizeof(defpassx));
+            //            plen = strlen(defpassx);
+            //            free(res2);
+            //            //hsprint(TO_ERR|TO_LOG, 2, "defpassx '%s'\n", defpassx);
+            //            }
+            //        }
+            //    }
+            //}
 
         // Will ask for pass if not filled
 
@@ -775,11 +774,18 @@ int     main(int argc, char *argv[])
         passarg.passprog = passprog;
         passarg.mountstr = mountpoint;
         passarg.markfile = markfile;
+        char *tmp = malloc(MAXPASSLEN);
+        passarg.result = tmp;
+        passarg.reslen = MAXPASSLEN;
         int ret = getpass_front(&passarg);
         xsfree(markfile);
 
         if(ret == HSPASS_OK)
-            printf("Pass OK.\n");
+            {
+            strcpy(defpassx, passarg.result);
+            printf("Pass OK. '%s'\n", defpassx);
+            free(passarg.result);
+            }
         else
             {
             if(ret == HSPASS_NOPASS)
@@ -797,8 +803,7 @@ int     main(int argc, char *argv[])
             exit(1);
             }
 
-
-        //int ret2 = pass_ritual(mountpoint, mountsecret, passx, &plen, passprog);
+        //int ret2 = pass_ritual(mountpoint, mountsecret, defpassx, &plen, passprog);
         //if(ret2)
         //    {
         //    // Catch abort message
@@ -907,7 +912,6 @@ int     main(int argc, char *argv[])
         int ret3 = chmod(mountpoint, statbuf.st_mode & ~S_IWUSR );
         //hsprint(TO_ERR|TO_LOG, 1, "ret3 %d", ret3);
         }
-
     // Inform user, make a log entry
     if(mainret)
         {
@@ -927,7 +931,7 @@ int     main(int argc, char *argv[])
         hsprint(TO_ERR|TO_LOG, 1, "unMntSec '%s'", mountsecret);
         }
     return mainret;
+    }
 }
-
 
 // EOF

@@ -108,7 +108,7 @@ int     virt_read(const char *path, int fd, char *buf, uint wsize, uint offset)
 
     hslog(5, "virt_read(): res2a=%ld xsize=%ld\n", res2a, xsize);
 
-    hs_decrypt(mem, xsize, passx, plen);
+    hs_decrypt(mem, xsize, defpassx, plen);
     memcpy(buf, mem + (offset - new_offs), wsize);
     ret = wsize;     // Tell them we got it
 

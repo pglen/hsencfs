@@ -97,7 +97,7 @@ int     virt_write(const char *path, int fd, const char *buf, uint wsize, uint o
         goto end_func;
         }
     memset(mem, '\0', xsize);
-    hs_encrypt(mem, xsize, passx, plen);
+    hs_encrypt(mem, xsize, defpassx, plen);
 
     //   ofsize  |          |        wsize     |
     // ------------------------------------------------------
@@ -113,9 +113,9 @@ int     virt_write(const char *path, int fd, const char *buf, uint wsize, uint o
         }
     hslog(3, "virt_write(): read res2a=%lx bytes\n",  res2a);
 
-    hs_decrypt(mem, xsize, passx, plen);
+    hs_decrypt(mem, xsize, defpassx, plen);
     memcpy(mem + (offset - new_offs), buf, wsize);
-    hs_encrypt(mem, xsize, passx, plen);
+    hs_encrypt(mem, xsize, defpassx, plen);
 
     // Make sure our auxilliary ops did not create an error condition
     errno = old_errno;

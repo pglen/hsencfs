@@ -671,7 +671,7 @@ static int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
     if (loglevel > 9)
         syslog(LOG_DEBUG, "Shadow file: '%s'\n", path2);
 
-    if(passx[0] == 0)
+    if(defpassx[0] == 0)
         {
         if (loglevel > 3)
             syslog(LOG_DEBUG, "Empty pass on create file: %s uid: %d\n", path, getuid());
@@ -747,7 +747,7 @@ static int xmp_open(const char *path, struct fuse_file_info *fi)
     strcpy(path2, mountsecret); strcat(path2, path);
 
     hslog(0, "Open: %s uid: %d mode: %x\n",  path, getuid(),fi->flags);
-    if(passx[0] == 0)
+    if(defpassx[0] == 0)
         {
         if (loglevel > 3)
             syslog(LOG_DEBUG, "Empty pass on open file: %s uid: %d\n", path, getuid());

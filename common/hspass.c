@@ -659,23 +659,31 @@ int     pass_ritual(PassArg *parg)
             goto cleanup;
             }
         zret = create_markfile(parg->markfile, xpass, xlen);
-        //printf("created markfile: %d\n", ret);
+        if(zret == 0)
+            {
+            printf("created markfile, pass '%s'\n", xpass);
+            //printf("created markfile: %d\n", ret);
+            strcpy(parg->result, xpass);
+            }
         xsfree(xpass); xsfree(xpass2);
         }
     else
         {
         //printf("xpass '%s'\n", xpass);
         zret = check_markfile(parg->markfile, xpass, xlen);
+        if (zret == 0)
+            {
+            printf("check markfile, pass '%s'\n", xpass);
+            strcpy(parg->result, xpass);
+            }
         //printf("checked markfile: %d\n", ret);
         xsfree(xpass);
         }
 
    cleanup:
     //xmdump(0);
-
     return zret;
 }
-
 
 int     pass_gui_ritual(PassArg *parg)
 {

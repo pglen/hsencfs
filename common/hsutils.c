@@ -134,7 +134,10 @@ void    hsprint(int outs, int lev, char *fmt, ...)
 void    hslog(int lev, char *fmt, ...)
 
 {
-    if (loglevel > lev || lev == -1)
+
+    if(loglevel == 0)
+        return;
+    if (lev <= loglevel)
         {
         va_list ap; va_start(ap, fmt);
         vsyslog(LOG_DEBUG, fmt, ap);
