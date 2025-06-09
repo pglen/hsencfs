@@ -13,20 +13,19 @@ testpassdir = .
 
 myincs =    -I$(srcdir)/../bluepoint -I$(srcdir)/../src \
             -I$(srcdir)/../common
+
 cryptx =    ../bluepoint/hs_crypt.c     \
             ../bluepoint/bluepoint2.c
+utilx =     hsutils.c base64.c hspass.c xmalloc.c
 
 testpass_CFLAGS = -D_FILE_OFFSET_BITS=64 -O2  $(myincs)
 testpass_LDADD = -lulockmgr -lfuse3  -lcrypto -lssl
-testpass_SOURCES = testpass.c hsutils.c hspass.c base64.c \
-                    $(cryptx)
+testpass_SOURCES = testpass.c $(cryptx) $(utilx)
 
 bin_PROGRAMS =  bpdec2 bpenc2
 
 #bpenc2dir = .
-bpenc2_SOURCES  = bpenc2.c  bp2com.c hsutils.c      \
-                            base64.c hspass.c       \
-                            $(cryptx)
+bpenc2_SOURCES  = bpenc2.c  bp2com.c $(utilx) $(cryptx)
 
 bpenc2_CFLAGS   =  -g -D_FILE_OFFSET_BITS=64  $(myincs) \
                             -lssl -lcrypt
@@ -38,9 +37,7 @@ bpenc2_LDADD = -lulockmgr -lfuse3  -lcrypto -lssl
 #bpdec2dir = .
 bpdec2_DEPENDENCIES =
 
-bpdec2_SOURCES  =       bpdec2.c bp2com.c base64.c   \
-                        hsutils.c hspass.c  \
-                        $(cryptx)
+bpdec2_SOURCES  =       bpdec2.c bp2com.c $(utilx) $(cryptx)
 
 bpdec2_CFLAGS = -g -D_FILE_OFFSET_BITS=64 $(myincs)  \
                      -lssl -lcrypt

@@ -14,13 +14,7 @@
 
    ======================================================================= */
 
-#define MARK_SIZE   4096
-
 // Included in ALl encrypters
-
-extern int loglevel;
-
-#define     HS_PROGNAME    "HSENCFS"
 
 #define  TO_OUT (1 << 0)
 #define  TO_ERR (1 << 1)
@@ -30,27 +24,8 @@ extern int loglevel;
 #define  TO_EL  (TO_ERR | TO_LOG)
 #define  TO_OL  (TO_OUT | TO_LOG)
 
+extern  int     loglevel;
 extern  char    *passfname;
-
-typedef struct _Malloc
-{
-    void    *ptr;
-    int     size;
-    char    freed;
-} Malloc;
-
-typedef struct _Malloc_Store
-{
-    int     curr ;
-    int     size ;
-    Malloc *store;
-} Malloc_Store;
-
-extern int  malloc_verbose;
-
-void    *xmalloc(int size);
-void    xfree(void *ptr);
-void    xmdump(int level);
 
 // Prototypes shared between components
 

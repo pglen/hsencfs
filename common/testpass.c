@@ -15,26 +15,29 @@
 #include "base64.h"
 #include "hsutils.h"
 #include "hspass.h"
+#include "xmalloc.h"
 
-static char tmp[256];
+static char tmp[MAXPASSLEN];
 int     xlen = 0;
 
-//int     loglevel = 0;
 char    progname[] = "HSENCFS";
 int     create = 0;
 int     gui = 0;
 int     verbose = 0;
 char    *markfile = "markfile";
 char    *defpass = "";
+char    *askprog = "../askpass/hsaskpass.py";
 
 int main(int argc, char *argv[])
 
 {
     //bluepoint2_set_verbose(2);
-    char *opts = "vgachm:p:l:";
+    char *opts = "vgachm:p:l:k:";
 
     openlog("HSEncFs",  LOG_PID,  LOG_DAEMON);
     srand(time(NULL));
+
+    //xmalloc_randfail = 3;
 
     while (1)
         {
@@ -53,7 +56,7 @@ int main(int argc, char *argv[])
                 break;
 
             case '?':
-                printf("Invalid option: -%c \n", optopt);
+                printf("Invalid option or missing argument: -%c \n", optopt);
                 exit(1);
                 break;
 
@@ -91,6 +94,11 @@ int main(int argc, char *argv[])
                 //printf("option m %s\n", optarg);
                 defpass = strdup(optarg);
                 break;
+
+            case 'k':
+                //printf("option g %s\n", optarg);
+                askprog = strdup(optarg);
+                break;
             }
         }
 
@@ -105,17 +113,33 @@ int main(int argc, char *argv[])
             create = 1;
             }
         }
-
     PassArg passarg;
     passarg.prompt = "\'  Enter pass:  \'",
     passarg.title = "\' Title Here: \'";
     passarg.gui = gui;
     passarg.create = create;
-    passarg.passprog = "../askpass/hsaskpass.py";
+    passarg.passprog = askprog;
     passarg.mountstr = "Mountstr";
     passarg.markfile = markfile;
     int ret = getpass_front(&passarg);
-    printf("getpass_front ret: %d\n", ret);
+
+    if(ret == HSPASS_OK)
+        printf("Pass OK.\n");
+    else if(ret == HSPASS_NOPASS)
+        printf("Empty pass.\n");
+    else if(ret == HSPASS_NOEXEC)
+        printf("Resource (exec askpass prog) problem.\n");
+    else if(ret == HSPASS_ERRFILE)
+        printf("Resource (markfile create) problem.\n");
+    else if(ret == HSPASS_ERRWRITE)
+        printf("Resource (markfile write) problem.\n");
+    else if (ret == HSPASS_MALLOC)
+        printf("Resource (malloc) problem.\n");
+    else
+        printf("No password match.\n");
+
+    //printf("getpass_front ret: %d\n", ret);
+
     exit(0);
 }
 

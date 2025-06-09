@@ -20,11 +20,12 @@
 #include <sys/time.h>
 #include <sys/stat.h>
 
-#include "../src/hsencfs.h"
-#include "bluepoint2.h"
+#include "hsencfs.h"
+#include "hsutils.h"
 #include "hs_crypt.h"
 #include "bp2com.h"
-#include "../src/hsencsb.h"
+#include "hsencsb.h"
+#include "bluepoint2.h"
 
 static char buff[BLOCKSIZE];
 
@@ -35,9 +36,6 @@ static FILE *logfp = NULL;
 int     verbose = 0;
 int     quiet = 0;
 int     force = 0;
-
-// Shared flags
-//int     loglevel = 0;
 
 // Maintain internal count
 static  char    version[] = "1.17";

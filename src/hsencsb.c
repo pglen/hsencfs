@@ -40,9 +40,9 @@
 #include "hsencsb.h"
 #include "hsencfs.h"
 
-#include "../bluepoint/hs_crypt.h"
-#include "../bluepoint/bluepoint2.h"
-#include "../common/hsutils.h"
+#include "hs_crypt.h"
+#include "bluepoint2.h"
+#include "hsutils.h"
 
 sideblock_t *alloc_sideblock()
 

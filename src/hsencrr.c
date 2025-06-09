@@ -52,9 +52,9 @@
 #include "hsencsb.h"
 #include "hsencfs.h"
 
-#include "../bluepoint/hs_crypt.h"
-#include "../bluepoint/bluepoint2.h"
-#include "../common/hsutils.h"
+#include "hs_crypt.h"
+#include "bluepoint2.h"
+#include "hsutils.h"
 
 int     virt_read(const char *path, int fd, char *buf, uint wsize, uint offset)
 

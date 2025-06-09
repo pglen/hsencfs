@@ -105,28 +105,31 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS) $(noinst_PROGRAMS)
+am__objects_1 = bpdec2-hsutils.$(OBJEXT) bpdec2-base64.$(OBJEXT) \
+	bpdec2-hspass.$(OBJEXT) bpdec2-xmalloc.$(OBJEXT)
 am__dirstamp = $(am__leading_dot)dirstamp
-am__objects_1 = ../bluepoint/bpdec2-hs_crypt.$(OBJEXT) \
+am__objects_2 = ../bluepoint/bpdec2-hs_crypt.$(OBJEXT) \
 	../bluepoint/bpdec2-bluepoint2.$(OBJEXT)
 am_bpdec2_OBJECTS = bpdec2-bpdec2.$(OBJEXT) bpdec2-bp2com.$(OBJEXT) \
-	bpdec2-base64.$(OBJEXT) bpdec2-hsutils.$(OBJEXT) \
-	bpdec2-hspass.$(OBJEXT) $(am__objects_1)
+	$(am__objects_1) $(am__objects_2)
 bpdec2_OBJECTS = $(am_bpdec2_OBJECTS)
 bpdec2_LINK = $(CCLD) $(bpdec2_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-am__objects_2 = ../bluepoint/bpenc2-hs_crypt.$(OBJEXT) \
+am__objects_3 = bpenc2-hsutils.$(OBJEXT) bpenc2-base64.$(OBJEXT) \
+	bpenc2-hspass.$(OBJEXT) bpenc2-xmalloc.$(OBJEXT)
+am__objects_4 = ../bluepoint/bpenc2-hs_crypt.$(OBJEXT) \
 	../bluepoint/bpenc2-bluepoint2.$(OBJEXT)
 am_bpenc2_OBJECTS = bpenc2-bpenc2.$(OBJEXT) bpenc2-bp2com.$(OBJEXT) \
-	bpenc2-hsutils.$(OBJEXT) bpenc2-base64.$(OBJEXT) \
-	bpenc2-hspass.$(OBJEXT) $(am__objects_2)
+	$(am__objects_3) $(am__objects_4)
 bpenc2_OBJECTS = $(am_bpenc2_OBJECTS)
 bpenc2_LINK = $(CCLD) $(bpenc2_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-am__objects_3 = ../bluepoint/testpass-hs_crypt.$(OBJEXT) \
+am__objects_5 = ../bluepoint/testpass-hs_crypt.$(OBJEXT) \
 	../bluepoint/testpass-bluepoint2.$(OBJEXT)
-am_testpass_OBJECTS = testpass-testpass.$(OBJEXT) \
-	testpass-hsutils.$(OBJEXT) testpass-hspass.$(OBJEXT) \
-	testpass-base64.$(OBJEXT) $(am__objects_3)
+am__objects_6 = testpass-hsutils.$(OBJEXT) testpass-base64.$(OBJEXT) \
+	testpass-hspass.$(OBJEXT) testpass-xmalloc.$(OBJEXT)
+am_testpass_OBJECTS = testpass-testpass.$(OBJEXT) $(am__objects_5) \
+	$(am__objects_6)
 testpass_OBJECTS = $(am_testpass_OBJECTS)
 testpass_DEPENDENCIES =
 testpass_LINK = $(CCLD) $(testpass_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
@@ -154,12 +157,14 @@ am__depfiles_remade = ../bluepoint/$(DEPDIR)/bpdec2-bluepoint2.Po \
 	../bluepoint/$(DEPDIR)/testpass-hs_crypt.Po \
 	./$(DEPDIR)/bpdec2-base64.Po ./$(DEPDIR)/bpdec2-bp2com.Po \
 	./$(DEPDIR)/bpdec2-bpdec2.Po ./$(DEPDIR)/bpdec2-hspass.Po \
-	./$(DEPDIR)/bpdec2-hsutils.Po ./$(DEPDIR)/bpenc2-base64.Po \
-	./$(DEPDIR)/bpenc2-bp2com.Po ./$(DEPDIR)/bpenc2-bpenc2.Po \
-	./$(DEPDIR)/bpenc2-hspass.Po ./$(DEPDIR)/bpenc2-hsutils.Po \
+	./$(DEPDIR)/bpdec2-hsutils.Po ./$(DEPDIR)/bpdec2-xmalloc.Po \
+	./$(DEPDIR)/bpenc2-base64.Po ./$(DEPDIR)/bpenc2-bp2com.Po \
+	./$(DEPDIR)/bpenc2-bpenc2.Po ./$(DEPDIR)/bpenc2-hspass.Po \
+	./$(DEPDIR)/bpenc2-hsutils.Po ./$(DEPDIR)/bpenc2-xmalloc.Po \
 	./$(DEPDIR)/testpass-base64.Po ./$(DEPDIR)/testpass-hspass.Po \
 	./$(DEPDIR)/testpass-hsutils.Po \
-	./$(DEPDIR)/testpass-testpass.Po
+	./$(DEPDIR)/testpass-testpass.Po \
+	./$(DEPDIR)/testpass-xmalloc.Po
 am__mv = mv -f
 AM_V_lt = $(am__v_lt_$(V))
 am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
@@ -322,17 +327,13 @@ myincs = -I$(srcdir)/../bluepoint -I$(srcdir)/../src \
 cryptx = ../bluepoint/hs_crypt.c     \
             ../bluepoint/bluepoint2.c
 
+utilx = hsutils.c base64.c hspass.c xmalloc.c
 testpass_CFLAGS = -D_FILE_OFFSET_BITS=64 -O2  $(myincs)
 testpass_LDADD = -lulockmgr -lfuse3  -lcrypto -lssl
-testpass_SOURCES = testpass.c hsutils.c hspass.c base64.c \
-                    $(cryptx)
-
+testpass_SOURCES = testpass.c $(cryptx) $(utilx)
 
 #bpenc2dir = .
-bpenc2_SOURCES = bpenc2.c  bp2com.c hsutils.c      \
-                            base64.c hspass.c       \
-                            $(cryptx)
-
+bpenc2_SOURCES = bpenc2.c  bp2com.c $(utilx) $(cryptx)
 bpenc2_CFLAGS = -g -D_FILE_OFFSET_BITS=64  $(myincs) \
                             -lssl -lcrypt
 
@@ -341,10 +342,7 @@ bpenc2_LDADD = -lulockmgr -lfuse3  -lcrypto -lssl
 
 #bpdec2dir = .
 bpdec2_DEPENDENCIES = 
-bpdec2_SOURCES = bpdec2.c bp2com.c base64.c   \
-                        hsutils.c hspass.c  \
-                        $(cryptx)
-
+bpdec2_SOURCES = bpdec2.c bp2com.c $(utilx) $(cryptx)
 bpdec2_CFLAGS = -g -D_FILE_OFFSET_BITS=64 $(myincs)  \
                      -lssl -lcrypt
 
@@ -484,15 +482,18 @@ include ./$(DEPDIR)/bpdec2-bp2com.Po # am--include-marker
 include ./$(DEPDIR)/bpdec2-bpdec2.Po # am--include-marker
 include ./$(DEPDIR)/bpdec2-hspass.Po # am--include-marker
 include ./$(DEPDIR)/bpdec2-hsutils.Po # am--include-marker
+include ./$(DEPDIR)/bpdec2-xmalloc.Po # am--include-marker
 include ./$(DEPDIR)/bpenc2-base64.Po # am--include-marker
 include ./$(DEPDIR)/bpenc2-bp2com.Po # am--include-marker
 include ./$(DEPDIR)/bpenc2-bpenc2.Po # am--include-marker
 include ./$(DEPDIR)/bpenc2-hspass.Po # am--include-marker
 include ./$(DEPDIR)/bpenc2-hsutils.Po # am--include-marker
+include ./$(DEPDIR)/bpenc2-xmalloc.Po # am--include-marker
 include ./$(DEPDIR)/testpass-base64.Po # am--include-marker
 include ./$(DEPDIR)/testpass-hspass.Po # am--include-marker
 include ./$(DEPDIR)/testpass-hsutils.Po # am--include-marker
 include ./$(DEPDIR)/testpass-testpass.Po # am--include-marker
+include ./$(DEPDIR)/testpass-xmalloc.Po # am--include-marker
 
 $(am__depfiles_remade):
 	@$(MKDIR_P) $(@D)
@@ -544,20 +545,6 @@ bpdec2-bp2com.obj: bp2com.c
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpdec2_CFLAGS) $(CFLAGS) -c -o bpdec2-bp2com.obj `if test -f 'bp2com.c'; then $(CYGPATH_W) 'bp2com.c'; else $(CYGPATH_W) '$(srcdir)/bp2com.c'; fi`
 
-bpdec2-base64.o: base64.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpdec2_CFLAGS) $(CFLAGS) -MT bpdec2-base64.o -MD -MP -MF $(DEPDIR)/bpdec2-base64.Tpo -c -o bpdec2-base64.o `test -f 'base64.c' || echo '$(srcdir)/'`base64.c
-	$(AM_V_at)$(am__mv) $(DEPDIR)/bpdec2-base64.Tpo $(DEPDIR)/bpdec2-base64.Po
-#	$(AM_V_CC)source='base64.c' object='bpdec2-base64.o' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpdec2_CFLAGS) $(CFLAGS) -c -o bpdec2-base64.o `test -f 'base64.c' || echo '$(srcdir)/'`base64.c
-
-bpdec2-base64.obj: base64.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpdec2_CFLAGS) $(CFLAGS) -MT bpdec2-base64.obj -MD -MP -MF $(DEPDIR)/bpdec2-base64.Tpo -c -o bpdec2-base64.obj `if test -f 'base64.c'; then $(CYGPATH_W) 'base64.c'; else $(CYGPATH_W) '$(srcdir)/base64.c'; fi`
-	$(AM_V_at)$(am__mv) $(DEPDIR)/bpdec2-base64.Tpo $(DEPDIR)/bpdec2-base64.Po
-#	$(AM_V_CC)source='base64.c' object='bpdec2-base64.obj' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpdec2_CFLAGS) $(CFLAGS) -c -o bpdec2-base64.obj `if test -f 'base64.c'; then $(CYGPATH_W) 'base64.c'; else $(CYGPATH_W) '$(srcdir)/base64.c'; fi`
-
 bpdec2-hsutils.o: hsutils.c
 	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpdec2_CFLAGS) $(CFLAGS) -MT bpdec2-hsutils.o -MD -MP -MF $(DEPDIR)/bpdec2-hsutils.Tpo -c -o bpdec2-hsutils.o `test -f 'hsutils.c' || echo '$(srcdir)/'`hsutils.c
 	$(AM_V_at)$(am__mv) $(DEPDIR)/bpdec2-hsutils.Tpo $(DEPDIR)/bpdec2-hsutils.Po
@@ -572,6 +559,20 @@ bpdec2-hsutils.obj: hsutils.c
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpdec2_CFLAGS) $(CFLAGS) -c -o bpdec2-hsutils.obj `if test -f 'hsutils.c'; then $(CYGPATH_W) 'hsutils.c'; else $(CYGPATH_W) '$(srcdir)/hsutils.c'; fi`
 
+bpdec2-base64.o: base64.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpdec2_CFLAGS) $(CFLAGS) -MT bpdec2-base64.o -MD -MP -MF $(DEPDIR)/bpdec2-base64.Tpo -c -o bpdec2-base64.o `test -f 'base64.c' || echo '$(srcdir)/'`base64.c
+	$(AM_V_at)$(am__mv) $(DEPDIR)/bpdec2-base64.Tpo $(DEPDIR)/bpdec2-base64.Po
+#	$(AM_V_CC)source='base64.c' object='bpdec2-base64.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpdec2_CFLAGS) $(CFLAGS) -c -o bpdec2-base64.o `test -f 'base64.c' || echo '$(srcdir)/'`base64.c
+
+bpdec2-base64.obj: base64.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpdec2_CFLAGS) $(CFLAGS) -MT bpdec2-base64.obj -MD -MP -MF $(DEPDIR)/bpdec2-base64.Tpo -c -o bpdec2-base64.obj `if test -f 'base64.c'; then $(CYGPATH_W) 'base64.c'; else $(CYGPATH_W) '$(srcdir)/base64.c'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/bpdec2-base64.Tpo $(DEPDIR)/bpdec2-base64.Po
+#	$(AM_V_CC)source='base64.c' object='bpdec2-base64.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpdec2_CFLAGS) $(CFLAGS) -c -o bpdec2-base64.obj `if test -f 'base64.c'; then $(CYGPATH_W) 'base64.c'; else $(CYGPATH_W) '$(srcdir)/base64.c'; fi`
+
 bpdec2-hspass.o: hspass.c
 	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpdec2_CFLAGS) $(CFLAGS) -MT bpdec2-hspass.o -MD -MP -MF $(DEPDIR)/bpdec2-hspass.Tpo -c -o bpdec2-hspass.o `test -f 'hspass.c' || echo '$(srcdir)/'`hspass.c
 	$(AM_V_at)$(am__mv) $(DEPDIR)/bpdec2-hspass.Tpo $(DEPDIR)/bpdec2-hspass.Po
@@ -585,6 +586,20 @@ bpdec2-hspass.obj: hspass.c
 #	$(AM_V_CC)source='hspass.c' object='bpdec2-hspass.obj' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpdec2_CFLAGS) $(CFLAGS) -c -o bpdec2-hspass.obj `if test -f 'hspass.c'; then $(CYGPATH_W) 'hspass.c'; else $(CYGPATH_W) '$(srcdir)/hspass.c'; fi`
+
+bpdec2-xmalloc.o: xmalloc.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpdec2_CFLAGS) $(CFLAGS) -MT bpdec2-xmalloc.o -MD -MP -MF $(DEPDIR)/bpdec2-xmalloc.Tpo -c -o bpdec2-xmalloc.o `test -f 'xmalloc.c' || echo '$(srcdir)/'`xmalloc.c
+	$(AM_V_at)$(am__mv) $(DEPDIR)/bpdec2-xmalloc.Tpo $(DEPDIR)/bpdec2-xmalloc.Po
+#	$(AM_V_CC)source='xmalloc.c' object='bpdec2-xmalloc.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpdec2_CFLAGS) $(CFLAGS) -c -o bpdec2-xmalloc.o `test -f 'xmalloc.c' || echo '$(srcdir)/'`xmalloc.c
+
+bpdec2-xmalloc.obj: xmalloc.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpdec2_CFLAGS) $(CFLAGS) -MT bpdec2-xmalloc.obj -MD -MP -MF $(DEPDIR)/bpdec2-xmalloc.Tpo -c -o bpdec2-xmalloc.obj `if test -f 'xmalloc.c'; then $(CYGPATH_W) 'xmalloc.c'; else $(CYGPATH_W) '$(srcdir)/xmalloc.c'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/bpdec2-xmalloc.Tpo $(DEPDIR)/bpdec2-xmalloc.Po
+#	$(AM_V_CC)source='xmalloc.c' object='bpdec2-xmalloc.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpdec2_CFLAGS) $(CFLAGS) -c -o bpdec2-xmalloc.obj `if test -f 'xmalloc.c'; then $(CYGPATH_W) 'xmalloc.c'; else $(CYGPATH_W) '$(srcdir)/xmalloc.c'; fi`
 
 ../bluepoint/bpdec2-hs_crypt.o: ../bluepoint/hs_crypt.c
 	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpdec2_CFLAGS) $(CFLAGS) -MT ../bluepoint/bpdec2-hs_crypt.o -MD -MP -MF ../bluepoint/$(DEPDIR)/bpdec2-hs_crypt.Tpo -c -o ../bluepoint/bpdec2-hs_crypt.o `test -f '../bluepoint/hs_crypt.c' || echo '$(srcdir)/'`../bluepoint/hs_crypt.c
@@ -684,6 +699,20 @@ bpenc2-hspass.obj: hspass.c
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpenc2_CFLAGS) $(CFLAGS) -c -o bpenc2-hspass.obj `if test -f 'hspass.c'; then $(CYGPATH_W) 'hspass.c'; else $(CYGPATH_W) '$(srcdir)/hspass.c'; fi`
 
+bpenc2-xmalloc.o: xmalloc.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpenc2_CFLAGS) $(CFLAGS) -MT bpenc2-xmalloc.o -MD -MP -MF $(DEPDIR)/bpenc2-xmalloc.Tpo -c -o bpenc2-xmalloc.o `test -f 'xmalloc.c' || echo '$(srcdir)/'`xmalloc.c
+	$(AM_V_at)$(am__mv) $(DEPDIR)/bpenc2-xmalloc.Tpo $(DEPDIR)/bpenc2-xmalloc.Po
+#	$(AM_V_CC)source='xmalloc.c' object='bpenc2-xmalloc.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpenc2_CFLAGS) $(CFLAGS) -c -o bpenc2-xmalloc.o `test -f 'xmalloc.c' || echo '$(srcdir)/'`xmalloc.c
+
+bpenc2-xmalloc.obj: xmalloc.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpenc2_CFLAGS) $(CFLAGS) -MT bpenc2-xmalloc.obj -MD -MP -MF $(DEPDIR)/bpenc2-xmalloc.Tpo -c -o bpenc2-xmalloc.obj `if test -f 'xmalloc.c'; then $(CYGPATH_W) 'xmalloc.c'; else $(CYGPATH_W) '$(srcdir)/xmalloc.c'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/bpenc2-xmalloc.Tpo $(DEPDIR)/bpenc2-xmalloc.Po
+#	$(AM_V_CC)source='xmalloc.c' object='bpenc2-xmalloc.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpenc2_CFLAGS) $(CFLAGS) -c -o bpenc2-xmalloc.obj `if test -f 'xmalloc.c'; then $(CYGPATH_W) 'xmalloc.c'; else $(CYGPATH_W) '$(srcdir)/xmalloc.c'; fi`
+
 ../bluepoint/bpenc2-hs_crypt.o: ../bluepoint/hs_crypt.c
 	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bpenc2_CFLAGS) $(CFLAGS) -MT ../bluepoint/bpenc2-hs_crypt.o -MD -MP -MF ../bluepoint/$(DEPDIR)/bpenc2-hs_crypt.Tpo -c -o ../bluepoint/bpenc2-hs_crypt.o `test -f '../bluepoint/hs_crypt.c' || echo '$(srcdir)/'`../bluepoint/hs_crypt.c
 	$(AM_V_at)$(am__mv) ../bluepoint/$(DEPDIR)/bpenc2-hs_crypt.Tpo ../bluepoint/$(DEPDIR)/bpenc2-hs_crypt.Po
@@ -726,48 +755,6 @@ testpass-testpass.obj: testpass.c
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -c -o testpass-testpass.obj `if test -f 'testpass.c'; then $(CYGPATH_W) 'testpass.c'; else $(CYGPATH_W) '$(srcdir)/testpass.c'; fi`
 
-testpass-hsutils.o: hsutils.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -MT testpass-hsutils.o -MD -MP -MF $(DEPDIR)/testpass-hsutils.Tpo -c -o testpass-hsutils.o `test -f 'hsutils.c' || echo '$(srcdir)/'`hsutils.c
-	$(AM_V_at)$(am__mv) $(DEPDIR)/testpass-hsutils.Tpo $(DEPDIR)/testpass-hsutils.Po
-#	$(AM_V_CC)source='hsutils.c' object='testpass-hsutils.o' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -c -o testpass-hsutils.o `test -f 'hsutils.c' || echo '$(srcdir)/'`hsutils.c
-
-testpass-hsutils.obj: hsutils.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -MT testpass-hsutils.obj -MD -MP -MF $(DEPDIR)/testpass-hsutils.Tpo -c -o testpass-hsutils.obj `if test -f 'hsutils.c'; then $(CYGPATH_W) 'hsutils.c'; else $(CYGPATH_W) '$(srcdir)/hsutils.c'; fi`
-	$(AM_V_at)$(am__mv) $(DEPDIR)/testpass-hsutils.Tpo $(DEPDIR)/testpass-hsutils.Po
-#	$(AM_V_CC)source='hsutils.c' object='testpass-hsutils.obj' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -c -o testpass-hsutils.obj `if test -f 'hsutils.c'; then $(CYGPATH_W) 'hsutils.c'; else $(CYGPATH_W) '$(srcdir)/hsutils.c'; fi`
-
-testpass-hspass.o: hspass.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -MT testpass-hspass.o -MD -MP -MF $(DEPDIR)/testpass-hspass.Tpo -c -o testpass-hspass.o `test -f 'hspass.c' || echo '$(srcdir)/'`hspass.c
-	$(AM_V_at)$(am__mv) $(DEPDIR)/testpass-hspass.Tpo $(DEPDIR)/testpass-hspass.Po
-#	$(AM_V_CC)source='hspass.c' object='testpass-hspass.o' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -c -o testpass-hspass.o `test -f 'hspass.c' || echo '$(srcdir)/'`hspass.c
-
-testpass-hspass.obj: hspass.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -MT testpass-hspass.obj -MD -MP -MF $(DEPDIR)/testpass-hspass.Tpo -c -o testpass-hspass.obj `if test -f 'hspass.c'; then $(CYGPATH_W) 'hspass.c'; else $(CYGPATH_W) '$(srcdir)/hspass.c'; fi`
-	$(AM_V_at)$(am__mv) $(DEPDIR)/testpass-hspass.Tpo $(DEPDIR)/testpass-hspass.Po
-#	$(AM_V_CC)source='hspass.c' object='testpass-hspass.obj' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -c -o testpass-hspass.obj `if test -f 'hspass.c'; then $(CYGPATH_W) 'hspass.c'; else $(CYGPATH_W) '$(srcdir)/hspass.c'; fi`
-
-testpass-base64.o: base64.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -MT testpass-base64.o -MD -MP -MF $(DEPDIR)/testpass-base64.Tpo -c -o testpass-base64.o `test -f 'base64.c' || echo '$(srcdir)/'`base64.c
-	$(AM_V_at)$(am__mv) $(DEPDIR)/testpass-base64.Tpo $(DEPDIR)/testpass-base64.Po
-#	$(AM_V_CC)source='base64.c' object='testpass-base64.o' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -c -o testpass-base64.o `test -f 'base64.c' || echo '$(srcdir)/'`base64.c
-
-testpass-base64.obj: base64.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -MT testpass-base64.obj -MD -MP -MF $(DEPDIR)/testpass-base64.Tpo -c -o testpass-base64.obj `if test -f 'base64.c'; then $(CYGPATH_W) 'base64.c'; else $(CYGPATH_W) '$(srcdir)/base64.c'; fi`
-	$(AM_V_at)$(am__mv) $(DEPDIR)/testpass-base64.Tpo $(DEPDIR)/testpass-base64.Po
-#	$(AM_V_CC)source='base64.c' object='testpass-base64.obj' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -c -o testpass-base64.obj `if test -f 'base64.c'; then $(CYGPATH_W) 'base64.c'; else $(CYGPATH_W) '$(srcdir)/base64.c'; fi`
-
 ../bluepoint/testpass-hs_crypt.o: ../bluepoint/hs_crypt.c
 	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -MT ../bluepoint/testpass-hs_crypt.o -MD -MP -MF ../bluepoint/$(DEPDIR)/testpass-hs_crypt.Tpo -c -o ../bluepoint/testpass-hs_crypt.o `test -f '../bluepoint/hs_crypt.c' || echo '$(srcdir)/'`../bluepoint/hs_crypt.c
 	$(AM_V_at)$(am__mv) ../bluepoint/$(DEPDIR)/testpass-hs_crypt.Tpo ../bluepoint/$(DEPDIR)/testpass-hs_crypt.Po
@@ -795,6 +782,62 @@ testpass-base64.obj: base64.c
 #	$(AM_V_CC)source='../bluepoint/bluepoint2.c' object='../bluepoint/testpass-bluepoint2.obj' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -c -o ../bluepoint/testpass-bluepoint2.obj `if test -f '../bluepoint/bluepoint2.c'; then $(CYGPATH_W) '../bluepoint/bluepoint2.c'; else $(CYGPATH_W) '$(srcdir)/../bluepoint/bluepoint2.c'; fi`
+
+testpass-hsutils.o: hsutils.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -MT testpass-hsutils.o -MD -MP -MF $(DEPDIR)/testpass-hsutils.Tpo -c -o testpass-hsutils.o `test -f 'hsutils.c' || echo '$(srcdir)/'`hsutils.c
+	$(AM_V_at)$(am__mv) $(DEPDIR)/testpass-hsutils.Tpo $(DEPDIR)/testpass-hsutils.Po
+#	$(AM_V_CC)source='hsutils.c' object='testpass-hsutils.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -c -o testpass-hsutils.o `test -f 'hsutils.c' || echo '$(srcdir)/'`hsutils.c
+
+testpass-hsutils.obj: hsutils.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -MT testpass-hsutils.obj -MD -MP -MF $(DEPDIR)/testpass-hsutils.Tpo -c -o testpass-hsutils.obj `if test -f 'hsutils.c'; then $(CYGPATH_W) 'hsutils.c'; else $(CYGPATH_W) '$(srcdir)/hsutils.c'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/testpass-hsutils.Tpo $(DEPDIR)/testpass-hsutils.Po
+#	$(AM_V_CC)source='hsutils.c' object='testpass-hsutils.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -c -o testpass-hsutils.obj `if test -f 'hsutils.c'; then $(CYGPATH_W) 'hsutils.c'; else $(CYGPATH_W) '$(srcdir)/hsutils.c'; fi`
+
+testpass-base64.o: base64.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -MT testpass-base64.o -MD -MP -MF $(DEPDIR)/testpass-base64.Tpo -c -o testpass-base64.o `test -f 'base64.c' || echo '$(srcdir)/'`base64.c
+	$(AM_V_at)$(am__mv) $(DEPDIR)/testpass-base64.Tpo $(DEPDIR)/testpass-base64.Po
+#	$(AM_V_CC)source='base64.c' object='testpass-base64.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -c -o testpass-base64.o `test -f 'base64.c' || echo '$(srcdir)/'`base64.c
+
+testpass-base64.obj: base64.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -MT testpass-base64.obj -MD -MP -MF $(DEPDIR)/testpass-base64.Tpo -c -o testpass-base64.obj `if test -f 'base64.c'; then $(CYGPATH_W) 'base64.c'; else $(CYGPATH_W) '$(srcdir)/base64.c'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/testpass-base64.Tpo $(DEPDIR)/testpass-base64.Po
+#	$(AM_V_CC)source='base64.c' object='testpass-base64.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -c -o testpass-base64.obj `if test -f 'base64.c'; then $(CYGPATH_W) 'base64.c'; else $(CYGPATH_W) '$(srcdir)/base64.c'; fi`
+
+testpass-hspass.o: hspass.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -MT testpass-hspass.o -MD -MP -MF $(DEPDIR)/testpass-hspass.Tpo -c -o testpass-hspass.o `test -f 'hspass.c' || echo '$(srcdir)/'`hspass.c
+	$(AM_V_at)$(am__mv) $(DEPDIR)/testpass-hspass.Tpo $(DEPDIR)/testpass-hspass.Po
+#	$(AM_V_CC)source='hspass.c' object='testpass-hspass.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -c -o testpass-hspass.o `test -f 'hspass.c' || echo '$(srcdir)/'`hspass.c
+
+testpass-hspass.obj: hspass.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -MT testpass-hspass.obj -MD -MP -MF $(DEPDIR)/testpass-hspass.Tpo -c -o testpass-hspass.obj `if test -f 'hspass.c'; then $(CYGPATH_W) 'hspass.c'; else $(CYGPATH_W) '$(srcdir)/hspass.c'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/testpass-hspass.Tpo $(DEPDIR)/testpass-hspass.Po
+#	$(AM_V_CC)source='hspass.c' object='testpass-hspass.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -c -o testpass-hspass.obj `if test -f 'hspass.c'; then $(CYGPATH_W) 'hspass.c'; else $(CYGPATH_W) '$(srcdir)/hspass.c'; fi`
+
+testpass-xmalloc.o: xmalloc.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -MT testpass-xmalloc.o -MD -MP -MF $(DEPDIR)/testpass-xmalloc.Tpo -c -o testpass-xmalloc.o `test -f 'xmalloc.c' || echo '$(srcdir)/'`xmalloc.c
+	$(AM_V_at)$(am__mv) $(DEPDIR)/testpass-xmalloc.Tpo $(DEPDIR)/testpass-xmalloc.Po
+#	$(AM_V_CC)source='xmalloc.c' object='testpass-xmalloc.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -c -o testpass-xmalloc.o `test -f 'xmalloc.c' || echo '$(srcdir)/'`xmalloc.c
+
+testpass-xmalloc.obj: xmalloc.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -MT testpass-xmalloc.obj -MD -MP -MF $(DEPDIR)/testpass-xmalloc.Tpo -c -o testpass-xmalloc.obj `if test -f 'xmalloc.c'; then $(CYGPATH_W) 'xmalloc.c'; else $(CYGPATH_W) '$(srcdir)/xmalloc.c'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/testpass-xmalloc.Tpo $(DEPDIR)/testpass-xmalloc.Po
+#	$(AM_V_CC)source='xmalloc.c' object='testpass-xmalloc.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpass_CFLAGS) $(CFLAGS) -c -o testpass-xmalloc.obj `if test -f 'xmalloc.c'; then $(CYGPATH_W) 'xmalloc.c'; else $(CYGPATH_W) '$(srcdir)/xmalloc.c'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique
@@ -1081,15 +1124,18 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/bpdec2-bpdec2.Po
 	-rm -f ./$(DEPDIR)/bpdec2-hspass.Po
 	-rm -f ./$(DEPDIR)/bpdec2-hsutils.Po
+	-rm -f ./$(DEPDIR)/bpdec2-xmalloc.Po
 	-rm -f ./$(DEPDIR)/bpenc2-base64.Po
 	-rm -f ./$(DEPDIR)/bpenc2-bp2com.Po
 	-rm -f ./$(DEPDIR)/bpenc2-bpenc2.Po
 	-rm -f ./$(DEPDIR)/bpenc2-hspass.Po
 	-rm -f ./$(DEPDIR)/bpenc2-hsutils.Po
+	-rm -f ./$(DEPDIR)/bpenc2-xmalloc.Po
 	-rm -f ./$(DEPDIR)/testpass-base64.Po
 	-rm -f ./$(DEPDIR)/testpass-hspass.Po
 	-rm -f ./$(DEPDIR)/testpass-hsutils.Po
 	-rm -f ./$(DEPDIR)/testpass-testpass.Po
+	-rm -f ./$(DEPDIR)/testpass-xmalloc.Po
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
@@ -1148,15 +1194,18 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/bpdec2-bpdec2.Po
 	-rm -f ./$(DEPDIR)/bpdec2-hspass.Po
 	-rm -f ./$(DEPDIR)/bpdec2-hsutils.Po
+	-rm -f ./$(DEPDIR)/bpdec2-xmalloc.Po
 	-rm -f ./$(DEPDIR)/bpenc2-base64.Po
 	-rm -f ./$(DEPDIR)/bpenc2-bp2com.Po
 	-rm -f ./$(DEPDIR)/bpenc2-bpenc2.Po
 	-rm -f ./$(DEPDIR)/bpenc2-hspass.Po
 	-rm -f ./$(DEPDIR)/bpenc2-hsutils.Po
+	-rm -f ./$(DEPDIR)/bpenc2-xmalloc.Po
 	-rm -f ./$(DEPDIR)/testpass-base64.Po
 	-rm -f ./$(DEPDIR)/testpass-hspass.Po
 	-rm -f ./$(DEPDIR)/testpass-hsutils.Po
 	-rm -f ./$(DEPDIR)/testpass-testpass.Po
+	-rm -f ./$(DEPDIR)/testpass-xmalloc.Po
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 

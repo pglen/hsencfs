@@ -42,6 +42,7 @@
 #include "hsencfs.h"
 #include "hspass.h"
 #include "hsutils.h"
+#include "xmalloc.h"
 #include "base64.h"
 #include "bluepoint2.h"
 
@@ -284,22 +285,27 @@ int     private_decrypt(uchar * enc_data, int data_len, uchar *key, uchar *dbuf)
 int     create_markfile(char *name, char *pass, int plen)
 
 {
-    int loop, ret = 0;
-    char *ttt = xmalloc(MARK_SIZE);
-    if(!ttt)
-        return -errno;
+    int loop, ret = 0, fh = -1;
+    char *ttt = NULL, *ttt2 = NULL;
 
     //printf("use pass '%s'\n", pass);
 
-    char *ttt2 = xmalloc(MARK_SIZE / 2);
+    ttt = xmalloc(MARK_SIZE);
+    if(!ttt)
+        {
+        ret = HSPASS_MALLOC;  goto cleanup;
+        }
+    ttt2 = xmalloc(MARK_SIZE / 2);
     if(!ttt2)
-        { xsfree(ttt); return -errno; }
-
+        {
+        ret = HSPASS_MALLOC;  goto cleanup;
+        }
     srand(time(NULL));
-
     // Generate crap
     for(loop = 0; loop < MARK_SIZE; loop++)
-        { ttt[loop] = rand() % 0xff; }
+        {
+        ttt[loop] = rand() % 0xff;
+        }
 
     // Verify:
     //for(loop = 0; loop < 30; loop++)
@@ -308,19 +314,21 @@ int     create_markfile(char *name, char *pass, int plen)
     memcpy(ttt2, ttt, MARK_SIZE / 2);
     bluepoint2_encrypt(ttt2, MARK_SIZE / 2, pass, plen);
     memcpy(ttt + MARK_SIZE / 2, ttt2, MARK_SIZE / 2);
-    if (ttt2) xsfree(ttt2);
 
     //int fh = open(name, O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR);
-    int fh = open(name, O_CREAT | O_TRUNC | O_WRONLY, S_IRUSR | S_IWUSR);
-    if(fh < 1)
-        { if(ttt) xsfree(ttt); return -errno;}
-
+    fh = open(name, O_CREAT | O_TRUNC | O_WRONLY, S_IRUSR | S_IWUSR);
+    if(fh < 0)
+        {
+        ret = HSPASS_ERRFILE; goto cleanup;
+        }
     if (write(fh, ttt, MARK_SIZE) != MARK_SIZE)
-        { if(ttt) xsfree(ttt); close(fh); return -errno; }
-
-    close(fh);
-
+        {
+        ret = HSPASS_ERRWRITE; goto cleanup;
+        }
+  cleanup:
     if (ttt) xsfree(ttt);
+    if (ttt2) xsfree(ttt2);
+    if(fh >=0 ) close(fh);
 
     return ret;
 }
@@ -482,7 +490,7 @@ int     hs_askpass(const char *program, char *buf, int buflen)
     if ((pid = fork()) == -1)
         {
         hsprint(TO_ERR | TO_LOG, 2, "Unable to fork");
-        mainret = -2;
+        mainret = HSPASS_NOEXEC;
         goto cleanup;
         }
     if (pid == 0)
@@ -490,7 +498,7 @@ int     hs_askpass(const char *program, char *buf, int buflen)
         /* child, point stdout to output side of the pipe and exec askpass */
     	if (dup2(pfd[1], STDOUT_FILENO) == -1) {
                 hsprint(TO_ERR | TO_LOG, 2, "Unable to dup2");
-                mainret = -3;
+                mainret = HSPASS_NOEXEC;
                 goto cleanup;
     	       }
         //(void) dup2(pfd[1], STDOUT_FILENO);
@@ -499,11 +507,13 @@ int     hs_askpass(const char *program, char *buf, int buflen)
     	closefrom(STDERR_FILENO + 1);
         arr2log(argx);
         int retx = execvp(argx[0], argx) ;
-        hsprint(TO_ERR | TO_LOG, 1, "Unable to run askpass: '%s' ret=%d", program, retx);
+        hsprint(TO_ERR | TO_LOG, 2,
+            "Unable to run askpass: '%s' ret=%d", program, retx);
         // Clear error number so the FS can work
-        errno = 0;
-        mainret = -4;
-        goto cleanup;
+        errno = 0;    // ??
+        //mainret = HSPASS_NOEXEC;
+        //goto cleanup;
+        exit(1);   // Error exit, so parent knows
         }
     /* Ignore SIGPIPE in case child exits prematurely */
     memset(&sa, 0, sizeof(sa));
@@ -524,7 +534,7 @@ int     hs_askpass(const char *program, char *buf, int buflen)
     if (status)
         {
         xsfree(tmp6);
-        hsprint(TO_ERR | TO_LOG, 1, "exe askpass return status: %d\n", status);
+        hsprint(TO_ERR | TO_LOG, 2, "exe askpass return status: %d", status);
         mainret = -5;
         goto cleanup;
         }
@@ -597,7 +607,7 @@ int     pass_ritual(PassArg *parg)
     if(!tmp2)
         {
         //printf("Memory alloc error\n");
-        zret = -3 - 0x100;
+        zret = HSPASS_MALLOC;
         goto cleanup;
         }
     snprintf(tmp2, PATH_MAX, ppp, parg->mountstr);
@@ -607,15 +617,15 @@ int     pass_ritual(PassArg *parg)
     if(!xpass)
         {
         //printf("Memory alloc error\n");
-        zret = -3  - 0x100;
+        zret = HSPASS_MALLOC;
         goto cleanup;
         }
     int xlen = strlen(xpass);
     if(xlen == 0)
         {
         xsfree(xpass);
-        printf("Empty pass.\n");
-        zret = -3 - 0x100;
+        //printf("Empty pass.\n");
+        zret = HSPASS_NOPASS;
         goto cleanup;
         }
     if(parg->create)
@@ -625,8 +635,8 @@ int     pass_ritual(PassArg *parg)
         if(!tmp3)
             {
             xsfree(xpass);
-            printf("Memory alloc error.\n");
-            zret = -3 - 0x100;
+            //printf("Memory alloc error.\n");
+            zret = HSPASS_MALLOC;
             goto cleanup;
             }
         snprintf(tmp3, PATH_MAX, "Please verify HSENCFS pass: ");
@@ -636,8 +646,8 @@ int     pass_ritual(PassArg *parg)
         if(!xpass2)
             {
             xsfree(xpass);
-            printf("Memory alloc error.\n");
-            zret = -3 - 0x100;
+            //printf("Memory alloc error.\n");
+            zret = HSPASS_MALLOC;
             goto cleanup;
             }
         int xlen2 = strlen(xpass2);
@@ -645,7 +655,7 @@ int     pass_ritual(PassArg *parg)
             {
             xsfree(xpass); xsfree(xpass2);
             //printf("Passes do not match\n");
-            zret = -4 - 0x100;
+            zret = HSPASS_NOMATCH;
             goto cleanup;
             }
         zret = create_markfile(parg->markfile, xpass, xlen);
@@ -666,6 +676,56 @@ int     pass_ritual(PassArg *parg)
     return zret;
 }
 
+
+int     pass_gui_ritual(PassArg *parg)
+{
+    int yret = 0;
+
+    char *passprog = xmalloc(PATH_MAX);
+    snprintf(passprog, PATH_MAX,
+                "%s --prompt %s --title %s --create %d ",
+                    parg->passprog,
+                        parg->prompt,
+                            parg->title,
+                                parg->create);
+
+    //printf("passprog: '%s'\n", passprog);
+    char *xpass = xmalloc(MAXPASSLEN);
+    int ret = hs_askpass(passprog, xpass, MAXPASSLEN);
+    //printf("hsaskpass ret: %d\n", ret);
+    xsfree(passprog);
+    if(ret)
+        {
+        xsfree(xpass);
+        //printf("Error on  getting pass %d\n", ret);
+        yret = HSPASS_NOEXEC;
+        goto cleanup;
+        }
+    //printf("hs_askpass() %d returned pass: '%s'\n", ret, xpass);
+    int xlen = strlen(xpass);
+    if(!xlen)
+        {
+        xsfree(xpass);
+        //printf("No gui pass, aborted.\n");
+        yret = HSPASS_NOPASS;
+        goto cleanup;
+        }
+    //printf("pass: '%s'\n", xpass);
+    if(parg->create)
+        {
+        yret = create_markfile(parg->markfile, xpass, xlen);
+        //printf("created markfile: %d\n", ret);
+        }
+    else
+        {
+        yret = check_markfile(parg->markfile, xpass, xlen);
+        }
+    xsfree(xpass);
+
+cleanup:
+    return yret;
+}
+
 // Front end for asking pass
 
 int     getpass_front(PassArg *parg)
@@ -677,54 +737,12 @@ int     getpass_front(PassArg *parg)
     //printf("-----\n");
 
     if(parg->gui)
-        {
-        char *passprog = xmalloc(PATH_MAX);
-        snprintf(passprog, PATH_MAX,
-                    "%s --prompt %s --title %s --create %d ",
-                        parg->passprog,
-                            parg->prompt,
-                                parg->title,
-                                    parg->create);
-
-        //printf("passprog: '%s'\n", passprog);
-        char *xpass = xmalloc(MAXPASSLEN);
-        int ret = hs_askpass(passprog, xpass, MAXPASSLEN);
-        xsfree(passprog);
-        if(ret)
-            {
-            xsfree(xpass);
-            printf("Error on  getting pass %d\n", ret);
-            yret = -2 - 0x100;
-            goto cleanup;
-            }
-        //printf("hs_askpass() %d returned pass: '%s'\n", ret, retp);
-        int xlen = strlen(xpass);
-        if(!xlen)
-            {
-            xsfree(xpass);
-            printf("No gui pass, aborted.\n");
-            yret = -3 - 0x100;
-            goto cleanup;
-            }
-        //printf("pass: '%s'\n", xpass);
-        if(parg->create)
-            {
-            yret = create_markfile(parg->markfile, xpass, xlen);
-            //printf("created markfile: %d\n", ret);
-            }
-        else
-            {
-            yret = check_markfile(parg->markfile, xpass, xlen);
-            }
-        xsfree(xpass);
-        }
+        yret = pass_gui_ritual(parg);
     else
-        {
         yret = pass_ritual(parg);
-        }
 
   cleanup:
-    xmdump(0);
+    //xmdump(0);
 
     return yret;
 }

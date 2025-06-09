@@ -5,27 +5,31 @@ AUTOMAKE_OPTIONS = subdir-objects
 
 EXTRA_DIST = hsencfs
 
-# Fuse based encrypted file system, test utilities
+# Fuse based encrypted file system
 
 bin_PROGRAMS =  hsencfs
 
 #tests/dualwrite tests/seekcp tests/zigjump tests/zigzag tests/farwrite
 #tests/onejump tests/dualread tests/jumpread
-#hsaskpass
 
 # The main program
-hsencfsdir = .
+#hsencfsdir = .
 
-hsencfs_CFLAGS = -g -D_FILE_OFFSET_BITS=64 -O2 -I$(srcdir)/../bluepoint \
+myincs =    -I$(srcdir)/../bluepoint -I$(srcdir)/../src \
             -I$(srcdir)/../common
 
-hsencfs_SOURCES = hsencfs.c hsencrr.c hsencrw.c hsencsb.c hsencsu.c \
-                        ../common/base64.c \
-                        ../common/hsutils.c ../common/hspass.c \
-                        ../bluepoint/bluepoint2.c \
-                        ../bluepoint/bluepoint2.h \
-                        ../bluepoint/hs_crypt.c  \
-                        ../bluepoint/hs_crypt.h
+cryptx =    ../bluepoint/hs_crypt.c     \
+            ../bluepoint/bluepoint2.c
+utilx =     ../common/hsutils.c ../common/base64.c \
+            ../common/hspass.c ../common/xmalloc.c
+
+#-I$(srcdir)/../bluepoint -I$(srcdir)/../common
+
+hsencfs_CFLAGS = -g -D_FILE_OFFSET_BITS=64 -O2 $(myincs)
+
+
+hsencfs_SOURCES = hsencrr.c hsencrw.c hsencsb.c hsencsu.c \
+                        $(utilx) $(cryptx) hsencfs.c
 
 hsencfs_LDADD = -lfuse3 -lulockmgr  -lcrypto -lssl
 
@@ -46,22 +50,4 @@ clean:
 #	@./cycle/cycle_write.sh
 #
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# EOF

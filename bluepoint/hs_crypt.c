@@ -20,7 +20,7 @@
 #include <syslog.h>
 #include <sys/time.h>
 
-#include "../src/hsencfs.h"
+#include "hsencfs.h"
 #include "bluepoint2.h"
 #include "hs_crypt.h"
 

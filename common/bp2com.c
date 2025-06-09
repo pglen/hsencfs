@@ -16,12 +16,11 @@
 #include <sys/time.h>
 #include <sys/stat.h>
 
-#include "../src/hsencfs.h"
+#include "hsencfs.h"
 #include "bluepoint2.h"
-
 #include "hs_crypt.h"
 #include "bp2com.h"
-#include "../src/hsencsb.h"
+#include "hsencsb.h"
 
 char    progname[] = "HSENCFS";
 

@@ -27,6 +27,14 @@ typedef struct _PassArg
 
 } PassArg;
 
+#define HSPASS_OK      (0)
+#define HSPASS_NOPASS   (-2 -0x100)
+#define HSPASS_NOMATCH  (-3 -0x100)
+#define HSPASS_MALLOC   (-4 -0x100)
+#define HSPASS_NOEXEC   (-5 -0x100)
+#define HSPASS_ERRFILE  (-6 -0x100)
+#define HSPASS_ERRWRITE (-7 -0x100)
+
 int     create_markfile(char *name, char *pass, int plen);
 int     check_markfile(char *name, char *pass, int plen);
 int     public_encrypt(uchar *data, int data_len, uchar *key, uchar *ebuf);

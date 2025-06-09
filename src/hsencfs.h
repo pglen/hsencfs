@@ -29,13 +29,26 @@
 typedef unsigned int  uint;
 typedef unsigned char uchar;
 
+#define     HS_PROGNAME    "HSENCFS"
+#define     MARK_SIZE   4096
+
+#define EXIT_NOERROR    0
+#define EXIT_ERROR      1
+#define EXIT_ALREADY    2
+#define EXIT_NONEMPTY   3
+#define EXIT_NOASKPASS  4
+#define EXIT_NOCREATE   5
+#define EXIT_MOUNTNEST  6
+#define EXIT_NOPASS     7
+#define EXIT_BADPASS    8
+
 // ---------------------------------------------------------------------
 // Debug the FUSE subsystem without (bypass) the encryption
 // Debug the FUSE subsystem with simple (fake) encryption
 // Debug the VIRTUAL read/write subsystem, full encryption
 
 //#define BYPASS  1                       // Test case for no interception
-#define VIRTUAL 1                     // Newer version of interception
+#define VIRTUAL 1                         // Newer version of interception
 
 // Warning: this will disable all encryptions;
 // This is used for testing ONLY;
@@ -62,7 +75,6 @@ extern  char    progname[];
 extern  char    *myext;
 
 extern  int     plen;
-extern  int     loglevel;
 extern  int     pg_debug;
 extern  int     verbose;
 extern  int     ondemand;

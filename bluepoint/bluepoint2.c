@@ -108,7 +108,7 @@
 #define     ROTATE_CHAR_RIGHT(x, n) (((x) >> (n))  | ((x) << (8 - (n))))
 #define     ROTATE_CHAR_LEFT(x, n) (((x) << (n))  | ((x) >> (8 - (n))))
 
-#include "../src/hsencfs.h"
+#include "hsencfs.h"
 #include "bluepoint2.h"
 #include "hs_crypt.h"
 #include "bluemac.h"
