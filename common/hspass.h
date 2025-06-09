@@ -16,6 +16,7 @@
 
 typedef struct _PassArg
 {
+    char *markfile;
     char *passprog;
     char *mountstr;
     char *prompt;
@@ -35,6 +36,6 @@ void    sigint_local(int sig);
 char    *getpassx(char *prompt);
 int     hs_askpass(const char *program, char *buf, int buflen);
 int     pass_ritual(PassArg *parg);
-char    *getpass_front(PassArg *parg);
+int     getpass_front(PassArg *parg);
 
 //# EOF

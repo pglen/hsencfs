@@ -105,39 +105,17 @@ int main(int argc, char *argv[])
             create = 1;
             }
         }
-    char *prompt = "Enter pass for HSENCFS: ";
-    if(create)
-        {
-        prompt = "Enter NEW pass for HSENCFS: ";
-        }
-    int xlen = strlen(defpass);
-    char *xpass;
-    if(xlen)
-        {
-        xpass = strdup(defpass);
-        }
-    else
-        {
-        PassArg passarg;
-        passarg.prompt = "\'  Enter pass:  \'",
-        passarg.title = "\' Title Here: \'";
-        passarg.gui = gui;
-        passarg.create = create;
-        passarg.passprog = "../askpass/hsaskpass.py";
-        passarg.mountstr = "Mountstr";
-        xpass = getpass_front(&passarg);
-        }
 
-    //printf("xpass '%s'\n", xpass);
-
-    if(create)
-        {
-        create_markfile(markfile, xpass, strlen(xpass));
-        printf("Created new markfile '%s'.\n", markfile);
-        }
-    int ret = check_markfile(markfile, xpass, (int)strlen(xpass));
-    printf("Check returned: %d.\n", ret);
-
+    PassArg passarg;
+    passarg.prompt = "\'  Enter pass:  \'",
+    passarg.title = "\' Title Here: \'";
+    passarg.gui = gui;
+    passarg.create = create;
+    passarg.passprog = "../askpass/hsaskpass.py";
+    passarg.mountstr = "Mountstr";
+    passarg.markfile = markfile;
+    int ret = getpass_front(&passarg);
+    printf("getpass_front ret: %d\n", ret);
     exit(0);
 }
 

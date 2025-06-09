@@ -90,7 +90,7 @@ static  void printpass(char *pp, int ll)
         // Erase it by encrypt / clear
         bluepoint2_encrypt(ttt, ll, progname, strlen(progname));
         memset(ttt, 0, ll);
-        xfree(ttt);
+        xsfree(ttt);
         }
 }
 #endif
@@ -116,7 +116,7 @@ static void printLastError(char *msg)
     char *err = xmalloc(130);;
     ERR_error_string(ERR_get_error(), err);
     printf("%s ERROR: %s\n", msg, err);
-    xfree(err);
+    xsfree(err);
 }
 
 static char* publicKeyToString(EVP_PKEY* pubKey)
@@ -293,7 +293,7 @@ int     create_markfile(char *name, char *pass, int plen)
 
     char *ttt2 = xmalloc(MARK_SIZE / 2);
     if(!ttt2)
-        { xfree(ttt); return -errno; }
+        { xsfree(ttt); return -errno; }
 
     srand(time(NULL));
 
@@ -308,19 +308,19 @@ int     create_markfile(char *name, char *pass, int plen)
     memcpy(ttt2, ttt, MARK_SIZE / 2);
     bluepoint2_encrypt(ttt2, MARK_SIZE / 2, pass, plen);
     memcpy(ttt + MARK_SIZE / 2, ttt2, MARK_SIZE / 2);
-    if (ttt2) xfree(ttt2);
+    if (ttt2) xsfree(ttt2);
 
     //int fh = open(name, O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR);
     int fh = open(name, O_CREAT | O_TRUNC | O_WRONLY, S_IRUSR | S_IWUSR);
     if(fh < 1)
-        { if(ttt) xfree(ttt); return -errno;}
+        { if(ttt) xsfree(ttt); return -errno;}
 
     if (write(fh, ttt, MARK_SIZE) != MARK_SIZE)
-        { if(ttt) xfree(ttt); close(fh); return -errno; }
+        { if(ttt) xsfree(ttt); close(fh); return -errno; }
 
     close(fh);
 
-    if (ttt) xfree(ttt);
+    if (ttt) xsfree(ttt);
 
     return ret;
 }
@@ -360,19 +360,22 @@ int     check_markfile(char *name, char *pass, int plen)
 
     int fh = open(name, O_RDONLY);
     if(fh < 1)
-        { if(ttt) xfree(ttt); return -errno; }
-
+        {
+        xsfree(ttt);
+        return -errno;
+        }
     if (read(fh, ttt, MARK_SIZE) != MARK_SIZE)
         {
-        if(ttt) xfree(ttt); close(fh); return -errno;
+        xsfree(ttt);
+        close(fh);
+        return -errno;
         }
-
     close(fh);
 
     bluepoint2_decrypt(ttt + MARK_SIZE / 2, MARK_SIZE / 2, pass, plen);
     ret = seccomp(ttt, ttt + MARK_SIZE / 2, MARK_SIZE / 2);
 
-    if(ttt) xfree(ttt);
+    xsfree(ttt);
 
     return ret;
 }
@@ -392,11 +395,9 @@ void    sigint_local(int sig)
 char    *getpassx(char *prompt)
 
 {
-    static char ppp[128];
-    char tmp[MAXPASSLEN];
-
-    ppp[0] = '\0';
-
+    char *tmp = xmalloc(MAXPASSLEN);
+    if(!tmp)
+        return(NULL);
     sighandler_t oldsig = signal(SIGINT, sigint_local);
     printf("%s", prompt); fflush(stdout);
     struct termios newt;
@@ -415,24 +416,24 @@ char    *getpassx(char *prompt)
     int prog = 0;
     while(1==1)
         {
-        if (prog >= sizeof(ppp)-1)
+        if (prog >= MAXPASSLEN-1)
             {
-            ppp[prog] = '\0';
+            tmp[prog] = '\0';
             break;
             }
         int ddd = getchar();
         if(ddd == '\r' || ddd == '\n' || ddd == '\0')
             {
-            ppp[prog] = '\0';
+            tmp[prog] = '\0';
             break;
             }
-        ppp[prog] = (char)ddd;
+        tmp[prog] = (char)ddd;
         prog++;
         }
     tcsetattr(0, TCSANOW, &oldt);
     signal(SIGINT, oldsig);
-    printf("\n");
-    return ppp;
+    //printf("\n");
+    return tmp;
 }
 
 /*
@@ -450,14 +451,6 @@ int     hs_askpass(const char *program, char *buf, int buflen)
 
     char *argx[12]; argx[0] = NULL;
     int idx = parse_comstr(argx, sizeof(argx)/sizeof(char*), program);
-    //printf("idx: %d\n", idx);
-    //    {   int xx = 0; while(1) {
-    //            hslog(0, "argx ptr: '%s'\n", argx[xx]);
-    //            printf("argx %d ptr: '%s'\n", xx, argx[xx]);
-    //            if(!argx[xx++]) break;
-    //            }
-    //    printf("\n");
-    //    }
     //if (access(argx[0], X_OK) < 0)
     //    {
     //    hsprint(TO_ERR | TO_LOG, -1,
@@ -478,10 +471,8 @@ int     hs_askpass(const char *program, char *buf, int buflen)
 
     argx[idx] = strdup("--pubkey");  argx[idx+1] = NULL;  idx++;
     argx[idx] = strdup(pub_ptr);     argx[idx+1] = NULL; idx++;
-    //argx[idx] = strdup("badkey");  argx[idx+1] = NULL; idx++;
 
     char* priv_ptr = privateKeyToString(rsa_key);
-    //printf("tmp4: %ld '%s'\n", strlen(tmp4), tmp4);
     if (pipe(pfd) == -1)
         {
         hsprint(TO_ERR | TO_LOG, 2, "Unable to create pipe.");
@@ -532,14 +523,14 @@ int     hs_askpass(const char *program, char *buf, int buflen)
     hsprint(TO_ERR | TO_LOG, 2, "hspass() stdout: '%s'\n", tmp6);
     if (status)
         {
-        xfree(tmp6);
+        xsfree(tmp6);
         hsprint(TO_ERR | TO_LOG, 1, "exe askpass return status: %d\n", status);
         mainret = -5;
         goto cleanup;
         }
     unsigned long olen = 0;
     unsigned char *res2 = base64_decode(tmp6, strlen(tmp6), &olen);
-    xfree(tmp6);
+    xsfree(tmp6);
     if(!res2)
         {
         hsprint(TO_ERR | TO_LOG, 2, "hspass() cannot decode.\n");
@@ -554,10 +545,10 @@ int     hs_askpass(const char *program, char *buf, int buflen)
             memset(tmp5, '\0', MAXPASSLEN * 2);
             int   ret = private_decrypt(res2, olen, priv_ptr, tmp5);
             //printf("decoded: len=%d '%s'\n", ret, buf);
-            xfree(res2);
+            xsfree(res2);
             if(ret >= 0)
                 strcpy(buf, tmp5);
-            xfree(tmp5);
+            xsfree(tmp5);
             }
         }
     (void) close(pfd[0]);
@@ -565,14 +556,14 @@ int     hs_askpass(const char *program, char *buf, int buflen)
     (void) sigaction(SIGPIPE, &saved_sa_pipe, NULL);
 
   cleanup:
-    if( pub_ptr)  xfree(pub_ptr);
-    if( priv_ptr) xfree(priv_ptr);
+    if( pub_ptr)  xsfree(pub_ptr);
+    if( priv_ptr) xsfree(priv_ptr);
 
-    // xfree array
+    // xsfree array
     { int xx = 0; while(1)
         {
         if(!argx[xx]) break;
-        xfree(argx[xx]);
+        xsfree(argx[xx]);
         xx++;
         }
     }
@@ -585,109 +576,106 @@ int     hs_askpass(const char *program, char *buf, int buflen)
 int     pass_ritual(PassArg *parg)
 
 {
-    int ret = 0;
+    int zret = 0;
 
-    hsprint(TO_ERR|TO_LOG, 1, "pass_ritual() '%s'", parg->title);
+    //xmdump(0);
+    //printf("Bound ---\n");
+    //hsprint(TO_ERR|TO_LOG, 1, "pass_ritual() '%s'", parg->title);
 
     char *ppp;
     if(parg->create)
         {
         ppp = "About to create encrypted mount in: '%s'\n"
-               "Please enter HSENCFS pass: ";
+               "Please enter  HSENCFS pass: ";
         }
     else
         {
         ppp = "Mounting: '%s'\n"
               "Please enter HSENCFS pass: ";
         }
-    int xlen = 0;
     char *tmp2 = xmalloc(PATH_MAX);
-    if(tmp2)
+    if(!tmp2)
         {
-        snprintf(tmp2, PATH_MAX, ppp, parg->mountstr);
-        char *xpass = getpassx(tmp2);
-        free(tmp2);
-        xlen = strlen(xpass);
-        if(xlen == 0)
+        //printf("Memory alloc error\n");
+        zret = -3 - 0x100;
+        goto cleanup;
+        }
+    snprintf(tmp2, PATH_MAX, ppp, parg->mountstr);
+    char *xpass = getpassx(tmp2);
+    printf("\n");
+    xsfree(tmp2);
+    if(!xpass)
+        {
+        //printf("Memory alloc error\n");
+        zret = -3  - 0x100;
+        goto cleanup;
+        }
+    int xlen = strlen(xpass);
+    if(xlen == 0)
+        {
+        xsfree(xpass);
+        printf("Empty pass.\n");
+        zret = -3 - 0x100;
+        goto cleanup;
+        }
+    if(parg->create)
+        {
+        //printf("xpass '%s'\n", xpass);
+        char *tmp3 = xmalloc(PATH_MAX);
+        if(!tmp3)
             {
-            return 2;
+            xsfree(xpass);
+            printf("Memory alloc error.\n");
+            zret = -3 - 0x100;
+            goto cleanup;
             }
-
-        if(!parg->create)
+        snprintf(tmp3, PATH_MAX, "Please verify HSENCFS pass: ");
+        char *xpass2 = getpassx(tmp3);
+        printf("\n");
+        xsfree(tmp3);
+        if(!xpass2)
             {
-            printf("xpass '%s'\n", xpass);
-            int ret = check_markfile("markfile", xpass, xlen);
-            printf("checked markfile: %d\n", ret);
+            xsfree(xpass);
+            printf("Memory alloc error.\n");
+            zret = -3 - 0x100;
+            goto cleanup;
             }
-        else
+        int xlen2 = strlen(xpass2);
+        if(seccomp(xpass, xpass2, MAX(xlen, xlen2)))
             {
-            printf("create");
+            xsfree(xpass); xsfree(xpass2);
+            //printf("Passes do not match\n");
+            zret = -4 - 0x100;
+            goto cleanup;
             }
+        zret = create_markfile(parg->markfile, xpass, xlen);
+        //printf("created markfile: %d\n", ret);
+        xsfree(xpass); xsfree(xpass2);
+        }
+    else
+        {
+        //printf("xpass '%s'\n", xpass);
+        zret = check_markfile(parg->markfile, xpass, xlen);
+        //printf("checked markfile: %d\n", ret);
+        xsfree(xpass);
         }
 
-    // Encrypt the results right away
-    //*plen = strlen(pass);
+   cleanup:
+    //xmdump(0);
 
-    //bluepoint2_encrypt(pass, *plen, progname, strlen(progname));
-    //
-    ////printpass(pass, *plen);
-    //
-    //if(rret < 0)
-    //    {
-    //    if(pask)
-    //        {
-    //        sprintf(tmp,
-    //            "This is a new mount with no password set previously.\n"
-    //            "Please re-enter HSENCFS pass: ");
-    //        xpass2 = getpassx(tmp);
-    //        xlen2 = strlen(xpass2);
-    //        if(xlen2 == 0)
-    //            {
-    //            //fprintf(stderr, "Aborted.\n");
-    //            ret = 2;
-    //            return ret;
-    //            }
-    //        // Always padd it
-    //        if(xlen2 % 2)
-    //            strcat(xpass2, "x");
-    //        xlen2 = strlen(xpass2);
-    //        bluepoint2_encrypt(xpass2, xlen2, progname, strlen(progname));
-    //        //printpass(xpass2, xlen2);
-    //        if (memcmp(pass, xpass2, *plen))
-    //            {
-    //            memset(xpass2, 0, xlen2);
-    //            //fprintf(stderr, "Passes do not match. Aborted\n");
-    //            //if(loglevel > 0)
-    //            //    syslog(LOG_DEBUG, "Passes do not match by uid: %d\n", getuid());
-    //            ret = 3;
-    //            return ret;
-    //            }
-    //        memset(xpass2, 0, xlen2);
-    //        }
-    //    ret = create_markfile(tmp2, pass, *plen);
-    //    if (ret)
-    //        {
-    //        hsprint(TO_ERR|TO_LOG, 1, "Error on creating markfile.\n");
-    //        }
-    //    }
-    //else
-    //    {
-    //    ret = check_markfile(tmp2, pass, *plen);
-    //    //if (ret)
-    //    //    {
-    //    //    hsprint(TO_ERR|TO_LOG, -1, "Invalid pass entered by uid: %d\n", getuid());
-    //    //    }
-    //    //printf("Checking '%s' got %d", tmp2, ret);
-    //    }
-    return ret;
+    return zret;
 }
 
 // Front end for asking pass
 
-char    *getpass_front(PassArg *parg)
+int     getpass_front(PassArg *parg)
 
 {
-    char *retp = xmalloc(MAXPASSLEN);
+    int yret = 0;
+
+    //xmdump(0);
+    //printf("-----\n");
+
     if(parg->gui)
         {
         char *passprog = xmalloc(PATH_MAX);
@@ -699,26 +687,46 @@ char    *getpass_front(PassArg *parg)
                                     parg->create);
 
         //printf("passprog: '%s'\n", passprog);
-        int ret = hs_askpass(passprog, retp, MAXPASSLEN);
-        xfree(passprog);
+        char *xpass = xmalloc(MAXPASSLEN);
+        int ret = hs_askpass(passprog, xpass, MAXPASSLEN);
+        xsfree(passprog);
         if(ret)
             {
-            printf("Error on  pass %d\n", ret);
-            exit(1);
+            xsfree(xpass);
+            printf("Error on  getting pass %d\n", ret);
+            yret = -2 - 0x100;
+            goto cleanup;
             }
         //printf("hs_askpass() %d returned pass: '%s'\n", ret, retp);
-        if(!strlen(retp))
+        int xlen = strlen(xpass);
+        if(!xlen)
             {
+            xsfree(xpass);
             printf("No gui pass, aborted.\n");
-            exit(1);
+            yret = -3 - 0x100;
+            goto cleanup;
             }
+        //printf("pass: '%s'\n", xpass);
+        if(parg->create)
+            {
+            yret = create_markfile(parg->markfile, xpass, xlen);
+            //printf("created markfile: %d\n", ret);
+            }
+        else
+            {
+            yret = check_markfile(parg->markfile, xpass, xlen);
+            }
+        xsfree(xpass);
         }
     else
         {
-        //retp =
-        int ret = pass_ritual(parg);
+        yret = pass_ritual(parg);
         }
-    return retp;
+
+  cleanup:
+    xmdump(0);
+
+    return yret;
 }
 
 // EOF
