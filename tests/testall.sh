@@ -1,7 +1,15 @@
-echo -------------------------------------------------------
-echo "Tests:  (silent if all is OK)"
+#!/bin/bash
 
 TESTDIR=~/test_secrets
+
+MMM=$(mount | grep $TESTDIR)
+if [ "$MMM" == "" ] ; then
+    echo Not mounted: \'$TESTDIR\'
+    exit 1
+fi
+
+echo -------------------------------------------------------
+echo "Tests:  (silent if all is OK)"
 
 echo Direct "(for read / write test) at $TESTDIR"
 
@@ -27,11 +35,11 @@ test_direct aa12288.txt
 
 echo Test onejump
 
-rm -f jump.txt $TESTDIR/jump.txt
-./tests/onejump jump.txt
-./tests/onejump $TESTDIR/jump.txt
-diff jump.txt $TESTDIR/jump.txt
-rm -f jump.txt $TESTDIR/jump.txt
+rm -f jump.txt $TESTDIRjump.txt
+./onejump jump.txt
+./onejump $TESTDIRjump.txt
+diff jump.txt $TESTDIRjump.txt
+rm -f jump.txt $TESTDIRjump.txt
 
 ERR=$?
 if [ "$ERR" != "0" ] ; then
@@ -45,7 +53,7 @@ echo Test rzig
 
 function test_rzig {
     cp test_data/$1 $TESTDIR$1
-    ./tests/zigzag  $TESTDIR$1  test_data/$1.rev
+    ./zigzag  $TESTDIR$1  test_data/$1.rev
     diff -q test_data/$1 test_data/$1.rev
     ERR=$?
     rm -f test_data/$1.rev
@@ -66,8 +74,8 @@ echo Test farwrite
 function far_write
 {
     rm -f $1
-    ./tests/farwrite $1
-    ./tests/farwrite $TESTDIR/$1
+    ./farwrite $1
+    ./farwrite $TESTDIR$1
     diff -q $1 $TESTDIR$1
     ERR=$?
     if [ "$ERR" != "0" ] ; then
@@ -97,31 +105,31 @@ function test_item {
 echo Test zigzag
 
 # Test if utility is OK
-#test_item ./tests/zigzag test_data tmp aa300.txt
+#test_item ./zigzag test_data tmp aa300.txt
 
-test_item ./tests/zigzag test_data ~/secrets aa300.txt
-test_item ./tests/zigzag test_data ~/secrets aa4096.txt
-test_item ./tests/zigzag test_data ~/secrets aa5000.txt
-test_item ./tests/zigzag test_data ~/secrets aa8192.txt
-test_item ./tests/zigzag test_data ~/secrets aa9000.txt
-test_item ./tests/zigzag test_data ~/secrets aa12288.txt
+test_item ./zigzag test_data $TESTDIR aa300.txt
+test_item ./zigzag test_data $TESTDIR aa4096.txt
+test_item ./zigzag test_data $TESTDIR aa5000.txt
+test_item ./zigzag test_data $TESTDIR aa8192.txt
+test_item ./zigzag test_data $TESTDIR aa9000.txt
+test_item ./zigzag test_data $TESTDIR aa12288.txt
 #exit
-#test_item ./tests/zigzag test_data ~/secrets aa16384.txt
+#test_item ./zigzag test_data $TESTDIR aa16384.txt
 
 echo Test Zigjump
 
 # Test if utility is OK
-#test_item ./tests/zigjump test_data tmp aa5000.txt
+#test_item ./zigjump test_data tmp aa5000.txt
 
 # The problem Items
 #  Sun 08.May.2022 succeeded with virtual
 
-test_item ./tests/zigjump test_data ~/secrets aa3000.txt
-test_item ./tests/zigjump test_data ~/secrets aa4096.txt
-test_item ./tests/zigjump test_data ~/secrets aa5000.txt  # this one
-test_item ./tests/zigjump test_data ~/secrets aa5500.txt
-test_item ./tests/zigjump test_data ~/secrets aa9100.txt
-test_item ./tests/zigjump test_data ~/secrets aa12288.txt
+test_item ./zigjump test_data $TESTDIR aa3000.txt
+test_item ./zigjump test_data $TESTDIR aa4096.txt
+test_item ./zigjump test_data $TESTDIR aa5000.txt  # this one
+test_item ./zigjump test_data $TESTDIR aa5500.txt
+test_item ./zigjump test_data $TESTDIR aa9100.txt
+test_item ./zigjump test_data $TESTDIR aa12288.txt
 
 # Jumpread
 
@@ -130,9 +138,9 @@ echo Test Jumpread
 function jump_read
 {
     rm -f $1
-    ./tests/jumpread $1
-    ./tests/jumpread $TESTDIR$1
-    diff -q $1 $TESTDIR$1
+    ./jumpread $1
+    ./jumpread $TESTDIR/$1
+    diff -q $1 $TESTDIR/$1
     ERR=$?
     if [ "$ERR" != "0" ] ; then
         echo "Error: Cannot pass jumpread stage; err=$ERR"
@@ -141,7 +149,7 @@ function jump_read
 }
 
 jump_read  jumpread.txt
-rm jumpread.txt $TESTDIRjumpread.txt
+rm jumpread.txt $TESTDIR/jumpread.txt
 
 if [ "$1" == "pause" ] ; then
     read aa
@@ -150,11 +158,10 @@ fi
 echo Copy "(for boundary aligned copy test)"
 
 shopt -s dotglob
-rm -rf ~/.secrets/*
-rm -rf $TESTDIR*
+rm -rf $TESTDIR/*
 
-cp -r ../hello/* ~/secrets
-diff -qr ../hello $TESTDIR
+cp -r test_data/* $TESTDIR
+diff -qr test_data/ $TESTDIR
 shopt -u dotglob
 
 ERR=$?
@@ -163,8 +170,7 @@ if [ "$ERR" != "0" ] ; then
     exit
 fi
 
-
-#echo Done
+echo Done tests
 
 # EOF
 

@@ -27,11 +27,11 @@ test_direct aa12288.txt
 
 echo Test onejump
 
-rm -f jump.txt $TESTDIR/jump.txt
+rm -f jump.txt $TESTDIRjump.txt
 ./tests/onejump jump.txt
-./tests/onejump $TESTDIR/jump.txt
-diff jump.txt $TESTDIR/jump.txt
-rm -f jump.txt $TESTDIR/jump.txt
+./tests/onejump $TESTDIRjump.txt
+diff jump.txt $TESTDIRjump.txt
+rm -f jump.txt $TESTDIRjump.txt
 
 ERR=$?
 if [ "$ERR" != "0" ] ; then
@@ -67,7 +67,7 @@ function far_write
 {
     rm -f $1
     ./tests/farwrite $1
-    ./tests/farwrite $TESTDIR/$1
+    ./tests/farwrite $TESTDIR$1
     diff -q $1 $TESTDIR$1
     ERR=$?
     if [ "$ERR" != "0" ] ; then
@@ -77,7 +77,7 @@ function far_write
 }
 
 far_write  farwrite.txt
-rm  -f farwrite.txt $TESTDIR/farwrite.txt
+rm  -f farwrite.txt $TESTDIRfarwrite.txt
 
 # ------------------------------------------------------------------------
 

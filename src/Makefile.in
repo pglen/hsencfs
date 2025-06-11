@@ -17,6 +17,8 @@
 # ------------------------------------------------------------------------
 # HSENCFS source. (High Security Encrypted File system)
 
+# Common includes for sections
+
 VPATH = @srcdir@
 am__is_gnu_make = { \
   if test -z '$(MAKELEVEL)'; then \
@@ -185,9 +187,9 @@ am__define_uniq_tagged_files = \
     if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
   done | $(am__uniquify_input)`
 AM_RECURSIVE_TARGETS = cscope
-am__DIST_COMMON = $(srcdir)/Makefile.in $(top_srcdir)/../compile \
-	$(top_srcdir)/../depcomp $(top_srcdir)/../install-sh \
-	$(top_srcdir)/../missing
+am__DIST_COMMON = $(srcdir)/../common.mk $(srcdir)/Makefile.in \
+	$(top_srcdir)/../compile $(top_srcdir)/../depcomp \
+	$(top_srcdir)/../install-sh $(top_srcdir)/../missing
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -295,14 +297,6 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-AUTOMAKE_OPTIONS = subdir-objects
-EXTRA_DIST = hsencfs
-
-#tests/dualwrite tests/seekcp tests/zigjump tests/zigzag tests/farwrite
-#tests/onejump tests/dualread tests/jumpread
-
-# The main program
-hsencfsdir = .
 myincs = -I$(srcdir)/../bluepoint -I$(srcdir)/../src \
             -I$(srcdir)/../common
 
@@ -312,6 +306,14 @@ cryptx = ../bluepoint/hs_crypt.c     \
 utilx = ../common/hsutils.c ../common/base64.c \
             ../common/hspass.c ../common/xmalloc.c
 
+AUTOMAKE_OPTIONS = subdir-objects
+EXTRA_DIST = hsencfs
+
+#tests/dualwrite tests/seekcp tests/zigjump tests/zigzag tests/farwrite
+#tests/onejump tests/dualread tests/jumpread
+
+# The main program
+hsencfsdir = .
 
 #-I$(srcdir)/../bluepoint -I$(srcdir)/../common
 hsencfs_CFLAGS = -g -D_FILE_OFFSET_BITS=64 -O2 $(myincs)
@@ -325,7 +327,7 @@ all: all-am
 .SUFFIXES: .c .o .obj
 am--refresh: Makefile
 	@:
-$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
+$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am $(srcdir)/../common.mk $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -347,6 +349,7 @@ Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	    echo ' cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__maybe_remake_depfiles)'; \
 	    cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__maybe_remake_depfiles);; \
 	esac;
+$(srcdir)/../common.mk $(am__empty):
 
 $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
 	$(SHELL) ./config.status --recheck
@@ -1006,6 +1009,8 @@ uninstall-am: uninstall-binPROGRAMS
 
 .PRECIOUS: Makefile
 
+
+# EOF
 
 clean-local:
 	@-rm -f aa bb cc *~

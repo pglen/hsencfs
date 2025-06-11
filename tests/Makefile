@@ -17,8 +17,6 @@
 # ------------------------------------------------------------------------
 # HSENCFS source. (High Security Encrypted File system)
 
-# Common includes for sections
-
 
 am__is_gnu_make = { \
   if test -z '$(MAKELEVEL)'; then \
@@ -91,7 +89,9 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-bin_PROGRAMS = hsencfs$(EXEEXT)
+bin_PROGRAMS = dualwrite$(EXEEXT) seekcp$(EXEEXT) zigjump$(EXEEXT) \
+	zigzag$(EXEEXT) farwrite$(EXEEXT) onejump$(EXEEXT) \
+	dualread$(EXEEXT) jumpread$(EXEEXT)
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -106,21 +106,30 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am__dirstamp = $(am__leading_dot)dirstamp
-am__objects_1 = ../common/hsencfs-hsutils.$(OBJEXT) \
-	../common/hsencfs-base64.$(OBJEXT) \
-	../common/hsencfs-hspass.$(OBJEXT) \
-	../common/hsencfs-xmalloc.$(OBJEXT)
-am__objects_2 = ../bluepoint/hsencfs-hs_crypt.$(OBJEXT) \
-	../bluepoint/hsencfs-bluepoint2.$(OBJEXT)
-am_hsencfs_OBJECTS = hsencfs-hsencrr.$(OBJEXT) \
-	hsencfs-hsencrw.$(OBJEXT) hsencfs-hsencsb.$(OBJEXT) \
-	hsencfs-hsencsu.$(OBJEXT) $(am__objects_1) $(am__objects_2) \
-	hsencfs-hsencfs.$(OBJEXT)
-hsencfs_OBJECTS = $(am_hsencfs_OBJECTS)
-hsencfs_DEPENDENCIES =
-hsencfs_LINK = $(CCLD) $(hsencfs_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
-	$(LDFLAGS) -o $@
+am_dualread_OBJECTS = dualread.$(OBJEXT)
+dualread_OBJECTS = $(am_dualread_OBJECTS)
+dualread_LDADD = $(LDADD)
+am_dualwrite_OBJECTS = dualwrite.$(OBJEXT)
+dualwrite_OBJECTS = $(am_dualwrite_OBJECTS)
+dualwrite_LDADD = $(LDADD)
+am_farwrite_OBJECTS = farwrite.$(OBJEXT)
+farwrite_OBJECTS = $(am_farwrite_OBJECTS)
+farwrite_LDADD = $(LDADD)
+am_jumpread_OBJECTS = jumpread.$(OBJEXT)
+jumpread_OBJECTS = $(am_jumpread_OBJECTS)
+jumpread_LDADD = $(LDADD)
+am_onejump_OBJECTS = onejump.$(OBJEXT)
+onejump_OBJECTS = $(am_onejump_OBJECTS)
+onejump_LDADD = $(LDADD)
+am_seekcp_OBJECTS = seekcp.$(OBJEXT)
+seekcp_OBJECTS = $(am_seekcp_OBJECTS)
+seekcp_LDADD = $(LDADD)
+am_zigjump_OBJECTS = zigjump.$(OBJEXT)
+zigjump_OBJECTS = $(am_zigjump_OBJECTS)
+zigjump_LDADD = $(LDADD)
+am_zigzag_OBJECTS = zigzag.$(OBJEXT)
+zigzag_OBJECTS = $(am_zigzag_OBJECTS)
+zigzag_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_$(V))
 am__v_P_ = $(am__v_P_$(AM_DEFAULT_VERBOSITY))
 am__v_P_0 = false
@@ -136,20 +145,11 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I.
 depcomp = $(SHELL) $(top_srcdir)/../depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = ../bluepoint/$(DEPDIR)/hsencfs-bluepoint2.Po \
-	../bluepoint/$(DEPDIR)/hsencfs-hs_crypt.Po \
-	../common/$(DEPDIR)/hsencfs-base64.Po \
-	../common/$(DEPDIR)/hsencfs-hspass.Po \
-	../common/$(DEPDIR)/hsencfs-hsutils.Po \
-	../common/$(DEPDIR)/hsencfs-xmalloc.Po \
-	./$(DEPDIR)/hsencfs-hsencfs.Po ./$(DEPDIR)/hsencfs-hsencrr.Po \
-	./$(DEPDIR)/hsencfs-hsencrw.Po ./$(DEPDIR)/hsencfs-hsencsb.Po \
-	./$(DEPDIR)/hsencfs-hsencsu.Po
+am__depfiles_remade = ./$(DEPDIR)/dualread.Po ./$(DEPDIR)/dualwrite.Po \
+	./$(DEPDIR)/farwrite.Po ./$(DEPDIR)/jumpread.Po \
+	./$(DEPDIR)/onejump.Po ./$(DEPDIR)/seekcp.Po \
+	./$(DEPDIR)/zigjump.Po ./$(DEPDIR)/zigzag.Po
 am__mv = mv -f
-AM_V_lt = $(am__v_lt_$(V))
-am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
-am__v_lt_0 = --silent
-am__v_lt_1 = 
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 AM_V_CC = $(am__v_CC_$(V))
@@ -162,8 +162,12 @@ AM_V_CCLD = $(am__v_CCLD_$(V))
 am__v_CCLD_ = $(am__v_CCLD_$(AM_DEFAULT_VERBOSITY))
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(hsencfs_SOURCES)
-DIST_SOURCES = $(hsencfs_SOURCES)
+SOURCES = $(dualread_SOURCES) $(dualwrite_SOURCES) $(farwrite_SOURCES) \
+	$(jumpread_SOURCES) $(onejump_SOURCES) $(seekcp_SOURCES) \
+	$(zigjump_SOURCES) $(zigzag_SOURCES)
+DIST_SOURCES = $(dualread_SOURCES) $(dualwrite_SOURCES) \
+	$(farwrite_SOURCES) $(jumpread_SOURCES) $(onejump_SOURCES) \
+	$(seekcp_SOURCES) $(zigjump_SOURCES) $(zigzag_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -187,9 +191,9 @@ am__define_uniq_tagged_files = \
     if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
   done | $(am__uniquify_input)`
 AM_RECURSIVE_TARGETS = cscope
-am__DIST_COMMON = $(srcdir)/../common.mk $(srcdir)/Makefile.in \
-	$(top_srcdir)/../compile $(top_srcdir)/../depcomp \
-	$(top_srcdir)/../install-sh $(top_srcdir)/../missing
+am__DIST_COMMON = $(srcdir)/Makefile.in $(top_srcdir)/../compile \
+	$(top_srcdir)/../depcomp $(top_srcdir)/../install-sh \
+	$(top_srcdir)/../missing README.md
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -254,10 +258,10 @@ SET_MAKE =
 SHELL = /bin/bash
 STRIP = 
 VERSION = 1.5.0
-abs_builddir = /home/peterglen/pgsrc/hsencfs/hsencfs/src
-abs_srcdir = /home/peterglen/pgsrc/hsencfs/hsencfs/src
-abs_top_builddir = /home/peterglen/pgsrc/hsencfs/hsencfs/src
-abs_top_srcdir = /home/peterglen/pgsrc/hsencfs/hsencfs/src
+abs_builddir = /home/peterglen/pgsrc/hsencfs/hsencfs/tests
+abs_srcdir = /home/peterglen/pgsrc/hsencfs/hsencfs/tests
+abs_top_builddir = /home/peterglen/pgsrc/hsencfs/hsencfs/tests
+abs_top_srcdir = /home/peterglen/pgsrc/hsencfs/hsencfs/tests
 ac_ct_CC = gcc
 am__include = include
 am__leading_dot = .
@@ -297,37 +301,22 @@ target_alias =
 top_build_prefix = 
 top_builddir = .
 top_srcdir = .
-myincs = -I$(srcdir)/../bluepoint -I$(srcdir)/../src \
-            -I$(srcdir)/../common
-
-cryptx = ../bluepoint/hs_crypt.c     \
-            ../bluepoint/bluepoint2.c
-
-utilx = ../common/hsutils.c ../common/base64.c \
-            ../common/hspass.c ../common/xmalloc.c
-
 AUTOMAKE_OPTIONS = subdir-objects
-EXTRA_DIST = hsencfs
-
-#tests/dualwrite tests/seekcp tests/zigjump tests/zigzag tests/farwrite
-#tests/onejump tests/dualread tests/jumpread
-
-# The main program
-hsencfsdir = .
-
-#-I$(srcdir)/../bluepoint -I$(srcdir)/../common
-hsencfs_CFLAGS = -g -D_FILE_OFFSET_BITS=64 -O2 $(myincs)
-hsencfs_SOURCES = hsencrr.c hsencrw.c hsencsb.c hsencsu.c \
-                        $(utilx) $(cryptx) hsencfs.c
-
-hsencfs_LDADD = -lfuse3 -lulockmgr  -lcrypto -lssl
+dualwrite_SOURCES = dualwrite.c
+seekcp_SOURCES = seekcp.c
+zigjump_SOURCES = zigjump.c
+zigzag_SOURCES = zigzag.c
+farwrite_SOURCES = farwrite.c
+onejump_SOURCES = onejump.c
+dualread_SOURCES = dualread.c
+jumpread_SOURCES = jumpread.c
 all: all-am
 
 .SUFFIXES:
 .SUFFIXES: .c .o .obj
 am--refresh: Makefile
 	@:
-$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am $(srcdir)/../common.mk $(am__configure_deps)
+$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -349,7 +338,6 @@ Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	    echo ' cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__maybe_remake_depfiles)'; \
 	    cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__maybe_remake_depfiles);; \
 	esac;
-$(srcdir)/../common.mk $(am__empty):
 
 $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
 	$(SHELL) ./config.status --recheck
@@ -401,55 +389,53 @@ uninstall-binPROGRAMS:
 
 clean-binPROGRAMS:
 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
-../common/$(am__dirstamp):
-	@$(MKDIR_P) ../common
-	@: > ../common/$(am__dirstamp)
-../common/$(DEPDIR)/$(am__dirstamp):
-	@$(MKDIR_P) ../common/$(DEPDIR)
-	@: > ../common/$(DEPDIR)/$(am__dirstamp)
-../common/hsencfs-hsutils.$(OBJEXT): ../common/$(am__dirstamp) \
-	../common/$(DEPDIR)/$(am__dirstamp)
-../common/hsencfs-base64.$(OBJEXT): ../common/$(am__dirstamp) \
-	../common/$(DEPDIR)/$(am__dirstamp)
-../common/hsencfs-hspass.$(OBJEXT): ../common/$(am__dirstamp) \
-	../common/$(DEPDIR)/$(am__dirstamp)
-../common/hsencfs-xmalloc.$(OBJEXT): ../common/$(am__dirstamp) \
-	../common/$(DEPDIR)/$(am__dirstamp)
-../bluepoint/$(am__dirstamp):
-	@$(MKDIR_P) ../bluepoint
-	@: > ../bluepoint/$(am__dirstamp)
-../bluepoint/$(DEPDIR)/$(am__dirstamp):
-	@$(MKDIR_P) ../bluepoint/$(DEPDIR)
-	@: > ../bluepoint/$(DEPDIR)/$(am__dirstamp)
-../bluepoint/hsencfs-hs_crypt.$(OBJEXT): ../bluepoint/$(am__dirstamp) \
-	../bluepoint/$(DEPDIR)/$(am__dirstamp)
-../bluepoint/hsencfs-bluepoint2.$(OBJEXT):  \
-	../bluepoint/$(am__dirstamp) \
-	../bluepoint/$(DEPDIR)/$(am__dirstamp)
 
-hsencfs$(EXEEXT): $(hsencfs_OBJECTS) $(hsencfs_DEPENDENCIES) $(EXTRA_hsencfs_DEPENDENCIES) 
-	@rm -f hsencfs$(EXEEXT)
-	$(AM_V_CCLD)$(hsencfs_LINK) $(hsencfs_OBJECTS) $(hsencfs_LDADD) $(LIBS)
+dualread$(EXEEXT): $(dualread_OBJECTS) $(dualread_DEPENDENCIES) $(EXTRA_dualread_DEPENDENCIES) 
+	@rm -f dualread$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(dualread_OBJECTS) $(dualread_LDADD) $(LIBS)
+
+dualwrite$(EXEEXT): $(dualwrite_OBJECTS) $(dualwrite_DEPENDENCIES) $(EXTRA_dualwrite_DEPENDENCIES) 
+	@rm -f dualwrite$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(dualwrite_OBJECTS) $(dualwrite_LDADD) $(LIBS)
+
+farwrite$(EXEEXT): $(farwrite_OBJECTS) $(farwrite_DEPENDENCIES) $(EXTRA_farwrite_DEPENDENCIES) 
+	@rm -f farwrite$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(farwrite_OBJECTS) $(farwrite_LDADD) $(LIBS)
+
+jumpread$(EXEEXT): $(jumpread_OBJECTS) $(jumpread_DEPENDENCIES) $(EXTRA_jumpread_DEPENDENCIES) 
+	@rm -f jumpread$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(jumpread_OBJECTS) $(jumpread_LDADD) $(LIBS)
+
+onejump$(EXEEXT): $(onejump_OBJECTS) $(onejump_DEPENDENCIES) $(EXTRA_onejump_DEPENDENCIES) 
+	@rm -f onejump$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(onejump_OBJECTS) $(onejump_LDADD) $(LIBS)
+
+seekcp$(EXEEXT): $(seekcp_OBJECTS) $(seekcp_DEPENDENCIES) $(EXTRA_seekcp_DEPENDENCIES) 
+	@rm -f seekcp$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(seekcp_OBJECTS) $(seekcp_LDADD) $(LIBS)
+
+zigjump$(EXEEXT): $(zigjump_OBJECTS) $(zigjump_DEPENDENCIES) $(EXTRA_zigjump_DEPENDENCIES) 
+	@rm -f zigjump$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(zigjump_OBJECTS) $(zigjump_LDADD) $(LIBS)
+
+zigzag$(EXEEXT): $(zigzag_OBJECTS) $(zigzag_DEPENDENCIES) $(EXTRA_zigzag_DEPENDENCIES) 
+	@rm -f zigzag$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(zigzag_OBJECTS) $(zigzag_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
-	-rm -f ../bluepoint/*.$(OBJEXT)
-	-rm -f ../common/*.$(OBJEXT)
 
 distclean-compile:
 	-rm -f *.tab.c
 
-include ../bluepoint/$(DEPDIR)/hsencfs-bluepoint2.Po # am--include-marker
-include ../bluepoint/$(DEPDIR)/hsencfs-hs_crypt.Po # am--include-marker
-include ../common/$(DEPDIR)/hsencfs-base64.Po # am--include-marker
-include ../common/$(DEPDIR)/hsencfs-hspass.Po # am--include-marker
-include ../common/$(DEPDIR)/hsencfs-hsutils.Po # am--include-marker
-include ../common/$(DEPDIR)/hsencfs-xmalloc.Po # am--include-marker
-include ./$(DEPDIR)/hsencfs-hsencfs.Po # am--include-marker
-include ./$(DEPDIR)/hsencfs-hsencrr.Po # am--include-marker
-include ./$(DEPDIR)/hsencfs-hsencrw.Po # am--include-marker
-include ./$(DEPDIR)/hsencfs-hsencsb.Po # am--include-marker
-include ./$(DEPDIR)/hsencfs-hsencsu.Po # am--include-marker
+include ./$(DEPDIR)/dualread.Po # am--include-marker
+include ./$(DEPDIR)/dualwrite.Po # am--include-marker
+include ./$(DEPDIR)/farwrite.Po # am--include-marker
+include ./$(DEPDIR)/jumpread.Po # am--include-marker
+include ./$(DEPDIR)/onejump.Po # am--include-marker
+include ./$(DEPDIR)/seekcp.Po # am--include-marker
+include ./$(DEPDIR)/zigjump.Po # am--include-marker
+include ./$(DEPDIR)/zigzag.Po # am--include-marker
 
 $(am__depfiles_remade):
 	@$(MKDIR_P) $(@D)
@@ -472,160 +458,6 @@ am--depfiles: $(am__depfiles_remade)
 #	$(AM_V_CC)source='$<' object='$@' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(AM_V_CC_no)$(COMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
-
-hsencfs-hsencrr.o: hsencrr.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -MT hsencfs-hsencrr.o -MD -MP -MF $(DEPDIR)/hsencfs-hsencrr.Tpo -c -o hsencfs-hsencrr.o `test -f 'hsencrr.c' || echo '$(srcdir)/'`hsencrr.c
-	$(AM_V_at)$(am__mv) $(DEPDIR)/hsencfs-hsencrr.Tpo $(DEPDIR)/hsencfs-hsencrr.Po
-#	$(AM_V_CC)source='hsencrr.c' object='hsencfs-hsencrr.o' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -c -o hsencfs-hsencrr.o `test -f 'hsencrr.c' || echo '$(srcdir)/'`hsencrr.c
-
-hsencfs-hsencrr.obj: hsencrr.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -MT hsencfs-hsencrr.obj -MD -MP -MF $(DEPDIR)/hsencfs-hsencrr.Tpo -c -o hsencfs-hsencrr.obj `if test -f 'hsencrr.c'; then $(CYGPATH_W) 'hsencrr.c'; else $(CYGPATH_W) '$(srcdir)/hsencrr.c'; fi`
-	$(AM_V_at)$(am__mv) $(DEPDIR)/hsencfs-hsencrr.Tpo $(DEPDIR)/hsencfs-hsencrr.Po
-#	$(AM_V_CC)source='hsencrr.c' object='hsencfs-hsencrr.obj' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -c -o hsencfs-hsencrr.obj `if test -f 'hsencrr.c'; then $(CYGPATH_W) 'hsencrr.c'; else $(CYGPATH_W) '$(srcdir)/hsencrr.c'; fi`
-
-hsencfs-hsencrw.o: hsencrw.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -MT hsencfs-hsencrw.o -MD -MP -MF $(DEPDIR)/hsencfs-hsencrw.Tpo -c -o hsencfs-hsencrw.o `test -f 'hsencrw.c' || echo '$(srcdir)/'`hsencrw.c
-	$(AM_V_at)$(am__mv) $(DEPDIR)/hsencfs-hsencrw.Tpo $(DEPDIR)/hsencfs-hsencrw.Po
-#	$(AM_V_CC)source='hsencrw.c' object='hsencfs-hsencrw.o' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -c -o hsencfs-hsencrw.o `test -f 'hsencrw.c' || echo '$(srcdir)/'`hsencrw.c
-
-hsencfs-hsencrw.obj: hsencrw.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -MT hsencfs-hsencrw.obj -MD -MP -MF $(DEPDIR)/hsencfs-hsencrw.Tpo -c -o hsencfs-hsencrw.obj `if test -f 'hsencrw.c'; then $(CYGPATH_W) 'hsencrw.c'; else $(CYGPATH_W) '$(srcdir)/hsencrw.c'; fi`
-	$(AM_V_at)$(am__mv) $(DEPDIR)/hsencfs-hsencrw.Tpo $(DEPDIR)/hsencfs-hsencrw.Po
-#	$(AM_V_CC)source='hsencrw.c' object='hsencfs-hsencrw.obj' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -c -o hsencfs-hsencrw.obj `if test -f 'hsencrw.c'; then $(CYGPATH_W) 'hsencrw.c'; else $(CYGPATH_W) '$(srcdir)/hsencrw.c'; fi`
-
-hsencfs-hsencsb.o: hsencsb.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -MT hsencfs-hsencsb.o -MD -MP -MF $(DEPDIR)/hsencfs-hsencsb.Tpo -c -o hsencfs-hsencsb.o `test -f 'hsencsb.c' || echo '$(srcdir)/'`hsencsb.c
-	$(AM_V_at)$(am__mv) $(DEPDIR)/hsencfs-hsencsb.Tpo $(DEPDIR)/hsencfs-hsencsb.Po
-#	$(AM_V_CC)source='hsencsb.c' object='hsencfs-hsencsb.o' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -c -o hsencfs-hsencsb.o `test -f 'hsencsb.c' || echo '$(srcdir)/'`hsencsb.c
-
-hsencfs-hsencsb.obj: hsencsb.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -MT hsencfs-hsencsb.obj -MD -MP -MF $(DEPDIR)/hsencfs-hsencsb.Tpo -c -o hsencfs-hsencsb.obj `if test -f 'hsencsb.c'; then $(CYGPATH_W) 'hsencsb.c'; else $(CYGPATH_W) '$(srcdir)/hsencsb.c'; fi`
-	$(AM_V_at)$(am__mv) $(DEPDIR)/hsencfs-hsencsb.Tpo $(DEPDIR)/hsencfs-hsencsb.Po
-#	$(AM_V_CC)source='hsencsb.c' object='hsencfs-hsencsb.obj' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -c -o hsencfs-hsencsb.obj `if test -f 'hsencsb.c'; then $(CYGPATH_W) 'hsencsb.c'; else $(CYGPATH_W) '$(srcdir)/hsencsb.c'; fi`
-
-hsencfs-hsencsu.o: hsencsu.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -MT hsencfs-hsencsu.o -MD -MP -MF $(DEPDIR)/hsencfs-hsencsu.Tpo -c -o hsencfs-hsencsu.o `test -f 'hsencsu.c' || echo '$(srcdir)/'`hsencsu.c
-	$(AM_V_at)$(am__mv) $(DEPDIR)/hsencfs-hsencsu.Tpo $(DEPDIR)/hsencfs-hsencsu.Po
-#	$(AM_V_CC)source='hsencsu.c' object='hsencfs-hsencsu.o' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -c -o hsencfs-hsencsu.o `test -f 'hsencsu.c' || echo '$(srcdir)/'`hsencsu.c
-
-hsencfs-hsencsu.obj: hsencsu.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -MT hsencfs-hsencsu.obj -MD -MP -MF $(DEPDIR)/hsencfs-hsencsu.Tpo -c -o hsencfs-hsencsu.obj `if test -f 'hsencsu.c'; then $(CYGPATH_W) 'hsencsu.c'; else $(CYGPATH_W) '$(srcdir)/hsencsu.c'; fi`
-	$(AM_V_at)$(am__mv) $(DEPDIR)/hsencfs-hsencsu.Tpo $(DEPDIR)/hsencfs-hsencsu.Po
-#	$(AM_V_CC)source='hsencsu.c' object='hsencfs-hsencsu.obj' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -c -o hsencfs-hsencsu.obj `if test -f 'hsencsu.c'; then $(CYGPATH_W) 'hsencsu.c'; else $(CYGPATH_W) '$(srcdir)/hsencsu.c'; fi`
-
-../common/hsencfs-hsutils.o: ../common/hsutils.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -MT ../common/hsencfs-hsutils.o -MD -MP -MF ../common/$(DEPDIR)/hsencfs-hsutils.Tpo -c -o ../common/hsencfs-hsutils.o `test -f '../common/hsutils.c' || echo '$(srcdir)/'`../common/hsutils.c
-	$(AM_V_at)$(am__mv) ../common/$(DEPDIR)/hsencfs-hsutils.Tpo ../common/$(DEPDIR)/hsencfs-hsutils.Po
-#	$(AM_V_CC)source='../common/hsutils.c' object='../common/hsencfs-hsutils.o' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -c -o ../common/hsencfs-hsutils.o `test -f '../common/hsutils.c' || echo '$(srcdir)/'`../common/hsutils.c
-
-../common/hsencfs-hsutils.obj: ../common/hsutils.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -MT ../common/hsencfs-hsutils.obj -MD -MP -MF ../common/$(DEPDIR)/hsencfs-hsutils.Tpo -c -o ../common/hsencfs-hsutils.obj `if test -f '../common/hsutils.c'; then $(CYGPATH_W) '../common/hsutils.c'; else $(CYGPATH_W) '$(srcdir)/../common/hsutils.c'; fi`
-	$(AM_V_at)$(am__mv) ../common/$(DEPDIR)/hsencfs-hsutils.Tpo ../common/$(DEPDIR)/hsencfs-hsutils.Po
-#	$(AM_V_CC)source='../common/hsutils.c' object='../common/hsencfs-hsutils.obj' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -c -o ../common/hsencfs-hsutils.obj `if test -f '../common/hsutils.c'; then $(CYGPATH_W) '../common/hsutils.c'; else $(CYGPATH_W) '$(srcdir)/../common/hsutils.c'; fi`
-
-../common/hsencfs-base64.o: ../common/base64.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -MT ../common/hsencfs-base64.o -MD -MP -MF ../common/$(DEPDIR)/hsencfs-base64.Tpo -c -o ../common/hsencfs-base64.o `test -f '../common/base64.c' || echo '$(srcdir)/'`../common/base64.c
-	$(AM_V_at)$(am__mv) ../common/$(DEPDIR)/hsencfs-base64.Tpo ../common/$(DEPDIR)/hsencfs-base64.Po
-#	$(AM_V_CC)source='../common/base64.c' object='../common/hsencfs-base64.o' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -c -o ../common/hsencfs-base64.o `test -f '../common/base64.c' || echo '$(srcdir)/'`../common/base64.c
-
-../common/hsencfs-base64.obj: ../common/base64.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -MT ../common/hsencfs-base64.obj -MD -MP -MF ../common/$(DEPDIR)/hsencfs-base64.Tpo -c -o ../common/hsencfs-base64.obj `if test -f '../common/base64.c'; then $(CYGPATH_W) '../common/base64.c'; else $(CYGPATH_W) '$(srcdir)/../common/base64.c'; fi`
-	$(AM_V_at)$(am__mv) ../common/$(DEPDIR)/hsencfs-base64.Tpo ../common/$(DEPDIR)/hsencfs-base64.Po
-#	$(AM_V_CC)source='../common/base64.c' object='../common/hsencfs-base64.obj' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -c -o ../common/hsencfs-base64.obj `if test -f '../common/base64.c'; then $(CYGPATH_W) '../common/base64.c'; else $(CYGPATH_W) '$(srcdir)/../common/base64.c'; fi`
-
-../common/hsencfs-hspass.o: ../common/hspass.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -MT ../common/hsencfs-hspass.o -MD -MP -MF ../common/$(DEPDIR)/hsencfs-hspass.Tpo -c -o ../common/hsencfs-hspass.o `test -f '../common/hspass.c' || echo '$(srcdir)/'`../common/hspass.c
-	$(AM_V_at)$(am__mv) ../common/$(DEPDIR)/hsencfs-hspass.Tpo ../common/$(DEPDIR)/hsencfs-hspass.Po
-#	$(AM_V_CC)source='../common/hspass.c' object='../common/hsencfs-hspass.o' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -c -o ../common/hsencfs-hspass.o `test -f '../common/hspass.c' || echo '$(srcdir)/'`../common/hspass.c
-
-../common/hsencfs-hspass.obj: ../common/hspass.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -MT ../common/hsencfs-hspass.obj -MD -MP -MF ../common/$(DEPDIR)/hsencfs-hspass.Tpo -c -o ../common/hsencfs-hspass.obj `if test -f '../common/hspass.c'; then $(CYGPATH_W) '../common/hspass.c'; else $(CYGPATH_W) '$(srcdir)/../common/hspass.c'; fi`
-	$(AM_V_at)$(am__mv) ../common/$(DEPDIR)/hsencfs-hspass.Tpo ../common/$(DEPDIR)/hsencfs-hspass.Po
-#	$(AM_V_CC)source='../common/hspass.c' object='../common/hsencfs-hspass.obj' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -c -o ../common/hsencfs-hspass.obj `if test -f '../common/hspass.c'; then $(CYGPATH_W) '../common/hspass.c'; else $(CYGPATH_W) '$(srcdir)/../common/hspass.c'; fi`
-
-../common/hsencfs-xmalloc.o: ../common/xmalloc.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -MT ../common/hsencfs-xmalloc.o -MD -MP -MF ../common/$(DEPDIR)/hsencfs-xmalloc.Tpo -c -o ../common/hsencfs-xmalloc.o `test -f '../common/xmalloc.c' || echo '$(srcdir)/'`../common/xmalloc.c
-	$(AM_V_at)$(am__mv) ../common/$(DEPDIR)/hsencfs-xmalloc.Tpo ../common/$(DEPDIR)/hsencfs-xmalloc.Po
-#	$(AM_V_CC)source='../common/xmalloc.c' object='../common/hsencfs-xmalloc.o' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -c -o ../common/hsencfs-xmalloc.o `test -f '../common/xmalloc.c' || echo '$(srcdir)/'`../common/xmalloc.c
-
-../common/hsencfs-xmalloc.obj: ../common/xmalloc.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -MT ../common/hsencfs-xmalloc.obj -MD -MP -MF ../common/$(DEPDIR)/hsencfs-xmalloc.Tpo -c -o ../common/hsencfs-xmalloc.obj `if test -f '../common/xmalloc.c'; then $(CYGPATH_W) '../common/xmalloc.c'; else $(CYGPATH_W) '$(srcdir)/../common/xmalloc.c'; fi`
-	$(AM_V_at)$(am__mv) ../common/$(DEPDIR)/hsencfs-xmalloc.Tpo ../common/$(DEPDIR)/hsencfs-xmalloc.Po
-#	$(AM_V_CC)source='../common/xmalloc.c' object='../common/hsencfs-xmalloc.obj' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -c -o ../common/hsencfs-xmalloc.obj `if test -f '../common/xmalloc.c'; then $(CYGPATH_W) '../common/xmalloc.c'; else $(CYGPATH_W) '$(srcdir)/../common/xmalloc.c'; fi`
-
-../bluepoint/hsencfs-hs_crypt.o: ../bluepoint/hs_crypt.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -MT ../bluepoint/hsencfs-hs_crypt.o -MD -MP -MF ../bluepoint/$(DEPDIR)/hsencfs-hs_crypt.Tpo -c -o ../bluepoint/hsencfs-hs_crypt.o `test -f '../bluepoint/hs_crypt.c' || echo '$(srcdir)/'`../bluepoint/hs_crypt.c
-	$(AM_V_at)$(am__mv) ../bluepoint/$(DEPDIR)/hsencfs-hs_crypt.Tpo ../bluepoint/$(DEPDIR)/hsencfs-hs_crypt.Po
-#	$(AM_V_CC)source='../bluepoint/hs_crypt.c' object='../bluepoint/hsencfs-hs_crypt.o' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -c -o ../bluepoint/hsencfs-hs_crypt.o `test -f '../bluepoint/hs_crypt.c' || echo '$(srcdir)/'`../bluepoint/hs_crypt.c
-
-../bluepoint/hsencfs-hs_crypt.obj: ../bluepoint/hs_crypt.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -MT ../bluepoint/hsencfs-hs_crypt.obj -MD -MP -MF ../bluepoint/$(DEPDIR)/hsencfs-hs_crypt.Tpo -c -o ../bluepoint/hsencfs-hs_crypt.obj `if test -f '../bluepoint/hs_crypt.c'; then $(CYGPATH_W) '../bluepoint/hs_crypt.c'; else $(CYGPATH_W) '$(srcdir)/../bluepoint/hs_crypt.c'; fi`
-	$(AM_V_at)$(am__mv) ../bluepoint/$(DEPDIR)/hsencfs-hs_crypt.Tpo ../bluepoint/$(DEPDIR)/hsencfs-hs_crypt.Po
-#	$(AM_V_CC)source='../bluepoint/hs_crypt.c' object='../bluepoint/hsencfs-hs_crypt.obj' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -c -o ../bluepoint/hsencfs-hs_crypt.obj `if test -f '../bluepoint/hs_crypt.c'; then $(CYGPATH_W) '../bluepoint/hs_crypt.c'; else $(CYGPATH_W) '$(srcdir)/../bluepoint/hs_crypt.c'; fi`
-
-../bluepoint/hsencfs-bluepoint2.o: ../bluepoint/bluepoint2.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -MT ../bluepoint/hsencfs-bluepoint2.o -MD -MP -MF ../bluepoint/$(DEPDIR)/hsencfs-bluepoint2.Tpo -c -o ../bluepoint/hsencfs-bluepoint2.o `test -f '../bluepoint/bluepoint2.c' || echo '$(srcdir)/'`../bluepoint/bluepoint2.c
-	$(AM_V_at)$(am__mv) ../bluepoint/$(DEPDIR)/hsencfs-bluepoint2.Tpo ../bluepoint/$(DEPDIR)/hsencfs-bluepoint2.Po
-#	$(AM_V_CC)source='../bluepoint/bluepoint2.c' object='../bluepoint/hsencfs-bluepoint2.o' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -c -o ../bluepoint/hsencfs-bluepoint2.o `test -f '../bluepoint/bluepoint2.c' || echo '$(srcdir)/'`../bluepoint/bluepoint2.c
-
-../bluepoint/hsencfs-bluepoint2.obj: ../bluepoint/bluepoint2.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -MT ../bluepoint/hsencfs-bluepoint2.obj -MD -MP -MF ../bluepoint/$(DEPDIR)/hsencfs-bluepoint2.Tpo -c -o ../bluepoint/hsencfs-bluepoint2.obj `if test -f '../bluepoint/bluepoint2.c'; then $(CYGPATH_W) '../bluepoint/bluepoint2.c'; else $(CYGPATH_W) '$(srcdir)/../bluepoint/bluepoint2.c'; fi`
-	$(AM_V_at)$(am__mv) ../bluepoint/$(DEPDIR)/hsencfs-bluepoint2.Tpo ../bluepoint/$(DEPDIR)/hsencfs-bluepoint2.Po
-#	$(AM_V_CC)source='../bluepoint/bluepoint2.c' object='../bluepoint/hsencfs-bluepoint2.obj' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -c -o ../bluepoint/hsencfs-bluepoint2.obj `if test -f '../bluepoint/bluepoint2.c'; then $(CYGPATH_W) '../bluepoint/bluepoint2.c'; else $(CYGPATH_W) '$(srcdir)/../bluepoint/bluepoint2.c'; fi`
-
-hsencfs-hsencfs.o: hsencfs.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -MT hsencfs-hsencfs.o -MD -MP -MF $(DEPDIR)/hsencfs-hsencfs.Tpo -c -o hsencfs-hsencfs.o `test -f 'hsencfs.c' || echo '$(srcdir)/'`hsencfs.c
-	$(AM_V_at)$(am__mv) $(DEPDIR)/hsencfs-hsencfs.Tpo $(DEPDIR)/hsencfs-hsencfs.Po
-#	$(AM_V_CC)source='hsencfs.c' object='hsencfs-hsencfs.o' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -c -o hsencfs-hsencfs.o `test -f 'hsencfs.c' || echo '$(srcdir)/'`hsencfs.c
-
-hsencfs-hsencfs.obj: hsencfs.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -MT hsencfs-hsencfs.obj -MD -MP -MF $(DEPDIR)/hsencfs-hsencfs.Tpo -c -o hsencfs-hsencfs.obj `if test -f 'hsencfs.c'; then $(CYGPATH_W) 'hsencfs.c'; else $(CYGPATH_W) '$(srcdir)/hsencfs.c'; fi`
-	$(AM_V_at)$(am__mv) $(DEPDIR)/hsencfs-hsencfs.Tpo $(DEPDIR)/hsencfs-hsencfs.Po
-#	$(AM_V_CC)source='hsencfs.c' object='hsencfs-hsencfs.obj' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -c -o hsencfs-hsencfs.obj `if test -f 'hsencfs.c'; then $(CYGPATH_W) 'hsencfs.c'; else $(CYGPATH_W) '$(srcdir)/hsencfs.c'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique
@@ -890,10 +722,6 @@ clean-generic:
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
 	-test . = "$(srcdir)" || test -z "$(CONFIG_CLEAN_VPATH_FILES)" || rm -f $(CONFIG_CLEAN_VPATH_FILES)
-	-rm -f ../bluepoint/$(DEPDIR)/$(am__dirstamp)
-	-rm -f ../bluepoint/$(am__dirstamp)
-	-rm -f ../common/$(DEPDIR)/$(am__dirstamp)
-	-rm -f ../common/$(am__dirstamp)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
@@ -902,17 +730,14 @@ clean-am: clean-binPROGRAMS clean-generic clean-local mostlyclean-am
 
 distclean: distclean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
-		-rm -f ../bluepoint/$(DEPDIR)/hsencfs-bluepoint2.Po
-	-rm -f ../bluepoint/$(DEPDIR)/hsencfs-hs_crypt.Po
-	-rm -f ../common/$(DEPDIR)/hsencfs-base64.Po
-	-rm -f ../common/$(DEPDIR)/hsencfs-hspass.Po
-	-rm -f ../common/$(DEPDIR)/hsencfs-hsutils.Po
-	-rm -f ../common/$(DEPDIR)/hsencfs-xmalloc.Po
-	-rm -f ./$(DEPDIR)/hsencfs-hsencfs.Po
-	-rm -f ./$(DEPDIR)/hsencfs-hsencrr.Po
-	-rm -f ./$(DEPDIR)/hsencfs-hsencrw.Po
-	-rm -f ./$(DEPDIR)/hsencfs-hsencsb.Po
-	-rm -f ./$(DEPDIR)/hsencfs-hsencsu.Po
+		-rm -f ./$(DEPDIR)/dualread.Po
+	-rm -f ./$(DEPDIR)/dualwrite.Po
+	-rm -f ./$(DEPDIR)/farwrite.Po
+	-rm -f ./$(DEPDIR)/jumpread.Po
+	-rm -f ./$(DEPDIR)/onejump.Po
+	-rm -f ./$(DEPDIR)/seekcp.Po
+	-rm -f ./$(DEPDIR)/zigjump.Po
+	-rm -f ./$(DEPDIR)/zigzag.Po
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
@@ -960,17 +785,14 @@ installcheck-am:
 maintainer-clean: maintainer-clean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf $(top_srcdir)/autom4te.cache
-		-rm -f ../bluepoint/$(DEPDIR)/hsencfs-bluepoint2.Po
-	-rm -f ../bluepoint/$(DEPDIR)/hsencfs-hs_crypt.Po
-	-rm -f ../common/$(DEPDIR)/hsencfs-base64.Po
-	-rm -f ../common/$(DEPDIR)/hsencfs-hspass.Po
-	-rm -f ../common/$(DEPDIR)/hsencfs-hsutils.Po
-	-rm -f ../common/$(DEPDIR)/hsencfs-xmalloc.Po
-	-rm -f ./$(DEPDIR)/hsencfs-hsencfs.Po
-	-rm -f ./$(DEPDIR)/hsencfs-hsencrr.Po
-	-rm -f ./$(DEPDIR)/hsencfs-hsencrw.Po
-	-rm -f ./$(DEPDIR)/hsencfs-hsencsb.Po
-	-rm -f ./$(DEPDIR)/hsencfs-hsencsu.Po
+		-rm -f ./$(DEPDIR)/dualread.Po
+	-rm -f ./$(DEPDIR)/dualwrite.Po
+	-rm -f ./$(DEPDIR)/farwrite.Po
+	-rm -f ./$(DEPDIR)/jumpread.Po
+	-rm -f ./$(DEPDIR)/onejump.Po
+	-rm -f ./$(DEPDIR)/seekcp.Po
+	-rm -f ./$(DEPDIR)/zigjump.Po
+	-rm -f ./$(DEPDIR)/zigzag.Po
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
@@ -1010,8 +832,6 @@ uninstall-am: uninstall-binPROGRAMS
 .PRECIOUS: Makefile
 
 
-# EOF
-
 clean-local:
 	@-rm -f aa bb cc *~
 	@-rm -f *.o
@@ -1023,11 +843,16 @@ clean:
 
 # Help
 
-#test-local:
+test-local:
+	@./testall.sh
+#	@./tests.sh
 #	@./create/create_all.sh
 #	@./cycle/cycle_read.sh
 #	@./cycle/cycle_write.sh
 #
+
+#tests:
+#	@./testall.sh
 
 # EOF
 

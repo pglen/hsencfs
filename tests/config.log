@@ -223,17 +223,17 @@ configure:4381: checking for main in -lulockmgr
 configure:4401: gcc -o conftest -g -O2   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS    conftest.c -lulockmgr   >&5
 configure:4401: $? = 0
 configure:4411: result: yes
-configure:4476: checking for gcc
-configure:4508: result: gcc
-configure:4861: checking for C compiler version
-configure:4870: gcc --version >&5
+configure:4477: checking for gcc
+configure:4509: result: gcc
+configure:4862: checking for C compiler version
+configure:4871: gcc --version >&5
 gcc (Ubuntu 12.3.0-1ubuntu1~22.04) 12.3.0
 Copyright (C) 2022 Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-configure:4881: $? = 0
-configure:4870: gcc -v >&5
+configure:4882: $? = 0
+configure:4871: gcc -v >&5
 Using built-in specs.
 COLLECT_GCC=gcc
 COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/12/lto-wrapper
@@ -245,35 +245,35 @@ Thread model: posix
 Supported LTO compression algorithms: zlib zstd
 gcc version 12.3.0 (Ubuntu 12.3.0-1ubuntu1~22.04) 
 ... rest of stderr output deleted ...
-configure:4881: $? = 0
-configure:4870: gcc -V >&5
+configure:4882: $? = 0
+configure:4871: gcc -V >&5
 gcc: error: unrecognized command-line option '-V'
 gcc: fatal error: no input files
 compilation terminated.
-configure:4881: $? = 1
-configure:4870: gcc -qversion >&5
+configure:4882: $? = 1
+configure:4871: gcc -qversion >&5
 gcc: error: unrecognized command-line option '-qversion'; did you mean '--version'?
 gcc: fatal error: no input files
 compilation terminated.
-configure:4881: $? = 1
-configure:4870: gcc -version >&5
+configure:4882: $? = 1
+configure:4871: gcc -version >&5
 gcc: error: unrecognized command-line option '-version'
 gcc: fatal error: no input files
 compilation terminated.
-configure:4881: $? = 1
-configure:4885: checking whether the compiler supports GNU C
-configure:4915: result: yes
-configure:4926: checking whether gcc accepts -g
-configure:4991: result: yes
-configure:5011: checking for gcc option to enable C11 features
-configure:5044: result: none needed
-configure:5160: checking whether gcc understands -c and -o together
-configure:5198: result: yes
-configure:5217: checking dependency style of gcc
-configure:5329: result: gcc3
-configure:5483: checking that generated files are newer than configure
-configure:5489: result: done
-configure:5516: creating ./config.status
+configure:4882: $? = 1
+configure:4886: checking whether the compiler supports GNU C
+configure:4916: result: yes
+configure:4927: checking whether gcc accepts -g
+configure:4992: result: yes
+configure:5012: checking for gcc option to enable C11 features
+configure:5045: result: none needed
+configure:5161: checking whether gcc understands -c and -o together
+configure:5199: result: yes
+configure:5218: checking dependency style of gcc
+configure:5330: result: gcc3
+configure:5484: checking that generated files are newer than configure
+configure:5490: result: done
+configure:5517: creating ./config.status
 
 ## ---------------------- ##
 ## Running config.status. ##
@@ -293,6 +293,7 @@ on dell007
 config.status:770: creating Makefile
 config.status:942: executing depfiles commands
 config.status:1019: cd .       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+make: Nothing to be done for 'am--depfiles'.
 config.status:1024: $? = 0
 
 ## ---------------- ##
@@ -482,7 +483,7 @@ on dell007
 config.status:770: creating Makefile
 config.status:942: executing depfiles commands
 config.status:1019: cd .       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
-make[2]: Entering directory '/home/peterglen/pgsrc/hsencfs/hsencfs/src'
-make[2]: Nothing to be done for 'am--depfiles'.
-make[2]: Leaving directory '/home/peterglen/pgsrc/hsencfs/hsencfs/src'
+make[1]: Entering directory '/home/peterglen/pgsrc/hsencfs/hsencfs/tests'
+make[1]: Nothing to be done for 'am--depfiles'.
+make[1]: Leaving directory '/home/peterglen/pgsrc/hsencfs/hsencfs/tests'
 config.status:1024: $? = 0

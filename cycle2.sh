@@ -1,8 +1,8 @@
 #!/bin/bash
 
+MYDIR=$(dirname $0)
 TESTDIR=~/test_secrets
 TESTDATA=~/.test_secrets
-
 PROMPT="Ended test, press Enter key to continue ... "
 
 umount $TESTDIR   >/dev/null 2>&1
@@ -18,7 +18,7 @@ if [ "$ERR" != "0" ] ; then
     exit
 fi
 
-./src/hsencfs -o -a ./askpass/hsaskpass.py -l 5 -p 1234 $TESTDIR
+$MYDIR/src/hsencfs -o -l 5 $TESTDIR
 ERR=$?
 if [ "$ERR" != "0" ] ; then
     echo "Cannot mount. $TESTDIR err=$ERR"
@@ -26,16 +26,11 @@ if [ "$ERR" != "0" ] ; then
     exit
 fi
 
-#echo Compilation and start Done, Begin tests ...
-
-echo "aa" > $TESTDIR/aa
-ls -l $TESTDIR
+echo "Hello World" > $TESTDIR/aa
+ls -l $TESTDIR/aa $TESTDATA/aa
 cat $TESTDIR/aa
 
-#echo
 echo -n "$PROMPT "
 read
-#-p $PROMPT
-#"Press a key"
 
 # EOF
