@@ -47,7 +47,7 @@ typedef unsigned char uchar;
 // Debug the FUSE subsystem with simple (fake) encryption
 // Debug the VIRTUAL read/write subsystem, full encryption
 
-//#define BYPASS  1                       // Test case for no interception
+#define BYPASS  1                       // Test case for no interception
 #define VIRTUAL 1                         // Newer version of interception
 
 // Warning: this will disable all encryptions;
@@ -64,6 +64,7 @@ typedef unsigned char uchar;
 #define FULL_ENCRYPT    1
 
 extern  char    defpassx[MAXPASSLEN];
+
 extern  char    mountpoint[PATH_MAX] ;
 extern  char    mountsecret[PATH_MAX] ;
 extern  char    passprog[PATH_MAX] ;
@@ -74,7 +75,7 @@ extern  char    progname[];
 
 extern  char    *myext;
 
-extern  int     plen;
+extern  int     defplen;
 extern  int     pg_debug;
 extern  int     verbose;
 extern  int     ondemand;
@@ -87,6 +88,7 @@ int xmp_write(const char *path, const char *buf, size_t wsize,
 
 int     is_our_file(const char *path, int fname_only);
 off_t   get_fsize(int fh);
+char    *alloc_path2(const char *path);
 void    kill_buff(void *bbuff, int xlen);
 int     openpass(const char *path);
 

@@ -36,10 +36,9 @@
 #include <signal.h>
 #include <getopt.h>
 
+#include "hsencfs.h"
 #include "base64.h"
 #include "hsencsb.h"
-
-#include "hsencfs.h"
 #include "hs_crypt.h"
 #include "bluepoint2.h"
 #include "hsutils.h"
@@ -83,6 +82,24 @@ off_t    get_fsize(int fh)
     return stbuf.st_size;
 }
 
+char    *alloc_path2(const char *path)
+
+{
+    char  *path2 = NULL;
+
+    path2 = malloc(PATH_MAX);
+    if(path2)
+        {
+        memset(path2, '\0', PATH_MAX);
+        strcpy(path2, mountsecret);
+        if(path[0] == '/')
+            strcat(path2, path + 1);
+        else
+            strcat(path2, path);
+        }
+    return path2;
+}
+
 // -----------------------------------------------------------------------
 // Encrypt (double decrypt) it: This is a fake encryption of the
 // dangling memory, Just to confuse the would be decoder
@@ -116,10 +133,12 @@ int     openpass(const char *path)
 {
     int ret = 0;
 
-    // Use pre entered password if ondemand is not enabled
+    hslog(3, "Openpass() path: '%s'", path);
+
     if(defpassx[0] != '\0')
         {
-        printf("Using pre made pass '%s'\n", defpassx);
+        hslog(-1, "Using default pass '%s'", defpassx);
+        return 0;
         }
 
     char tmp[MAXPASSLEN];
@@ -144,12 +163,11 @@ int     openpass(const char *path)
 
     snprintf(tmp2, PATH_MAX + PATH_MAX + 12, "%s %s %d",
                                       passprog, mountpoint, rret);
-    ret = hs_askpass(tmp2, tmp, MAXPASSLEN);
+    //ret = hs_askpass(tmp2, tmp, MAXPASSLEN);
     // Error ?
      if (ret != 0)
         {
-        hslog(0, "Cannot get pass for '%s' with %s, err=%d\n",
-                                path, passprog, ret);
+        hslog(0, "Cannot get pass for '%s' with %s\n", path, passprog);
         ret = 1;
         goto endx;
         }
@@ -166,22 +184,25 @@ int     openpass(const char *path)
     // Decode base64
     unsigned long olen = 0;
     unsigned char *res2 = base64_decode(tmp, rlen, &olen);
-    strncpy(defpassx, res2, sizeof(defpassx));
-    plen = strlen(defpassx);
-    free(res2);
-
-    // Do not log sensitive data
-    //hslog(2, "defpassx '%s'\n", defpassx);
-
-    int ret2 = 0; //pass_ritual(mountpoint, mountsecret, defpassx, &plen, passprog);
-    if(ret2)
+    //defplen = strlen(defpassx);
+    //strncpy(passx, res2, sizeof(passx));
+    if(res2)
         {
-        // Force new pass prompt
-        memset(defpassx, 0, sizeof(defpassx));
-        hslog(-1, "Invalid pass for '%s' by uid: %d\n", mountpoint, getuid());
-        ret =  ret2;
-        goto endx;
+        strcpy(defpassx, res2);
+        free(res2);
         }
+    // Do not log sensitive data
+    //hslog(2, "passx '%s'\n", passx);
+
+    //int ret2 = pass_ritual(mountpoint, mountsecret, passx, &defplen, passprog);
+    //if(ret2)
+    //    {
+    //    // Force new pass prompt
+    //    memset(passx, 0, sizeof(passx));
+    //    hslog(-1, "Invalid pass for '%s' by uid: %d\n", mountpoint, getuid());
+    //    ret =  ret2;
+    //    goto endx;
+    //    }
 
   endx:
     if(tmp2)

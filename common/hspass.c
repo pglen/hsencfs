@@ -451,6 +451,8 @@ char    *getpassx(char *prompt)
 int     hs_askpass(const char *program, char *buf, int buflen)
 
 {
+    return 0;
+
     struct sigaction  sa, saved_sa_pipe;
     int pfd[2];  pid_t pid;
     int mainret = 0;

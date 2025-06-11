@@ -25,7 +25,7 @@
 #include <fcntl.h>
 #include <dirent.h>
 #include <errno.h>
-#include <syslog.h>
+//#include <syslog.h>
 #include <sys/time.h>
 
 #ifdef HAVE_SETXATTR
@@ -50,8 +50,7 @@ sideblock_t *alloc_sideblock()
     sideblock_t *psb = malloc(sizeof(sideblock_t));
     if(psb == NULL)
         {
-        if (loglevel > 0)
-           syslog(LOG_DEBUG, "Cannot allocate memory for sideblock\n");
+        hslog(1, "Cannot allocate memory for sideblock\n");
         goto endd;
         }
     INIT_SIDEBLOCK(*psb);
@@ -70,15 +69,14 @@ char    *get_sidename(const char *path)
     char *ptmp2 = malloc(PATH_MAX);
     if(!ptmp2)
         {
-        if (loglevel > 0)
-            syslog(LOG_DEBUG, "Cannot allocate memory for sideblock filename '%s'\n", path);
+        hslog(1,
+            "Cannot allocate memory for sideblock filename '%s'\n", path);
         goto endd;
         }
 
     memset(ptmp2, '\0',  PATH_MAX);
 
-    //if (loglevel > 9)
-    //   syslog(LOG_DEBUG, "Generate sidename '%s'\n", path);
+    // hslog(1, "Generate sidename '%s'\n", path);
 
     int cnt = 0, cnt2 = 0; char *pch, *temp;
     char *ddd = strdup(path);
@@ -93,12 +91,13 @@ char    *get_sidename(const char *path)
     if(cnt2 == cnt)
         strcat(ptmp2, "._");
     strcat(ptmp2, pch);
-    //syslog(LOG_DEBUG, "sb tokenx '%s'\n", pch);
+
+    //hslog(9, "sb tokenx '%s'\n", pch);
 
     while ( (temp = strtok(NULL, "/") ) != NULL)
         {
         cnt2++;
-        //syslog(LOG_DEBUG, "sb token %d  '%s'\n", cnt2, temp);
+        //hslog(1, "sb token %d  '%s'\n", cnt2, temp);
         if(strcmp(temp, "."))
             {
             strcat(ptmp2, "/");
@@ -110,7 +109,7 @@ char    *get_sidename(const char *path)
     free(eee);
     strcat(ptmp2, myext);
 
-    hslog(5, "Sidename '%s'\n", ptmp2 + 15);
+    hslog(9, "Sidename: '%s'\n", ptmp2 + 15);
 
    endd:
     return ptmp2;
@@ -145,7 +144,7 @@ size_t get_sidelen(const char *path)
 
   end_func3:
     kill_sideblock(psb);
-    errno = old_errno;
+    //errno = old_errno;
 
    end_func2:
     return ret;
@@ -157,40 +156,33 @@ size_t get_sidelen(const char *path)
 int    read_sideblock(const char *path, sideblock_t *psb)
 
 {
-    int ret = 0;
+    int ret = 0, old_errno = 0;
 
     if(psb->magic !=  HSENCFS_MAGIC)
         {
-        if (loglevel > 0)
-            syslog(LOG_DEBUG, "Bad magic on sizeblock read '%s'\n", path);
+        hslog(1, "Bad magic on sizeblock read '%s'\n", path);
         ret = -1;
         goto endd;
         }
     char *ptmp2 =  get_sidename(path);
     if(!ptmp2)
         {
-        if (loglevel > 0)
-            syslog(LOG_DEBUG, "Cannot allocate memory for sideblock file name '%s'\n", path);
+        hslog(1, "Cannot allocate sideblock filename '%s'\n", path);
 
         ret = -ENOMEM;
         goto endd;
         }
-
-    //if (loglevel > 2)
-    //    syslog(LOG_DEBUG, "Opening sideblock file '%s'\n", ptmp2);
-
-    int old_errno = errno;
-
+    hslog(6, "Opening sideblock file '%s'\n", ptmp2);
     int fdi = open(ptmp2, O_RDWR);
     if(fdi < 0)
         {
         fdi = open(ptmp2, O_RDWR | O_CREAT | O_TRUNC , S_IRUSR | S_IWUSR);
         if(fdi < 0)
             {
-            if (loglevel > 0)
-                syslog(LOG_DEBUG, "Error on opening sideblock file '%s', errno: %d\n", ptmp2, errno);
+            hslog(1, "Error on opening sideblock '%s', errno: %d\n",
+                             ptmp2, errno);
             //ret = -ENOENT;
-            errno = old_errno;
+            //errno = old_errno;
             goto endd2;
             }
         }
@@ -199,27 +191,25 @@ int    read_sideblock(const char *path, sideblock_t *psb)
         ret = read(fdi, psb, sizeof(sideblock_t));
         if(ret && ret < sizeof(sideblock_t))        // We ignore empty file
             {
-            if (loglevel > 0)
-                syslog(LOG_DEBUG, "Error on reading sideblock file, errno: %d\n", errno);
+            hslog(1,
+                "Error on reading sideblock file, errno: %d\n", errno);
             //ret = -EFAULT;
             }
         close(fdi);
         }
-
-    errno = old_errno;
+    //errno = old_errno;
     if(psb->magic !=  HSENCFS_MAGIC)
         {
-        if (loglevel > 0)
-            syslog(LOG_DEBUG, "Error on sideblock MAGIC\n");
+        hslog(1, "Error on sideblock MAGIC\n");
         }
 
-    //if (loglevel > 3)
-    //    syslog(LOG_DEBUG, "Got sideblock:, '%s'\n", bluepoint2_dumphex(*pbuff, 8));
+    //hslog(1, "Got sideblock:, '%s'\n", bluepoint2_dumphex(*pbuff, 8));
 
   endd2:
     free(ptmp2);
 
   endd:
+    //errno = old_errno;
     return ret;
 }
 
@@ -236,8 +226,7 @@ int     write_sideblock(const char *path, sideblock_t *psb)
 
     if(psb->magic !=  HSENCFS_MAGIC)
         {
-        if (loglevel > 0)
-            syslog(LOG_DEBUG, "Bad magic on sizeblock write '%s'\n", path);
+        hslog(1, "Bad magic on sizeblock write '%s'\n", path);
         ret = -1;
         goto endd;
         }
@@ -245,22 +234,21 @@ int     write_sideblock(const char *path, sideblock_t *psb)
     char *ptmp2 =  get_sidename(path);
     if(!ptmp2)
         {
-        if (loglevel > 0)
-            syslog(LOG_DEBUG, "Cannot allocate memory for file name '%s'\n", path);
+        hslog(1,
+                "Cannot allocate memory for file name '%s'\n", path);
         goto endd;
         }
 
     //hslog(2, "Sidename '%s'\n", ptmp2 + 15);
 
-    if (loglevel > 9)
-        syslog(LOG_DEBUG, "Writing sideblock file '%s'\n", ptmp2);
+    hslog(5, "Writing sideblock file '%s'\n", ptmp2);
 
     int rrr = 0, old_errno = errno;
     int fdi = open(ptmp2, O_RDWR);
     if(fdi < 0)
         {
-        if (loglevel > 0)
-            syslog(LOG_DEBUG, "Error on creating sideblock file '%s', errno: %d\n", ptmp2, errno);
+        hslog(1, "Error on creating sideblock file '%s', errno: %d\n",
+                        ptmp2, errno);
 
         ret = -errno;
         errno = old_errno;
@@ -269,23 +257,20 @@ int     write_sideblock(const char *path, sideblock_t *psb)
     rrr = write(fdi, psb, sizeof(sideblock_t));
     if(rrr < sizeof(sideblock_t))
         {
-        if (loglevel > 0)
-            syslog(LOG_DEBUG, "Error on writing sideblock file, errno: %d\n", errno);
+        hslog(1, "Error on writing sideblock file, errno: %d\n", errno);
         ret = -errno;
         }
     close(fdi);
 
-    //if (loglevel > 2)
-    //    syslog(LOG_DEBUG, "Writing sideblock file2 '%s'\n", ptmp2);
+    //hslog(1, "Writing sideblock file2 '%s'\n", ptmp2);
 
     errno = old_errno;
 
-    //if (loglevel > 4)
-    //    syslog(LOG_DEBUG, "Written sideblock file, '%s'\n", bluepoint2_dumphex(bbuff, 16));
+    // hslog(4, "Written sideblock file, '%s'\n",
+    //            bluepoint2_dumphex(bbuff, 16));
 
    endd2:
-    if (loglevel > 9)
-        syslog(LOG_DEBUG, "Writing sideblock file3 '%s'\n", ptmp2);
+        hslog(5, "Writing sideblock file3 '%s'\n", ptmp2);
 
     free(ptmp2);
 
@@ -296,13 +281,12 @@ int     write_sideblock(const char *path, sideblock_t *psb)
 int    create_sideblock(const char *path)
 
 {
-    int ret = 0;
+    int ret = 0, old_errno = errno;
 
     char *ptmp2 = get_sidename(path);
     if(!ptmp2)
         {
-        if (loglevel > 0)
-            syslog(LOG_DEBUG, "Canot allocate sideblock memory.");
+        hslog(1, "Canot allocate sideblock memory on '%s'", path);
         ret = -ENOMEM;
         goto endd;
         }
@@ -313,12 +297,11 @@ int    create_sideblock(const char *path)
     if(!psb)
         goto endd2;
 
-    int old_errno = errno;
     int fdi = open(ptmp2, O_RDWR | O_CREAT | O_TRUNC , S_IRUSR | S_IWUSR);
     if(fdi < 0)
         {
-        if (loglevel > 0)
-            syslog(LOG_DEBUG, "Error on creating sideblock '%s' errno: %d\n", ptmp2, errno);
+        hslog(1, "Error on creating sideblock '%s' errno: %d\n",
+                    ptmp2, errno);
 
         // Not sure what to do ... error?
         ret = -errno;
@@ -327,8 +310,7 @@ int    create_sideblock(const char *path)
     int ww = write(fdi, psb, sizeof(sideblock_t));
     if(ww < sizeof(sideblock_t))
         {
-        if (loglevel > 0)
-            syslog(LOG_DEBUG, "Error on writing to sideblock errno: %d\n", errno);
+        hslog(1, "Error on writing to sideblock errno: %d\n", errno);
         }
     close(fdi);
     errno = old_errno;

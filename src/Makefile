@@ -217,11 +217,11 @@ AWK = gawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
 CFLAGS = -g -O2
-CPPFLAGS = 
+CPPFLAGS =   -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=33 -I/usr/include/fuse3 -D__STDC_FORMAT_MACROS
 CSCOPE = cscope
 CTAGS = ctags
 CYGPATH_W = echo
-DEFS = -DPACKAGE_NAME=\"hsencfs\" -DPACKAGE_TARNAME=\"hsencfs\" -DPACKAGE_VERSION=\"1.5.0\" -DPACKAGE_STRING=\"hsencfs\ 1.5.0\" -DPACKAGE_BUGREPORT=\"peterglen99@gmail.com\" -DPACKAGE_URL=\"\" -DPACKAGE=\"hsencfs\" -DVERSION=\"1.5.0\"
+DEFS = -DPACKAGE_NAME=\"hsencfs\" -DPACKAGE_TARNAME=\"hsencfs\" -DPACKAGE_VERSION=\"1.5.0\" -DPACKAGE_STRING=\"hsencfs\ 1.5.0\" -DPACKAGE_BUGREPORT=\"peterglen99@gmail.com\" -DPACKAGE_URL=\"\" -DPACKAGE=\"hsencfs\" -DVERSION=\"1.5.0\" -DHAVE_STDIO_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_STRINGS_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_UNISTD_H=1 -DSTDC_HEADERS=1 -DHAVE_LIBULOCKMGR=1
 DEPDIR = .deps
 ECHO_C = 
 ECHO_N = -n
@@ -233,9 +233,9 @@ INSTALL_DATA = ${INSTALL} -m 644
 INSTALL_PROGRAM = ${INSTALL}
 INSTALL_SCRIPT = ${INSTALL}
 INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
-LDFLAGS = 
+LDFLAGS =   
 LIBOBJS = 
-LIBS = 
+LIBS = -lulockmgr 
 LTLIBOBJS = 
 MAKEINFO = ${SHELL} '/home/peterglen/pgsrc/hsencfs/hsencfs/missing' makeinfo
 MKDIR_P = /bin/mkdir -p
@@ -302,7 +302,7 @@ EXTRA_DIST = hsencfs
 #tests/onejump tests/dualread tests/jumpread
 
 # The main program
-#hsencfsdir = .
+hsencfsdir = .
 myincs = -I$(srcdir)/../bluepoint -I$(srcdir)/../src \
             -I$(srcdir)/../common
 

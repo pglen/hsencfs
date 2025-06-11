@@ -302,7 +302,7 @@ EXTRA_DIST = hsencfs
 #tests/onejump tests/dualread tests/jumpread
 
 # The main program
-#hsencfsdir = .
+hsencfsdir = .
 myincs = -I$(srcdir)/../bluepoint -I$(srcdir)/../src \
             -I$(srcdir)/../common
 

@@ -77,7 +77,7 @@ int     virt_write(const char *path, int fd, const char *buf, uint wsize, uint o
     lseek(fd, offset, SEEK_CUR);
     errno = old_errno;
 
-    hslog(3, "virt_write(): wsize=%ld offset=%ld\n", wsize, offset);
+    hslog(3, "virt_write(): '%s' wsize=%ld offset=%ld\n", path, wsize, offset);
 
     int xsize = new_end - new_offs;
     hslog(5, "virt_write(): new_offs=%ld new_end=%ld\n", new_offs, new_end);
@@ -97,7 +97,7 @@ int     virt_write(const char *path, int fd, const char *buf, uint wsize, uint o
         goto end_func;
         }
     memset(mem, '\0', xsize);
-    hs_encrypt(mem, xsize, defpassx, plen);
+    hs_encrypt(mem, xsize, defpassx, defplen);
 
     //   ofsize  |          |        wsize     |
     // ------------------------------------------------------
@@ -113,12 +113,12 @@ int     virt_write(const char *path, int fd, const char *buf, uint wsize, uint o
         }
     hslog(3, "virt_write(): read res2a=%lx bytes\n",  res2a);
 
-    hs_decrypt(mem, xsize, defpassx, plen);
+    hs_decrypt(mem, xsize, defpassx, defplen);
     memcpy(mem + (offset - new_offs), buf, wsize);
-    hs_encrypt(mem, xsize, defpassx, plen);
+    hs_encrypt(mem, xsize, defpassx, defplen);
 
     // Make sure our auxilliary ops did not create an error condition
-    errno = old_errno;
+    //errno = old_errno;
 
     // The actual write writes out all of it
     int res3a = pwrite(fd, mem, xsize, new_offs);
@@ -135,11 +135,12 @@ int     virt_write(const char *path, int fd, const char *buf, uint wsize, uint o
     // Write sideblock
     sideblock_t *psb = alloc_sideblock();
     if(psb == NULL) {
+        hslog(1, "virt_write(): cannot alloc sideblock");
         ret = -ENOMEM;  goto end_func2;
         }
     int ret3 = read_sideblock(path, psb);
     size_t newsize =  MAX(offset + wsize, psb->flen);
-    hslog(6, "virt_write(): newsize=%ld xsize=%ld\n", newsize, xsize);
+    hslog(3, "virt_write(): newsize=%ld xsize=%ld\n", newsize, xsize);
     psb->flen = newsize;
 
     int ret2 = write_sideblock(path, psb);
@@ -165,32 +166,37 @@ int     virt_write(const char *path, int fd, const char *buf, uint wsize, uint o
 int xmp_write(const char *path, const char *buf, size_t wsize, // )
                         off_t offset, struct fuse_file_info *fi)
 {
-	int res = 0, loop = 0, fd = -1;
+	int res = 0;
 
 	if(fi == NULL)
         return -ENOSYS;
 
-    //fd = open(path, O_RDWR);
-
-    fd = fi->fh;
     if(wsize == 0)
         {
-        hslog(1, "zero write on '%s'\n", path);
+        hslog(1, "xmp_write(): zero write length on '%s'\n", path);
         return 0;
         }
-    hslog(2, "@@ xmp_write(): fh=%ld '%s'\n", fi->fh, path);
+    hslog(2, "xmp_write(): fh=%ld '%s' errno=%d\n",
+                        fi->fh, path, errno);
 
-    //off_t orgfsize = get_fsize(fd);
-    //off_t oldoff = lseek(fd, 0, SEEK_CUR);
-    //hslog(3, "xmp_write(): orgfsize=%lu oldoff=%lu\n", orgfsize, oldoff);
+    int old_errno = errno;
+    off_t orgfsize = get_fsize(fi->fh);
+    off_t oldoff = lseek(fi->fh, 0, SEEK_CUR);
+    errno = old_errno;
 
-    //hslog(3, "xmp_write(): fh=%ld wsize=%lu offs=%lu\n", fd, wsize, offset);
+    hslog(3, "xmp_write(): orgfsize=%lu oldoff=%lx errno=%d\n", orgfsize, oldoff, errno);
+    hslog(3, "xmp_write(): fh=%ld wsize=%lu offs=%lu\n", fi->fh, wsize, offset);
+    //errno = 0;
 
-    // This is a test case for evaluating the FUSE side of the system (it is OK)
+    // This is a test case for evaluating the FUSE side of
+    // the system (it is OK)
     #ifdef BYPASS
-        hslog(3, "xmp_write(): bypass fh=%ld wsize=%lu offs=%lu\n", fd, wsize, offset);
-        int res2a = pwrite(fd, buf, wsize, offset);
+        hslog(3, "xmp_write(): bypass fh=%ld wsize=%lu offs=%lu\n",
+                        fi->fh, wsize, offset);
+        int res2a = pwrite(fi->fh, buf, wsize, offset);
     	if (res2a < 0) {
+            hslog(4, "xmp_write(): bypass error: %d %s",
+                                        errno, strerror(errno));
             return -errno;
             }
         else
@@ -200,7 +206,7 @@ int xmp_write(const char *path, const char *buf, size_t wsize, // )
             }
     #else
         // Simplified algorythm
-        res = virt_write(path, fd, buf, wsize, offset);
+        res = virt_write(path, fi->fh, buf, wsize, offset);
     #endif
 
     return res;
