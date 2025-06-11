@@ -47,7 +47,7 @@ typedef unsigned char uchar;
 // Debug the FUSE subsystem with simple (fake) encryption
 // Debug the VIRTUAL read/write subsystem, full encryption
 
-#define BYPASS  1                       // Test case for no interception
+//#define BYPASS  1                       // Test case for no interception
 #define VIRTUAL 1                         // Newer version of interception
 
 // Warning: this will disable all encryptions;

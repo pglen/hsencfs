@@ -51,11 +51,6 @@
 
 #define _GNU_SOURCE
 
-//#define FUSE_USE_VERSION 34
-//#define FUSE_USE_VERSION 33
-//#define FUSE_USE_VERSION 31
-//#define FUSE_USE_VERSION 30
-
 #include <fuse3/fuse.h>
 #include <fuse3/fuse_lowlevel.h>
 
