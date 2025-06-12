@@ -135,7 +135,7 @@ int     openpass(const char *path)
 
     if(defpassx[0] != '\0')
         {
-        hslog(-1, "Using default pass '%s'", defpassx);
+        hslog(1, "Using default pass '%s'", defpassx);
         return 0;
         }
 
@@ -148,7 +148,7 @@ int     openpass(const char *path)
         }
     if(passprog[0] == 0)
         {
-        hslog(-1, "No pass program specified: %s uid: %d\n", path, getuid());
+        hslog(1, "No pass program specified: %s uid: %d\n", path, getuid());
         ret = 1;
         goto endx;
         }
@@ -197,7 +197,7 @@ int     openpass(const char *path)
     //    {
     //    // Force new pass prompt
     //    memset(passx, 0, sizeof(passx));
-    //    hslog(-1, "Invalid pass for '%s' by uid: %d\n", mountpoint, getuid());
+    //    hslog(1, "Invalid pass for '%s' by uid: %d\n", mountpoint, getuid());
     //    ret =  ret2;
     //    goto endx;
     //    }

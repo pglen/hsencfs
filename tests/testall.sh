@@ -13,9 +13,9 @@ fi
 rm -rf $TESTDIR/*
 
 echo -------------------------------------------------------
-echo "Tests:  (silent if all is OK)"
+echo "Tests: at $TESTDIR  (silent if all is OK) "
 
-echo Direct "(for read / write test) at $TESTDIR"
+echo -n "Direct (read / write test) "
 
 function test_direct {
     #rm -f ~/.secrets/$1
@@ -27,6 +27,7 @@ function test_direct {
         echo "Error: Cannot pass direct stage; err=$ERR"
         exit
     fi
+    echo -n "."
 }
 
 test_direct aa300.txt
@@ -35,25 +36,8 @@ test_direct aa4500.txt
 test_direct aa9000.txt
 test_direct aa12288.txt
 
-# Test for match between the two subsystems:
-
-echo Test onejump
-
-rm -f jump.txt $TESTDIRjump.txt
-./onejump jump.txt
-./onejump $TESTDIRjump.txt
-diff jump.txt $TESTDIRjump.txt
-rm -f jump.txt $TESTDIRjump.txt
-
-ERR=$?
-if [ "$ERR" != "0" ] ; then
-    echo "Error: Cannot pass onejump stage; err=$ERR"
-    exit
-fi
-
-echo Test rzig
-
-#rm -rf $TESTDIR*
+echo
+echo -n "Test rzig "
 
 function test_rzig {
     cp test_data/$1 $TESTDIR$1
@@ -66,30 +50,13 @@ function test_rzig {
         echo "Error: Cannot pass zigzag stage; err=$ERR"
         exit
     fi
+    echo -n "."
 }
 
 test_rzig aa300.txt
 test_rzig aa4096.txt
 test_rzig aa4500.txt
 test_rzig aa9100.txt
-
-echo Test farwrite
-
-function far_write
-{
-    rm -f $1
-    ./farwrite $1
-    ./farwrite $TESTDIR$1
-    diff -q $1 $TESTDIR$1
-    ERR=$?
-    if [ "$ERR" != "0" ] ; then
-        echo "Error: Cannot pass farwrite stage; err=$ERR"
-        exit
-    fi
-}
-
-far_write  farwrite.txt
-rm  -f farwrite.txt $TESTDIR/farwrite.txt
 
 # ------------------------------------------------------------------------
 
@@ -104,9 +71,11 @@ function test_item {
         echo "Error: Cannot pass  $1; err=$ERR with: $4"
     exit
     fi
+    echo -n "."
 }
 
-echo Test zigzag
+echo
+echo -n "Test Zigzag "
 
 # Test if utility is OK
 #test_item ./zigzag test_data tmp aa300.txt
@@ -120,7 +89,8 @@ test_item ./zigzag test_data $TESTDIR aa12288.txt
 #exit
 #test_item ./zigzag test_data $TESTDIR aa16384.txt
 
-echo Test Zigjump
+echo
+echo -n "Test Zigjump "
 
 # Test if utility is OK
 #test_item ./zigjump test_data tmp aa5000.txt
@@ -136,8 +106,8 @@ test_item ./zigjump test_data $TESTDIR aa9100.txt
 test_item ./zigjump test_data $TESTDIR aa12288.txt
 
 # Jumpread
-
-echo Test Jumpread
+echo
+echo -n "Test Jumpread "
 
 function jump_read
 {
@@ -150,6 +120,7 @@ function jump_read
         echo "Error: Cannot pass jumpread stage; err=$ERR"
         exit
     fi
+    echo -n "."
 }
 
 jump_read  jumpread.txt
@@ -158,8 +129,46 @@ rm jumpread.txt $TESTDIR/jumpread.txt
 if [ "$1" == "pause" ] ; then
     read aa
 fi
+echo
 
-echo Copy "(for boundary aligned copy test)"
+echo -n "Test farwrite "
+
+function far_write
+{
+    rm -f $1
+    ./farwrite $1
+    ./farwrite $TESTDIR$1
+    diff -q $1 $TESTDIR$1
+    ERR=$?
+    if [ "$ERR" != "0" ] ; then
+        echo "Error: Cannot pass farwrite stage; err=$ERR"
+        exit
+    fi
+    echo -n "."
+}
+
+far_write  farwrite.txt
+rm  -f farwrite.txt $TESTDIR/farwrite.txt
+echo
+
+# Test for match between the two subsystems:
+
+echo -n "Test Onejump "
+
+rm -f jump.txt $TESTDIRjump.txt
+./onejump jump.txt
+./onejump $TESTDIRjump.txt
+diff jump.txt $TESTDIRjump.txt
+rm -f jump.txt $TESTDIRjump.txt
+
+ERR=$?
+if [ "$ERR" != "0" ] ; then
+    echo "Error: Cannot pass onejump stage; err=$ERR"
+    exit
+fi
+
+echo
+echo -n "Text Copy (for boundary aligned copy test) "
 
 shopt -s dotglob
 rm -rf $TESTDIR/*
@@ -174,6 +183,7 @@ if [ "$ERR" != "0" ] ; then
     exit
 fi
 
+echo
 echo Done tests
 
 # EOF

@@ -712,7 +712,7 @@ static int xmp_open(const char *path, struct fuse_file_info *fi)
         }
     int mode2 = (S_IRUSR | S_IWUSR | S_IRGRP);
     int addy =  O_RDWR;
-    int suby = ~(O_EXCL | O_WRONLY | O_EXCL) ;
+    int suby = ~(O_EXCL | O_WRONLY) ;
     int flags2 = (fi->flags | addy) & suby;
     fi->fh = open(path2, flags2, mode2);
     if (fi->fh < 0)
