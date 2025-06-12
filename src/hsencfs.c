@@ -79,6 +79,7 @@
 #include "hspass.h"
 #include "hsencsb.h"
 #include "bluepoint2.h"
+#include "hsencop.h"
 
 #include "hs_crypt.h"
 
@@ -104,8 +105,8 @@ char  startdir[PATH_MAX];
 char  fff[PATH_MAX];
 char  eee[PATH_MAX];
 
-char  passprog[PATH_MAX] ;
-char  passback[PATH_MAX] ;
+char  passprog[2 * PATH_MAX] ;
+char  passback[2 * PATH_MAX] ;
 
 char *myext = ".datx";
 
@@ -131,8 +132,6 @@ static  char  tmpsecret[PATH_MAX] ;
 static  char  inodedir[PATH_MAX] ;
 
 // -----------------------------------------------------------------------
-
-#include "hsencop.c"
 
 struct fuse *fuse_op;
 struct fuse_session *fuse_sess;

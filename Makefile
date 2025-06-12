@@ -350,10 +350,11 @@ BONOBO_DIR = /usr/lib/bonobo/servers
 
 # Docs for distribution
 dist_doc_DATA = PASSES FUSEOPTS QUICKSTART SECURITY PASSHINTS DISCLAIMER\
-        hsencfs.spec hsencfs.init compall.sh hard-remove.sh \
-            lazy.sh
+        hsencfs.spec hsencfs.init
 
 
+#           compall.sh hard-remove.sh \
+#            lazy.sh
 #                $(PAN_SERV).in
 
 # Scripts for askpass and tray

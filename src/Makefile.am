@@ -20,7 +20,7 @@ hsencfsdir = .
 hsencfs_CFLAGS = -g -D_FILE_OFFSET_BITS=64 -O2 $(myincs)
 
 
-hsencfs_SOURCES = hsencrr.c hsencrw.c hsencsb.c hsencsu.c \
+hsencfs_SOURCES = hsencrr.c hsencrw.c hsencsb.c hsencsu.c hsencop.c \
                         $(utilx) $(cryptx) hsencfs.c
 
 hsencfs_LDADD = -lfuse3 -lulockmgr  -lcrypto -lssl

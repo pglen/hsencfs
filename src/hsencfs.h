@@ -67,11 +67,9 @@ extern  char    defpassx[MAXPASSLEN];
 
 extern  char    mountpoint[PATH_MAX] ;
 extern  char    mountsecret[PATH_MAX] ;
-extern  char    passprog[PATH_MAX] ;
-extern  char    passback[PATH_MAX] ;
-extern  char    passprog[PATH_MAX] ;
-extern  char    passback[PATH_MAX] ;
 extern  char    progname[];
+extern  char    passback[2*PATH_MAX] ;
+extern  char    passprog[2*PATH_MAX] ;
 
 extern  char    *myext;
 

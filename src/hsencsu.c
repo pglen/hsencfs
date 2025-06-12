@@ -17,7 +17,6 @@
 
 #include <fuse.h>
 #include <ulockmgr.h>
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
@@ -152,15 +151,16 @@ int     openpass(const char *path)
         ret = 1;
         goto endx;
         }
-    char tmp3[PATH_MAX + PATH_MAX +  2];
+    char tmp3[8*PATH_MAX];
     strncpy(tmp3, mountsecret, sizeof(tmp3));
     strcat(tmp3, passfname);
     //printf("tmp3: '%s'\n", tmp3);
+
     struct stat ss;
     int rret = stat(tmp3, &ss);
 
-    snprintf(tmp2, PATH_MAX + PATH_MAX + 12, "%s %s %d",
-                                      passprog, mountpoint, rret);
+    //snprintf(tmp2, 8*PATH_MAX, "%s %s %d",
+    //                                  passprog, mountpoint, rret);
     //ret = hs_askpass(tmp2, tmp, MAXPASSLEN);
     // Error ?
      if (ret != 0)

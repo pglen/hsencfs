@@ -115,8 +115,8 @@ am__objects_2 = ../bluepoint/hsencfs-hs_crypt.$(OBJEXT) \
 	../bluepoint/hsencfs-bluepoint2.$(OBJEXT)
 am_hsencfs_OBJECTS = hsencfs-hsencrr.$(OBJEXT) \
 	hsencfs-hsencrw.$(OBJEXT) hsencfs-hsencsb.$(OBJEXT) \
-	hsencfs-hsencsu.$(OBJEXT) $(am__objects_1) $(am__objects_2) \
-	hsencfs-hsencfs.$(OBJEXT)
+	hsencfs-hsencsu.$(OBJEXT) hsencfs-hsencop.$(OBJEXT) \
+	$(am__objects_1) $(am__objects_2) hsencfs-hsencfs.$(OBJEXT)
 hsencfs_OBJECTS = $(am_hsencfs_OBJECTS)
 hsencfs_DEPENDENCIES =
 hsencfs_LINK = $(CCLD) $(hsencfs_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
@@ -142,9 +142,9 @@ am__depfiles_remade = ../bluepoint/$(DEPDIR)/hsencfs-bluepoint2.Po \
 	../common/$(DEPDIR)/hsencfs-hspass.Po \
 	../common/$(DEPDIR)/hsencfs-hsutils.Po \
 	../common/$(DEPDIR)/hsencfs-xmalloc.Po \
-	./$(DEPDIR)/hsencfs-hsencfs.Po ./$(DEPDIR)/hsencfs-hsencrr.Po \
-	./$(DEPDIR)/hsencfs-hsencrw.Po ./$(DEPDIR)/hsencfs-hsencsb.Po \
-	./$(DEPDIR)/hsencfs-hsencsu.Po
+	./$(DEPDIR)/hsencfs-hsencfs.Po ./$(DEPDIR)/hsencfs-hsencop.Po \
+	./$(DEPDIR)/hsencfs-hsencrr.Po ./$(DEPDIR)/hsencfs-hsencrw.Po \
+	./$(DEPDIR)/hsencfs-hsencsb.Po ./$(DEPDIR)/hsencfs-hsencsu.Po
 am__mv = mv -f
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -316,7 +316,7 @@ hsencfsdir = .
 
 #-I$(srcdir)/../bluepoint -I$(srcdir)/../common
 hsencfs_CFLAGS = -g -D_FILE_OFFSET_BITS=64 -O2 $(myincs)
-hsencfs_SOURCES = hsencrr.c hsencrw.c hsencsb.c hsencsu.c \
+hsencfs_SOURCES = hsencrr.c hsencrw.c hsencsb.c hsencsu.c hsencop.c \
                         $(utilx) $(cryptx) hsencfs.c
 
 hsencfs_LDADD = -lfuse3 -lulockmgr  -lcrypto -lssl
@@ -445,6 +445,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@../common/$(DEPDIR)/hsencfs-hsutils.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@../common/$(DEPDIR)/hsencfs-xmalloc.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hsencfs-hsencfs.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hsencfs-hsencop.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hsencfs-hsencrr.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hsencfs-hsencrw.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hsencfs-hsencsb.Po@am__quote@ # am--include-marker
@@ -527,6 +528,20 @@ hsencfs-hsencsu.obj: hsencsu.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='hsencsu.c' object='hsencfs-hsencsu.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -c -o hsencfs-hsencsu.obj `if test -f 'hsencsu.c'; then $(CYGPATH_W) 'hsencsu.c'; else $(CYGPATH_W) '$(srcdir)/hsencsu.c'; fi`
+
+hsencfs-hsencop.o: hsencop.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -MT hsencfs-hsencop.o -MD -MP -MF $(DEPDIR)/hsencfs-hsencop.Tpo -c -o hsencfs-hsencop.o `test -f 'hsencop.c' || echo '$(srcdir)/'`hsencop.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/hsencfs-hsencop.Tpo $(DEPDIR)/hsencfs-hsencop.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='hsencop.c' object='hsencfs-hsencop.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -c -o hsencfs-hsencop.o `test -f 'hsencop.c' || echo '$(srcdir)/'`hsencop.c
+
+hsencfs-hsencop.obj: hsencop.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -MT hsencfs-hsencop.obj -MD -MP -MF $(DEPDIR)/hsencfs-hsencop.Tpo -c -o hsencfs-hsencop.obj `if test -f 'hsencop.c'; then $(CYGPATH_W) 'hsencop.c'; else $(CYGPATH_W) '$(srcdir)/hsencop.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/hsencfs-hsencop.Tpo $(DEPDIR)/hsencfs-hsencop.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='hsencop.c' object='hsencfs-hsencop.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -c -o hsencfs-hsencop.obj `if test -f 'hsencop.c'; then $(CYGPATH_W) 'hsencop.c'; else $(CYGPATH_W) '$(srcdir)/hsencop.c'; fi`
 
 ../common/hsencfs-hsutils.o: ../common/hsutils.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hsencfs_CFLAGS) $(CFLAGS) -MT ../common/hsencfs-hsutils.o -MD -MP -MF ../common/$(DEPDIR)/hsencfs-hsutils.Tpo -c -o ../common/hsencfs-hsutils.o `test -f '../common/hsutils.c' || echo '$(srcdir)/'`../common/hsutils.c
@@ -908,6 +923,7 @@ distclean: distclean-am
 	-rm -f ../common/$(DEPDIR)/hsencfs-hsutils.Po
 	-rm -f ../common/$(DEPDIR)/hsencfs-xmalloc.Po
 	-rm -f ./$(DEPDIR)/hsencfs-hsencfs.Po
+	-rm -f ./$(DEPDIR)/hsencfs-hsencop.Po
 	-rm -f ./$(DEPDIR)/hsencfs-hsencrr.Po
 	-rm -f ./$(DEPDIR)/hsencfs-hsencrw.Po
 	-rm -f ./$(DEPDIR)/hsencfs-hsencsb.Po
@@ -966,6 +982,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ../common/$(DEPDIR)/hsencfs-hsutils.Po
 	-rm -f ../common/$(DEPDIR)/hsencfs-xmalloc.Po
 	-rm -f ./$(DEPDIR)/hsencfs-hsencfs.Po
+	-rm -f ./$(DEPDIR)/hsencfs-hsencop.Po
 	-rm -f ./$(DEPDIR)/hsencfs-hsencrr.Po
 	-rm -f ./$(DEPDIR)/hsencfs-hsencrw.Po
 	-rm -f ./$(DEPDIR)/hsencfs-hsencsb.Po
