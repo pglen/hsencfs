@@ -53,6 +53,5 @@ int     write_sideblock(const char *path, sideblock_t *psb);
 int     create_sideblock(const char *path);
 void    kill_sideblock(sideblock_t *psb);
 
-
 // EOF
 

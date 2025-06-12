@@ -80,13 +80,13 @@ int     virt_write(const char *path, int fd, const char *buf, uint wsize, uint o
     hslog(3, "virt_write(): '%s' wsize=%ld offset=%ld\n", path, wsize, offset);
 
     int xsize = new_end - new_offs;
-    hslog(5, "virt_write(): new_offs=%ld new_end=%ld\n", new_offs, new_end);
+    hslog(9, "virt_write(): new_offs=%ld new_end=%ld\n", new_offs, new_end);
 
     //off_t ofsize = get_fsize(fd);
     off_t ofsize =  get_sidelen(path);
     off_t oldoff = lseek(fd, 0, SEEK_CUR);
 
-    hslog(5, "virt_write(): ofsize=%ld oldoff=%ld\n", ofsize, oldoff);
+    hslog(9, "virt_write(): ofsize=%ld oldoff=%ld\n", ofsize, oldoff);
 
     // Read in ALL EXISING blocks to mem
     char *mem = malloc(xsize + 1);
@@ -107,11 +107,11 @@ int     virt_write(const char *path, int fd, const char *buf, uint wsize, uint o
     int res2a = pread(fd, mem, xsize, new_offs);
     if(res2a < 0)
         {
-        hslog(3, "virt_write(): read error res2a=%lx, errno=%d\n",  res2a, errno);
+        hslog(9, "virt_write(): read error res2a=%lx, errno=%d\n",  res2a, errno);
         // Ignore pre read error
         //  ret =  -errno;  goto end_func2;
         }
-    hslog(3, "virt_write(): read res2a=%lx bytes\n",  res2a);
+    hslog(9, "virt_write(): read res2a=%lx bytes\n",  res2a);
 
     hs_decrypt(mem, xsize, defpassx, defplen);
     memcpy(mem + (offset - new_offs), buf, wsize);
@@ -125,11 +125,11 @@ int     virt_write(const char *path, int fd, const char *buf, uint wsize, uint o
     //int res3a = pwrite(fd, mem + (offset - new_offs), wsize, offset);
     if(res3a < 0)
         {
-        hslog(3, "virt_write(): error xsize=%ld errno=%d\n", errno, xsize);
+        hslog(9, "virt_write(): error xsize=%ld errno=%d\n", errno, xsize);
         //ret = -errno;  goto end_func2;
         }
 
-    hslog(5, "virt_write(): res3a=%ld xsize=%ld\n", res3a, xsize);
+    hslog(9, "virt_write(): res3a=%ld xsize=%ld\n", res3a, xsize);
     ret = wsize;     // Tell them we got it
 
     // Write sideblock
@@ -140,7 +140,7 @@ int     virt_write(const char *path, int fd, const char *buf, uint wsize, uint o
         }
     int ret3 = read_sideblock(path, psb);
     size_t newsize =  MAX(offset + wsize, psb->flen);
-    hslog(3, "virt_write(): newsize=%ld xsize=%ld\n", newsize, xsize);
+    hslog(9, "virt_write(): newsize=%ld xsize=%ld\n", newsize, xsize);
     psb->flen = newsize;
 
     int ret2 = write_sideblock(path, psb);

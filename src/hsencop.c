@@ -100,7 +100,7 @@ int xmp_getattr(const char *path, struct stat *stbuf, struct fuse_file_info *fi)
         ret = -errno;
         goto cleanup;
         }
-    hslog(8, "xmp_getattr.org='%s' st_size=%d\n", path, stbuf->st_size);
+    hslog(9, "xmp_getattr.org='%s' st_size=%d\n", path, stbuf->st_size);
 
     // Do not process '/'
     #ifndef BYPASS
@@ -663,7 +663,7 @@ int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
 {
 	int res = 0;
 
-    hslog(1, "xmp_create: '%s' mode: %o flags: %x\n", path, mode, fi->flags);
+    hslog(1, "Create: '%s' mode: %o flags: %o\n", path, mode, fi->flags);
 
     if(is_our_file(path, FALSE))
         {
@@ -678,7 +678,6 @@ int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
         hslog(1, "Cannot alloc path2 on: '%s'\n", path);
         return -errno;
         }
-    hslog(1, "Create: '%s' mode: %o flags: %o\n", path, mode, fi->flags);
     hslog(2, "Shadow file: '%s'\n", path2);
 
     if(defpassx[0] == 0)
@@ -710,9 +709,19 @@ int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
         hslog(1, "Cannot stat newly created file '%s'\n", path);
         goto cleanup;
         }
+
+    hslog(3, "File size: %d\n", stbuf.st_size);
+
+    if(flags2 & O_TRUNC)
+        {
+        hslog(1, "Truncating '%s' fh=%ld\n", path, fi->fh);
+        int ret2 = ftruncate(fi->fh, 0);
+
+        }
     hslog(3, "Created: '%s' fh=%d mode=%o\n", path, fi->fh, mode);
     //hslog(9, "Inode: %lud blocksize %ld \n",
     //                                stbuf.st_ino, stbuf.st_blksize);
+
     create_sideblock(path);
   cleanup:
         if(path2) free(path2);
@@ -732,9 +741,10 @@ int xmp_open(const char *path, struct fuse_file_info *fi)
 
     char  path2[PATH_MAX] ;
     memset(path2, '\0', PATH_MAX);
+
     strcpy(path2, mountsecret); strcat(path2, path);
 
-    hslog(1, "Open: '%s' uid: %d mode: %o\n",  path, getuid(),fi->flags);
+    hslog(1, "Open: '%s' uid: %d flags: %o\n",  path, getuid(),fi->flags);
     hslog(1, "Shadow: '%s' '%s' plen=%d",  path2, defpassx, defplen);
     if(defpassx[0] == 0)
         {
@@ -748,13 +758,39 @@ int xmp_open(const char *path, struct fuse_file_info *fi)
         }
     int mode2 = (S_IRUSR | S_IWUSR | S_IRGRP);
     int addy =  O_RDWR;
-    int suby = ~(O_EXCL | O_WRONLY) ;
+    int suby = ~(O_EXCL | O_WRONLY | O_APPEND) ;
     int flags2 = (fi->flags | addy) & suby;
     fi->fh = open(path2, flags2, mode2);
     if (fi->fh < 0)
         {
         hslog(1, "Error on open file, trying org perm. errno=%d\n", errno);
         return -errno;
+        }
+    //struct stat stbuf;	memset(&stbuf, 0, sizeof(stbuf));
+    //int res2 = fstat(fi->fh, &stbuf);
+    //if(res2 < 0)
+    //    {
+    //    hslog(1, "Cannot stat opened file '%s'\n", path);
+    //    goto cleanup;
+    //    }
+    //hslog(3, "File size: %d\n", stbuf.st_size);
+
+    // Create flag set?
+    if(fi->flags & O_TRUNC)
+        {
+        hslog(3, "Truncating '%s' fh=%ld\n", path, fi->fh);
+        int ret2 = ftruncate(fi->fh, 0);
+        create_sideblock(path);
+        }
+    // Append flag set?
+    if(fi->flags & O_APPEND)
+        {
+        hslog(3, "Appending '%s' fh=%ld\n", path, fi->fh);
+        hslog(3, "Current real size: %ls\n", path, fi->fh);
+
+        int fsize = get_sidelen(path);
+        int res3 = lseek(fi->fh, fsize, SEEK_SET);
+        hslog(3, "Current pos=%ld\n", res3);
         }
     hslog(3, "Opened '%s' fh=%ld\n", path, fi->fh);
     //struct stat stbuf;	memset(&stbuf, 0, sizeof(stbuf));
@@ -787,7 +823,7 @@ int xmp_flush(const char *path, struct fuse_file_info *fi)
 {
 	int res = 0;
 
-    hslog(1, "Flushing file: %s fh=%d\n", path, fi->fh);
+    hslog(9, "Flushing file: %s fh=%d\n", path, fi->fh);
 
 	(void) path;
 	/* This is called from every close on an open file, so call the

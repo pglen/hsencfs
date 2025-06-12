@@ -172,7 +172,7 @@ int    read_sideblock(const char *path, sideblock_t *psb)
         ret = -ENOMEM;
         goto endd;
         }
-    hslog(6, "Opening sideblock file '%s'\n", ptmp2);
+    hslog(9, "Opening sideblock file '%s'\n", ptmp2);
     int fdi = open(ptmp2, O_RDWR);
     if(fdi < 0)
         {
@@ -241,7 +241,7 @@ int     write_sideblock(const char *path, sideblock_t *psb)
 
     //hslog(2, "Sidename '%s'\n", ptmp2 + 15);
 
-    hslog(5, "Writing sideblock file '%s'\n", ptmp2);
+    hslog(9, "Writing sideblock file '%s'\n", ptmp2);
 
     int rrr = 0, old_errno = errno;
     int fdi = open(ptmp2, O_RDWR);
@@ -270,7 +270,7 @@ int     write_sideblock(const char *path, sideblock_t *psb)
     //            bluepoint2_dumphex(bbuff, 16));
 
    endd2:
-        hslog(5, "Writing sideblock file3 '%s'\n", ptmp2);
+        hslog(9, "Writing sideblock file3 '%s'\n", ptmp2);
 
     free(ptmp2);
 

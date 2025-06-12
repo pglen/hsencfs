@@ -37,7 +37,7 @@ test_direct aa9000.txt
 test_direct aa12288.txt
 
 echo
-echo -n "Test rzig "
+echo -n "Test Rzig "
 
 function test_rzig {
     cp test_data/$1 $TESTDIR$1
@@ -131,7 +131,7 @@ if [ "$1" == "pause" ] ; then
 fi
 echo
 
-echo -n "Test farwrite "
+echo -n "Test Farwrite "
 
 function far_write
 {
@@ -160,6 +160,7 @@ rm -f jump.txt $TESTDIRjump.txt
 ./onejump $TESTDIRjump.txt
 diff jump.txt $TESTDIRjump.txt
 rm -f jump.txt $TESTDIRjump.txt
+echo -n "."
 
 ERR=$?
 if [ "$ERR" != "0" ] ; then
@@ -168,13 +169,15 @@ if [ "$ERR" != "0" ] ; then
 fi
 
 echo
-echo -n "Text Copy (for boundary aligned copy test) "
+echo -n "Test Copy "
 
 shopt -s dotglob
 rm -rf $TESTDIR/*
-
+echo -n "."
 cp -r test_data/* $TESTDIR
+echo -n "."
 diff -qr test_data/ $TESTDIR
+echo -n "."
 shopt -u dotglob
 
 ERR=$?
@@ -183,8 +186,47 @@ if [ "$ERR" != "0" ] ; then
     exit
 fi
 
+function bsimple()
+{
+    echo $1 >aa
+    echo $1 >$TESTDIR/aa
+    cat  $TESTDIR/aa > bb
+    #echo -n "aa: '" ; hd aa
+    #echo -n "bb: '" ; hd bb
+    #ls -l aa bb
+    #stat --printf="%s " aa bb
+    echo -n "."
+    diff aa bb
+    rm aa bb
+}
+
 echo
-echo Done tests
+echo -n "Test Truncate (bash)"
+
+bsimple "aaaaaaa"
+bsimple "aabbb"
+bsimple "cc"
+echo
+
+function bappend()
+{
+    echo -n $1 >>aa
+    echo -n $1 >>$TESTDIR/aa
+    echo -n "."
+    diff aa $TESTDIR/aa
+}
+
+echo -n "Test Append (bash) "
+
+echo -n  "" >aa
+echo -n "" >$TESTDIR/aa
+
+bappend "aaa"
+bappend "bbbb"
+bappend "aaa"
+
+echo
+echo Done tests.
 
 # EOF
 

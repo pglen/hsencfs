@@ -89,9 +89,9 @@ char    *alloc_path2(const char *path)
         {
         memset(path2, '\0', PATH_MAX);
         strcpy(path2, mountsecret);
-        //if(path[0] == '/')
-        //    strcat(path2, path + 1);
-        //else
+        if(path[0] == '/')
+            strcat(path2, path + 1);
+        else
             strcat(path2, path);
         }
     return path2;
@@ -137,7 +137,6 @@ int     openpass(const char *path)
         hslog(1, "Using default pass '%s'", defpassx);
         return 0;
         }
-
     char tmp[MAXPASSLEN];
     char *tmp2 = malloc(PATH_MAX + PATH_MAX + 12);
     if (!tmp2)
