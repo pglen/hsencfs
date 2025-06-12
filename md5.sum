@@ -2286,7 +2286,7 @@ a0a7c3fff21f2aea3cfa1d0316dd816c  ./.git/description
 0b29255a914ce7eb310d64c99507b256  ./.git/FETCH_HEAD
 305cc4b10a114505a654c2be00fa497e  ./doall.sh
 a4b6d3814da17e7ba070a1876c172eab  ./COPYING
-81a3479c8a8f4836576007cba6233e4c  ./gensum.sh
+1008fc96d4fc4c7e30d58c332c033648  ./gensum.sh
 dd63184811cb2ff705c3e466364d3773  ./INSTALL
 5e56d25915bcf94265e2902647cdeca6  ./study/trunctest.c
 516af2fe12ea3eb6d484e025d81eacbb  ./study/rsa_exa
@@ -3341,7 +3341,6 @@ ebda27507669ef4b656fe10b920a0544  ./src/hsencsb.c
 13b325ef303a54f714bf6ff7a3a42163  ./src/config.status
 f72f5fdd0805e86a592a872dcae98048  ./src/mount.sh
 ab62038e074d5ce20d73b03eb1b60abb  ./cycle2.sh
-1115bbe729b4b34823b083412acc27a5  ./md5.tmp
 8d35a0452448e659c16621c5f92f23c3  ./tests/jumpread
 746afe3060ddd627ae48fecab46a1922  ./tests/seekcp.o
 e57c73be336f8c843d3ff6381470f7e7  ./tests/Makefile.in
@@ -3441,6 +3440,7 @@ ef6fb9daf0c13216abc6c89d47c2a94c  ./tests/config.status
 c03abcc650ccd9d6ca03f51d720513eb  ./hsencfs.spec
 d41d8cd98f00b204e9800998ecf8427e  ./md5.tmp.old
 b816f92498a6ec8138d9ec53a14bcaa4  ./compile
+0c32200ee5a4eaf8e2f8bc049394c55f  ./sha1.sum.old
 2235d4fbf1d3c80ee98548cf15d39f3a  ./FUSEOPTS
 4f6b706847fe7e62e2223ab1ce867266  ./start_pack.sh
 661a0f5ac2887aabf00105a1845f1167  ./latex/hsaskpass_8c__incl.pdf
@@ -3864,6 +3864,7 @@ b5658b5518d926b9db3fa697c1e14b25  ./autom4te.cache/traces.3
 511b454aedd152a92bc510bb0dc8bbff  ./autom4te.cache/traces.4
 b19ffaf3163a5abb4502a49dc7dd5bf5  ./conf.sh
 0982d73674d56017c4ef54e2a4e0e632  ./common.mk
+bbcac5badb9213d0aeb75a5bf49a37cd  ./sha1.sum
 73d805d379262a159af609f802a8478d  ./umount.sh
 a779b07b3d4c719aac61ba9fb4a38154  ./SECURITY
 663d7a244814a1237cd81b1c7d4271c3  ./Makefile.am
@@ -3904,7 +3905,7 @@ afc035df59b96c6874f447e38d0b01ec  ./GNOME_HSENCApplet.server.in
 eca58ffd9d70a5e083595e74162af632  ./config.status
 205d95ad91cb1dd29011ca6735269555  ./configure.scan
 448d428e076a57f0d8673970a4832190  ./enctest.sh
-be870491b64e7493f517ffc1a94b9158  ./chksum.sh
+ec43e86b2d527dd39123c809f4e2fd76  ./chksum.sh
 d41d8cd98f00b204e9800998ecf8427e  ./bluepoint/COPYING
 d41d8cd98f00b204e9800998ecf8427e  ./bluepoint/INSTALL
 a312df40eb0373372083599dd616ae95  ./bluepoint/Makefile.in
