@@ -306,11 +306,10 @@ cryptx = ../bluepoint/hs_crypt.c     \
 utilx = ../common/hsutils.c ../common/base64.c \
             ../common/hspass.c ../common/xmalloc.c
 
+
+#include $(srcdir)/common.mk
 AUTOMAKE_OPTIONS = subdir-objects
 EXTRA_DIST = hsencfs
-
-#tests/dualwrite tests/seekcp tests/zigjump tests/zigzag tests/farwrite
-#tests/onejump tests/dualread tests/jumpread
 
 # The main program
 hsencfsdir = .

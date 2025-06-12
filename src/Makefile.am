@@ -1,6 +1,7 @@
 # ------------------------------------------------------------------------
 # HSENCFS source. (High Security Encrypted File system)
 
+#include $(srcdir)/common.mk
 include ../common.mk
 
 AUTOMAKE_OPTIONS = subdir-objects
@@ -10,9 +11,6 @@ EXTRA_DIST = hsencfs
 # Fuse based encrypted file system
 
 bin_PROGRAMS =  hsencfs
-
-#tests/dualwrite tests/seekcp tests/zigjump tests/zigzag tests/farwrite
-#tests/onejump tests/dualread tests/jumpread
 
 # The main program
 hsencfsdir = .

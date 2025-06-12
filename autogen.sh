@@ -89,12 +89,12 @@ if test "$DIE" -eq 1; then
   exit 1
 fi
 
-if test -z "$*"; then
-  echo "**Warning**: I am going to run \`configure' with no arguments."
-  echo "If you wish to pass any to it, please specify them on the"
-  echo \`$0\'" command line."
-  echo
-fi
+#if test -z "$*"; then
+#  echo "**Warning**: I am going to run \`configure' with no arguments."
+#  echo "If you wish to pass any to it, please specify them on the"
+#  echo \`$0\'" command line."
+#  echo
+#fi
 
 case $CC in
 xlc )
@@ -107,17 +107,17 @@ do
   if test -f $dr/NO-AUTO-GEN; then
     echo skipping $dr -- flagged as no auto-gen
   else
-    echo processing $dr
+    echo Processing: $dr
     ( cd $dr
 
       aclocalinclude="$ACLOCAL_FLAGS"
 
       if grep "^AM_GLIB_GNU_GETTEXT" configure.ac >/dev/null; then
-	echo "Creating $dr/aclocal.m4 ..."
+	#echo "Creating $dr/aclocal.m4 ..."
 	test -r $dr/aclocal.m4 || touch $dr/aclocal.m4
-	echo "Running glib-gettextize...  Ignore non-fatal messages."
-	echo "no" | glib-gettextize --force --copy
-	echo "Making $dr/aclocal.m4 writable ..."
+	#echo "Running glib-gettextize...  Ignore non-fatal messages."
+	#echo "no" | glib-gettextize --force --copy
+	#echo "Making $dr/aclocal.m4 writable ..."
 	test -r $dr/aclocal.m4 && chmod u+w $dr/aclocal.m4
       fi
       if grep "^IT_PROG_INTLTOOL" configure.ac >/dev/null; then
@@ -125,26 +125,26 @@ do
 	intltoolize --copy --force --automake
       fi
       if grep "^AM_PROG_XML_I18N_TOOLS" configure.ac >/dev/null; then
-        echo "Running xml-i18n-toolize..."
-	xml-i18n-toolize --copy --force --automake
+        #echo "Running xml-i18n-toolize..."
+	    xml-i18n-toolize --copy --force --automake
       fi
       if grep "^LT_INIT" configure.ac >/dev/null; then
 	if test -z "$NO_LIBTOOLIZE" ; then
-	  echo "Running libtoolize..."
+	  #echo "Running libtoolize..."
 	  libtoolize --force --copy
 	fi
       fi
-      echo "Running aclocal $aclocalinclude ..."
+      #echo "Running aclocal $aclocalinclude ..."
       aclocal $aclocalinclude
       if grep "^A[CM]_CONFIG_HEADER" configure.ac >/dev/null; then
-	echo "Running autoheader..."
+	#echo "Running autoheader..."
 	autoheader
       fi
       OPTX="--gnu $am_opt"
-      echo "Running automake $OPTX"
+      #echo "Running automake $OPTX"
       #automake -v --add-missing --copy --gnu $am_opt
       automake  $OPTX
-      echo "Running autoconf ..."
+      #echo "Running autoconf ..."
       autoconf
     )
   fi
@@ -157,3 +157,5 @@ if test x$NOCONFIGURE = x; then
 else
   echo Skipping configure process.
 fi
+
+# EOF

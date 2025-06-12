@@ -625,9 +625,9 @@ static int xmp_utimens(const char *path, const struct timespec ts[2], struct fus
 
 static int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
 {
-	int fd, res = 0;
+	int res = 0;
 
-    hslog(1, "@@xmp_create: '%s' mode: %o flags: %x\n", path, mode, fi->flags);
+    hslog(1, "xmp_create: '%s' mode: %o flags: %x\n", path, mode, fi->flags);
 
     if(is_our_file(path, FALSE))
         {
@@ -656,25 +656,17 @@ static int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
             goto cleanup;
             }
         }
-    // Patch new flag as we always read Sun 08.May.2022
-    int mode2 = mode | (S_IRUSR | S_IWUSR ) ; // | S_IRGRP); // & ~(S_IXOTH | S_IROTH | S_IWOTH);
-    int flags2 = (fi->flags | O_RDWR); //& ~(O_EXCL | O_WRONLY | O_EXCL);
-    fd = open(path2, flags2, mode2);
-    //fd = open(path2, mode);
-	if (fd < 0)
+    // Patch new flag as we always read back Sun 08.May.2022
+    int mode2 = mode | (S_IRUSR | S_IWUSR | S_IRGRP);
+    int addy =  O_CREAT | O_TRUNC | O_RDWR;
+    int suby = ~(O_EXCL | O_WRONLY | O_EXCL) ;
+    int flags2 = (fi->flags | addy) & suby;
+    fi->fh = open(path2, flags2, mode2);
+	if (fi->fh < 0)
         {
         hslog(1, "Cannot create file '%s' mode=%o errno=%d retry ...\n",
                         path, mode2, errno);
-
-        //fd = open(path2, fi->flags, mode);
-        //if (fd < 0)
-        //    {
-        //        hslog(1, "Cannot create file '%s' mode=%d(0x%x) errno=%d\n",
-        //                    path, mode, mode, errno);
-        //    return -1;
-        //    }
         }
-	fi->fh = fd;
     struct stat stbuf;	memset(&stbuf, 0, sizeof(stbuf));
     int res2 = fstat(fi->fh, &stbuf);
     if(res2 < 0)
@@ -693,7 +685,7 @@ static int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
 
 static int xmp_open(const char *path, struct fuse_file_info *fi)
 {
-	int ret = 0, fd;
+	int ret = 0;
 
     // Needed by the decrypt command line util
     //if(is_our_file(path, FALSE))
@@ -707,7 +699,7 @@ static int xmp_open(const char *path, struct fuse_file_info *fi)
     strcpy(path2, mountsecret); strcat(path2, path);
 
     hslog(1, "Open: '%s' uid: %d mode: %o\n",  path, getuid(),fi->flags);
-    hslog(1, "Open: '%s' '%s' plen=%d",  path2, defpassx, defplen);
+    hslog(1, "Shadow: '%s' '%s' plen=%d",  path2, defpassx, defplen);
     if(defpassx[0] == 0)
         {
         hslog(LOG_DEBUG, "Empty pass on open file: %s uid: %d\n", path, getuid());
@@ -718,26 +710,16 @@ static int xmp_open(const char *path, struct fuse_file_info *fi)
             return -EACCES;
             }
         }
-
-    fd = open(path2, S_IRUSR | S_IWUSR | S_IRGRP | O_RDWR);
-
-    //int mode2 = S_IRUSR | S_IWUSR |  S_IRGRP | O_RDWR;
-    //int flags2 =  fi->flags | O_RDWR ;
-    //fd = open(path2, flags2, mode2);
-
-    if (fd < 0)
+    int mode2 = (S_IRUSR | S_IWUSR | S_IRGRP);
+    int addy =  O_RDWR;
+    int suby = ~(O_EXCL | O_WRONLY | O_EXCL) ;
+    int flags2 = (fi->flags | addy) & suby;
+    fi->fh = open(path2, flags2, mode2);
+    if (fi->fh < 0)
         {
         hslog(1, "Error on open file, trying org perm. errno=%d\n", errno);
-        // Failed, try with original permissions
-        fd = open(path2, fi->flags);
-        if (fd < 0)
-            {
-            hslog(1, "Error on open file, '%s' perm=%d (0x%x)\n",
-                                        path, fi->flags, fi->flags);
-    		return -errno;
-            }
+        return -errno;
         }
-	fi->fh = fd;
     hslog(3, "Opened '%s' fh=%ld\n", path, fi->fh);
     //struct stat stbuf;	memset(&stbuf, 0, sizeof(stbuf));
     //int res = fstat(fi->fh, &stbuf);

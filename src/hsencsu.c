@@ -90,9 +90,9 @@ char    *alloc_path2(const char *path)
         {
         memset(path2, '\0', PATH_MAX);
         strcpy(path2, mountsecret);
-        if(path[0] == '/')
-            strcat(path2, path + 1);
-        else
+        //if(path[0] == '/')
+        //    strcat(path2, path + 1);
+        //else
             strcat(path2, path);
         }
     return path2;

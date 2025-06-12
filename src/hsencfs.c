@@ -119,7 +119,7 @@ int   ondemand = 1;
 
 // Maintain internal version string
 static  char    version[] = "1.5.0";
-static  char    build[]   = "Tue 10.Jun.2025";
+static  char    build[]   = "Thu 12.Jun.2025";
 
 // The decoy employed occasionally to stop spyers
 // from figuring out where it is stored
