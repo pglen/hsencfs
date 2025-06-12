@@ -625,10 +625,10 @@ static int xmp_utimens(const char *path, const struct timespec ts[2], struct fus
 
 static int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
 {
-	int fd, res = 0;
+	int res = 0;
 
-    hslog(1, "@@xmp_create: '%s' mode: %o flags: %x\n", path, mode, fi->flags);
-
+    hslog(1, "@@xmp_create: '%s' mode: %o flags: %x\n",
+                                                path, mode, fi->flags);
     if(is_our_file(path, FALSE))
         {
         hslog(1, "No operation of myfiles allowed: '%s'\n", path);
@@ -657,11 +657,11 @@ static int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
             }
         }
     // Patch new flag as we always read Sun 08.May.2022
-    int mode2 = mode | (S_IRUSR | S_IWUSR ) ; // | S_IRGRP); // & ~(S_IXOTH | S_IROTH | S_IWOTH);
-    int flags2 = (fi->flags | O_RDWR); //& ~(O_EXCL | O_WRONLY | O_EXCL);
-    fd = open(path2, flags2, mode2);
-    //fd = open(path2, mode);
-	if (fd < 0)
+    int mode2 = mode | (S_IRUSR | S_IWUSR |  S_IRGRP); // & ~(S_IXOTH | S_IROTH | S_IWOTH);
+    int flags2 = (fi->flags | O_RDWR) & ~(O_EXCL | O_WRONLY | O_EXCL);
+    fi->fh = open(path2, flags2, mode2);
+    //fi->fh = open(path2, mode);
+	if (fi->fh < 0)
         {
         hslog(1, "Cannot create file '%s' mode=%o errno=%d retry ...\n",
                         path, mode2, errno);
@@ -674,7 +674,7 @@ static int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
         //    return -1;
         //    }
         }
-	fi->fh = fd;
+	//fi->fh = fd;
     struct stat stbuf;	memset(&stbuf, 0, sizeof(stbuf));
     int res2 = fstat(fi->fh, &stbuf);
     if(res2 < 0)
@@ -827,7 +827,7 @@ static int xmp_fsync(const char *path, int isdatasync,
 	(void) isdatasync;
 #else
 	if (isdatasync)
-		ret = fdatasync(fi->fh);
+		res = fdatasync(fi->fh);
 	else
 #endif
     ret = fsync(fi->fh);
