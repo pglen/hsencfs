@@ -14,6 +14,8 @@
 
    ======================================================================= */
 
+#define     MARK_SIZE   4096
+
 typedef struct _PassArg
 {
     char    *markfile;

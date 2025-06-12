@@ -276,10 +276,12 @@ int     private_decrypt(uchar * enc_data, int data_len, uchar *key, uchar *dbuf)
 }
 
 //////////////////////////////////////////////////////////////////////////
+//
 // Create mark file. Random block, one half is encrypted with the
 // password and saved to the other half. Checking is done by
 // decrypting the second half, comparing it to the first.
-// Long enough to have more numbers than the starts in the universe
+// Long enough to have more numbers than the number of stars in
+// the universe. Password never stored.
 //
 
 int     create_markfile(char *name, char *pass, int plen)

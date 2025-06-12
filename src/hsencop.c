@@ -86,7 +86,7 @@ int xmp_getattr(const char *path, struct stat *stbuf, struct fuse_file_info *fi)
 {
     int ret = 0;
 
-    char  *path2 = malloc(PATH_MAX) ;
+    char  *path2 = xmalloc(PATH_MAX) ;
     if(path2 == NULL)
         {
         hslog(1, "xmp_getattr() cannot alloc for'%s'", path);
@@ -108,13 +108,13 @@ int xmp_getattr(const char *path, struct stat *stbuf, struct fuse_file_info *fi)
         stbuf->st_size = get_sidelen(path);
     #endif
    cleanup:
-    if(path2) free(path2);
+    if(path2) xsfree(path2);
     return ret;
 }
 
 int xmp_fgetattr(const char *path, struct stat *stbuf, struct fuse_file_info *fi)
 {
-    char  *path2 = malloc(PATH_MAX) ;
+    char  *path2 = xmalloc(PATH_MAX) ;
     if(path2 == NULL)
         {
         hslog(1, "xmp_fgetattr() cannot alloc for'%s'", path);
@@ -135,7 +135,7 @@ int xmp_fgetattr(const char *path, struct stat *stbuf, struct fuse_file_info *fi
     hslog(2, "xmp_fgetattr() path='%s' st_size=%d\n", path, stbuf->st_size);
 
    cleanup:
-    if(path2) free(path2);
+    if(path2) xsfree(path2);
 
     return 0;
 }
@@ -198,7 +198,7 @@ int xmp_opendir(const char *path, struct fuse_file_info *fi)
 
     //  hslog(LOG_DEBUG, "xmp_opendir='%s'\n", path);
 
-	struct xmp_dirp *dd = malloc(sizeof(struct xmp_dirp));
+	struct xmp_dirp *dd = xmalloc(sizeof(struct xmp_dirp));
 	if (dd == NULL)
 		return -ENOMEM;
 
@@ -210,7 +210,7 @@ int xmp_opendir(const char *path, struct fuse_file_info *fi)
 	dd->dp = opendir(path2);
 	if (dd->dp == NULL) {
 		res = -errno;
-		free(dd);
+		xsfree(dd);
 		return res;
 	}
 	dd->offset = 0;
@@ -277,7 +277,7 @@ int xmp_releasedir(const char *path, struct fuse_file_info *fi)
 	(void) path;
 
 	closedir(d->dp);
-	free(d);
+	xsfree(d);
 	return 0;
 }
 
@@ -359,7 +359,7 @@ int xmp_unlink(const char *path)
                 hslog(1,
                     "Cannot unlink sideblock file: %s errno %d\n", ptmp2, errno);
 
-        free(ptmp2);
+        xsfree(ptmp2);
         }
 	return 0;
 }
@@ -394,7 +394,7 @@ int xmp_rmdir(const char *path)
                 hslog(1,
                     "Cannot unlink sideblock file: %s errno %d\n", ptmp2, errno);
 
-        free(ptmp2);
+        xsfree(ptmp2);
         }
 
         hslog(1, "Removed dir: %s uid: %d\n", path, getuid());
@@ -466,14 +466,14 @@ int xmp_rename(const char *from, const char *to, unsigned int flags)
         {
             hslog(1, "Error on malloc sideblock file3\n");
 
-        free(ptmp2);
+        xsfree(ptmp2);
         return -errno;
         }
 
         hslog(1, "Rename sideblock file1: %s\n", ptmp2);
 
     rename(ptmp2, ptmp3);
-    free(ptmp2), free(ptmp3);
+    xsfree(ptmp2), xsfree(ptmp3);
 
 	res = rename(path2, path3);
 
@@ -605,7 +605,7 @@ int xmp_ftruncate(const char *path, off_t size, struct fuse_file_info *fi)
         if(span %  HS_BLOCK)
             end += HS_BLOCK;
         int total = end - beg;
-        char *mem = malloc(total);
+        char *mem = xmalloc(total);
         if(!mem)
             {
                 hslog(1, "fTruncate fill: no memory\n");
@@ -724,7 +724,7 @@ int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
 
     create_sideblock(path);
   cleanup:
-        if(path2) free(path2);
+        if(path2) xsfree(path2);
 	return res;
 }
 

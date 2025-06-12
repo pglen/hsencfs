@@ -30,7 +30,6 @@ typedef unsigned int  uint;
 typedef unsigned char uchar;
 
 #define     HS_PROGNAME    "HSENCFS"
-#define     MARK_SIZE   4096
 
 #define EXIT_NOERROR    0
 #define EXIT_ERROR      1

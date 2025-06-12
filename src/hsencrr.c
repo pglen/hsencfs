@@ -74,7 +74,7 @@ int     virt_read(const char *path, int fd, char *buf, uint wsize, uint offset)
 
     // Read in full blocks
     int xsize = new_end - new_offs;
-    char *mem = malloc(xsize);
+    char *mem = xmalloc(xsize);
     if(!mem)
         {
         ret = -ENOMEM;
@@ -113,7 +113,7 @@ int     virt_read(const char *path, int fd, char *buf, uint wsize, uint offset)
     ret = wsize;     // Tell them we got it
 
    end_func2:
-    free(mem);
+    xsfree(mem);
 
     old_errno = errno;
     lseek(fd, offset + wsize, SEEK_CUR);

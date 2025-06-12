@@ -69,7 +69,7 @@ int     ismounted(char *orig)
             }
         }
     endmntent(fp);
-    free(ddd);
+    xsfree(ddd);
     return ret;
 }
 
@@ -187,7 +187,7 @@ void    hsfree(void *mem, int size)
         {
         ptr[aa] = (char)(rand() & 0xff);
         }
-    free(mem);
+    xsfree(mem);
 }
 
 char    *hexdump(char *ptr, int len)

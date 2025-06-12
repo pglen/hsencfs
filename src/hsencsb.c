@@ -36,10 +36,9 @@
 #include <getopt.h>
 
 #include "base64.h"
-
 #include "hsencsb.h"
 #include "hsencfs.h"
-
+#include "xmalloc.h"
 #include "hs_crypt.h"
 #include "bluepoint2.h"
 #include "hsutils.h"
@@ -47,7 +46,7 @@
 sideblock_t *alloc_sideblock()
 
 {
-    sideblock_t *psb = malloc(sizeof(sideblock_t));
+    sideblock_t *psb = xmalloc(sizeof(sideblock_t));
     if(psb == NULL)
         {
         hslog(1, "Cannot allocate memory for sideblock\n");
@@ -66,7 +65,7 @@ sideblock_t *alloc_sideblock()
 char    *get_sidename(const char *path)
 
 {
-    char *ptmp2 = malloc(PATH_MAX);
+    char *ptmp2 = xmalloc(PATH_MAX);
     if(!ptmp2)
         {
         hslog(1,
@@ -83,7 +82,7 @@ char    *get_sidename(const char *path)
     pch = strtok(ddd, "/");
     while ( (temp = strtok (NULL, "/") ) != NULL)
         cnt++;
-    free(ddd);
+    xsfree(ddd);
 
     char *eee = strdup(path);
     strcpy(ptmp2, mountsecret);
@@ -106,7 +105,7 @@ char    *get_sidename(const char *path)
             strcat(ptmp2, temp);
             }
         }
-    free(eee);
+    xsfree(eee);
     strcat(ptmp2, myext);
 
     hslog(9, "Sidename: '%s'\n", ptmp2 + 15);
@@ -206,7 +205,7 @@ int    read_sideblock(const char *path, sideblock_t *psb)
     //hslog(1, "Got sideblock:, '%s'\n", bluepoint2_dumphex(*pbuff, 8));
 
   endd2:
-    free(ptmp2);
+    xsfree(ptmp2);
 
   endd:
     //errno = old_errno;
@@ -272,7 +271,7 @@ int     write_sideblock(const char *path, sideblock_t *psb)
    endd2:
         hslog(9, "Writing sideblock file3 '%s'\n", ptmp2);
 
-    free(ptmp2);
+    xsfree(ptmp2);
 
   endd:
     return ret;
@@ -316,10 +315,10 @@ int    create_sideblock(const char *path)
     errno = old_errno;
 
   endd3:
-    free(psb);
+    xsfree(psb);
 
   endd2:
-    free(ptmp2);
+    xsfree(ptmp2);
 
    endd:
     return ret;
