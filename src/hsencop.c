@@ -86,6 +86,7 @@ int xmp_getattr(const char *path, struct stat *stbuf, struct fuse_file_info *fi)
 {
     int ret = 0;
 
+    hslog(9, "xmp_getattr '%s' st_size=%d\n", path, stbuf->st_size);
     char  *path2 = alloc_path2(path);
     if(path2 == NULL)
         {
@@ -93,13 +94,14 @@ int xmp_getattr(const char *path, struct stat *stbuf, struct fuse_file_info *fi)
         return -errno;
         }
     hslog(9, "Shadow: '%s' ", path2);
+
     int res = lstat(path2, stbuf);
 	if (res < 0)
         {
+        hslog(1, "xmp_getattr() cannot stat '%s'", path);
         ret = -errno;
         goto cleanup;
         }
-    hslog(9, "xmp_getattr '%s' st_size=%d\n", path, stbuf->st_size);
 
     // Do not process '/'
     #ifdef BYPASS
