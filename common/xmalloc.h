@@ -15,7 +15,19 @@
 
 // Use a medium amount
 
-#define XMALLOC_STEP 100
+// The algorithm dynamically allocates STEP entries at the time.
+// When MAX is reached, it recycles the already allocated entries.
+// When no recycled entry is available, it ignores the
+// supplementary debug information. This assures limits to
+// erroneous code, still retaining information that started the error.
+// No entries are removed, so no race condition will occur.
+// Realloc protected by mutex;
+
+//#define  XMALLOC_STEP 100
+//#define  XMALLOC_MAX  1000
+
+#define  XMALLOC_STEP 2          // test
+#define  XMALLOC_MAX  4
 
 typedef struct _Malloc
 {

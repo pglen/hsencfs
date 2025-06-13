@@ -44,7 +44,7 @@ int     ismounted(char *orig)
 {
     int ret = 0;
 
-    char *ddd = strdup(orig);
+    char *ddd = xstrdup(orig);
     if (!ddd) return 0;
     int xlen = strlen(ddd);
     // Trailaing slash?
@@ -69,7 +69,7 @@ int     ismounted(char *orig)
             }
         }
     endmntent(fp);
-    free(ddd);
+    xsfree(ddd);
     return ret;
 }
 
@@ -253,7 +253,7 @@ int     parse_comstr(char *argx[], int limx, const char *program)
             //printf("estr: '%s'\n", curr);
             if (curr[0] != '\0')
                 {
-                argx[cc] = strdup(curr);
+                argx[cc] = xstrdup(curr);
                 cc++;
                 }
             argx[cc] = NULL;
@@ -292,7 +292,7 @@ int     parse_comstr(char *argx[], int limx, const char *program)
             if(in_squote)
                 goto just_char;
 
-            argx[cc] = strdup(curr);
+            argx[cc] = xstrdup(curr);
             cc++; bb = 0;
             curr[bb] = '\0';
             }

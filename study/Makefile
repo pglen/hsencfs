@@ -21,7 +21,7 @@ gen_rsa:  gen_rsa.c
 EVP_PKEY_RSA_keygen: EVP_PKEY_RSA_keygen.c
 	gcc EVP_PKEY_RSA_keygen.c -l crypto -l ssl -o EVP_PKEY_RSA_keygen
 
-test_xalloc: test_xalloc.c  ../common/xmalloc.c
+test_xalloc: test_xalloc.c  ../common/xmalloc.c ../common/xmalloc.h
 	gcc -D_FILE_OFFSET_BITS=64 test_xalloc.c \
                      -I../common  -I../src -I.. \
                     ../common/xmalloc.c ../common/hsutils.c \

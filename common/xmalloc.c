@@ -24,6 +24,7 @@
 #include <syslog.h>
 #include <mntent.h>
 #include <stdarg.h>
+#include <pthread.h>
 
 #include "xmalloc.h"
 #include "hsutils.h"
@@ -31,6 +32,9 @@
 Malloc_Store malloc_store = {0, 0, NULL };
 
 static  int xmalloc_step = XMALLOC_STEP;
+static  int xmalloc_max  = XMALLOC_MAX;
+static  pthread_mutex_t lock;
+static  int  inited = 0;
 
 int  xmalloc_verbose = 0;
 int  xmalloc_randfail = 0;
@@ -38,6 +42,14 @@ int  xmalloc_randfail = 0;
 void    *xmalloc(size_t xsize)
 
 {
+    if(!inited)
+        {
+        if (pthread_mutex_init(&lock, NULL) != 0) {
+            hsprint(TO_ERR | TO_LOG, 3, "mutex init has failed");
+        }
+    inited = 1;
+    }
+
     if(xmalloc_randfail)
         if ( rand() % xmalloc_randfail == 0)
             {
@@ -49,24 +61,58 @@ void    *xmalloc(size_t xsize)
     void *ptr = malloc(xsize);
     if(ptr)
         {
-        if(malloc_store.curr >= malloc_store.size)
+        // Start recycle
+
+        if (malloc_store.curr >= XMALLOC_MAX)
             {
-            // Realloc
-            size_t newsize = malloc_store.size + xmalloc_step;
-            if(xmalloc_verbose > 3)
+            int found2 = -1;
+            for(int bb = 0; bb < malloc_store.curr; bb++)
+                {
+                if(malloc_store.store[bb].freed != 0)
+                    {
+                    found2 = bb; break;
+                    }
+                }
+            if(found2 >= 0)
+                {
                 hsprint(TO_ERR | TO_LOG, 3,
-                        " xmalloc: store realloc at %ld", newsize);
-            malloc_store.store = realloc(malloc_store.store,
-                                        sizeof(Malloc) * newsize);
-            malloc_store.size = newsize;
+                        "Empty slot: at %d %p",
+                                found2, malloc_store.store[found2].ptr);
+                malloc_store.store[found2].ptr = ptr;
+                malloc_store.store[found2].size = xsize;
+                malloc_store.store[found2].freed = 0;
+                }
+            else
+                {
+                if(xmalloc_verbose > 3)
+                    hsprint(TO_ERR | TO_LOG, 3,
+                        "NO Empty slots at: %p %d", ptr, xsize);
+                }
             }
-        if(xmalloc_verbose > 0)
-            hsprint(TO_ERR | TO_LOG, 3,
-                    " xmalloc: allocate %p %ld bytes", ptr, xsize);
-        malloc_store.store[malloc_store.curr].ptr = ptr;
-        malloc_store.store[malloc_store.curr].size = xsize;
-        malloc_store.store[malloc_store.curr].freed = 0;
-        malloc_store.curr++;
+        else
+            {
+            if(malloc_store.curr >= malloc_store.size)
+                {
+                 pthread_mutex_lock(&lock);
+
+                // Realloc
+                size_t newsize = malloc_store.size + xmalloc_step;
+                if(xmalloc_verbose > 3)
+                    hsprint(TO_ERR | TO_LOG, 3,
+                            " xmalloc: store realloc at %ld", newsize);
+                malloc_store.store = realloc(malloc_store.store,
+                                            sizeof(Malloc) * newsize);
+                malloc_store.size = newsize;
+                pthread_mutex_unlock(&lock);
+                }
+            if(xmalloc_verbose > 0)
+                hsprint(TO_ERR | TO_LOG, 3,
+                        " xmalloc: allocate %p %ld bytes", ptr, xsize);
+            malloc_store.store[malloc_store.curr].ptr = ptr;
+            malloc_store.store[malloc_store.curr].size = xsize;
+            malloc_store.store[malloc_store.curr].freed = 0;
+            malloc_store.curr++;
+            }
         }
     else
         {
