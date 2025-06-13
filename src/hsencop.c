@@ -35,13 +35,13 @@
 #include <fcntl.h>
 #include <dirent.h>
 #include <errno.h>
-#include <syslog.h>
 #include <libgen.h>
 #include <sys/time.h>
 #include <sys/mount.h>
 #include <pwd.h>
 #include <signal.h>
 #include <getopt.h>
+//#include <syslog.h>
 
 #include "hsencfs.h"
 #include "hsutils.h"
@@ -78,7 +78,7 @@ void *xmp_init(struct fuse_conn_info *conn, struct fuse_config *cfg)
 
 off_t xmp_lseek(const char *path,  off_t off, int whence, struct fuse_file_info *fi)
 {
-    hslog(2, "xmp_lseek='%s' off=%ld whence=%d\n", path, off, whence);
+    hslog(3, "xmp_lseek='%s' off=%ld whence=%d\n", path, off, whence);
     return lseek(fi->fh, off, whence);
 }
 
@@ -86,15 +86,14 @@ int xmp_getattr(const char *path, struct stat *stbuf, struct fuse_file_info *fi)
 {
     int ret = 0;
 
-    hslog(9, "xmp_getattr '%s' st_size=%d\n", path, stbuf->st_size);
+    //hslog(9, "xmp_getattr '%s' st_size=%d\n", path, stbuf->st_size);
     char  *path2 = alloc_path2(path);
     if(path2 == NULL)
         {
         hslog(1, "xmp_getattr() cannot alloc for'%s'", path);
         return -errno;
         }
-    hslog(9, "Shadow: '%s' ", path2);
-
+    //memset(stbuf, '\0', sizeof(struct stat));
     int res = lstat(path2, stbuf);
 	if (res < 0)
         {
@@ -102,6 +101,8 @@ int xmp_getattr(const char *path, struct stat *stbuf, struct fuse_file_info *fi)
         ret = -errno;
         goto cleanup;
         }
+    hslog(9, "xmp_getattr '%s' st_size=%d\n", path, stbuf->st_size);
+    hslog(9, "Shadow: '%s' ", path2);
 
     // Do not process '/'
     #ifdef BYPASS
@@ -111,9 +112,10 @@ int xmp_getattr(const char *path, struct stat *stbuf, struct fuse_file_info *fi)
         stbuf->st_size = get_sidelen(path);
     #endif
 
-   cleanup:
+  cleanup:
     if(path2) xsfree(path2);
 
+    hslog(9, "xmp_getattr xmalloc_bytes %d", xmalloc_bytes);
     //xmdump(0);
 
     return ret;
@@ -121,15 +123,13 @@ int xmp_getattr(const char *path, struct stat *stbuf, struct fuse_file_info *fi)
 
 int xmp_fgetattr(const char *path, struct stat *stbuf, struct fuse_file_info *fi)
 {
-    char  *path2 = xmalloc(PATH_MAX) ;
+    char  *path2 = alloc_path2(path);
     if(path2 == NULL)
         {
         hslog(1, "xmp_fgetattr() cannot alloc for'%s'", path);
         return -errno;
         }
-    memset(path2, '\0', PATH_MAX);
-    strcpy(path2, mountsecret); strcat(path2, path);
-	int res = fstat(fi->fh, stbuf);
+    int res = fstat(fi->fh, stbuf);
 	if (res < 0)
 		return -errno;
 
@@ -139,7 +139,7 @@ int xmp_fgetattr(const char *path, struct stat *stbuf, struct fuse_file_info *fi
     //    stbuf->st_size = get_sidelen(path);
     #endif
 
-    hslog(2, "xmp_fgetattr() path='%s' st_size=%d\n", path, stbuf->st_size);
+    hslog(9, "xmp_fgetattr() path='%s' st_size=%d\n", path, stbuf->st_size);
 
    cleanup:
     if(path2) xsfree(path2);
@@ -147,26 +147,26 @@ int xmp_fgetattr(const char *path, struct stat *stbuf, struct fuse_file_info *fi
     return 0;
 }
 
-int xmp_access(const char *path, int mask)
+int     xmp_access(const char *path, int mask)
 {
-	int res;
+	int ret = 0;
 
-    char  path2[PATH_MAX] ;
-    memset(path2, '\0', PATH_MAX);
-
-    strcpy(path2, mountsecret); strcat(path2, path);
-
-    //    hslog(1, "Get access, file: %s uid: %d\n", path, getuid());
-
-	res = access(path2, mask);
-
-	if (res < 0)
+    char  *path2 = alloc_path2(path);
+    if(path2 == NULL)
         {
-            hslog(1, "Cannot access file: %s uid: %d\n", path, getuid());
-		//return -errno;
+        hslog(1, "xmp_access() cannot alloc for'%s'", path);
+        return -errno;
         }
+    hslog(5, "Access, file: %s uid: %d\n", path, getuid());
+	ret = access(path2, mask);
+	if (ret < 0)
+        {
+        hslog(1, "Cannot access file: %s uid: %d\n", path, getuid());
+        }
+  cleanup:
+    if(path2) xsfree(path2);
 
-	return 0;
+	return ret;
 }
 
 int xmp_readlink(const char *path, char *buf, size_t size)
@@ -174,16 +174,20 @@ int xmp_readlink(const char *path, char *buf, size_t size)
     return -ENOSYS;
 
 	int res;
-	char  path2[PATH_MAX] ;
-    memset(path2, '\0', PATH_MAX);
-
-    strcpy(path2, mountsecret); strcat(path2, path);
-
+    char  *path2 = alloc_path2(path);
+    if(path2 == NULL)
+        {
+        hslog(1, "xmp_readlink() cannot alloc for'%s'", path);
+        return -errno;
+        }
     res = readlink(path2, buf, size - 1);
 	if (res < 0)
 		return -errno;
-
 	buf[res] = '\0';
+
+  cleanup:
+    if(path2) xsfree(path2);
+
 	return 0;
 }
 
@@ -203,17 +207,16 @@ int xmp_opendir(const char *path, struct fuse_file_info *fi)
 {
 	int res = 0;
 
-    //  hslog(LOG_DEBUG, "xmp_opendir='%s'\n", path);
-
 	struct xmp_dirp *dd = xmalloc(sizeof(struct xmp_dirp));
 	if (dd == NULL)
 		return -ENOMEM;
 
-    char  path2[PATH_MAX] ;
-    memset(path2, '\0', PATH_MAX);
-
-    strcpy(path2, mountsecret); strcat(path2, path);
-
+    char  *path2 = alloc_path2(path);
+    if(path2 == NULL)
+        {
+        hslog(1, "xmp_opendir() cannot alloc for'%s'", path);
+        return -errno;
+        }
 	dd->dp = opendir(path2);
 	if (dd->dp == NULL) {
 		res = -errno;
@@ -224,6 +227,10 @@ int xmp_opendir(const char *path, struct fuse_file_info *fi)
 	dd->entry = NULL;
 
 	fi->fh = (unsigned long) dd;
+
+  cleanup:
+    if(path2) xsfree(path2);
+
 	return 0;
 }
 
@@ -231,11 +238,9 @@ int xmp_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offse
 {
 	struct xmp_dirp *d = get_dirp(fi);
 
-    if (loglevel > 9)
-        {
-        syslog(LOG_DEBUG, "xmp_readdir='%s'\n", path);
-        }
-	(void) path;
+    hslog(3, "xmp_readdir='%s'\n", path);
+
+    (void) path;
 	if (offset != d->offset) {
 		seekdir(d->dp, offset);
 		d->entry = NULL;
@@ -257,11 +262,10 @@ int xmp_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offse
     	nextoff = telldir(d->dp);
         if(d->entry)
             {
-            //syslog(LOG_DEBUG, "gotdirent '%s'\n", d->entry->d_name);
             // Hide our files from main list
             if(is_our_file(d->entry->d_name, TRUE))
                 {
-                //syslog(LOG_DEBUG, "List skipping: '%s'\n", d->entry->d_name);
+                //hslog(1, "List skipping: '%s'\n", d->entry->d_name);
             	d->entry = NULL;
             	d->offset = nextoff;
                 continue;
@@ -292,10 +296,12 @@ int xmp_mknod(const char *path, mode_t mode, dev_t rdev)
 {
 	int res;
 
-    char  path2[PATH_MAX] ;
-    memset(path2, '\0', PATH_MAX);
-
-    strcpy(path2, mountsecret); strcat(path2, path);
+    char  *path2 = alloc_path2(path);
+    if(path2 == NULL)
+        {
+        hslog(1, "xmp_mknod() cannot alloc for'%s'", path);
+        return -errno;
+        }
 
 	if (S_ISFIFO(mode))
 		res = mkfifo(path2, mode);
@@ -304,27 +310,34 @@ int xmp_mknod(const char *path, mode_t mode, dev_t rdev)
 	if (res < 0)
 		return -errno;
 
-	return 0;
+   cleanup:
+    if(path2) xsfree(path2);
+
+    return 0;
 }
 
 int xmp_mkdir(const char *path, mode_t mode)
 
 {
-	int res;
+	int ret = 0;
 
-    char  path2[PATH_MAX] ;
-    memset(path2, '\0', PATH_MAX);
+    char  *path2 = alloc_path2(path);
+    if(path2 == NULL)
+        {
+        hslog(1, "xmp_mkdir() cannot alloc for'%s'", path);
+        return -errno;
+        }
+    hslog(3, "Mkdir dir: %s mode: %o\n", path, mode);
+	ret = mkdir(path2, mode | S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP);
+	if (ret < 0)
+        {
+		hslog(1, "Cannot Mkdir dir: %s mode: %o\n", path, mode);
+        ret = -errno;
+        }
+  cleanup:
+    if(path2) xsfree(path2);
 
-    strcpy(path2, mountsecret); strcat(path2, path);
-
-    hslog(1, "Mkdir dir: %s mode: %o\n", path, mode);
-
-	res = mkdir(path2, mode | S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP);
-
-	if (res < 0)
-		return -errno;
-
-	return 0;
+	return ret;
 }
 
 int xmp_unlink(const char *path)
@@ -333,115 +346,102 @@ int xmp_unlink(const char *path)
 
     if(is_our_file(path, FALSE))
         {
-            hslog(1, "No deletion of myfiles allowed: '%s'\n", path);
-
+        hslog(1, "No deletion of myfiles allowed: '%s'\n", path);
         errno = EACCES;
         return -EACCES;
         }
-
-    char  path2[PATH_MAX] ;
-    memset(path2, '\0', PATH_MAX);
-
-    strcpy(path2, mountsecret); strcat(path2, path);
-
-    //    hslog(1, "Unlinking file '%s' uid: %d\n", path, getuid());
-
+    char  *path2 = alloc_path2(path);
+    if(path2 == NULL)
+        {
+        hslog(1, "xmp_unlink() cannot alloc for'%s'", path);
+        return -errno;
+        }
+    hslog(3, "Unlinking file '%s' uid: %d\n", path, getuid());
 	res = unlink(path2);
 	if (res < 0)
         {
         hslog(1, "Error on Unlinking: '%s' errno: %d\n", path, errno);
-		return -errno;
+		//return -errno;
         }
 
-    // Also unlink the .sideblock
-    // Reassemble with dot path
-
+    // Also unlink the sideblock
     char *ptmp2 = get_sidename(path);
     if(ptmp2)
         {
-            hslog(1, "RM sb file: %s\n", ptmp2);
-
+        hslog(9, "Removing sideblock file: %s\n", ptmp2);
         int ret2 = unlink(ptmp2);
         if(ret2 < 0)
-                hslog(1,
-                    "Cannot unlink sideblock file: %s errno %d\n", ptmp2, errno);
-
+                hslog(1, "Cannot unlink sideblock file: %s errno %d\n",
+                             ptmp2, errno);
         xsfree(ptmp2);
         }
-	return 0;
+  cleanup:
+    if(path2) xsfree(path2);
+
+	return res;
 }
 
 int xmp_rmdir(const char *path)
 {
-	int res;
+	int res = 0;
 
-    char  path2[PATH_MAX] ;
-    memset(path2, '\0', PATH_MAX);
-
-    strcpy(path2, mountsecret); strcat(path2, path);
-
-        hslog(1, "Removing dir: %s uid: %d\n", path, getuid());
-
+    char  *path2 = alloc_path2(path);
+    if(path2 == NULL)
+        {
+        hslog(1, "xmp_rmdir() cannot alloc for'%s'", path);
+        return -errno;
+        }
+    hslog(3, "Removing dir: %s uid: %d\n", path, getuid());
 	res = rmdir(path2);
 	if (res < 0)
         {
-            hslog(1, "Cannot remove dir: '%s' errno=%d\n", path2, errno);
-
-		return -errno;
+        hslog(1, "Cannot remove dir: '%s' errno=%d\n", path2, errno);
+		//return -errno;
         }
-
     // ?? Also remove all side items
     char *ptmp2 = get_sidename(path);
     if(ptmp2)
         {
-            hslog(1, "RM sb file: %s\n", ptmp2);
-
+        hslog(4, "Remove sideblock file: %s\n", ptmp2);
         int ret2 = unlink(ptmp2);
         if(ret2 < 0)
-                hslog(1,
-                    "Cannot unlink sideblock file: %s errno %d\n", ptmp2, errno);
-
+                hslog(1, "Cannot unlink sideblock file: %s\n",
+                            ptmp2, errno);
         xsfree(ptmp2);
         }
+    hslog(7, "Removed dir: %s uid: %d\n", path, getuid());
 
-        hslog(1, "Removed dir: %s uid: %d\n", path, getuid());
+  cleanup:
+    if(path2) xsfree(path2);
 
-	return 0;
+	return res;
 }
 
 //# Symlink is not implemented in the encrypted file system
-// We disabled symlink, as it confused the dataroot. Remember we link
-// to dataroot as an intercept.
-// Re-enabled symlink ... wtf
+// We disabled symlink, as it confused the dataroot.
+// Remember, we link to dataroot as an intercept.
 
 int xmp_symlink(const char *from, const char *to)
 {
 	int res;
-
+    hslog(1, "Symlink disabled: %s -> %s\n", from, to);
     return -ENOSYS;
-
-        hslog(1, "Symlink parms: %s -> %s\n", from, to);
 
     // TODO symlink between file systems
 
     char  path2[PATH_MAX] ;
     memset(path2, '\0', PATH_MAX);
-
     strcpy(path2, mountsecret); strcat(path2, from);
-
     char  path3[PATH_MAX] ;
     strcpy(path3, mountsecret); strcat(path3, to);
-
-        hslog(1, "Symlink file: %s -> %s\n", path2, path3);
-
+    hslog(1, "Symlink file: %s -> %s\n", path2, path3);
 	//res = symlink(from, path3);
 	//res = symlink(path2, path3);
 	res = symlink(from, to);
-
 	if (res < 0)
 		return -errno;
 
-	return 0;
+	return res;
 }
 
 //
@@ -452,43 +452,50 @@ int xmp_rename(const char *from, const char *to, unsigned int flags)
 {
 	int res;
 
-    char  path2[PATH_MAX] ;
-    memset(path2, '\0', PATH_MAX);
-
-    strcpy(path2, mountsecret); strcat(path2, from);
-
-    char  path3[PATH_MAX] ;
-    strcpy(path3, mountsecret); strcat(path3, to);
-
-        hslog(1, "Renamed file: %s to %s uid: %d\n", from, to, getuid());
-
-    char *ptmp2 = get_sidename(from);
+    char  *path2 = alloc_path2(from);
+    if(path2 == NULL)
+        {
+        hslog(1, "xmp_rename() cannot alloc for'%s'", from);
+        return -errno;
+        }
+    char  *path3 = alloc_path2(to);
+    if(path2 == NULL)
+        {
+        xsfree(path2);
+        hslog(1, "xmp_rename() cannot alloc for'%s'", to);
+        return -errno;
+        }
+    hslog(2, "Rename file from: %s to %s\n", from, to);
+    char *ptmp2 = NULL, *ptmp3 = NULL;
+    ptmp2 = get_sidename(from);
     if(!ptmp2)
         {
-            hslog(1, "Error on malloc sideblock file2\n");
-        return -errno;
+        hslog(1, "Error on malloc sideblock from\n");
+        res = -errno;
+        goto cleanup;
         }
-    char *ptmp3 = get_sidename(to);
+    ptmp3 = get_sidename(to);
     if(!ptmp3)
         {
-            hslog(1, "Error on malloc sideblock file3\n");
-
-        xsfree(ptmp2);
-        return -errno;
+        hslog(1, "Error on malloc sideblock file3\n");
+        res = -errno;
+        goto cleanup;
         }
-
-        hslog(1, "Rename sideblock file1: %s\n", ptmp2);
-
-    rename(ptmp2, ptmp3);
-    xsfree(ptmp2), xsfree(ptmp3);
-
-	res = rename(path2, path3);
-
-	//res = rename(from, to);
+    res = rename(path2, path3);
 	if (res < 0)
-		return -errno;
+        {
+        res = -errno;
+        }
+    hslog(5, "Rename sideblock file1: %s %s\n", ptmp2, ptmp3);
+    rename(ptmp2, ptmp3);
 
-	return 0;
+  cleanup:
+    if(ptmp2) xsfree(ptmp2);
+    if(ptmp3) xsfree(ptmp3);
+    if(path2) xsfree(path2);
+    if(path3) xsfree(path3);
+
+	return res;
 }
 
 // We disabled link, as it confused the dataroot. Remember we link to dataroot
@@ -512,74 +519,71 @@ int xmp_link(const char *from, const char *to)
 	//res = link(from, to);
 	if (res < 0)
 		return -errno;
+  cleanup:
+    if(path2) xsfree(path2);
 
 	return 0;
 }
 
 int xmp_chmod(const char *path, mode_t mode, struct fuse_file_info *fi)
 {
-	int res;
-
-    char  path2[PATH_MAX] ;
-    memset(path2, '\0', PATH_MAX);
-
-    strcpy(path2, mountsecret); strcat(path2, path);
-
+	int res = 0;
+    char  *path2 = alloc_path2(path);
+    if(path2 == NULL)
+        {
+        hslog(1, "xmp_chmod() cannot alloc for'%s'", path);
+        return -errno;
+        }
     hslog(1, "Chmod file: %s uid: %d mode: %o", path, getuid(), mode);
-
 	res = chmod(path2, mode);
-
 	if (res < 0)
-		return -errno;
-
-	return 0;
+		res = -errno;
+  cleanup:
+    if(path2) xsfree(path2);
+	return res;
 }
 
 int xmp_chown(const char *path, uid_t uid, gid_t gid, struct fuse_file_info *fi)
 {
-	int res;
-
-    char  path2[PATH_MAX] ;
-    memset(path2, '\0', PATH_MAX);
-
-    strcpy(path2, mountsecret); strcat(path2, path);
-
-        hslog(1, "Chown file: %s uid: %d touid: %d togid %d\n",
-                path, getuid(), uid, gid);
-
+	int res = 0;
+    char  *path2 = alloc_path2(path);
+    if(path2 == NULL)
+        {
+        hslog(1, "xmp_chown() cannot alloc for'%s'", path);
+        return -errno;
+        }
+    hslog(1, "Chown file: %s uid: %d touid: %d togid %d\n",
+                        path, getuid(), uid, gid);
 	res = lchown(path2, uid, gid);
 	if (res < 0)
-		return -errno;
-
-	return 0;
+		res =  -errno;
+ cleanup:
+    if(path2) xsfree(path2);
+    return res;
 }
 
 int xmp_truncate(const char *path, off_t size, struct fuse_file_info *fi)
 {
-	int res;
-
+	int res = 0;
     if(is_our_file(path, FALSE))
         {
-            hslog(1, "No trancation of myfiles allowed: '%s'\n", path);
+        hslog(1, "No trancation of myfiles allowed: '%s'\n", path);
         errno = EACCES;
         return -EACCES;
         }
-
-    char  path2[PATH_MAX] ;
-    memset(path2, '\0', PATH_MAX);
-
-    strcpy(path2, mountsecret); strcat(path2, path);
-
-        hslog(1, "Truncated file: %s size=%ld\n", path, size);
-
+    char  *path2 = alloc_path2(path);
+    if(path2 == NULL)
+        {
+        hslog(1, "xmp_truncate() cannot alloc for'%s'", path);
+        return -errno;
+        }
+    hslog(3, "Truncated file: %s size=%ld\n", path, size);
     // Kill sideblock too
     create_sideblock(path);
-
 	res = truncate(path2, size);
 	if (res < 0)
-		return -errno;
-
-	return 0;
+		res = -errno;
+	return res;
 }
 
 int xmp_ftruncate(const char *path, off_t size, struct fuse_file_info *fi)
@@ -588,9 +592,8 @@ int xmp_ftruncate(const char *path, off_t size, struct fuse_file_info *fi)
 
 	off_t fsize = get_fsize(fi->fh);
 
-        hslog(1, "fTruncated file: %s size %ld fsize=%ld\n",
+    hslog(1, "fTruncate file: %s size %ld fsize=%ld\n",
                                                 path, size, fsize);
-
     // Kill sideblock too
     create_sideblock(path);
 
@@ -647,18 +650,22 @@ int xmp_utimens(const char *path, const struct timespec ts[2], struct fuse_file_
 	//tv[1].tv_usec = ts[1].tv_nsec / 1000;
     //
 
-    char  path2[PATH_MAX] ;
-    memset(path2, '\0', PATH_MAX);
-
-    strcpy(path2, mountsecret); strcat(path2, path);
-
+    char  *path2 = alloc_path2(path);
+    if(path2 == NULL)
+        {
+        hslog(1, "xmp_utimens() cannot alloc for'%s'", path);
+        return -errno;
+        }
     (void) fi;
-    int res;
+    int res = 0;
     /* don't use utime/utimes since they follow symlinks */
     res = utimensat(0, path2, ts, AT_SYMLINK_NOFOLLOW);
     if (res < 0)
-            return -errno;
-    return 0;
+            res = -errno;
+  cleanup:
+    if(path2) xsfree(path2);
+
+    return res;
 
 	//res = utimes(path2, tv);
 	//if (res < 0)
@@ -716,48 +723,37 @@ int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
         hslog(1, "Cannot stat newly created file '%s'\n", path);
         goto cleanup;
         }
-
     hslog(3, "File size: %d\n", stbuf.st_size);
 
     if(flags2 & O_TRUNC)
         {
         hslog(1, "Truncating '%s' fh=%ld\n", path, fi->fh);
         int ret2 = ftruncate(fi->fh, 0);
-
         }
     hslog(3, "Created: '%s' fh=%d mode=%o\n", path, fi->fh, mode);
     //hslog(9, "Inode: %lud blocksize %ld \n",
     //                                stbuf.st_ino, stbuf.st_blksize);
-
     create_sideblock(path);
   cleanup:
-        if(path2) xsfree(path2);
+    if(path2) xsfree(path2);
 	return res;
 }
 
-int xmp_open(const char *path, struct fuse_file_info *fi)
+int     xmp_open(const char *path, struct fuse_file_info *fi)
 {
 	int ret = 0;
 
-    // Needed by the decrypt command line util
-    //if(is_our_file(path, FALSE))
-    //    {
-    //    syslog(LOG_DEBUG, "No operation on myfiles allowed: '%s'\n", path);
-    //    return -EACCES;
-    //    }
-
-    xmdump(1);
-
-    char  path2[PATH_MAX] ;
-    memset(path2, '\0', PATH_MAX);
-
-    strcpy(path2, mountsecret); strcat(path2, path);
-
-    hslog(1, "Open: '%s' flags: %o\n",  path, fi->flags);
-    hslog(1, "Shadow: '%s'",  path2);
+    char  *path2 = alloc_path2(path);
+    if(path2 == NULL)
+        {
+        hslog(1, "xmp_rmdir() cannot alloc for'%s'", path);
+        return -errno;
+        }
+    hslog(2, "Open: '%s' flags: %o\n",  path, fi->flags);
+    hslog(4, "Shadow: '%s'",  path2);
     if(defpassx[0] == 0)
         {
-        hslog(LOG_DEBUG, "Empty pass on open file: %s uid: %d\n", path, getuid());
+        hslog(1, "Empty pass on open file: %s uid: %d\n", path, getuid());
         int ret = openpass(path);
         if (ret)
             {
@@ -773,7 +769,8 @@ int xmp_open(const char *path, struct fuse_file_info *fi)
     if (fi->fh < 0)
         {
         hslog(1, "Error on open file, trying org perm. errno=%d\n", errno);
-        return -errno;
+        ret = -errno;
+        goto cleanup;
         }
     //struct stat stbuf;	memset(&stbuf, 0, sizeof(stbuf));
     //int res2 = fstat(fi->fh, &stbuf);
@@ -795,37 +792,35 @@ int xmp_open(const char *path, struct fuse_file_info *fi)
     if(fi->flags & O_APPEND)
         {
         hslog(3, "Appending '%s' fh=%ld\n", path, fi->fh);
-        hslog(3, "Current real size: %ls\n", path, fi->fh);
+        hslog(5, "Current real size: %ls\n", path, fi->fh);
 
         int fsize = get_sidelen(path);
         int res3 = lseek(fi->fh, fsize, SEEK_SET);
-        hslog(3, "Current pos=%ld\n", res3);
+        hslog(5, "Current pos=%ld\n", res3);
         }
-    hslog(3, "Opened '%s' fh=%ld\n", path, fi->fh);
-    //struct stat stbuf;	memset(&stbuf, 0, sizeof(stbuf));
-    //int res = fstat(fi->fh, &stbuf);
-    //    hslog(1, "Inode: %lud\n", stbuf.st_ino);
-    cleanup:
+    hslog(5, "Opened '%s' fh=%ld\n", path, fi->fh);
+  cleanup:
+    if(path2) xsfree(path2);
         ;
 	return ret;
 }
 
 int xmp_statfs(const char *path, struct statvfs *stbuf)
 {
-	int res;
-
-    char  path2[PATH_MAX] ;
-    memset(path2, '\0', PATH_MAX);
-
-    strcpy(path2, mountsecret); strcat(path2, path);
-
-        hslog(1, "Stat file: %s uid: %d\n", path, getuid());
-
+	int res = 0;
+    char  *path2 = alloc_path2(path);
+    if(path2 == NULL)
+        {
+        hslog(1, "xmp_statfs() cannot alloc for'%s'", path);
+        return -errno;
+        }
+    hslog(1, "Stat file: %s uid: %d\n", path, getuid());
 	res = statvfs(path2, stbuf);
 	if (res < 0)
-		return -errno;
-
-	return 0;
+		res = -errno;
+cleanup:
+    if(path2) xsfree(path2);
+  	return res;
 }
 
 int xmp_flush(const char *path, struct fuse_file_info *fi)
@@ -862,7 +857,7 @@ int xmp_flush(const char *path, struct fuse_file_info *fi)
     //if (res < 0)
     //   return -errno;
 
-    hslog(9, "Flushed file: %s fh: %ld\n", path, fi->fh);
+    //hslog(9, "Flushed file: %s fh: %ld\n", path, fi->fh);
 
 	return 0;
 }
@@ -877,8 +872,11 @@ int xmp_release(const char *path, struct fuse_file_info *fi)
 	int rret =  close(fi->fh);
     hslog(9, "Released: '%s' fh: %ld rret=%d\n", path, fi->fh, rret);
 
+    hslog(3, "xmalloc_bytes %d", xmalloc_bytes);
+
     // Show if this file leaked memory
     //xmdump(0);
+
     return res;
 }
 
@@ -909,67 +907,91 @@ int xmp_fsync(const char *path, int isdatasync, struct fuse_file_info *fi)
 /* xattr operations are optional and can safely be left unimplemented */
 int xmp_setxattr(const char *path, const char *name, const char *value, size_t size, int flags)
 {
-    char  path2[PATH_MAX] ;
-    memset(path2, '\0', PATH_MAX);
-
-    strcpy(path2, mountsecret); strcat(path2, path);
-
-	int res = lsetxattr(path2, name, value, size, flags);
+    int res = 0;
+    char  *path2 = alloc_path2(path);
+    if(path2 == NULL)
+        {
+        hslog(1, "xmp_setxattr() cannot alloc for'%s'", path);
+        return -errno;
+        }
+	res = lsetxattr(path2, name, value, size, flags);
 	if (res < 0)
-		return -errno;
-	return 0;
+		 res = -errno;
+  cleanup:
+    if(path2) xsfree(path2);
+	return res;
 }
 
 int xmp_getxattr(const char *path, const char *name, char *value,
 			size_t size)
 {
-    char  path2[PATH_MAX] ;
-    memset(path2, '\0', PATH_MAX);
-
-    strcpy(path2, mountsecret); strcat(path2, path);
-
+    char  *path2 = alloc_path2(path);
+    if(path2 == NULL)
+        {
+        hslog(1, "xmp_getxattr() cannot alloc for'%s'", path);
+        return -errno;
+        }
 	int res = lgetxattr(path2, name, value, size);
 	if (res < 0)
-		return -errno;
+		res = -errno;
+  cleanup:
+    if(path2) xsfree(path2);
+
 	return res;
 }
 
 int xmp_listxattr(const char *path, char *list, size_t size)
 {
-    char  path2[PATH_MAX] ;
-    memset(path2, '\0', PATH_MAX);
-
-    strcpy(path2, mountsecret); strcat(path2, path);
-
+    char  *path2 = alloc_path2(path);
+    if(path2 == NULL)
+        {
+        hslog(1, "xmp_rmdir() cannot alloc for'%s'", path);
+        return -errno;
+        }
 	int res = llistxattr(path3, list, size);
 	if (res < 0)
-		return -errno;
+		res = -errno;
+  cleanup:
+    if(path2) xsfree(path2);
 	return res;
 }
 
 int xmp_removexattr(const char *path, const char *name)
 {
-    char  path2[PATH_MAX] ;
-    memset(path2, '\0', PATH_MAX);
-
-    strcpy(path2, mountsecret); strcat(path2, path);
-
+    char  *path2 = alloc_path2(path);
+    if(path2 == NULL)
+        {
+        hslog(1, "xmp_rmdir() cannot alloc for'%s'", path);
+        return -errno;
+        }
 	int res = lremovexattr(path2, name);
 	if (res < 0)
-		return -errno;
-	return 0;
+		res = -errno;
+  cleanup:
+    if(path2) xsfree(path2);
+	return res;
 }
 #endif /* HAVE_SETXATTR */
 
 int xmp_lock(const char *path, struct fuse_file_info *fi, int cmd, struct flock *lock)
 {
-	(void) path;
+    // TODO
+    char  *path2 = alloc_path2(path);
+    if(path2 == NULL)
+        {
+        hslog(1, "xmp_rmdir() cannot alloc for'%s'", path);
+        return -errno;
+        }
     int ret = 0;
     //ulockmgr_op(fi->fh, cmd, lock, &fi->lock_owner,
 	//		   sizeof(fi->lock_owner));
     //hslog(3, "xmp_lock='%s' cmd=%ld fh=%ld type=%d\n",
     //                            path, cmd, fi->fh, lock->l_type);
-	return ret;
+
+  cleanup:
+    if(path2) xsfree(path2);
+
+  return ret;
 }
 
 // EOF

@@ -42,10 +42,13 @@ int main(int argc, char *argv[])
             memset(memarr[aa], 'a', memsize);
         //else
         //    printf("randfail %d\n", aa);
+
+        printf("malloc: %d\n", xmalloc_bytes);
         }
     for (int aa = 0; aa < sss; aa++)
         {
         xsfree(memarr[aa]);
+        printf("malloc: %d\n", xmalloc_bytes);
         }
     for (int aa = 0; aa < sss ; aa++)
         {
@@ -53,11 +56,14 @@ int main(int argc, char *argv[])
         memarr[aa] = xmalloc(memsize);
         if (memarr[aa])
             memset(memarr[aa], 'a', memsize);
+        printf("malloc: %d\n", xmalloc_bytes);
         }
     for (int aa = 0; aa < sss/2; aa++)
         {
         xsfree(memarr[aa]);
+        printf("malloc: %d\n", xmalloc_bytes);
         }
+    printf("final malloc: %d\n", xmalloc_bytes);
 
     //printf("%s\n", hexdump(memarr[0], memsize));
     //xfree(ppp);

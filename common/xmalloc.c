@@ -38,6 +38,7 @@ static  int  inited = 0;
 
 int  xmalloc_verbose = 0;
 int  xmalloc_randfail = 0;
+int  xmalloc_bytes = 0;
 
 void    *xmalloc(size_t xsize)
 
@@ -112,6 +113,7 @@ void    *xmalloc(size_t xsize)
             malloc_store.store[malloc_store.curr].size = xsize;
             malloc_store.store[malloc_store.curr].freed = 0;
             malloc_store.curr++;
+            xmalloc_bytes += xsize;
             }
         }
     else
@@ -158,11 +160,11 @@ static  void    _xsfree(void *ptr, int safe)
             ((char *)ptr)[bb] = rand() & 0xff;
             }
         }
-
     if(xmalloc_verbose > 0)
         hsprint(TO_ERR | TO_LOG, 3, " xmalloc: freeing %p %d bytes",
                             ptr, malloc_store.store[found].size);
     malloc_store.store[found].freed = 1;
+    xmalloc_bytes -= malloc_store.store[found].size;
 
   endd: ;
     if(ptr)

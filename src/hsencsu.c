@@ -98,31 +98,6 @@ char    *alloc_path2(const char *path)
 }
 
 // -----------------------------------------------------------------------
-// Encrypt (double decrypt) it: This is a fake encryption of the
-// dangling memory, Just to confuse the would be decoder
-
-void  kill_buff(void *bbuff, int xlen)
-
-{
-    // Do not leave data behind
-    if (bbuff)
-        {
-        #if 1
-        // Just to confuse the would be debugger
-        if(rand() % 2 == 0)
-            hs_decrypt(bbuff, xlen, "passpass", 8);
-        else
-            hs_decrypt(bbuff, xlen, "pass", 4);
-
-        // No data left behind
-        memset(bbuff, 0, xlen);        // Zero it
-        #endif
-
-        free(bbuff);
-        }
-}
-
-// -----------------------------------------------------------------------
 // Go through pass ritual on demand
 
 int     openpass(const char *path)

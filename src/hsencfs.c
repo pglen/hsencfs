@@ -862,12 +862,14 @@ int     main(int argc, char *argv[])
         //    }
         }
 
-    xmalloc_verbose = 3;
+    //xmalloc_verbose = 3;
 
     hsprint(TO_ERR|TO_LOG, 1, "MountDir: '%s'", mountpoint);
     hsprint(TO_ERR|TO_LOG, 1, "DataDir: '%s'", mountsecret);
     int uid = getuid();
     struct passwd *pwd = getpwuid(uid);
+    hsprint(TO_ERR|TO_LOG, 6,
+              "----------------------------------");
     hsprint(TO_ERR|TO_LOG, 6,
               "Started by uid=%d (%s)", uid, pwd->pw_name);
     if(verbose)

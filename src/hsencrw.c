@@ -150,7 +150,8 @@ int     virt_write(const char *path, int fd, const char *buf, uint wsize, uint o
 	    //res = -errno;
         //goto endd;
         }
-    kill_sideblock(psb);
+    if(psb)
+        xsfree(psb);
 
   end_func2:
     free(mem);

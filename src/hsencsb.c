@@ -73,7 +73,7 @@ char    *get_sidename(const char *path)
         goto endd;
         }
     memset(ptmp2, '\0',  PATH_MAX);
-    // hslog(1, "Generate sidename '%s'\n", path);
+    // hslog(9, "Generate sidename '%s'\n", path);
     int cnt = 0, cnt2 = 0; char *pch, *temp;
     char *ddd = xstrdup(path);
     pch = strtok(ddd, "/");
@@ -93,7 +93,7 @@ char    *get_sidename(const char *path)
     while ( (temp = strtok(NULL, "/") ) != NULL)
         {
         cnt2++;
-        //hslog(1, "sb token %d  '%s'\n", cnt2, temp);
+        //hslog(9, "sb token %d  '%s'\n", cnt2, temp);
         if(strcmp(temp, "."))
             {
             strcat(ptmp2, "/");
@@ -120,8 +120,8 @@ size_t get_sidelen(const char *path)
 {
     size_t ret = 0;  int old_errno = errno;
 
-    if(strlen(path) == 1)
-        return 0;
+    //if(strlen(path) == 1)
+    //    return 0;
 
     hslog(9, "Get sideblock len from: '%s'\n", path);
 
@@ -140,10 +140,11 @@ size_t get_sidelen(const char *path)
     ret = psb->flen;
 
   end_func3:
-    kill_sideblock(psb);
+    xsfree(psb);
     //errno = old_errno;
 
    end_func2:
+    //hslog(9, "sidelen: xmalloc_bytes %d", xmalloc_bytes);
 
     return ret;
 }
@@ -171,7 +172,7 @@ int    read_sideblock(const char *path, sideblock_t *psb)
         ret = -ENOMEM;
         goto endd;
         }
-    hslog(9, "Opening sideblock file '%s'\n", ptmpr);
+    //hslog(9, "Opening sideblock file '%s'\n", ptmpr);
     int fdi = open(ptmpr, O_RDWR);
     if(fdi < 0)
         {
@@ -190,14 +191,13 @@ int    read_sideblock(const char *path, sideblock_t *psb)
         {
         hslog(1, "Error on sideblock MAGIC\n");
         }
-    //hslog(1, "Got sideblock:, '%s'\n", bluepoint2_dumphex(*pbuff, 8));
+    //hslog(9, "Got sideblock:, '%s'\n", bluepoint2_dumphex(*pbuff, 8));
 
   endd2:
     if (ptmpr) xsfree(ptmpr);
   endd:
+    //hslog(9, "read sb xmalloc_bytes %d", xmalloc_bytes);
 
-    hslog(9, "Done read sideblock: '%s'\n", path);
-    xmdump(0);
     return ret;
 }
 
@@ -280,16 +280,13 @@ int    create_sideblock(const char *path)
         ret = -ENOMEM;
         goto endd;
         }
-
     //hslog(3, "Sideblock created '%s'\n", ptmp2 + 15);
-
     sideblock_t *psb = alloc_sideblock();
     if(!psb)
         {
         ret = -ENOMEM;
         goto endd2;
         }
-
     int fdi = open(ptmpc, O_RDWR | O_CREAT | O_TRUNC , S_IRUSR | S_IWUSR);
     if(fdi < 0)
         {
@@ -319,13 +316,6 @@ int    create_sideblock(const char *path)
 
    endd:
     return ret;
-}
-
-void    kill_sideblock(sideblock_t *psb)
-
-{
-    if(psb)
-        kill_buff(psb, sizeof(psb));
 }
 
 // EOF

@@ -102,7 +102,8 @@ int     virt_read(const char *path, int fd, char *buf, uint wsize, uint offset)
         hslog(1, "Cannot read sideblock data.\n");
         // Ignore, still could be good
         }
-    kill_sideblock(psb);
+    if(psb)
+        xsfree(psb);
 
     hslog(5, "virt_read(): res2a=%ld xsize=%ld\n", res2a, xsize);
 
