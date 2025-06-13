@@ -225,6 +225,8 @@ bappend "aaa"
 bappend "bbbb"
 bappend "aaa"
 
+rm -rf $TESTDIR/*
+
 echo
 echo Done tests.
 

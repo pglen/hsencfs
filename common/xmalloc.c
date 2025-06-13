@@ -26,107 +26,113 @@
 #include <stdarg.h>
 
 #include "xmalloc.h"
+#include "hsutils.h"
 
 Malloc_Store malloc_store = {0, 0, NULL };
 
-static  int xmalloc_step = 100;
+static  int xmalloc_step = XMALLOC_STEP;
 
 int  xmalloc_verbose = 0;
 int  xmalloc_randfail = 0;
 
-void    *xmalloc(int size)
+void    *xmalloc(size_t xsize)
 
 {
     if(xmalloc_randfail)
         if ( rand() % xmalloc_randfail == 0)
             {
             if(xmalloc_verbose > 0)
-                printf("xmalloc: random fail on len=%d\n", size);
+                hsprint(TO_ERR | TO_LOG, 3,
+                    " xmalloc: random fail on len=%ld", xsize);
             return NULL;
             }
-    char *ptr = malloc(size);
+    void *ptr = malloc(xsize);
     if(ptr)
         {
-        if(xmalloc_verbose > 0)
-            printf("xmalloc: %d %p\n", size, ptr);
-
         if(malloc_store.curr >= malloc_store.size)
             {
             // Realloc
-            int newsize = malloc_store.size + xmalloc_step;
-            if(xmalloc_verbose > 1)
-                printf("realloc at %d\n", newsize);
+            size_t newsize = malloc_store.size + xmalloc_step;
+            if(xmalloc_verbose > 3)
+                hsprint(TO_ERR | TO_LOG, 3,
+                        " xmalloc: store realloc at %ld", newsize);
             malloc_store.store = realloc(malloc_store.store,
                                         sizeof(Malloc) * newsize);
             malloc_store.size = newsize;
             }
+        if(xmalloc_verbose > 0)
+            hsprint(TO_ERR | TO_LOG, 3,
+                    " xmalloc: allocate %p %ld bytes", ptr, xsize);
         malloc_store.store[malloc_store.curr].ptr = ptr;
-        malloc_store.store[malloc_store.curr].size = size;
+        malloc_store.store[malloc_store.curr].size = xsize;
         malloc_store.store[malloc_store.curr].freed = 0;
-
         malloc_store.curr++;
+        }
+    else
+        {
+        if(xmalloc_verbose > 0)
+            hsprint(TO_ERR | TO_LOG, 3,
+                " xmalloc: allocate failed for %ld", xsize);
         }
     return ptr;
 }
 
-void    xsfree(void *ptr)
+static  void    _xsfree(void *ptr, int safe)
 {
-    // safe free
     int found = -1;
-    for(int aa = 0; aa <  malloc_store.curr; aa++)
+    // Added sequencially, so search backwards
+    for(int aa = malloc_store.curr - 1; aa >= 0; aa--)
         {
         if(malloc_store.store[aa].ptr == ptr)
             {
-            found = aa;
+            found = aa; break;
             }
        }
     if (found < 0)
         {
         if(xmalloc_verbose > 0)
-            printf("Error on xfree: %p\n", ptr);
+            hsprint(TO_ERR | TO_LOG, 3,
+                    " xmalloc: no entry on xfree %p", ptr);
+        goto endd;
         }
-    else
+    //hsprint(TO_ERR | TO_LOG, 3, "xsfree: %ld",
+    //                  malloc_store.store[found].size );
+    if(malloc_store.store[found].freed != 0)
         {
-        //printf("xsfree: %d\n", malloc_store.store[found].size );
+        if(xmalloc_verbose > 0)
+            hsprint(TO_ERR | TO_LOG, 3,
+                    " xmalloc: Duplicate free  %p", ptr);
+        // Skip real free
+        goto endd;
+        }
+    if(safe)
+        {
         for(int bb = 0; bb < malloc_store.store[found].size; bb++)
             {
             ((char *)ptr)[bb] = rand() & 0xff;
             }
-        malloc_store.store[found].freed = 1;
         }
-    free(ptr);
+
+    if(xmalloc_verbose > 0)
+        hsprint(TO_ERR | TO_LOG, 3, " xmalloc: freeing %p %d bytes",
+                            ptr, malloc_store.store[found].size);
+    malloc_store.store[found].freed = 1;
+
+  endd: ;
+    if(ptr)
+        free(ptr);
 }
 
 void    xfree(void *ptr)
 
 {
-    if(xmalloc_verbose > 1)
-        printf("freeing %p ... ", ptr);
+    _xsfree(ptr, 0);
+}
 
-    int found = -1;
-    for(int aa = 0; aa <  malloc_store.curr; aa++)
-        {
-        if(malloc_store.store[aa].ptr == ptr)
-            {
-            if(xmalloc_verbose > 3)
-                printf("ptr: %p size: %d freed: %d\n",
-                    malloc_store.store[aa].ptr,
-                             malloc_store.store[aa].size,
-                                malloc_store.store[aa].freed);
-            found = aa;
-            }
-        }
-    if (found < 0)
-        {
-        if(xmalloc_verbose > 0)
-            printf("Error on xfree: %p\n", ptr);
-        }
-    else
-        {
-        malloc_store.store[found].freed = 1;
-        }
-    // Free it, even if not in our database
-    free(ptr);
+void    xsfree(void *ptr)
+
+{
+    _xsfree(ptr, 1);
 }
 
 void    xmdump(int level)
@@ -136,7 +142,7 @@ void    xmdump(int level)
         {
         if(level)
             {
-            printf("ptr: %p size: %d freed: %d\n",
+            hsprint(TO_ERR | TO_LOG, 3, "ptr: %p size: %ld freed: %d",
                     malloc_store.store[aa].ptr,
                             malloc_store.store[aa].size,
                                 malloc_store.store[aa].freed);
@@ -144,9 +150,10 @@ void    xmdump(int level)
         else
             {
             if(!malloc_store.store[aa].freed)
-                printf("Not freed - ptr: %p size: %d\n",
-                    malloc_store.store[aa].ptr,
-                            malloc_store.store[aa].size);
+                hsprint(TO_ERR | TO_LOG, 3,
+                        "Not freed - ptr: %p size: %ld",
+                            malloc_store.store[aa].ptr,
+                                malloc_store.store[aa].size);
             }
         }
 }

@@ -507,6 +507,16 @@ void split_path(const char *path, char *dir, char *fname, char *ext)
         }
 }
 
+void sigenv(int sig)
+
+{
+    hsprint(TO_ERR|TO_LOG, 1, "Received signal: %d", sig);
+    fuse_session_unmount(fuse_sess);
+    fuse_session_exit(fuse_sess);
+    hsprint(TO_ERR|TO_LOG, 1, "Terminating.");
+    _exit(127);
+}
+
 void sigterm(int sig)
 
 {
@@ -587,6 +597,7 @@ int     main(int argc, char *argv[])
     split_path(fullpath, startdir, fff, eee);
 
     // Set signal handlers
+    signal(SIGSEGV, sigenv);
     signal(SIGTERM, sigterm);
     signal(SIGINT, sigint);
 
@@ -644,16 +655,16 @@ int     main(int argc, char *argv[])
         msptr = tmpsecret;
         int cnt = 0, cnt2 = 0; char *pch, *temp;
         // strtok needs different string in successive calls
-        char *ddd = strdup(mountpoint);
+        char *ddd = xstrdup(mountpoint);
         pch = strtok(ddd, "/");
         while ( (temp = strtok (NULL, "/") ) != NULL)
             {
             //printf("tokenx '%s'\n", temp);
             cnt++;
             }
-        free(ddd);
+        xsfree(ddd);
         //printf("cnt %d\n", cnt);
-        char *eee = strdup(mountpoint);
+        char *eee = xstrdup(mountpoint);
         pch = strtok(eee, "/");
         strcat(tmpsecret, "/"); strcat(tmpsecret, pch);
         //printf("tokenx '%s'\n", pch);
@@ -670,10 +681,9 @@ int     main(int argc, char *argv[])
                 strcat(tmpsecret, temp);
                 }
             }
-        free(eee);
+        xsfree(eee);
         strcat(tmpsecret, "/");
         }
-
     if(pg_debug > 9)
         printf("msptr '%s'\n", msptr);
     test_mountsecret(msptr, mountsecret);
@@ -738,7 +748,80 @@ int     main(int argc, char *argv[])
 
     //bluepoint2_encrypt(decoy, sizeof(decoy), defpassx, defplen);
 
-// Check access
+    // Just for development. DO NOT USE!
+    //strcpy(defpassx, "1234");
+    //defplen = strlen(defpassx);
+
+    if (!ondemand)
+        {
+        if (verbose)
+            {
+            printf("Ondemand pass option deactivated.\n");
+            }
+        // Will ask for pass if not filled
+        //if(defpassx[0] == 0)
+        //    {
+        //    }
+
+        // Create markfile name
+        char *markfile = xmalloc(PATH_MAX);
+        snprintf(markfile, PATH_MAX, "%s%s", mountsecret, passfname);
+        //printf("markfile: '%s'\n", markfile);
+
+        int pret = 0;
+        if(defpassx[0] == '\0')
+            {
+            PassArg passarg;
+            if (access(markfile, R_OK) < 0)
+                passarg.create = 1;
+            else
+                passarg.create = 0;
+            passarg.prompt = "\'  Enter pass:  \'",
+            passarg.title = "\' Title Here: \'";
+            passarg.gui = 0;
+            passarg.passprog = passprog;
+            passarg.mountstr = mountpoint;
+            passarg.markfile = markfile;
+            char *tmp = malloc(MAXPASSLEN);
+            passarg.result = tmp;
+            passarg.reslen = MAXPASSLEN;
+            pret = getpass_front(&passarg);
+            if(pret == HSPASS_OK)
+                {
+                strcpy(defpassx, passarg.result);
+                free(passarg.result);
+                }
+            }
+        else
+            {
+            // Just check
+            pret = check_markfile(markfile, defpassx, strlen(defpassx));
+            }
+
+        xsfree(markfile);
+
+        if(pret == HSPASS_OK)
+            {
+            printf("Pass OK. '%s' plen=%d\n", defpassx, defplen);
+            }
+        else
+            {
+            if(pret == HSPASS_NOPASS)
+                printf("Empty pass.\n");
+            else if(pret == HSPASS_NOEXEC)
+                printf("Resource (exec askpass prog) problem.\n");
+            else if(pret == HSPASS_ERRFILE)
+                printf("Resource (markfile create) problem.\n");
+            else if(pret == HSPASS_ERRWRITE)
+                printf("Resource (markfile write) problem.\n");
+            else if (pret == HSPASS_MALLOC)
+                printf("Resource (malloc) problem.\n");
+            else
+                printf("No password match.\n");
+            exit(1);
+            }
+
+    // Check access
     if (access(mountpoint, W_OK) < 0)
         {
         hsprint(TO_EL, 6, "No mountpoint write access, fixing.");
@@ -758,70 +841,7 @@ int     main(int argc, char *argv[])
         int ret3 = chmod(mountsecret, statbuf.st_mode | S_IWUSR);
         //printf("ret3 %d", ret3);
         }
-
-    // Just for development. DO NOT USE!
-    strcpy(defpassx, "1234");
-    //defplen = strlen(defpassx);
-
-    if (!ondemand)
-        {
-        if (verbose)
-            {
-            printf("Ondemand pass option deactivated.\n");
-            }
-        // Will ask for pass if not filled
-        //if(defpassx[0] == 0)
-        //    {
-        //    }
-
-        // Create markfile name
-        char *markfile = xmalloc(PATH_MAX);
-        snprintf(markfile, PATH_MAX, "%s%s", mountsecret, passfname);
-        //printf("markfile: '%s'\n", markfile);
-
-        PassArg passarg;
-        if (access(markfile, R_OK) < 0)
-            passarg.create = 1;
-        else
-            passarg.create = 0;
-
-        passarg.prompt = "\'  Enter pass:  \'",
-        passarg.title = "\' Title Here: \'";
-        passarg.gui = 0;
-        passarg.passprog = passprog;
-        passarg.mountstr = mountpoint;
-        passarg.markfile = markfile;
-        char *tmp = malloc(MAXPASSLEN);
-        passarg.result = tmp;
-        passarg.reslen = MAXPASSLEN;
-        int ret = getpass_front(&passarg);
-        xsfree(markfile);
-
-        if(ret == HSPASS_OK)
-            {
-            strcpy(defpassx, passarg.result);
-            //defplen = strlen(defpassx);
-            printf("Pass OK. '%s' plen=%d\n", defpassx, defplen);
-            free(passarg.result);
-            }
-        else
-            {
-            if(ret == HSPASS_NOPASS)
-                printf("Empty pass.\n");
-            else if(ret == HSPASS_NOEXEC)
-                printf("Resource (exec askpass prog) problem.\n");
-            else if(ret == HSPASS_ERRFILE)
-                printf("Resource (markfile create) problem.\n");
-            else if(ret == HSPASS_ERRWRITE)
-                printf("Resource (markfile write) problem.\n");
-            else if (ret == HSPASS_MALLOC)
-                printf("Resource (malloc) problem.\n");
-            else
-                printf("No password match.\n");
-            exit(1);
-            }
-
-        //int ret2 = pass_ritual(mountpoint, mountsecret, defpassx, &plen, passprog);
+    //int ret2 = pass_ritual(mountpoint, mountsecret, defpassx, &plen, passprog);
         //if(ret2)
         //    {
         //    // Catch abort message
@@ -841,6 +861,8 @@ int     main(int argc, char *argv[])
         //    exit(EXIT_BADPASS);
         //    }
         }
+
+    xmalloc_verbose = 3;
 
     hsprint(TO_ERR|TO_LOG, 1, "MountDir: '%s'", mountpoint);
     hsprint(TO_ERR|TO_LOG, 1, "DataDir: '%s'", mountsecret);

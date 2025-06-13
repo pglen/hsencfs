@@ -51,10 +51,10 @@
 
 #include "hsencsb.h"
 #include "hsencfs.h"
-
 #include "hs_crypt.h"
 #include "bluepoint2.h"
 #include "hsutils.h"
+#include "xmalloc.h"
 
 int     virt_read(const char *path, int fd, char *buf, uint wsize, uint offset)
 
@@ -81,8 +81,6 @@ int     virt_read(const char *path, int fd, char *buf, uint wsize, uint offset)
         goto end_func;
         }
     memset(mem, '\0', xsize);
-    //hslog(3, "virt_read(): pread() new_offs=%ld new_end=%ld\n", new_offs, new_end);
-
     int res2a = pread(fd, mem, xsize, new_offs);
     if(res2a < 0)
         {
@@ -133,8 +131,8 @@ int xmp_read(const char *path, char *buf, size_t wsize, off_t offset, // )
 {
 	int res = 0;
 
-    hslog(2, "@@ xmp_read(): fh=%ld '%s'\n", fi->fh, path);
-    hslog(3, "xmp_read(): fh=%ld wsize=%ld offs=%ld\n", fi->fh, wsize, offset);
+    hslog(2, "xmp_read(): fh=%ld '%s'\n", fi->fh, path);
+    hslog(3, "xmp_read(): wsize=%ld offs=%ld\n", wsize, offset);
 
     #ifdef BYPASS
     int res2a = pread(fi->fh, buf, wsize, offset);

@@ -69,8 +69,18 @@ int     ismounted(char *orig)
             }
         }
     endmntent(fp);
-    xsfree(ddd);
+    free(ddd);
     return ret;
+}
+
+char    *xstrdup(const char *strx)
+
+{
+    size_t lenx = strlen(strx);
+    char *ptr = malloc(lenx + 1);
+    if(ptr)
+        strcpy(ptr, strx);
+    return ptr;
 }
 
 int     countfiles(char *mpoint)
@@ -172,22 +182,6 @@ void    expandpath(const char *inp, char *outp, int maxlen)
         (void)ppp;
         strcpy(outp, tmp_path);  strcat(outp, "/"); strcat(outp, inp);
         }
-}
-
-void    hsfree(void *mem, int size)
-
-{
-    if (!mem)
-        {
-        printf("Warn: free null\n");
-        return;
-        }
-    char *ptr = (char *)mem;
-    for(int aa = 0; aa < size; aa++)
-        {
-        ptr[aa] = (char)(rand() & 0xff);
-        }
-    xsfree(mem);
 }
 
 char    *hexdump(char *ptr, int len)

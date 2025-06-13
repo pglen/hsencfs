@@ -86,29 +86,34 @@ int xmp_getattr(const char *path, struct stat *stbuf, struct fuse_file_info *fi)
 {
     int ret = 0;
 
-    char  *path2 = xmalloc(PATH_MAX) ;
+    char  *path2 = alloc_path2(path);
     if(path2 == NULL)
         {
         hslog(1, "xmp_getattr() cannot alloc for'%s'", path);
         return -errno;
         }
-    memset(path2, '\0', PATH_MAX);
-    strcpy(path2, mountsecret); strcat(path2, path);
-	int res = lstat(path2, stbuf);
+    hslog(9, "Shadow: '%s' ", path2);
+    int res = lstat(path2, stbuf);
 	if (res < 0)
         {
         ret = -errno;
         goto cleanup;
         }
-    hslog(9, "xmp_getattr.org='%s' st_size=%d\n", path, stbuf->st_size);
+    hslog(9, "xmp_getattr '%s' st_size=%d\n", path, stbuf->st_size);
 
     // Do not process '/'
-    #ifndef BYPASS
+    #ifdef BYPASS
+        // NOOP
+    #else
     if(strlen(path) > 1)
         stbuf->st_size = get_sidelen(path);
     #endif
+
    cleanup:
     if(path2) xsfree(path2);
+
+    //xmdump(0);
+
     return ret;
 }
 
@@ -739,13 +744,15 @@ int xmp_open(const char *path, struct fuse_file_info *fi)
     //    return -EACCES;
     //    }
 
+    xmdump(1);
+
     char  path2[PATH_MAX] ;
     memset(path2, '\0', PATH_MAX);
 
     strcpy(path2, mountsecret); strcat(path2, path);
 
-    hslog(1, "Open: '%s' uid: %d flags: %o\n",  path, getuid(),fi->flags);
-    hslog(1, "Shadow: '%s' '%s' plen=%d",  path2, defpassx, defplen);
+    hslog(1, "Open: '%s' flags: %o\n",  path, fi->flags);
+    hslog(1, "Shadow: '%s'",  path2);
     if(defpassx[0] == 0)
         {
         hslog(LOG_DEBUG, "Empty pass on open file: %s uid: %d\n", path, getuid());
@@ -867,7 +874,10 @@ int xmp_release(const char *path, struct fuse_file_info *fi)
 	(void) path;
 	int rret =  close(fi->fh);
     hslog(9, "Released: '%s' fh: %ld rret=%d\n", path, fi->fh, rret);
-	return res;
+
+    // Show if this file leaked memory
+    //xmdump(0);
+    return res;
 }
 
 int xmp_fsync(const char *path, int isdatasync, struct fuse_file_info *fi)
@@ -955,8 +965,8 @@ int xmp_lock(const char *path, struct fuse_file_info *fi, int cmd, struct flock 
     int ret = 0;
     //ulockmgr_op(fi->fh, cmd, lock, &fi->lock_owner,
 	//		   sizeof(fi->lock_owner));
-    hslog(3, "xmp_lock='%s' cmd=%ld fh=%ld type=%d\n",
-                                path, cmd, fi->fh, lock->l_type);
+    //hslog(3, "xmp_lock='%s' cmd=%ld fh=%ld type=%d\n",
+    //                            path, cmd, fi->fh, lock->l_type);
 	return ret;
 }
 

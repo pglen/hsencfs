@@ -22,11 +22,14 @@ EVP_PKEY_RSA_keygen: EVP_PKEY_RSA_keygen.c
 	gcc EVP_PKEY_RSA_keygen.c -l crypto -l ssl -o EVP_PKEY_RSA_keygen
 
 test_xalloc: test_xalloc.c  ../common/xmalloc.c
-	gcc -D_FILE_OFFSET_BITS=64 test_xalloc.c ../common/xmalloc.c \
+	gcc -D_FILE_OFFSET_BITS=64 test_xalloc.c \
+                     -I../common  -I../src -I.. \
+                    ../common/xmalloc.c ../common/hsutils.c \
                     -o test_xalloc
 
 test_hsencfs: test_hsencfs.c
-	gcc -D_FILE_OFFSET_BITS=64 -I../common -I../src test_hsencfs.c \
+	gcc -D_FILE_OFFSET_BITS=64 -I../common -I../src -I../common \
+            test_hsencfs.c \
             ../common/hsutils.c ../common/xmalloc.c \
             -o test_hsencfs
 
