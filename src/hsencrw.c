@@ -77,7 +77,7 @@ int     virt_write(const char *path, int fd, const char *buf, uint wsize, uint o
     lseek(fd, offset, SEEK_CUR);
     errno = old_errno;
 
-    hslog(3, "virt_write(): '%s' wsize=%ld offset=%ld\n", path, wsize, offset);
+    hslog(5, "virt_write(): '%s' wsize=%ld offset=%ld\n", path, wsize, offset);
 
     int xsize = new_end - new_offs;
     hslog(9, "virt_write(): new_offs=%ld new_end=%ld\n", new_offs, new_end);
@@ -177,7 +177,7 @@ int xmp_write(const char *path, const char *buf, size_t wsize, // )
         hslog(1, "xmp_write(): zero write length on '%s'\n", path);
         return 0;
         }
-    hslog(2, "xmp_write(): fh=%ld '%s' errno=%d\n",
+    hslog(3, "xmp_write(): fh=%ld '%s' errno=%d\n",
                         fi->fh, path, errno);
 
     int old_errno = errno;
@@ -185,8 +185,8 @@ int xmp_write(const char *path, const char *buf, size_t wsize, // )
     off_t oldoff = lseek(fi->fh, 0, SEEK_CUR);
     errno = old_errno;
 
-    hslog(3, "xmp_write(): orgfsize=%lu oldoff=%lx errno=%d\n", orgfsize, oldoff, errno);
-    hslog(3, "xmp_write(): fh=%ld wsize=%lu offs=%lu\n", fi->fh, wsize, offset);
+    hslog(6, "xmp_write(): orgfsize=%lu oldoff=%lx errno=%d\n", orgfsize, oldoff, errno);
+    hslog(7, "xmp_write(): fh=%ld wsize=%lu offs=%lu\n", fi->fh, wsize, offset);
     //errno = 0;
 
     // This is a test case for evaluating the FUSE side of

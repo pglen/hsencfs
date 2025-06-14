@@ -90,19 +90,19 @@ int xmp_getattr(const char *path, struct stat *stbuf, struct fuse_file_info *fi)
     char  *path2 = alloc_path2(path);
     if(path2 == NULL)
         {
-        hslog(1, "xmp_getattr() cannot alloc for'%s'", path);
+        hslog(2, "xmp_getattr() cannot alloc for'%s'", path);
         return -errno;
         }
     //memset(stbuf, '\0', sizeof(struct stat));
     int res = lstat(path2, stbuf);
 	if (res < 0)
         {
-        hslog(1, "xmp_getattr() cannot stat '%s'", path);
+        hslog(8, "xmp_getattr() cannot stat '%s'", path);
         ret = -errno;
         goto cleanup;
         }
-    hslog(9, "xmp_getattr '%s' st_size=%d\n", path, stbuf->st_size);
-    hslog(9, "Shadow: '%s' ", path2);
+    hslog(9, "xmp_getattr() '%s' st_size=%d\n", path, stbuf->st_size);
+    hslog(9, "shadow: '%s' ", path2);
 
     // Do not process '/'
     #ifdef BYPASS
@@ -126,7 +126,7 @@ int xmp_fgetattr(const char *path, struct stat *stbuf, struct fuse_file_info *fi
     char  *path2 = alloc_path2(path);
     if(path2 == NULL)
         {
-        hslog(1, "xmp_fgetattr() cannot alloc for'%s'", path);
+        hslog(2, "xmp_fgetattr() cannot alloc for'%s'", path);
         return -errno;
         }
     int res = fstat(fi->fh, stbuf);
@@ -157,11 +157,11 @@ int     xmp_access(const char *path, int mask)
         hslog(1, "xmp_access() cannot alloc for'%s'", path);
         return -errno;
         }
-    hslog(5, "Access, file: %s uid: %d\n", path, getuid());
+    hslog(5, "access, file: %s uid: %d\n", path, getuid());
 	ret = access(path2, mask);
 	if (ret < 0)
         {
-        hslog(1, "Cannot access file: %s uid: %d\n", path, getuid());
+        hslog(2, "Cannot access file: %s uid: %d\n", path, getuid());
         }
   cleanup:
     if(path2) xsfree(path2);
@@ -238,7 +238,7 @@ int xmp_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offse
 {
 	struct xmp_dirp *d = get_dirp(fi);
 
-    hslog(3, "xmp_readdir='%s'\n", path);
+    hslog(3, "xmp_readdir() '%s'\n", path);
 
     (void) path;
 	if (offset != d->offset) {
@@ -327,11 +327,11 @@ int xmp_mkdir(const char *path, mode_t mode)
         hslog(1, "xmp_mkdir() cannot alloc for'%s'", path);
         return -errno;
         }
-    hslog(3, "Mkdir dir: %s mode: %o\n", path, mode);
+    hslog(3, "mkdir dir: %s mode: %o\n", path, mode);
 	ret = mkdir(path2, mode | S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP);
 	if (ret < 0)
         {
-		hslog(1, "Cannot Mkdir dir: %s mode: %o\n", path, mode);
+		hslog(2, "Cannot mkdir '%s' mode: %o\n", path, mode);
         ret = -errno;
         }
   cleanup:
@@ -346,7 +346,7 @@ int xmp_unlink(const char *path)
 
     if(is_our_file(path, FALSE))
         {
-        hslog(1, "No deletion of myfiles allowed: '%s'\n", path);
+        hslog(2, "No deletion of myfiles allowed: '%s'\n", path);
         errno = EACCES;
         return -EACCES;
         }
@@ -356,11 +356,11 @@ int xmp_unlink(const char *path)
         hslog(1, "xmp_unlink() cannot alloc for'%s'", path);
         return -errno;
         }
-    hslog(3, "Unlinking file '%s' uid: %d\n", path, getuid());
+    hslog(4, "unlink() '%s' uid: %d\n", path, getuid());
 	res = unlink(path2);
 	if (res < 0)
         {
-        hslog(1, "Error on Unlinking: '%s' errno: %d\n", path, errno);
+        hslog(2, "Error on Unlinking: '%s' errno: %d\n", path, errno);
 		//return -errno;
         }
 
@@ -391,25 +391,25 @@ int xmp_rmdir(const char *path)
         hslog(1, "xmp_rmdir() cannot alloc for'%s'", path);
         return -errno;
         }
-    hslog(3, "Removing dir: %s uid: %d\n", path, getuid());
+    hslog(3, "removing dir: %s uid: %d\n", path, getuid());
 	res = rmdir(path2);
 	if (res < 0)
         {
-        hslog(1, "Cannot remove dir: '%s' errno=%d\n", path2, errno);
+        hslog(2, "Cannot remove dir: '%s' errno=%d\n", path2, errno);
 		//return -errno;
         }
     // ?? Also remove all side items
     char *ptmp2 = get_sidename(path);
     if(ptmp2)
         {
-        hslog(4, "Remove sideblock file: %s\n", ptmp2);
+        hslog(9, "Remove sideblock file: %s\n", ptmp2);
         int ret2 = unlink(ptmp2);
         if(ret2 < 0)
-                hslog(1, "Cannot unlink sideblock file: %s\n",
+                hslog(2, "Cannot unlink sideblock file: %s\n",
                             ptmp2, errno);
         xsfree(ptmp2);
         }
-    hslog(7, "Removed dir: %s uid: %d\n", path, getuid());
+    hslog(7, "removed dir: %s uid: %d\n", path, getuid());
 
   cleanup:
     if(path2) xsfree(path2);
@@ -424,7 +424,7 @@ int xmp_rmdir(const char *path)
 int xmp_symlink(const char *from, const char *to)
 {
 	int res;
-    hslog(1, "Symlink disabled: %s -> %s\n", from, to);
+    hslog(2, "symlink disabled: %s -> %s\n", from, to);
     return -ENOSYS;
 
     // TODO symlink between file systems
@@ -434,7 +434,7 @@ int xmp_symlink(const char *from, const char *to)
     strcpy(path2, mountsecret); strcat(path2, from);
     char  path3[PATH_MAX] ;
     strcpy(path3, mountsecret); strcat(path3, to);
-    hslog(1, "Symlink file: %s -> %s\n", path2, path3);
+    hslog(9, "symlink file: %s -> %s\n", path2, path3);
 	//res = symlink(from, path3);
 	//res = symlink(path2, path3);
 	res = symlink(from, to);
@@ -455,29 +455,29 @@ int xmp_rename(const char *from, const char *to, unsigned int flags)
     char  *path2 = alloc_path2(from);
     if(path2 == NULL)
         {
-        hslog(1, "xmp_rename() cannot alloc for'%s'", from);
+        hslog(1, "xmp_rename() cannot alloc for '%s'", from);
         return -errno;
         }
     char  *path3 = alloc_path2(to);
     if(path2 == NULL)
         {
         xsfree(path2);
-        hslog(1, "xmp_rename() cannot alloc for'%s'", to);
+        hslog(1, "xmp_rename() cannot alloc for '%s'", to);
         return -errno;
         }
-    hslog(2, "Rename file from: %s to %s\n", from, to);
+    hslog(2, "rename file from: %s to %s\n", from, to);
     char *ptmp2 = NULL, *ptmp3 = NULL;
     ptmp2 = get_sidename(from);
     if(!ptmp2)
         {
-        hslog(1, "Error on malloc sideblock from\n");
+        hslog(1, "Error on malloc sideblock\n");
         res = -errno;
         goto cleanup;
         }
     ptmp3 = get_sidename(to);
     if(!ptmp3)
         {
-        hslog(1, "Error on malloc sideblock file3\n");
+        hslog(1, "Error on malloc sideblock\n");
         res = -errno;
         goto cleanup;
         }
@@ -486,7 +486,7 @@ int xmp_rename(const char *from, const char *to, unsigned int flags)
         {
         res = -errno;
         }
-    hslog(5, "Rename sideblock file1: %s %s\n", ptmp2, ptmp3);
+    hslog(9, "Rename sideblock file1: %s %s\n", ptmp2, ptmp3);
     rename(ptmp2, ptmp3);
 
   cleanup:
@@ -531,10 +531,10 @@ int xmp_chmod(const char *path, mode_t mode, struct fuse_file_info *fi)
     char  *path2 = alloc_path2(path);
     if(path2 == NULL)
         {
-        hslog(1, "xmp_chmod() cannot alloc for'%s'", path);
+        hslog(1, "xmp_chmod() cannot alloc for '%s'", path);
         return -errno;
         }
-    hslog(1, "Chmod file: %s uid: %d mode: %o", path, getuid(), mode);
+    hslog(3, "chmod file: %s uid: %d mode: %o", path, getuid(), mode);
 	res = chmod(path2, mode);
 	if (res < 0)
 		res = -errno;
@@ -549,11 +549,11 @@ int xmp_chown(const char *path, uid_t uid, gid_t gid, struct fuse_file_info *fi)
     char  *path2 = alloc_path2(path);
     if(path2 == NULL)
         {
-        hslog(1, "xmp_chown() cannot alloc for'%s'", path);
+        hslog(1, "xmp_chown() cannot alloc for '%s'", path);
         return -errno;
         }
-    hslog(1, "Chown file: %s uid: %d touid: %d togid %d\n",
-                        path, getuid(), uid, gid);
+    hslog(4, "chown file: '%s' touid: %d togid %d\n",
+                                    path, uid, gid);
 	res = lchown(path2, uid, gid);
 	if (res < 0)
 		res =  -errno;
@@ -574,10 +574,10 @@ int xmp_truncate(const char *path, off_t size, struct fuse_file_info *fi)
     char  *path2 = alloc_path2(path);
     if(path2 == NULL)
         {
-        hslog(1, "xmp_truncate() cannot alloc for'%s'", path);
+        hslog(1, "xmp_truncate() cannot alloc for '%s'", path);
         return -errno;
         }
-    hslog(3, "Truncated file: %s size=%ld\n", path, size);
+    hslog(3, "truncate() '%s' size=%ld\n", path, size);
     // Kill sideblock too
     create_sideblock(path);
 	res = truncate(path2, size);
@@ -592,7 +592,7 @@ int xmp_ftruncate(const char *path, off_t size, struct fuse_file_info *fi)
 
 	off_t fsize = get_fsize(fi->fh);
 
-    hslog(1, "fTruncate file: %s size %ld fsize=%ld\n",
+    hslog(5, "ftruncate() '%s' size %ld fsize=%ld\n",
                                                 path, size, fsize);
     // Kill sideblock too
     create_sideblock(path);
@@ -605,7 +605,7 @@ int xmp_ftruncate(const char *path, off_t size, struct fuse_file_info *fi)
     // Fill in zeros
     if (size > fsize)
         {
-            hslog(1, "fTruncate fill: size=%ld fsize=%ld\n", size, fsize);
+        hslog(6, "ftruncate fill: size=%ld fsize=%ld\n", size, fsize);
 
         // Create a buffer suitable for encrypting / writing
         int fill =  size - fsize;
@@ -618,7 +618,7 @@ int xmp_ftruncate(const char *path, off_t size, struct fuse_file_info *fi)
         char *mem = xmalloc(total);
         if(!mem)
             {
-                hslog(1, "fTruncate fill: no memory\n");
+            hslog(1, "fTruncate fill: no memory\n");
             return -ENOMEM;
             }
         memset(mem, 0, total);
@@ -629,7 +629,7 @@ int xmp_ftruncate(const char *path, off_t size, struct fuse_file_info *fi)
         int ret2 = pwrite(fi->fh, mem, fill, fsize);
         if(!ret2)
             {
-                hslog(1, "fTruncate fill: cannot fill\n");
+            hslog(1, "ftruncate fill: cannot fill\n");
             return -errno;
             }
         //write_sideblock(path, mem + total - HS_BLOCK, HS_BLOCK);
@@ -677,7 +677,8 @@ int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
 {
 	int res = 0;
 
-    hslog(1, "Create: '%s' mode: %o flags: %o\n", path, mode, fi->flags);
+    hslog(2, "create(): '%s' mode: %o\n", path, mode);
+    hslog(5, "create(): '%s' flags: %o\n", path, fi->flags);
 
     if(is_our_file(path, FALSE))
         {
@@ -692,11 +693,11 @@ int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
         hslog(1, "Cannot alloc path2 on: '%s'\n", path);
         return -errno;
         }
-    hslog(2, "Shadow file: '%s'\n", path2);
+    hslog(9, "shadow file: '%s'\n", path2);
 
     if(defpassx[0] == 0)
         {
-        hslog(1, "Empty pass on create file: %s uid: %d\n", path, getuid());
+        hslog(9, "Empty pass on create file: %s uid: %d\n", path, getuid());
         int retp = openpass(path);
         if (retp)
             {
@@ -713,7 +714,7 @@ int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
     fi->fh = open(path2, flags2, mode2);
 	if (fi->fh < 0)
         {
-        hslog(1, "Cannot create file '%s' mode=%o errno=%d retry ...\n",
+        hslog(2, "Cannot create file '%s' mode=%o errno=%d retry ...\n",
                         path, mode2, errno);
         }
     struct stat stbuf;	memset(&stbuf, 0, sizeof(stbuf));
@@ -723,14 +724,13 @@ int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
         hslog(1, "Cannot stat newly created file '%s'\n", path);
         goto cleanup;
         }
-    hslog(3, "File size: %d\n", stbuf.st_size);
-
+    hslog(9, "file size: %d\n", stbuf.st_size);
     if(flags2 & O_TRUNC)
         {
-        hslog(1, "Truncating '%s' fh=%ld\n", path, fi->fh);
+        hslog(3, "truncating '%s' fh=%ld\n", path, fi->fh);
         int ret2 = ftruncate(fi->fh, 0);
         }
-    hslog(3, "Created: '%s' fh=%d mode=%o\n", path, fi->fh, mode);
+    hslog(9, "created: '%s' fh=%d mode=%o\n", path, fi->fh, mode);
     //hslog(9, "Inode: %lud blocksize %ld \n",
     //                                stbuf.st_ino, stbuf.st_blksize);
     create_sideblock(path);
@@ -746,11 +746,11 @@ int     xmp_open(const char *path, struct fuse_file_info *fi)
     char  *path2 = alloc_path2(path);
     if(path2 == NULL)
         {
-        hslog(1, "xmp_rmdir() cannot alloc for'%s'", path);
+        hslog(1, "xmp_open() cannot alloc for'%s'", path);
         return -errno;
         }
-    hslog(2, "Open: '%s' flags: %o\n",  path, fi->flags);
-    hslog(4, "Shadow: '%s'",  path2);
+    hslog(2, "open() '%s' flags: %o\n",  path, fi->flags);
+    hslog(9, "shadow: '%s'",  path2);
     if(defpassx[0] == 0)
         {
         hslog(1, "Empty pass on open file: %s uid: %d\n", path, getuid());
@@ -784,21 +784,21 @@ int     xmp_open(const char *path, struct fuse_file_info *fi)
     // Create flag set?
     if(fi->flags & O_TRUNC)
         {
-        hslog(3, "Truncating '%s' fh=%ld\n", path, fi->fh);
+        hslog(8, "truncating '%s' fh=%ld\n", path, fi->fh);
         int ret2 = ftruncate(fi->fh, 0);
         create_sideblock(path);
         }
     // Append flag set?
     if(fi->flags & O_APPEND)
         {
-        hslog(3, "Appending '%s' fh=%ld\n", path, fi->fh);
-        hslog(5, "Current real size: %ls\n", path, fi->fh);
+        hslog(8, "appending '%s' fh=%ld\n", path, fi->fh);
+        hslog(9, "Current real size: %ls\n", path, fi->fh);
 
         int fsize = get_sidelen(path);
         int res3 = lseek(fi->fh, fsize, SEEK_SET);
-        hslog(5, "Current pos=%ld\n", res3);
+        hslog(9, "Current pos=%ld\n", res3);
         }
-    hslog(5, "Opened '%s' fh=%ld\n", path, fi->fh);
+    hslog(8, "opened '%s' fh=%ld\n", path, fi->fh);
   cleanup:
     if(path2) xsfree(path2);
         ;
@@ -814,7 +814,7 @@ int xmp_statfs(const char *path, struct statvfs *stbuf)
         hslog(1, "xmp_statfs() cannot alloc for'%s'", path);
         return -errno;
         }
-    hslog(1, "Stat file: %s uid: %d\n", path, getuid());
+    hslog(3, "Stat file: %s uid: %d\n", path, getuid());
 	res = statvfs(path2, stbuf);
 	if (res < 0)
 		res = -errno;
@@ -852,13 +852,7 @@ int xmp_flush(const char *path, struct fuse_file_info *fi)
         hslog(1, "Flushing failed on %d", fi->fh);
     	return -errno;
         }
-
-    //res = close(dup(fi->fh));
-    //if (res < 0)
-    //   return -errno;
-
     //hslog(9, "Flushed file: %s fh: %ld\n", path, fi->fh);
-
 	return 0;
 }
 
@@ -867,14 +861,13 @@ int xmp_release(const char *path, struct fuse_file_info *fi)
 {
     int res = 0;
 
-    hslog(3, "Releasing: '%s' fh: %ld\n", path, fi->fh);
+    hslog(5, "Releasing: '%s' fh: %ld\n", path, fi->fh);
 	(void) path;
 	int rret =  close(fi->fh);
     hslog(9, "Released: '%s' fh: %ld rret=%d\n", path, fi->fh, rret);
 
-    hslog(3, "xmalloc_bytes %d", xmalloc_bytes);
-
     // Show if this file leaked memory
+    //hslog(3, "xmalloc_bytes %d", xmalloc_bytes);
     //xmdump(0);
 
     return res;
@@ -884,7 +877,7 @@ int xmp_fsync(const char *path, int isdatasync, struct fuse_file_info *fi)
 {
 	int ret = 0;
 
-    hslog(1, "xmp_fsync() '%s'", path);
+    hslog(9, "xmp_fsync() '%s'", path);
 
 #ifndef HAVE_FDATASYNC
 	(void) isdatasync;
@@ -896,7 +889,7 @@ int xmp_fsync(const char *path, int isdatasync, struct fuse_file_info *fi)
     ret = fsync(fi->fh);
 	if (ret < 0)
         {
-        hslog(1, "Fsync error '%s' fh: %ld err=%d\n",
+        hslog(3, "Fsync error '%s' fh: %ld err=%d\n",
                      path, fi->fh, ret);
 		ret = -errno;
         }
@@ -945,7 +938,7 @@ int xmp_listxattr(const char *path, char *list, size_t size)
     char  *path2 = alloc_path2(path);
     if(path2 == NULL)
         {
-        hslog(1, "xmp_rmdir() cannot alloc for'%s'", path);
+        hslog(1, "xmp_listxattr() cannot alloc for'%s'", path);
         return -errno;
         }
 	int res = llistxattr(path3, list, size);
@@ -961,7 +954,7 @@ int xmp_removexattr(const char *path, const char *name)
     char  *path2 = alloc_path2(path);
     if(path2 == NULL)
         {
-        hslog(1, "xmp_rmdir() cannot alloc for'%s'", path);
+        hslog(1, "xmp_removexattr() cannot alloc for'%s'", path);
         return -errno;
         }
 	int res = lremovexattr(path2, name);
@@ -979,7 +972,7 @@ int xmp_lock(const char *path, struct fuse_file_info *fi, int cmd, struct flock 
     char  *path2 = alloc_path2(path);
     if(path2 == NULL)
         {
-        hslog(1, "xmp_rmdir() cannot alloc for'%s'", path);
+        hslog(1, "xmp_lock() cannot alloc for'%s'", path);
         return -errno;
         }
     int ret = 0;

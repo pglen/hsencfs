@@ -70,7 +70,7 @@ int     virt_read(const char *path, int fd, char *buf, uint wsize, uint offset)
     lseek(fd, offset, SEEK_CUR);
     errno = old_errno;
 
-    hslog(3, "virt_read(): new_offs=%ld new_end=%ld\n", new_offs, new_end);
+    hslog(6, "virt_read(): new_offs=%ld new_end=%ld\n", new_offs, new_end);
 
     // Read in full blocks
     int xsize = new_end - new_offs;
@@ -105,7 +105,7 @@ int     virt_read(const char *path, int fd, char *buf, uint wsize, uint offset)
     if(psb)
         xsfree(psb);
 
-    hslog(5, "virt_read(): res2a=%ld xsize=%ld\n", res2a, xsize);
+    hslog(7, "virt_read(): res2a=%ld xsize=%ld\n", res2a, xsize);
 
     hs_decrypt(mem, xsize, defpassx, defplen);
     memcpy(buf, mem + (offset - new_offs), wsize);
@@ -132,8 +132,8 @@ int xmp_read(const char *path, char *buf, size_t wsize, off_t offset, // )
 {
 	int res = 0;
 
-    hslog(2, "xmp_read(): fh=%ld '%s'\n", fi->fh, path);
-    hslog(3, "xmp_read(): wsize=%ld offs=%ld\n", wsize, offset);
+    hslog(3, "xmp_read(): fh=%ld '%s'\n", fi->fh, path);
+    hslog(4, "xmp_read(): wsize=%ld offs=%ld\n", wsize, offset);
 
     #ifdef BYPASS
     int res2a = pread(fi->fh, buf, wsize, offset);
