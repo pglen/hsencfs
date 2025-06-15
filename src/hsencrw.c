@@ -55,11 +55,12 @@
 #include <getopt.h>
 
 #include "hsencdef.h"
-//#include "hsencfs.h"
+#include "hsencfs.h"
 #include "hsutils.h"
 #include "hspass.h"
 #include "base64.h"
 #include "hsencsb.h"
+#include "xmalloc.h"
 #include "hs_crypt.h"
 #include "bluepoint2.h"
 

@@ -372,7 +372,10 @@ void    parse_comline(int argc, char *argv[])
                     exit(EXIT_ERROR);
                     }
                 randmem(decoy, sizeof(decoy));
+                fprintf(stderr, "Warning: Cleartext password.\n");
                 strcpy(defpassx, optarg);
+                randmem(decoy2, sizeof(decoy));
+                strcpy(defpassx2, optarg);
                 // Randomize optarg
                 randmem(optarg, strlen(optarg));
                 if(verbose)
@@ -541,7 +544,7 @@ int     main(int argc, char *argv[])
         }
     //printf("optind=%d argc=%d\n", optind, argc);
 
-    hsprint(TO_EL, 2, "Started version %s", version);
+    hsprint(TO_EL, 2, "Started %s version %s", argv[0], version);
 
     // Test for mount point
     test_mountpoint(argv[optind], mountpoint);
@@ -651,7 +654,7 @@ int     main(int argc, char *argv[])
         if(defpassx[0] == '\0')
             {
             char *tmp = xmalloc(MAXPASSLEN);
-            if(! tmp)
+            if(!tmp)
                 {
 
                 }
@@ -684,7 +687,7 @@ int     main(int argc, char *argv[])
         if(pret == HSPASS_OK)
             {
             // Do not debug sectrets
-            printf("Pass OK. '%s'\n", defpassx);
+            //printf("Pass OK. '%s'\n", defpassx);
             }
         else
             {

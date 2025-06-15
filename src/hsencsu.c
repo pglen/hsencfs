@@ -91,8 +91,7 @@ int     openpass(const char *path)
         pret = 1;
         goto endx;
         }
-    char *tmp = NULL;
-    tmp = xmalloc(MAXPASSLEN);
+    char *tmp = xmalloc(MAXPASSLEN);
     if (!tmp)
         {
         hslog(1, "Cannot alloc tmp: '%s'\n", path);
@@ -114,6 +113,7 @@ int     openpass(const char *path)
     pret = getpass_front(&passarg);
     if(pret == HSPASS_OK)
         {
+        printf("passarg res: '%s'\n", passarg.result);
         strcpy(defpassx, passarg.result);
         }
     else
@@ -121,41 +121,7 @@ int     openpass(const char *path)
         // Error ?
         hslog(0, "Cannot get pass for '%s' with %s\n", path, passprog);
         pret = 1;
-        goto endx;
         }
-    // Do not debug sensitive data
-    //hslog(0, "Askpass delivered: '%s'\n", res);
-    int rlen = strlen(tmp);
-    // Empty pass ?
-    if(rlen == 0)
-        {
-        hslog(2, "Aborted on empty pass from: '%s'\n", passprog);
-        pret = 1;
-        goto endx;
-        }
-    // Decode base64
-    unsigned long olen = 0;
-    unsigned char *res2 = base64_decode(tmp, rlen, &olen);
-    //defplen = strlen(defpassx);
-    //strncpy(passx, res2, sizeof(passx));
-    if(res2)
-        {
-        strcpy(defpassx, res2);
-        free(res2);
-        }
-    // Do not log sensitive data
-    //hslog(2, "passx '%s'\n", passx);
-
-    //int ret2 = pass_ritual(mountpoint, mountsecret, passx, &defplen, passprog);
-    //if(ret2)
-    //    {
-    //    // Force new pass prompt
-    //    memset(passx, 0, sizeof(passx));
-    //    hslog(1, "Invalid pass for '%s' by uid: %d\n", mountpoint, getuid());
-    //    ret =  ret2;
-    //    goto endx;
-    //    }
-
   endx:
     if(tmp)
         free(tmp);

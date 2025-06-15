@@ -294,7 +294,7 @@ int     private_decrypt(uchar * enc_data, int data_len, uchar *key, uchar *dbuf)
 // the universe. Password never stored.
 //
 
-int     create_markfile(char *name, char *pass, int plen)
+int     create_markfile(const char *name, char *pass, int plen)
 
 {
     int loop, ret = 0, fh = -1;
@@ -366,7 +366,7 @@ static int     seccomp(const char *s1, const char *s2, int len)
 
 // See notes on create_markfile
 
-int     check_markfile(char *fname, char *pass, int plen)
+int     check_markfile(const char *fname, char *pass, int plen)
 
 {
     int ret = 0;
@@ -481,8 +481,7 @@ int     hs_askpass(const char *program, char *buf, int buflen)
     //    goto cleanup;
     //    }
     //char cwd[PATH_MAX];
-
-    hsprint(TO_ERR | TO_LOG, 3, "Asking pass with program: '%s'", program);
+    //hsprint(TO_ERR | TO_LOG, 3, "Asking pass with program: '%s'", program);
 
     EVP_PKEY *rsa_key = generate_rsa_key(2048);
     char* pub_ptr = publicKeyToString(rsa_key);
@@ -568,7 +567,7 @@ int     hs_askpass(const char *program, char *buf, int buflen)
             {
             memset(tmp5, '\0', MAXPASSLEN * 2);
             int   ret = private_decrypt(res2, olen, priv_ptr, tmp5);
-            //printf("decoded: len=%d '%s'\n", ret, buf);
+            //printf("decoded: len=%d '%s'\n", ret, tmp5);
             xsfree(res2);
             if(ret >= 0)
                 strcpy(buf, tmp5);
@@ -702,14 +701,15 @@ int     pass_ritual(PassArg *parg)
 int     pass_gui_ritual(PassArg *parg)
 {
     int yret = 0;
-    char *xpass = xmalloc(MAXPASSLEN);
-    if(!xpass)
-        {
-        hsprint(TO_EL, 9, "Error on alloc gui ritual.\n");
-        yret = HSPASS_MALLOC;
-        goto cleanup;
-        }
-    int ret = hs_askpass(parg->passprog, xpass, MAXPASSLEN);
+    //char *xpass = xmalloc(MAXPASSLEN);
+    //if(!xpass)
+    //    {
+    //    hsprint(TO_EL, 9, "Error on alloc gui ritual.\n");
+    //    yret = HSPASS_MALLOC;
+    //    goto cleanup;
+    //    }
+
+    int ret = hs_askpass(parg->passprog, parg->result, MAXPASSLEN);
     //printf("hsaskpass ret: %d\n", ret);
     if(ret)
         {
@@ -718,7 +718,7 @@ int     pass_gui_ritual(PassArg *parg)
         goto cleanup;
         }
     //hsprint(TO_EL, 9, ("hs_askpass() %d returned pass: '%s'\n", ret, xpass);
-    int xlen = strlen(xpass);
+    int xlen = strlen(parg->result);
     if(!xlen)
         {
         //printf("No gui pass, aborted.\n");
@@ -728,18 +728,18 @@ int     pass_gui_ritual(PassArg *parg)
     //hsprint(TO_EL, 9, "pass: '%s'\n", xpass);
     if(parg->create)
         {
-        yret = create_markfile(parg->markfname, xpass, xlen);
+        yret = create_markfile(parg->markfname, parg->result, xlen);
         hsprint(TO_EL, 9, "created markfile: %d\n", yret);
         }
     else
         {
-        yret = check_markfile(parg->markfname, xpass, xlen);
+        yret = check_markfile(parg->markfname, parg->result, xlen);
         }
 
 cleanup:
      hsprint(TO_EL, 9, "created markfile: %d\n", ret);
 
-    if(xpass) xsfree(xpass);
+    //if(xpass) xsfree(xpass);
     return yret;
 }
 

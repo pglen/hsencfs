@@ -26,11 +26,11 @@ extern  char    decoy2[MAXPASSLEN] ;
 
 typedef struct _PassArg
 {
-    char    *markfname;
-    char    *passprog;
-    char    *mountstr;
-    char    *prompt;
-    char    *title;
+    const char    *markfname;
+    const char    *passprog;
+    const char    *mountstr;
+    const char    *prompt;
+    const char    *title;
     char    *result;
     int     reslen;
     char    create;
@@ -46,8 +46,8 @@ typedef struct _PassArg
 #define HSPASS_ERRFILE  (-6 -0x100)
 #define HSPASS_ERRWRITE (-7 -0x100)
 
-int     create_markfile(char *name, char *pass, int plen);
-int     check_markfile(char *name, char *pass, int plen);
+int     create_markfile(const char *name, char *pass, int plen);
+int     check_markfile(const char *name, char *pass, int plen);
 int     public_encrypt(uchar *data, int data_len, uchar *key, uchar *ebuf);
 int     private_decrypt(uchar * enc_data, int data_len, uchar *key, uchar *dbuf);
 int     parse_comstr(char *argx[], int limx, const char *program);

@@ -698,7 +698,7 @@ int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
 
     if(defpassx[0] == 0)
         {
-        hsprint(TO_EL, 8, "Empty pass on create file: %s uid: %d", path, getuid());
+        hsprint(TO_EL, 9, "Empty pass on create file: %s uid: %d", path, getuid());
         int retp = openpass(path);
         if (retp)
             {
@@ -756,9 +756,9 @@ int     xmp_open(const char *path, struct fuse_file_info *fi)
     hsprint(TO_EL, 9, "shadow: '%s'",  path2);
     if(defpassx[0] == 0)
         {
-        hsprint(TO_EL, 1, "Empty pass on open file: %s uid: %d", path, getuid());
+        hsprint(TO_EL, 9, "Empty pass on open file: %s uid: %d", path, getuid());
         int ret = openpass(path);
-        hsprint(TO_EL, 1, "Open pass got %d", ret);
+        //hsprint(TO_EL, 1, "Open pass got %d", ret);
         if (ret)
             {
             errno = EACCES;
