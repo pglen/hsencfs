@@ -461,7 +461,7 @@ char    *getpassx(char *prompt)
  * Fork a child and exec progran to get the password from the user.
  */
 
-int     hs_askpass(const char *program, char *buf, int buflen)
+int     hs_askpass(const char *program, int create, char *buf, int len)
 
 {
     //return 1;
@@ -490,6 +490,11 @@ int     hs_askpass(const char *program, char *buf, int buflen)
     //argx[idx] = strdup("--loglevel");   argx[idx+1] = NULL;  idx++;
     //argx[idx] = strdup("5");            argx[idx+1] = NULL; idx++;
 
+    if (create)
+        {
+        argx[idx] = strdup("--create");  argx[idx+1] = NULL;  idx++;
+        argx[idx] = strdup("1");         argx[idx+1] = NULL;  idx++;
+        }
     argx[idx] = strdup("--pubkey");  argx[idx+1] = NULL;  idx++;
     argx[idx] = strdup(pub_ptr);     argx[idx+1] = NULL; idx++;
 
@@ -543,7 +548,7 @@ int     hs_askpass(const char *program, char *buf, int buflen)
 
     char *tmp6 = xmalloc(2 * MAXPASSLEN);
     getlinex(pfd[0], tmp6, 2 * MAXPASSLEN);
-    hsprint(TO_ERR | TO_LOG, 2, "hspass() stdout: '%s'\n", tmp6);
+    //hsprint(TO_ERR | TO_LOG, 2, "hspass() stdout: '%s'\n", tmp6);
     if (status)
         {
         xsfree(tmp6);
@@ -701,15 +706,8 @@ int     pass_ritual(PassArg *parg)
 int     pass_gui_ritual(PassArg *parg)
 {
     int yret = 0;
-    //char *xpass = xmalloc(MAXPASSLEN);
-    //if(!xpass)
-    //    {
-    //    hsprint(TO_EL, 9, "Error on alloc gui ritual.\n");
-    //    yret = HSPASS_MALLOC;
-    //    goto cleanup;
-    //    }
-
-    int ret = hs_askpass(parg->passprog, parg->result, MAXPASSLEN);
+    //printf("pass_gui_ritual create=%d\n",  parg->create);
+    int ret = hs_askpass(parg->passprog, parg->create, parg->result, MAXPASSLEN);
     //printf("hsaskpass ret: %d\n", ret);
     if(ret)
         {
@@ -721,7 +719,6 @@ int     pass_gui_ritual(PassArg *parg)
     int xlen = strlen(parg->result);
     if(!xlen)
         {
-        //printf("No gui pass, aborted.\n");
         yret = HSPASS_NOPASS;
         goto cleanup;
         }
@@ -750,16 +747,10 @@ int     getpass_front(PassArg *parg)
 {
     int yret = 0;
 
-    //xmdump(0);
-    //printf("-----\n");
-
     if(parg->gui)
         yret = pass_gui_ritual(parg);
     else
         yret = pass_ritual(parg);
-
-  cleanup:
-    //xmdump(0);
 
     return yret;
 }

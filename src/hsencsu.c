@@ -113,7 +113,7 @@ int     openpass(const char *path)
     pret = getpass_front(&passarg);
     if(pret == HSPASS_OK)
         {
-        printf("passarg res: '%s'\n", passarg.result);
+        //printf("passarg res: '%s'\n", passarg.result);
         strcpy(defpassx, passarg.result);
         }
     else

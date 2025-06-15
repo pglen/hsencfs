@@ -97,7 +97,7 @@ int xmp_getattr(const char *path, struct stat *stbuf, struct fuse_file_info *fi)
     int res = lstat(path2, stbuf);
 	if (res < 0)
         {
-        hsprint(TO_EL, 8, "xmp_getattr() cannot stat '%s'", path);
+        //hsprint(TO_EL, 8, "xmp_getattr() cannot stat '%s'", path);
         ret = -errno;
         goto cleanup;
         }

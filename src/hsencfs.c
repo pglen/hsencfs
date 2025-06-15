@@ -656,13 +656,16 @@ int     main(int argc, char *argv[])
             char *tmp = xmalloc(MAXPASSLEN);
             if(!tmp)
                 {
-
+                printf("Askpass no memory.\n");
                 }
             PassArg passarg;
             if (access(markfile, R_OK) < 0)
                 passarg.create = 1;
             else
                 passarg.create = 0;
+
+            //printf("create = %d\n", passarg.create);
+
             passarg.prompt = "\'  Enter pass:  \'",
             passarg.title = "\' Title Here: \'";
             passarg.gui = 0;
@@ -710,7 +713,7 @@ int     main(int argc, char *argv[])
     // Check access
     if (access(mountpoint, W_OK) < 0)
         {
-        hsprint(TO_EL, 6, "No mountpoint write access, fixing.");
+        hsprint(TO_EL, 9, "No mountpoint write access, fixing.");
         struct stat statbuf; memset(&statbuf, 0, sizeof(statbuf));
         int ret2 = stat(mountpoint, &statbuf);
         //printf("mode2 %d of %s %x\n", ret2, mountpoint, statbuf.st_mode);
@@ -720,7 +723,7 @@ int     main(int argc, char *argv[])
     // Check access
     if (access(mountsecret, W_OK) < 0)
         {
-        hsprint(TO_EL, 6, "No mountdata write access, fixing.");
+        hsprint(TO_EL, 9, "No mountdata write access, fixing.");
         struct stat statbuf; memset(&statbuf, 0, sizeof(statbuf));
         int ret2 = stat(mountsecret, &statbuf);
         //printf("mode2 %d of %s %x\n", ret2, mountpoint, statbuf.st_mode);
@@ -792,7 +795,7 @@ int     main(int argc, char *argv[])
     // Check access
     if (access(mountpoint, W_OK) >=0 )
         {
-        hsprint(TO_EL, 1, "Mountpoint write access, fixing.");
+        hsprint(TO_EL, 9, "Mountpoint write access, fixing.");
         struct stat statbuf; memset(&statbuf, 0, sizeof(statbuf));
         int ret2 = stat(mountpoint, &statbuf);
         //hsprint(TO_EL, 1, "mode2 %d of %s %x", ret2, mountpoint, statbuf.st_mode);
@@ -802,7 +805,7 @@ int     main(int argc, char *argv[])
     // Check access
     if (access(mountsecret, W_OK) >=0 )
         {
-        hsprint(TO_EL, 1, "Moundata write access, fixing.");
+        hsprint(TO_EL, 9, "Moundata write access, fixing.");
         struct stat statbuf; memset(&statbuf, 0, sizeof(statbuf));
         int ret2 = stat(mountsecret, &statbuf);
         //hsprint(TO_EL, 1, "mode2 %d of %s %x", ret2, mountpoint, statbuf.st_mode);
