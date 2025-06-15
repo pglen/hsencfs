@@ -39,5 +39,7 @@ char    *xstrdup(const char *strx);
 int     parse_comstr(char *argx[], int limx, const char *program);
 void    arr2log(char *argx[]);
 void    xsfree(void *ptr);
+void    randmem(void *ptr, int len);
+void    split_path(const char *path, char *dir, char *fname, char *ext);
 
 // EOF

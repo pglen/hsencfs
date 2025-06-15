@@ -35,41 +35,16 @@
 #include <signal.h>
 #include <getopt.h>
 
+#include "hsencdef.h"
 #include "hsencfs.h"
+#include "hsutils.h"
+#include "hspass.h"
+#include "hsutils.h"
+#include "xmalloc.h"
 #include "base64.h"
 #include "hsencsb.h"
 #include "hs_crypt.h"
 #include "bluepoint2.h"
-#include "hsutils.h"
-#include "hspass.h"
-
-// -----------------------------------------------------------------------
-// Check if it is our internal file
-
-int     is_our_file(const char *path, int fname_only)
-
-{
-    int ret = FALSE;
-    char *eee = "/.";
-    if(fname_only == FALSE)
-        {
-        eee = strrchr(path, '/');
-        }
-    char *nnn = strrchr(path, '.');
-
-    // Determine if it is our data file, deny access
-    if(eee && nnn)
-        {
-        if(eee[1] == '.' && strncmp(nnn, myext, sizeof(myext) - 1) == 0 )
-            {
-            ret = TRUE;
-            }
-
-        //if (loglevel > 4)
-        //    syslog(LOG_DEBUG, "is_our_file: eee '%s' nnn '%s' ret=%d\n", eee, nnn, ret);
-        }
-    return ret;
-}
 
 // Estabilish file size
 
@@ -103,44 +78,49 @@ char    *alloc_path2(const char *path)
 int     openpass(const char *path)
 
 {
-    int ret = 0;
-
+    int pret = 0;
     hslog(3, "Openpass() path: '%s'", path);
-
     if(defpassx[0] != '\0')
         {
         hslog(1, "Using default pass '%s'", defpassx);
         return 0;
         }
-    char tmp[MAXPASSLEN];
-    char *tmp2 = malloc(PATH_MAX + PATH_MAX + 12);
-    if (!tmp2)
-        {
-        ret = 1;
-        goto endx2;
-        }
     if(passprog[0] == 0)
         {
-        hslog(1, "No pass program specified: %s uid: %d\n", path, getuid());
-        ret = 1;
+        hslog(1, "No pass program specified: '%s'\n", path);
+        pret = 1;
         goto endx;
         }
-    char tmp3[8*PATH_MAX];
-    strncpy(tmp3, mountsecret, sizeof(tmp3));
-    strcat(tmp3, passfname);
-    //printf("tmp3: '%s'\n", tmp3);
-
-    struct stat ss;
-    int rret = stat(tmp3, &ss);
-
-    //snprintf(tmp2, 8*PATH_MAX, "%s %s %d",
-    //                                  passprog, mountpoint, rret);
-    //ret = hs_askpass(tmp2, tmp, MAXPASSLEN);
-    // Error ?
-     if (ret != 0)
+    char *tmp = NULL;
+    tmp = xmalloc(MAXPASSLEN);
+    if (!tmp)
         {
+        hslog(1, "Cannot alloc tmp: '%s'\n", path);
+        pret = 1; goto endx2;
+        }
+    PassArg passarg;
+    if (access(markfile, R_OK) < 0)
+        passarg.create = 1;
+    else
+        passarg.create = 0;
+    passarg.prompt = "\'  Enter pass:  \'",
+    passarg.title = "\' Title Here: \'";
+    passarg.gui = 1;
+    passarg.passprog = passprog;
+    passarg.mountstr = (char *)path;
+    passarg.markfname = markfile;
+    passarg.result = tmp;
+    passarg.reslen = MAXPASSLEN;
+    pret = getpass_front(&passarg);
+    if(pret == HSPASS_OK)
+        {
+        strcpy(defpassx, passarg.result);
+        }
+    else
+        {
+        // Error ?
         hslog(0, "Cannot get pass for '%s' with %s\n", path, passprog);
-        ret = 1;
+        pret = 1;
         goto endx;
         }
     // Do not debug sensitive data
@@ -150,7 +130,7 @@ int     openpass(const char *path)
     if(rlen == 0)
         {
         hslog(2, "Aborted on empty pass from: '%s'\n", passprog);
-        ret = 1;
+        pret = 1;
         goto endx;
         }
     // Decode base64
@@ -177,10 +157,10 @@ int     openpass(const char *path)
     //    }
 
   endx:
-    if(tmp2)
-        free(tmp2);
-   endx2:
-    return ret;
+    if(tmp)
+        free(tmp);
+  endx2:
+    return pret;
 }
 
 // EOF

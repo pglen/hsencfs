@@ -49,8 +49,10 @@
 #include <signal.h>
 #include <getopt.h>
 
+#include "hsencdef.h"
+//#include "hsencfs.h"
+#include "hspass.h"
 #include "hsencsb.h"
-#include "hsencfs.h"
 #include "hs_crypt.h"
 #include "bluepoint2.h"
 #include "hsutils.h"
@@ -70,7 +72,7 @@ int     virt_read(const char *path, int fd, char *buf, uint wsize, uint offset)
     lseek(fd, offset, SEEK_CUR);
     errno = old_errno;
 
-    hslog(6, "virt_read(): new_offs=%ld new_end=%ld\n", new_offs, new_end);
+    hsprint(TO_EL, 6, "virt_read() new_offs=%ld new_end=%ld", new_offs, new_end);
 
     // Read in full blocks
     int xsize = new_end - new_offs;
@@ -91,7 +93,7 @@ int     virt_read(const char *path, int fd, char *buf, uint wsize, uint offset)
     sideblock_t *psb =  alloc_sideblock();
     if(psb == NULL)
         {
-        hslog(1, "Cannot allocate memory for sideblock\n");
+        hsprint(TO_EL, 1, "Cannot allocate memory for sideblock");
         ret = -errno;
         //goto end_func2;
         }
@@ -99,15 +101,15 @@ int     virt_read(const char *path, int fd, char *buf, uint wsize, uint offset)
     int ret3 = read_sideblock(path, psb);
     if(ret3 < 0)
         {
-        hslog(1, "Cannot read sideblock data.\n");
+        hsprint(TO_EL, 1, "Cannot read sideblock data.");
         // Ignore, still could be good
         }
     if(psb)
         xsfree(psb);
 
-    hslog(7, "virt_read(): res2a=%ld xsize=%ld\n", res2a, xsize);
+    hsprint(TO_EL, 7, "virt_read() res2a=%ld xsize=%ld", res2a, xsize);
 
-    hs_decrypt(mem, xsize, defpassx, defplen);
+    hs_decrypt(mem, xsize, defpassx,  sizeof(defpassx));
     memcpy(buf, mem + (offset - new_offs), wsize);
     ret = wsize;     // Tell them we got it
 
@@ -132,18 +134,18 @@ int xmp_read(const char *path, char *buf, size_t wsize, off_t offset, // )
 {
 	int res = 0;
 
-    hslog(3, "xmp_read(): fh=%ld '%s'\n", fi->fh, path);
-    hslog(4, "xmp_read(): wsize=%ld offs=%ld\n", wsize, offset);
+    hsprint(TO_EL, 3, "xmp_read() fh=%ld '%s'", fi->fh, path);
+    hsprint(TO_EL, 4, "xmp_read() wsize=%ld offs=%ld", wsize, offset);
 
     #ifdef BYPASS
     int res2a = pread(fi->fh, buf, wsize, offset);
     if(res2a < 0) {
-        hslog(2, "xmp_read(): error errno=%d\n", errno);
+        hsprint(TO_EL, 2, "xmp_read() error errno=%d", errno);
         return -errno;
         }
     else
         {
-        hslog(4, "xmp_read(): fh=%ld wsize=%ld offs=%ld\n", fi->fh, wsize, offset);
+        hsprint(TO_EL, 4, "xmp_read() fh=%ld wsize=%ld offs=%ld", fi->fh, wsize, offset);
         return res2a;
         }
     #else

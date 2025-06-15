@@ -72,6 +72,7 @@
 #include <signal.h>
 #include <getopt.h>
 
+#include "hsencdef.h"
 #include "hsencfs.h"
 #include "hsutils.h"
 #include "base64.h"
@@ -80,7 +81,6 @@
 #include "hsencsb.h"
 #include "bluepoint2.h"
 #include "hsencop.h"
-
 #include "hs_crypt.h"
 
 // -----------------------------------------------------------------------
@@ -89,11 +89,6 @@
 int     verbose = 0;
 int     nobg = 0;
 
-char    defpassx[MAXPASSLEN];
-int     defplen = sizeof(defpassx);
-
-//sizeof(defpassx);
-
 // Main directories for data / encryption
 
 char  mountpoint[PATH_MAX] ;
@@ -101,19 +96,17 @@ char  mountsecret[PATH_MAX] ;
 
 char  fullpath[PATH_MAX] ;
 char  startdir[PATH_MAX];
+char  markfile[PATH_MAX];
 
-char  fff[PATH_MAX];
-char  eee[PATH_MAX];
+//char  fff[PATH_MAX];
+//char  eee[PATH_MAX];
 
 char  passprog[2 * PATH_MAX] ;
 char  passback[2 * PATH_MAX] ;
 
-char *myext = ".datx";
-
 /// We use this as a string to obfuscate the password. Do not change.
 char    progname[] =  HS_PROGNAME;
 
-int   pg_debug = 0;
 int   ondemand = 1;
 
 // -----------------------------------------------------------------------
@@ -122,14 +115,8 @@ int   ondemand = 1;
 static  char    version[] = "1.5.0";
 static  char    build[]   = "Thu 12.Jun.2025";
 
-// The decoy employed occasionally to stop spyers
-// from figuring out where it is stored
-
-static  char    decoy[MAXPASSLEN];
-static  int     plen2 = sizeof(decoy);
-
-static  char  tmpsecret[PATH_MAX] ;
-static  char  inodedir[PATH_MAX] ;
+static  char    tmpsecret[PATH_MAX] ;
+static  char    inodedir[PATH_MAX] ;
 
 // -----------------------------------------------------------------------
 
@@ -274,12 +261,12 @@ int     test_mountpoint(char *ppp, char *mpdir)
     ret = stat(mpdir, &sss);
     if (ret < 0)
         {
-        hsprint(TO_ERR|TO_LOG, 1, "Mount point '%s' does not exist.", mpdir);
+        hsprint(TO_EL, 1, "Mount point '%s' does not exist.", mpdir);
         exit(EXIT_ERROR);
         }
     if(!S_ISDIR(sss.st_mode))
         {
-        hsprint(TO_ERR|TO_LOG, 1, "Mount point must be a directory: '%s'", mpdir);
+        hsprint(TO_EL, 1, "Mount point must be a directory: '%s'", mpdir);
         exit(EXIT_ERROR);
         }
     return ret;
@@ -293,7 +280,7 @@ int     test_mountsecret(char *ppp, char *mpdir)
     //printf("test_mountsecret() ppp='%s', mpdir=%s\n", ppp, mpdir);
     if(strlen(ppp) == 0)
         {
-         hsprint(TO_ERR|TO_LOG, 1, "Must specify %s directory.\n", ppp);
+         hsprint(TO_EL, 1, "Must specify %s directory.\n", ppp);
         exit(EXIT_ERROR);
         }
     // Resolve relative path
@@ -314,7 +301,7 @@ int     test_mountsecret(char *ppp, char *mpdir)
         }
     if(!S_ISDIR(sss.st_mode))
         {
-         hsprint(TO_ERR|TO_LOG, 1, "Mount secret must be a directory: '%s'\n", mpdir);
+         hsprint(TO_EL, 1, "Mount secret must be a directory: '%s'\n", mpdir);
         exit(EXIT_NOCREATE);
         }
     return ret;
@@ -342,19 +329,6 @@ void    parse_comline(int argc, char *argv[])
             {
             //printf("option bailed\n");
             break;
-            }
-        if(pg_debug > 9)
-            {
-            printf("parse: cc=%c (%d) ", cc, cc);
-            if (optarg)
-                printf (" with arg '%s'", optarg);
-            if(option_index >= 0)
-                {
-                printf ("\n   -- long option '%s' idx: %d val '%c' ",
-                          long_options[option_index].name,
-                                option_index, long_options[option_index].val);
-                }
-            printf("\n");
             }
         int ret = 0, loop = 0;
         switch (cc)
@@ -385,12 +359,6 @@ void    parse_comline(int argc, char *argv[])
                     printf("Setting passprog: '%s'\n", passprog);
                 break;
 
-           case 'd':
-                pg_debug = atoi(optarg);
-                if(verbose)
-                    printf("Setting debug level: '%d'\n", pg_debug);
-                break;
-
            case 'l':
                loglevel = atoi(optarg);
                 if(verbose)
@@ -403,20 +371,12 @@ void    parse_comline(int argc, char *argv[])
                     fprintf(stderr, "%s Error: multiple passes on command line.\n", argv[0]);
                     exit(EXIT_ERROR);
                     }
-                //strcpy(defpassx, optarg, sizeof(defpassx));
+                randmem(decoy, sizeof(decoy));
                 strcpy(defpassx, optarg);
-                //defplen = strlen(defpassx);
                 // Randomize optarg
-                for(loop = 0; loop < strlen(optarg); loop++)
-                    {
-                    ((char*)optarg)[loop] = rand() % 0x80;
-                    }
+                randmem(optarg, strlen(optarg));
                 if(verbose)
                     printf("Pass provided on command line.\n");
-
-                //if(pg_debug > 5)
-                //    printf("Pass '%s' provided on command line.\n", defpassx);
-
                 break;
 
            case 'o':
@@ -459,68 +419,20 @@ void    parse_comline(int argc, char *argv[])
     }
 }
 
-// It is a shame that no cross platform split exists
-
-void split_path(const char *path, char *dir, char *fname, char *ext)
-
-{
-    int lenx = strlen(path);
-    char const *base_name = strrchr(path, '/');
-    char const *dot = strrchr(path, '.');
-
-    if(base_name)
-        {
-        int offs = base_name - path;
-        strncpy(dir, path, offs);
-        dir[offs] = '\0';
-        if (dot != NULL)
-            {
-            int offs = dot - base_name - 1;
-            strncpy(fname, base_name + 1, offs);
-            fname[offs] = '\0';
-            strcpy(ext, dot + 1);
-            ext[lenx - offs] = '\0';
-            }
-        else
-            {
-            strcpy(fname, base_name+1);
-            strcpy(ext, "");
-            }
-        }
-    else
-        {
-        strcpy(dir, ".");
-        base_name = path;
-        if (dot != NULL)
-            {
-            int offs = dot - base_name;
-            strncpy(fname, base_name, offs);
-            fname[offs] = '\0';
-            strcpy(ext, dot + 1);
-            ext[lenx - offs] = '\0';
-            }
-        else
-            {
-            strcpy(fname, base_name);
-            strcpy(ext, "");
-            }
-        }
-}
-
 void sigenv(int sig)
 
 {
-    hsprint(TO_ERR|TO_LOG, 1, "Received signal: %d", sig);
+    hsprint(TO_EL, 1, "Received signal: %d", sig);
     fuse_session_unmount(fuse_sess);
     fuse_session_exit(fuse_sess);
-    hsprint(TO_ERR|TO_LOG, 1, "Terminating.");
+    hsprint(TO_EL, 1, "Terminating.");
     _exit(127);
 }
 
 void sigterm(int sig)
 
 {
-    hsprint(TO_ERR|TO_LOG, 1, "Received signal: %d", sig);
+    hsprint(TO_EL, 1, "Received signal: %d", sig);
     fuse_session_unmount(fuse_sess);
     fuse_session_exit(fuse_sess);
     //_exit(127);
@@ -529,7 +441,7 @@ void sigterm(int sig)
 void sigint(int sig)
 
 {
-    hsprint(TO_ERR|TO_LOG, 1, "Received signal: %d", sig);
+    hsprint(TO_EL, 1, "Received signal: %d", sig);
     //printf("Received signal: %d\n", sig);
     fuse_session_unmount(fuse_sess);
     fuse_session_exit(fuse_sess);
@@ -542,12 +454,12 @@ void sigint(int sig)
 //    {
 //    if(passprog[0] != 0)
 //        {
-//        hsprint(TO_ERR|TO_LOG, 2, "Getting pass from program: '%s'\n", passprog);
+//        hsprint(TO_EL, 2, "Getting pass from program: '%s'\n", passprog);
 //
 //        int ret = hs_askpass(passprog, tmp, sizeof(tmp));
 //        if (ret == 0)
 //            {
-//            //hsprint(TO_ERR|TO_LOG, 2, "Askpass delivered: '%s'\n", res);
+//            //hsprint(TO_EL, 2, "Askpass delivered: '%s'\n", res);
 //            // Empty pass ?
 //            int rlen = strlen(tmp);
 //            if(rlen == 0)
@@ -562,7 +474,7 @@ void sigint(int sig)
 //            strncpy(defpassx, res2, sizeof(defpassx));
 //            plen = strlen(defpassx);
 //            free(res2);
-//            //hsprint(TO_ERR|TO_LOG, 2, "defpassx '%s'\n", defpassx);
+//            //hsprint(TO_EL, 2, "defpassx '%s'\n", defpassx);
 //            }
 //        }
 //    }
@@ -594,7 +506,7 @@ int     main(int argc, char *argv[])
     umask(0);
 
     char *yy = realpath(argv[0], fullpath);
-    split_path(fullpath, startdir, fff, eee);
+    split_path(fullpath, startdir, NULL, NULL);
 
     // Set signal handlers
     signal(SIGSEGV, sigenv);
@@ -617,19 +529,9 @@ int     main(int argc, char *argv[])
 
     // Init stuff
     snprintf(passprog, sizeof(passprog), "%s/%s", startdir, "hsaskpass.py");
-    if(pg_debug > 10)
-        printf("Passprog: '%s'\n", passprog);
     snprintf(passback, sizeof(passback), "%s/%s", startdir, "hsaskpass.sh");
-    if(pg_debug > 10)
-        printf("Passback: '%s'\n", passback);
-
     openlog("HSEncFs",  LOG_PID,  LOG_DAEMON);
     parse_comline(argc, argv);
-
-    if(pg_debug > 9)
-        {
-        printf("Dir: '%s' file: '%s' ext: '%s'\n", startdir, fff, eee);
-        }
 
     // Al least one arguments for md mp
     if (optind >= argc)
@@ -639,7 +541,7 @@ int     main(int argc, char *argv[])
         }
     //printf("optind=%d argc=%d\n", optind, argc);
 
-    hsprint(TO_ERR|TO_LOG, 1, "Started version %s", version);
+    hsprint(TO_EL, 2, "Started version %s", version);
 
     // Test for mount point
     test_mountpoint(argv[optind], mountpoint);
@@ -684,12 +586,8 @@ int     main(int argc, char *argv[])
         xsfree(eee);
         strcat(tmpsecret, "/");
         }
-    if(pg_debug > 9)
-        printf("msptr '%s'\n", msptr);
-    test_mountsecret(msptr, mountsecret);
-    if(pg_debug > 2)
-        printf("Mount: '%s' Secret: '%s'\n",  mountpoint, mountsecret);
 
+    test_mountsecret(msptr, mountsecret);
     // Make sure mroot and mdata exists, and are directories
     if (verbose)
         {
@@ -701,56 +599,47 @@ int     main(int argc, char *argv[])
     char *match  = strstr(mountpoint, mountsecret);
     if(match)
         {
-        hsprint(TO_ERR|TO_LOG, 1,
-            "Mount Point must not be nested in Mount Data.");
+        hsprint(TO_EL, 1, "Mount Point must not be nested in Mount Data.");
         exit(EXIT_MOUNTNEST);
         }
     char *match2 = strstr(mountsecret, mountpoint);
      if(match2)
         {
-        hsprint(TO_ERR|TO_LOG, 1,
-            "Mount Data must not be nested in Mount Point.");
+        hsprint(TO_EL, 1, "Mount Data must not be nested in Mount Point.");
         exit(EXIT_MOUNTNEST);
         }
     int mret = ismounted(mountpoint);
     if(mret)
         {
-        hsprint(TO_ERR|TO_LOG, 1,
-                "Directory: '%s' mounted already.", mountpoint);
+        hsprint(TO_EL, 1, "Directory: '%s' mounted already.", mountpoint);
         exit(EXIT_ALREADY);
         }
     int cntf = countfiles(mountpoint);
     //fprintf(stderr,"Cannnot open MountPoint directory\n");
     if(cntf > 2)
         {
-        hsprint(TO_ERR|TO_LOG, 1, "Cannot mount: '%s'", mountpoint);
+        hsprint(TO_EL, 1, "Cannot mount: '%s'", mountpoint);
         if (verbose)
-            hsprint(TO_ERR|TO_LOG, 1,
-                    "Directory not empty or mounted already.");
+            hsprint(TO_EL, 1, "Directory not empty or mounted already.");
         exit(EXIT_NONEMPTY);
         }
-
     // Check if valid askpass
     if(ondemand)
         {
         if (access(passprog, X_OK) < 0)
             {
-            hsprint(TO_ERR|TO_LOG, -1,
-                "Askpass program '%s' is not an executable.", passprog);
+            hsprint(TO_EL, -1, "Askpass program '%s' is not an executable.", passprog);
             exit(EXIT_NOASKPASS);
             }
         }
+    bluepoint2_encrypt(decoy, sizeof(decoy), defpassx, sizeof(defpassx));
 
-    // Note: if you transform the file with a different block size
-    // it will not decrypt.
-    //bufsize = ss.st_blksize;
-    //printf("Bufsize = %d\n", bufsize);
-
-    //bluepoint2_encrypt(decoy, sizeof(decoy), defpassx, defplen);
+    // Create markfile name
+    snprintf(markfile, PATH_MAX, "%s%s", mountsecret, passfname);
+    //printf("markfile: '%s'\n", markfile);
 
     // Just for development. DO NOT USE!
     //strcpy(defpassx, "1234");
-    //defplen = strlen(defpassx);
 
     if (!ondemand)
         {
@@ -758,19 +647,14 @@ int     main(int argc, char *argv[])
             {
             printf("Ondemand pass option deactivated.\n");
             }
-        // Will ask for pass if not filled
-        //if(defpassx[0] == 0)
-        //    {
-        //    }
-
-        // Create markfile name
-        char *markfile = xmalloc(PATH_MAX);
-        snprintf(markfile, PATH_MAX, "%s%s", mountsecret, passfname);
-        //printf("markfile: '%s'\n", markfile);
-
         int pret = 0;
         if(defpassx[0] == '\0')
             {
+            char *tmp = xmalloc(MAXPASSLEN);
+            if(! tmp)
+                {
+
+                }
             PassArg passarg;
             if (access(markfile, R_OK) < 0)
                 passarg.create = 1;
@@ -781,8 +665,7 @@ int     main(int argc, char *argv[])
             passarg.gui = 0;
             passarg.passprog = passprog;
             passarg.mountstr = mountpoint;
-            passarg.markfile = markfile;
-            char *tmp = malloc(MAXPASSLEN);
+            passarg.markfname = markfile;
             passarg.result = tmp;
             passarg.reslen = MAXPASSLEN;
             pret = getpass_front(&passarg);
@@ -797,12 +680,11 @@ int     main(int argc, char *argv[])
             // Just check
             pret = check_markfile(markfile, defpassx, strlen(defpassx));
             }
-
-        xsfree(markfile);
-
+        //xsfree(markfile);
         if(pret == HSPASS_OK)
             {
-            printf("Pass OK. '%s' plen=%d\n", defpassx, defplen);
+            // Do not debug sectrets
+            printf("Pass OK. '%s'\n", defpassx);
             }
         else
             {
@@ -820,6 +702,7 @@ int     main(int argc, char *argv[])
                 printf("No password match.\n");
             exit(1);
             }
+        }
 
     // Check access
     if (access(mountpoint, W_OK) < 0)
@@ -841,46 +724,20 @@ int     main(int argc, char *argv[])
         int ret3 = chmod(mountsecret, statbuf.st_mode | S_IWUSR);
         //printf("ret3 %d", ret3);
         }
-    //int ret2 = pass_ritual(mountpoint, mountsecret, defpassx, &plen, passprog);
-        //if(ret2)
-        //    {
-        //    // Catch abort message
-        //    if(ret2 == 3)
-        //        hsprint(TO_ERR|TO_LOG, 1,
-        //            "Passes do not match, aborted.");
-        //    else if(ret2 == 2)
-        //       hsprint(TO_ERR|TO_LOG, 1,
-        //                "Empty pass entered, aborted.\n");
-        //    else
-        //        hsprint(TO_ERR|TO_LOG, 1,
-        //                "Invalid password entered, aborted.\n");
-        //
-        //    hsprint(TO_ERR|TO_LOG, 2,
-        //            "Authentication error on mounting by %d '%s' -> '%s'",
-        //                        getuid(), mountpoint, mountsecret);
-        //    exit(EXIT_BADPASS);
-        //    }
-        }
-
     //xmalloc_verbose = 3;
-
-    hsprint(TO_ERR|TO_LOG, 1, "MountDir: '%s'", mountpoint);
-    hsprint(TO_ERR|TO_LOG, 1, "DataDir: '%s'", mountsecret);
+    hsprint(TO_EL, 2, "MountDir: '%s'", mountpoint);
+    hsprint(TO_EL, 2, "DataDir: '%s'", mountsecret);
     int uid = getuid();
     struct passwd *pwd = getpwuid(uid);
-    hsprint(TO_ERR|TO_LOG, 6,
-              "----------------------------------");
-    hsprint(TO_ERR|TO_LOG, 6,
-              "Started by uid=%d (%s)", uid, pwd->pw_name);
+    //hsprint(TO_EL, 6, "----------------------------------");
+    hsprint(TO_EL, 6, "Started by uid=%d (%s)", uid, pwd->pw_name);
     if(verbose)
         {
-        hsprint(TO_ERR|TO_LOG, 1,
-                    "Mounting: '%s'\n", mountpoint);
+        hsprint(TO_EL, 2, "Mounting: '%s'", mountpoint);
         //if(ondemand)
-        //    printf("Mounting: '%s' with on-demand password.\n", mountpoint);
+        //    printf("Mounting: '%s' with on-demand password.", mountpoint);
         }
-
-    //hsprint(TO_ERR|TO_LOG, 1, "Mounting: '%s'\n", mountpoint);
+    //hsprint(TO_EL, 1, "Mounting: '%s'", mountpoint);
 
     // Write back expanded paths
     //char *argv2[6]; int cnt = 0;
@@ -889,7 +746,7 @@ int     main(int argc, char *argv[])
     //argv2[cnt++]  = NULL;
 
     if(verbose)
-        printf("Mount parms '%s' '%s'\n", mountsecret,  mountpoint);
+        printf("Mount parms '%s' '%s'", mountsecret,  mountpoint);
 
     // Create INODE directory
     //char tmp2[PATH_MAX];
@@ -903,8 +760,6 @@ int     main(int argc, char *argv[])
     //        }
     //    }
 
-    hsprint(TO_ERR|TO_LOG, 2, "Mounted '%s'", mountpoint);
-
     // Skip arguments that are parsed already
     // Synthesize new array
     //int ret = fuse_main(2, argv2, &xmp_oper, NULL);
@@ -916,6 +771,9 @@ int     main(int argc, char *argv[])
     fuse_op = fuse_new(&fa, &xmp_oper, sizeof(xmp_oper), NULL);
     fuse_sess = fuse_get_session(fuse_op);
     int ret1 = fuse_mount(fuse_op, mountpoint);
+
+    hsprint(TO_EL, 1, "Mounted '%s'", mountpoint);
+
     if (!nobg)
         {
         int ret2 = fuse_daemonize(0);
@@ -926,48 +784,45 @@ int     main(int argc, char *argv[])
     fuse_opt_free_args(&fa);
 
     // FUSE MAIN terminates ...
-    hsprint(TO_ERR|TO_LOG, 1, "Unmounting: '%s'", mountpoint);
+    hsprint(TO_EL, 1, "Unmounting: '%s'", mountpoint);
 
     // Check access
     if (access(mountpoint, W_OK) >=0 )
         {
-        hsprint(TO_ERR|TO_LOG, 1,
-                     "Mountpoint write access, fixing.\n");
+        hsprint(TO_EL, 1, "Mountpoint write access, fixing.");
         struct stat statbuf; memset(&statbuf, 0, sizeof(statbuf));
         int ret2 = stat(mountpoint, &statbuf);
-        //hsprint(TO_ERR|TO_LOG, 1, "mode2 %d of %s %x\n", ret2, mountpoint, statbuf.st_mode);
+        //hsprint(TO_EL, 1, "mode2 %d of %s %x", ret2, mountpoint, statbuf.st_mode);
         int ret3 = chmod(mountpoint, statbuf.st_mode & (~S_IWUSR ));
-        //hsprint(TO_ERR|TO_LOG, 1, "ret3 %d", ret3);
+        //hsprint(TO_EL, 1, "ret3 %d", ret3);
         }
     // Check access
     if (access(mountsecret, W_OK) >=0 )
         {
-        hsprint(TO_ERR|TO_LOG, 1,
-                     "Moundata write access, fixing.\n");
+        hsprint(TO_EL, 1, "Moundata write access, fixing.");
         struct stat statbuf; memset(&statbuf, 0, sizeof(statbuf));
         int ret2 = stat(mountsecret, &statbuf);
-        //hsprint(TO_ERR|TO_LOG, 1, "mode2 %d of %s %x\n", ret2, mountpoint, statbuf.st_mode);
+        //hsprint(TO_EL, 1, "mode2 %d of %s %x", ret2, mountpoint, statbuf.st_mode);
         int ret3 = chmod(mountsecret, statbuf.st_mode & (~S_IWUSR) );
-        //hsprint(TO_ERR|TO_LOG, 1, "ret3 %d", ret3);
+        //hsprint(TO_EL, 1, "ret3 %d", ret3);
         }
 
     // Inform user, make a log entry
     if(mainret)
         {
-        hsprint(TO_ERR|TO_LOG, 1,
-                "Mount err: '%s' uid=%d", mountpoint, getuid());
-        hsprint(TO_ERR|TO_LOG, 1,
-                "Mount returned with %d errno=%d", mainret, errno);
-        hsprint(TO_ERR|TO_LOG, 1,
-                "Mounted by uid=%d -> %s\n", getuid(), mountpoint);
-        hsprint(TO_ERR|TO_LOG, 1,
-                "Cannot mount, attempt by user %d '%s' -> '%s'",
+        hsprint(TO_EL, 1, "Mount err: '%s' uid=%d",
+                                mountpoint, getuid());
+        hsprint(TO_EL, 1, "Mount returned with %d errno=%d",
+                                mainret, errno);
+        hsprint(TO_EL, 1, "Mounted by uid=%d -> %s", getuid(),
+                                        mountpoint);
+        hsprint(TO_EL, 1,  "Cannot mount, attempt by user %d '%s' -> '%s'",
                                          getuid(), mountsecret, mountpoint);
         }
     else
         {
-        hsprint(TO_ERR|TO_LOG, 1, "unMnt '%s'", mountpoint);
-        hsprint(TO_ERR|TO_LOG, 1, "unMntSec '%s'", mountsecret);
+        hsprint(TO_EL, 1, "unMnt '%s'", mountpoint);
+        hsprint(TO_EL, 1, "unMntSec '%s'", mountsecret);
         }
     return mainret;
 }

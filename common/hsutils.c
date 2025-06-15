@@ -31,7 +31,8 @@
 #include <sys/xattr.h>
 #endif
 
-#include "hsencfs.h"
+#include "hsencdef.h"
+//#include "hsencfs.h"
 #include "hsutils.h"
 #include "xmalloc.h"
 
@@ -217,7 +218,7 @@ void    arr2log(char *argx[])
     while(1)
         {
         hsprint(TO_ERR | TO_LOG, 3,
-            "argx[%d] ptr: '%s'\n", xx, argx[xx]);
+            "argx[%d] ptr: '%s'", xx, argx[xx]);
         if(!argx[xx++])
             break;
         }
@@ -308,5 +309,79 @@ int     parse_comstr(char *argx[], int limx, const char *program)
     return cc;
 }
 
+void    randmem(void *ptr, int len)
+{
+    // Randomize optarg
+    for(int loop = 0; loop < len; loop++)
+        {
+        ((char*)ptr)[loop] = rand() % 0x80;
+        }
+}
+
+// It is a shame that no cross platform split exists.
+// fname and ext are optional (use NULL)
+
+void    split_path(const char *path, char *dir, char *fname, char *ext)
+
+{
+    int lenp = strlen(path);
+    char const *base_name = strrchr(path, '/');
+    //printf("path: '%s' base_name: '%s' \n", path, base_name);
+
+    if(base_name)
+        {
+        char const *dot = strrchr(base_name, '.');
+        int offs = base_name - path;
+        strncpy(dir, path, offs);
+        dir[offs] = '\0';
+        if (dot != NULL)
+            {
+            int offs = dot - base_name - 1;
+            if(fname)
+                {
+                strncpy(fname, base_name + 1, offs);
+                fname[offs] = '\0';
+                }
+            if(ext)
+                {
+                strcpy(ext, dot + 1);
+                ext[lenp - offs] = '\0';
+                }
+            }
+        else
+            {
+            if(fname)
+                strcpy(fname, base_name+1);
+            if(ext)
+                strcpy(ext, "");
+            }
+        }
+    else
+        {
+        base_name = path;
+        char const *dot = strrchr(base_name, '.');
+        if (dot != NULL)
+            {
+            int offs = dot - base_name;
+            if(fname)
+            	{
+                strncpy(fname, base_name, offs);
+                fname[offs] = '\0';
+                }
+            if(ext)
+                {
+                strcpy(ext, dot + 1);
+                ext[lenp - offs] = '\0';
+                }
+            }
+        else
+            {
+            if(fname)
+                strcpy(fname, base_name);
+            if(ext)
+                strcpy(ext, "");
+            }
+        }
+}
 
 // EOF

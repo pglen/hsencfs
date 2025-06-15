@@ -25,7 +25,6 @@
 #include <fcntl.h>
 #include <dirent.h>
 #include <errno.h>
-//#include <syslog.h>
 #include <sys/time.h>
 
 #ifdef HAVE_SETXATTR
@@ -35,9 +34,11 @@
 #include <signal.h>
 #include <getopt.h>
 
+#include "hsencdef.h"
+#include "hsencfs.h"
+#include "hspass.h"
 #include "base64.h"
 #include "hsencsb.h"
-#include "hsencfs.h"
 #include "xmalloc.h"
 #include "hs_crypt.h"
 #include "bluepoint2.h"

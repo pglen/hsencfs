@@ -82,6 +82,7 @@
 #include <syslog.h>
 #include <sys/time.h>
 
+#include "hsencdef.h"
 #include "stddef.h"
 
 #define DEF_DUMPHEX  1   // undefine this if you do not want bluepoint2_dumphex

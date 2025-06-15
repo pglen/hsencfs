@@ -11,14 +11,22 @@
       ----  ---------------      ----------      -------------------------
       0.00  Thu 05.Jun.2025      Peter Glen      Initial version.
       0.00  Sun 08.Jun.2025      Peter Glen      Passarg
+      0.00  Sun 15.Jun.2025      Peter Glen      Uninclude hsencfs.
 
    ======================================================================= */
 
+#define     MAXPASSLEN      256
 #define     MARK_SIZE   4096
+
+extern  char    *myext;
+extern  char    defpassx[MAXPASSLEN] ;
+extern  char    defpassx2[MAXPASSLEN] ;
+extern  char    decoy[MAXPASSLEN] ;
+extern  char    decoy2[MAXPASSLEN] ;
 
 typedef struct _PassArg
 {
-    char    *markfile;
+    char    *markfname;
     char    *passprog;
     char    *mountstr;
     char    *prompt;

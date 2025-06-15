@@ -333,3 +333,24 @@
 
 #endif
 
+//int ret2 = pass_ritual(mountpoint, mountsecret, defpassx, &plen, passprog);
+        //if(ret2)
+        //    {
+        //    // Catch abort message
+        //    if(ret2 == 3)
+        //        hsprint(TO_EL, 1,
+        //            "Passes do not match, aborted.");
+        //    else if(ret2 == 2)
+        //       hsprint(TO_EL, 1,
+        //                "Empty pass entered, aborted.\n");
+        //    else
+        //        hsprint(TO_EL, 1,
+        //                "Invalid password entered, aborted.\n");
+        //
+        //    hsprint(TO_EL, 2,
+        //            "Authentication error on mounting by %d '%s' -> '%s'",
+        //                        getuid(), mountpoint, mountsecret);
+        //    exit(EXIT_BADPASS);
+        //    }
+        }
+

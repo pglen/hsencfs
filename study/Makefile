@@ -34,4 +34,10 @@ test_hsencfs: test_hsencfs.c
             -o test_hsencfs
 
 
+test_split:  test_split.c ../common/hsutils.c
+	gcc -D_FILE_OFFSET_BITS=64 -I../common -I../src -I../common \
+         test_split.c \
+            ../common/hsutils.c ../common/xmalloc.c \
+            -o test_split
+
 # EOF

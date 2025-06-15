@@ -39,14 +39,24 @@
 #include <sys/xattr.h>
 #endif
 
-#include "hsencfs.h"
-#include "hspass.h"
+#include "hsencdef.h"
+//#include "hsencfs.h"
 #include "hsutils.h"
+#include "hspass.h"
 #include "xmalloc.h"
 #include "base64.h"
 #include "bluepoint2.h"
 
-char  *passfname = ".passdata.datx";
+// The decoy deployed occasionally to stop spyers
+// from figuring out where pass is stored
+
+char    decoy[MAXPASSLEN];
+char    defpassx[MAXPASSLEN];
+char    decoy2[MAXPASSLEN];
+char    defpassx2[MAXPASSLEN];
+
+char    *passfname = ".passdata.datx";
+char    *myext = ".datx";
 
 static int  getlinex(int fd, char *buf, size_t bufsiz)
 
@@ -356,7 +366,7 @@ static int     seccomp(const char *s1, const char *s2, int len)
 
 // See notes on create_markfile
 
-int     check_markfile(char *name, char *pass, int plen)
+int     check_markfile(char *fname, char *pass, int plen)
 
 {
     int ret = 0;
@@ -366,32 +376,33 @@ int     check_markfile(char *name, char *pass, int plen)
     // Checking
     char *ttt = xmalloc(MARK_SIZE);
     if(!ttt)
+        {
+        hsprint(TO_EL, 1, "Cannot alloc markfile");
         return -errno;
-
-    int fh = open(name, O_RDONLY);
+        }
+    int fh = open(fname, O_RDONLY);
     if(fh < 1)
         {
-        xsfree(ttt);
-        return -errno;
+        ret = -errno;
+        goto cleanup;
         }
     if (read(fh, ttt, MARK_SIZE) != MARK_SIZE)
         {
-        xsfree(ttt);
         close(fh);
-        return -errno;
+        ret = -errno;
+        goto cleanup;
         }
     close(fh);
 
     bluepoint2_decrypt(ttt + MARK_SIZE / 2, MARK_SIZE / 2, pass, plen);
     ret = seccomp(ttt, ttt + MARK_SIZE / 2, MARK_SIZE / 2);
 
-    xsfree(ttt);
-
+  cleanup:
+    if(ttt) xsfree(ttt);
     return ret;
 }
 
-
-struct termios oldt;
+static struct termios oldt;
 
 void    sigint_local(int sig)
 
@@ -453,8 +464,7 @@ char    *getpassx(char *prompt)
 int     hs_askpass(const char *program, char *buf, int buflen)
 
 {
-    return 0;
-
+    //return 1;
     struct sigaction  sa, saved_sa_pipe;
     int pfd[2];  pid_t pid;
     int mainret = 0;
@@ -509,7 +519,7 @@ int     hs_askpass(const char *program, char *buf, int buflen)
         //(void) dup2(pfd[1], STDERR_FILENO);
     	//set_perms(PERM_FULL_USER); //TODO
     	closefrom(STDERR_FILENO + 1);
-        arr2log(argx);
+        //arr2log(argx);
         int retx = execvp(argx[0], argx) ;
         hsprint(TO_ERR | TO_LOG, 2,
             "Unable to run askpass: '%s' ret=%d", program, retx);
@@ -627,7 +637,7 @@ int     pass_ritual(PassArg *parg)
     int xlen = strlen(xpass);
     if(xlen == 0)
         {
-        xsfree(xpass);
+        //xsfree(xpass);
         //printf("Empty pass.\n");
         zret = HSPASS_NOPASS;
         goto cleanup;
@@ -662,7 +672,7 @@ int     pass_ritual(PassArg *parg)
             zret = HSPASS_NOMATCH;
             goto cleanup;
             }
-        zret = create_markfile(parg->markfile, xpass, xlen);
+        zret = create_markfile(parg->markfname, xpass, xlen);
         if(zret == 0)
             {
             printf("created markfile, pass '%s'\n", xpass);
@@ -674,7 +684,7 @@ int     pass_ritual(PassArg *parg)
     else
         {
         //printf("xpass '%s'\n", xpass);
-        zret = check_markfile(parg->markfile, xpass, xlen);
+        zret = check_markfile(parg->markfname, xpass, xlen);
         if (zret == 0)
             {
             printf("check markfile, pass '%s'\n", xpass);
@@ -692,49 +702,44 @@ int     pass_ritual(PassArg *parg)
 int     pass_gui_ritual(PassArg *parg)
 {
     int yret = 0;
-
-    char *passprog = xmalloc(PATH_MAX);
-    snprintf(passprog, PATH_MAX,
-                "%s --prompt %s --title %s --create %d ",
-                    parg->passprog,
-                        parg->prompt,
-                            parg->title,
-                                parg->create);
-
-    //printf("passprog: '%s'\n", passprog);
     char *xpass = xmalloc(MAXPASSLEN);
-    int ret = hs_askpass(passprog, xpass, MAXPASSLEN);
+    if(!xpass)
+        {
+        hsprint(TO_EL, 9, "Error on alloc gui ritual.\n");
+        yret = HSPASS_MALLOC;
+        goto cleanup;
+        }
+    int ret = hs_askpass(parg->passprog, xpass, MAXPASSLEN);
     //printf("hsaskpass ret: %d\n", ret);
-    xsfree(passprog);
     if(ret)
         {
-        xsfree(xpass);
-        //printf("Error on  getting pass %d\n", ret);
+        hsprint(TO_EL, 9, "Error on  getting pass %d\n", ret);
         yret = HSPASS_NOEXEC;
         goto cleanup;
         }
-    //printf("hs_askpass() %d returned pass: '%s'\n", ret, xpass);
+    //hsprint(TO_EL, 9, ("hs_askpass() %d returned pass: '%s'\n", ret, xpass);
     int xlen = strlen(xpass);
     if(!xlen)
         {
-        xsfree(xpass);
         //printf("No gui pass, aborted.\n");
         yret = HSPASS_NOPASS;
         goto cleanup;
         }
-    //printf("pass: '%s'\n", xpass);
+    //hsprint(TO_EL, 9, "pass: '%s'\n", xpass);
     if(parg->create)
         {
-        yret = create_markfile(parg->markfile, xpass, xlen);
-        //printf("created markfile: %d\n", ret);
+        yret = create_markfile(parg->markfname, xpass, xlen);
+        hsprint(TO_EL, 9, "created markfile: %d\n", yret);
         }
     else
         {
-        yret = check_markfile(parg->markfile, xpass, xlen);
+        yret = check_markfile(parg->markfname, xpass, xlen);
         }
-    xsfree(xpass);
 
 cleanup:
+     hsprint(TO_EL, 9, "created markfile: %d\n", ret);
+
+    if(xpass) xsfree(xpass);
     return yret;
 }
 
@@ -757,6 +762,34 @@ int     getpass_front(PassArg *parg)
     //xmdump(0);
 
     return yret;
+}
+
+// -----------------------------------------------------------------------
+// Check if it is our internal file
+
+int     is_our_file(const char *path, int fname_only)
+
+{
+    int ret = FALSE;
+    char *eee = "/.";
+    if(fname_only == FALSE)
+        {
+        eee = strrchr(path, '/');
+        }
+    char *nnn = strrchr(path, '.');
+
+    // Determine if it is our data file, deny access
+    if(eee && nnn)
+        {
+        if(eee[1] == '.' && strncmp(nnn, myext, sizeof(myext) - 1) == 0 )
+            {
+            ret = TRUE;
+            }
+
+        //if (loglevel > 4)
+        //    syslog(LOG_DEBUG, "is_our_file: eee '%s' nnn '%s' ret=%d\n", eee, nnn, ret);
+        }
+    return ret;
 }
 
 // EOF

@@ -1,9 +1,23 @@
-// base64.c
+
+/* =====[ base64.c ]=====================================================
+
+   File Name:       base64.c
+
+   Description:
+
+   Revisions:
+
+      REV       DATE                BY           DESCRIPTION
+      ----  ---------------      ----------      -------------------------
+      0.00  Sun 15.Jun.2025      Peter Glen      Initial version.
+
+   ======================================================================= */
 
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 
+#include "xmalloc.h"
 #include "base64.h"
 
 static char encoding_table[] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
@@ -14,16 +28,18 @@ static char encoding_table[] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
                                 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
                                 'w', 'x', 'y', 'z', '0', '1', '2', '3',
                                 '4', '5', '6', '7', '8', '9', '+', '/'};
-static char *decoding_table = NULL;
+
+static char *decoding_table[256] = {-1, };
+
 static int mod_table[] = {0, 2, 1};
 
 char    *base64_encode(const unsigned char *data,
-                    size_t input_length,
-                    size_t *output_length) {
+                                size_t input_length,
+                                    size_t *output_length) {
 
     *output_length = 4 * ((input_length + 2) / 3);
 
-    char *encoded_data = malloc(*output_length);
+    char *encoded_data = xmalloc(*output_length);
     if (encoded_data == NULL) return NULL;
 
     for (int i = 0, j = 0; i < input_length;) {
@@ -48,10 +64,10 @@ char    *base64_encode(const unsigned char *data,
 
 
 unsigned char *base64_decode(const char *data,
-                             size_t input_length,
-                             size_t *output_length) {
+                                    size_t input_length,
+                                        size_t *output_length) {
 
-    if (decoding_table == NULL) build_decoding_table();
+    if (decoding_table[0] == 0) build_decoding_table();
 
     if (input_length % 4 != 0) return NULL;
 
@@ -59,7 +75,7 @@ unsigned char *base64_decode(const char *data,
     if (data[input_length - 1] == '=') (*output_length)--;
     if (data[input_length - 2] == '=') (*output_length)--;
 
-    unsigned char *decoded_data = malloc(*output_length);
+    unsigned char *decoded_data = xmalloc(*output_length);
     if (decoded_data == NULL) return NULL;
 
     memset(decoded_data, '\0', *output_length + 1);
@@ -83,17 +99,10 @@ unsigned char *base64_decode(const char *data,
     return decoded_data;
 }
 
-
-void build_decoding_table() {
-
-    decoding_table = malloc(256);
-
+void build_decoding_table()
+{
     for (int i = 0; i < 64; i++)
         decoding_table[(unsigned char) encoding_table[i]] = i;
 }
 
-
-void base64_cleanup() {
-    free(decoding_table);
-}
-
+//# EOF

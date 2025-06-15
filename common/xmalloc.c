@@ -26,6 +26,7 @@
 #include <stdarg.h>
 #include <pthread.h>
 
+#include "hsencdef.h"
 #include "xmalloc.h"
 #include "hsutils.h"
 

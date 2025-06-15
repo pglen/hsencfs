@@ -13,21 +13,20 @@
 
    ======================================================================= */
 
-#define FALSE (0==1)
-#define TRUE  (0==0)
-
-#ifndef MAX
-#define MAX(x, y) (((x) > (y)) ? (x) : (y))
-#endif
-
-#ifndef MIN
-#define MIN(x, y) (((x) < (y)) ? (x) : (y))
-#endif
-
-#define MAXPASSLEN      256
-
-typedef unsigned int  uint;
-typedef unsigned char uchar;
+//#define FALSE (0==1)
+//#define TRUE  (0==0)
+//
+//#ifndef MAX
+//#define MAX(x, y) (((x) > (y)) ? (x) : (y))
+//#endif
+//
+//#ifndef MIN
+//#define MIN(x, y) (((x) < (y)) ? (x) : (y))
+//#endif
+//
+//typedef unsigned int  uint;
+//typedef unsigned char uchar;
+//
 
 #define     HS_PROGNAME    "HSENCFS"
 
@@ -49,31 +48,13 @@ typedef unsigned char uchar;
 //#define BYPASS  1                       // Test case for no interception
 #define VIRTUAL 1                         // Newer version of interception
 
-// Warning: this will disable all encryptions;
-// This is used for testing ONLY;
-
-// -----------------------------------------------------------------------
-// Test cases for simplifying and / or disabling encryption
-// Nothing defined yields error
-// FULL_ENCRYPT activates the real encryption
-
-//#define NONE_ENCRYPT      1
-//#define FAKE_ENCRYPT    1
-//#define HALF_ENCRYPT    1
-#define FULL_ENCRYPT    1
-
-extern  char    defpassx[MAXPASSLEN];
-
 extern  char    mountpoint[PATH_MAX] ;
 extern  char    mountsecret[PATH_MAX] ;
 extern  char    progname[];
 extern  char    passback[2*PATH_MAX] ;
 extern  char    passprog[2*PATH_MAX] ;
+extern  char    markfile[PATH_MAX] ;
 
-extern  char    *myext;
-
-extern  int     defplen;
-extern  int     pg_debug;
 extern  int     verbose;
 extern  int     ondemand;
 
