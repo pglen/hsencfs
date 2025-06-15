@@ -24,6 +24,8 @@ extern  char    defpassx2[MAXPASSLEN] ;
 extern  char    decoy[MAXPASSLEN] ;
 extern  char    decoy2[MAXPASSLEN] ;
 
+extern  int     gotdefpass;
+
 typedef struct _PassArg
 {
     const char    *markfname;
@@ -53,7 +55,7 @@ int     private_decrypt(uchar * enc_data, int data_len, uchar *key, uchar *dbuf)
 int     parse_comstr(char *argx[], int limx, const char *program);
 void    sigint_local(int sig);
 char    *getpassx(char *prompt);
-int     hs_askpass(const char *program, int create, char *buf, int len);
+int     hs_askpass(PassArg *parg);
 int     pass_ritual(PassArg *parg);
 int     getpass_front(PassArg *parg);
 

@@ -50,10 +50,11 @@
 // The decoy deployed occasionally to stop spyers
 // from figuring out where pass is stored
 
-char    decoy[MAXPASSLEN];
-char    defpassx[MAXPASSLEN];
-char    decoy2[MAXPASSLEN];
-char    defpassx2[MAXPASSLEN];
+char    decoy[MAXPASSLEN] = {0,};
+char    defpassx[MAXPASSLEN] = {0,};
+char    decoy2[MAXPASSLEN] = {0,};
+char    defpassx2[MAXPASSLEN] = {0,};
+int     gotdefpass = 0;
 
 char    *passfname = ".passdata.datx";
 char    *myext = ".datx";
@@ -107,10 +108,7 @@ static  void printpass(char *pp, int ll)
 #endif
 
 //// -----------------------------------------------------------------------
-//// Create asyn encryption
-//
-////define MIN(aa, bb) aa > bb ? bb : aa
-//typedef unsigned char uchar;
+//// Create async encryption
 //
 
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
@@ -461,7 +459,7 @@ char    *getpassx(char *prompt)
  * Fork a child and exec progran to get the password from the user.
  */
 
-int     hs_askpass(const char *program, int create, char *buf, int len)
+int     hs_askpass(PassArg *parg)
 
 {
     //return 1;
@@ -472,16 +470,10 @@ int     hs_askpass(const char *program, int create, char *buf, int len)
     //printf("hsaskpass() progfile: '%s'\n", program);
 
     char *argx[12]; argx[0] = NULL;
-    int idx = parse_comstr(argx, sizeof(argx)/sizeof(char*), program);
-    //if (access(argx[0], X_OK) < 0)
-    //    {
-    //    hsprint(TO_ERR | TO_LOG, -1,
-    //            "Askpass is not an executable: '%s'\n", program);
-    //    mainret = -1;
-    //    goto cleanup;
-    //    }
-    //char cwd[PATH_MAX];
-    //hsprint(TO_ERR | TO_LOG, 3, "Asking pass with program: '%s'", program);
+    int idx = parse_comstr(argx, sizeof(argx)/sizeof(char*),
+                                        parg->passprog);
+    //hsprint(TO_ERR | TO_LOG, 3,
+    //    "Asking pass with program: '%s'", parg->passprog);
 
     EVP_PKEY *rsa_key = generate_rsa_key(2048);
     char* pub_ptr = publicKeyToString(rsa_key);
@@ -490,7 +482,12 @@ int     hs_askpass(const char *program, int create, char *buf, int len)
     //argx[idx] = strdup("--loglevel");   argx[idx+1] = NULL;  idx++;
     //argx[idx] = strdup("5");            argx[idx+1] = NULL; idx++;
 
-    if (create)
+    if (parg->title)
+        {
+        argx[idx] = strdup("--title");    argx[idx+1] = NULL;  idx++;
+        argx[idx] = strdup(parg->title);  argx[idx+1] = NULL;  idx++;
+        }
+    if (parg->create)
         {
         argx[idx] = strdup("--create");  argx[idx+1] = NULL;  idx++;
         argx[idx] = strdup("1");         argx[idx+1] = NULL;  idx++;
@@ -526,7 +523,7 @@ int     hs_askpass(const char *program, int create, char *buf, int len)
         //arr2log(argx);
         int retx = execvp(argx[0], argx) ;
         hsprint(TO_ERR | TO_LOG, 2,
-            "Unable to run askpass: '%s' ret=%d", program, retx);
+            "Unable to run askpass: '%s' ret=%d", argx[0], retx);
         // Clear error number so the FS can work
         errno = 0;    // ??
         //mainret = HSPASS_NOEXEC;
@@ -575,7 +572,7 @@ int     hs_askpass(const char *program, int create, char *buf, int len)
             //printf("decoded: len=%d '%s'\n", ret, tmp5);
             xsfree(res2);
             if(ret >= 0)
-                strcpy(buf, tmp5);
+                strcpy(parg->result, tmp5);
             xsfree(tmp5);
             }
         }
@@ -691,13 +688,12 @@ int     pass_ritual(PassArg *parg)
         zret = check_markfile(parg->markfname, xpass, xlen);
         if (zret == 0)
             {
-            printf("check markfile, pass '%s'\n", xpass);
+            //printf("check markfile, pass '%s'\n", xpass);
             strcpy(parg->result, xpass);
             }
         //printf("checked markfile: %d\n", ret);
         xsfree(xpass);
         }
-
    cleanup:
     //xmdump(0);
     return zret;
@@ -707,7 +703,7 @@ int     pass_gui_ritual(PassArg *parg)
 {
     int yret = 0;
     //printf("pass_gui_ritual create=%d\n",  parg->create);
-    int ret = hs_askpass(parg->passprog, parg->create, parg->result, MAXPASSLEN);
+    int ret = hs_askpass(parg);
     //printf("hsaskpass ret: %d\n", ret);
     if(ret)
         {
@@ -732,11 +728,8 @@ int     pass_gui_ritual(PassArg *parg)
         {
         yret = check_markfile(parg->markfname, parg->result, xlen);
         }
-
-cleanup:
-     hsprint(TO_EL, 9, "created markfile: %d\n", ret);
-
-    //if(xpass) xsfree(xpass);
+   cleanup:
+    hsprint(TO_EL, 9, "created markfile: %d\n", ret);
     return yret;
 }
 

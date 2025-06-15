@@ -694,16 +694,17 @@ int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
         hsprint(TO_EL, 1, "Cannot alloc path2 on: '%s'", path);
         return -errno;
         }
-    hsprint(TO_EL, 9, "shadow file: '%s'", path2);
-
+    //hsprint(TO_EL, 9, "shadow file: '%s'", path2);
     if(defpassx[0] == 0)
         {
         hsprint(TO_EL, 9, "Empty pass on create file: %s uid: %d", path, getuid());
         int retp = openpass(path);
         if (retp)
             {
-            errno = EACCES;
-            res = -EACCES;
+            //errno = EACCES;
+            //res = -EACCES;
+            errno = EKEYREJECTED;
+            res = -EKEYREJECTED;
             goto cleanup;
             }
         }
@@ -761,8 +762,10 @@ int     xmp_open(const char *path, struct fuse_file_info *fi)
         //hsprint(TO_EL, 1, "Open pass got %d", ret);
         if (ret)
             {
-            errno = EACCES;
-            return -EACCES;
+            //errno = EACCES;
+            //return -EACCES;
+            errno = EKEYREJECTED;
+            return -EKEYREJECTED;
             }
         }
     int mode2 = (S_IRUSR | S_IWUSR | S_IRGRP);

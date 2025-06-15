@@ -91,18 +91,14 @@ int     nobg = 0;
 
 // Main directories for data / encryption
 
-char  mountpoint[PATH_MAX] ;
-char  mountsecret[PATH_MAX] ;
+char  mountpoint[PATH_MAX] = {0, };
+char  mountsecret[PATH_MAX] = {0, } ;
+char  fullpath[PATH_MAX] = {0, };
+char  startdir[PATH_MAX] = {0, };
+char  markfile[PATH_MAX] = {0, };
 
-char  fullpath[PATH_MAX] ;
-char  startdir[PATH_MAX];
-char  markfile[PATH_MAX];
-
-//char  fff[PATH_MAX];
-//char  eee[PATH_MAX];
-
-char  passprog[2 * PATH_MAX] ;
-char  passback[2 * PATH_MAX] ;
+char  passprog[2 * PATH_MAX] = {0, };
+char  passback[2 * PATH_MAX] = {0, };
 
 /// We use this as a string to obfuscate the password. Do not change.
 char    progname[] =  HS_PROGNAME;
@@ -191,7 +187,6 @@ void    closefrom(int lowfd)
 int     helpfunc()
 
 {
-    //printf("\n");
     printf("Usage: hsencfs [options] MountPoint [StorageDir] \n");
     printf("MountPoint is a directory for user accessible data. (ex: ~/secret)\n");
     printf("StorageDir (optional) or storing the encrypted data. (ex: ~/.secret)\n");
@@ -207,10 +202,8 @@ int     helpfunc()
     printf("Append '--' to the end of command line for FUSE options.\n");
     printf("For example: 'hsencfs ~/secret -- -user-allow-other' for a shared mount.\n");
     printf("Use hsencfs -vh option for more help.\n");
-
     if (verbose)
         {
-        //printf("\n");
         printf("Log levels:  1 - start/stop;   2 - open/create     3 - read/write;\n");
         printf("             4 - all (noisy);  5 - show most  6...10 more details\n");
         printf("Access errors and mount errors are reported stderr and to the log.\n");
@@ -366,7 +359,7 @@ void    parse_comline(int argc, char *argv[])
                break;
 
            case 'p':
-                if (defpassx[0] != 0)
+                if (!gotdefpass)
                     {
                     fprintf(stderr, "%s Error: multiple passes on command line.\n", argv[0]);
                     exit(EXIT_ERROR);
@@ -375,7 +368,8 @@ void    parse_comline(int argc, char *argv[])
                 fprintf(stderr, "Warning: Cleartext password.\n");
                 strcpy(defpassx, optarg);
                 randmem(decoy2, sizeof(decoy));
-                strcpy(defpassx2, optarg);
+                randmem(defpassx2, sizeof(defpassx2));
+                gotdefpass = TRUE;
                 // Randomize optarg
                 randmem(optarg, strlen(optarg));
                 if(verbose)
@@ -626,6 +620,7 @@ int     main(int argc, char *argv[])
             hsprint(TO_EL, 1, "Directory not empty or mounted already.");
         exit(EXIT_NONEMPTY);
         }
+    bluepoint2_encrypt(defpassx2, sizeof(defpassx2), progname, sizeof(progname));
     // Check if valid askpass
     if(ondemand)
         {
@@ -635,7 +630,7 @@ int     main(int argc, char *argv[])
             exit(EXIT_NOASKPASS);
             }
         }
-    bluepoint2_encrypt(decoy, sizeof(decoy), defpassx, sizeof(defpassx));
+    bluepoint2_encrypt(decoy, sizeof(decoy), progname, sizeof(progname));
 
     // Create markfile name
     snprintf(markfile, PATH_MAX, "%s%s", mountsecret, passfname);
@@ -651,7 +646,7 @@ int     main(int argc, char *argv[])
             printf("Ondemand pass option deactivated.\n");
             }
         int pret = 0;
-        if(defpassx[0] == '\0')
+        if(gotdefpass == 0)
             {
             char *tmp = xmalloc(MAXPASSLEN);
             if(!tmp)
@@ -667,7 +662,7 @@ int     main(int argc, char *argv[])
             //printf("create = %d\n", passarg.create);
 
             passarg.prompt = "\'  Enter pass:  \'",
-            passarg.title = "\' Title Here: \'";
+            passarg.title = mountpoint;
             passarg.gui = 0;
             passarg.passprog = passprog;
             passarg.mountstr = mountpoint;
@@ -679,12 +674,13 @@ int     main(int argc, char *argv[])
                 {
                 strcpy(defpassx, passarg.result);
                 free(passarg.result);
+                gotdefpass = TRUE;
                 }
             }
         else
             {
             // Just check
-            pret = check_markfile(markfile, defpassx, strlen(defpassx));
+            pret = check_markfile(markfile, defpassx, sizeof(defpassx));
             }
         //xsfree(markfile);
         if(pret == HSPASS_OK)
@@ -695,17 +691,17 @@ int     main(int argc, char *argv[])
         else
             {
             if(pret == HSPASS_NOPASS)
-                printf("Empty pass.\n");
+                hsprint(TO_EL, 0, "Empty pass.");
             else if(pret == HSPASS_NOEXEC)
-                printf("Resource (exec askpass prog) problem.\n");
+                hsprint(TO_EL, 0, "Resource (exec askpass prog) problem.");
             else if(pret == HSPASS_ERRFILE)
-                printf("Resource (markfile create) problem.\n");
+                hsprint(TO_EL, 0, "Resource (markfile create) problem.");
             else if(pret == HSPASS_ERRWRITE)
-                printf("Resource (markfile write) problem.\n");
+                hsprint(TO_EL, 0, "Resource (markfile write) problem.");
             else if (pret == HSPASS_MALLOC)
-                printf("Resource (malloc) problem.\n");
+                hsprint(TO_EL, 0, "Resource (malloc) problem.");
             else
-                printf("No password match.\n");
+                hsprint(TO_EL, 0, "Invalid password.");
             exit(1);
             }
         }

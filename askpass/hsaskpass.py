@@ -234,7 +234,7 @@ def mainloop():
     star = " "
     if args.pubkey:
         star = "*"
-    head = "%s%s" % (star, args.title);
+    head = "%s Mounting: '%s'" % (star, args.title);
     while 1:
         text, text2 = getpass(head, args.create)
         if args.create:

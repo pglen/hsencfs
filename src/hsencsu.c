@@ -103,7 +103,7 @@ int     openpass(const char *path)
     else
         passarg.create = 0;
     passarg.prompt = "\'  Enter pass:  \'",
-    passarg.title = "\' Title Here: \'";
+    passarg.title = mountpoint;
     passarg.gui = 1;
     passarg.passprog = passprog;
     passarg.mountstr = (char *)path;
@@ -120,7 +120,7 @@ int     openpass(const char *path)
         {
         // Error ?
         hslog(0, "Cannot get pass for '%s' with %s\n", path, passprog);
-        pret = 1;
+        pret = EKEYREJECTED;
         }
   endx:
     if(tmp)
