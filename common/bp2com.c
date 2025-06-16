@@ -16,13 +16,15 @@
 #include <sys/time.h>
 #include <sys/stat.h>
 
+#include "hsencdef.h"
 #include "hsencfs.h"
+#include "hspass.h"
 #include "bluepoint2.h"
 #include "hs_crypt.h"
 #include "bp2com.h"
 #include "hsencsb.h"
 
-char    progname[] = "HSENCFS";
+//char    progname[] = "HSENCFS";
 
 static char     tmp[256];
 

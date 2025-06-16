@@ -20,7 +20,9 @@
 #include <sys/time.h>
 #include <sys/stat.h>
 
+#include "hsencdef.h"
 #include "hsencfs.h"
+#include "hspass.h"
 #include "hsutils.h"
 #include "hs_crypt.h"
 #include "bp2com.h"
@@ -41,7 +43,7 @@ int     force = 0;
 static  char    version[] = "1.17";
 char    passx[MAXPASSLEN];
 int     plen = sizeof(passx);
-char    decoy[MAXPASSLEN];
+//char    decoy[MAXPASSLEN];
 int     plen2 = sizeof(decoy);
 char    pass[MAXPASSLEN];
 

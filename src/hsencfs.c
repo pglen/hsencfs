@@ -326,17 +326,15 @@ void    parse_comline(int argc, char *argv[])
            case 'a':
                 if (optarg[0] == '/')
                     {
+                    // Absolute path
                     snprintf(passprog, sizeof(passprog), "%s", optarg);
-                    }
-                else if (optarg[0] == '.')
-                    {
-                    char cwd[PATH_MAX];
-                    char *pp = getcwd(cwd, sizeof(cwd));
-                    snprintf(passprog, sizeof(passprog), "%s/%s", cwd, optarg);
                     }
                 else
                     {
-                    snprintf(passprog, sizeof(passprog), "%s/%s", startdir, optarg);
+                    // Relative path
+                    char cwd[PATH_MAX];
+                    char *pp = getcwd(cwd, sizeof(cwd));
+                    snprintf(passprog, sizeof(passprog), "%s/%s", cwd, optarg);
                     }
                 struct stat statbuf;
                 int ret = stat(passprog, &statbuf);

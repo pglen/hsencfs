@@ -11,21 +11,23 @@
 #include <dirent.h>
 #include <fuse.h>
 
+#include "hsencdef.h"
 #include "hsencfs.h"
-#include "base64.h"
-#include "hsutils.h"
 #include "hspass.h"
+#include "hsutils.h"
+#include "base64.h"
 #include "xmalloc.h"
 
 static char tmp[MAXPASSLEN];
 int     xlen = 0;
 
-char    progname[] = "HSENCFS";
+//char    progname[] = "HSENCFS";
+
 int     create = 0;
 int     gui = 0;
 int     verbose = 0;
-char    *markfile = "markfile";
-char    *defpass = "";
+char    markfile[PATH_MAX] = {0, };
+char    defpass[PATH_MAX] = {0, };
 char    *askprog = "../askpass/hsaskpass.py";
 
 int main(int argc, char *argv[])
@@ -82,7 +84,7 @@ int main(int argc, char *argv[])
 
             case 'm':
                 //printf("option m %s\n", optarg);
-                markfile = strdup(optarg);
+                //markfile = strdup(optarg);
                 break;
 
             case 'l':
@@ -92,7 +94,7 @@ int main(int argc, char *argv[])
 
             case 'p':
                 //printf("option m %s\n", optarg);
-                defpass = strdup(optarg);
+                strcpy(defpass, optarg);
                 break;
 
             case 'k':
@@ -122,7 +124,7 @@ int main(int argc, char *argv[])
     passarg.create   = create;
     passarg.passprog = askprog;
     passarg.mountstr = "Mountstr";
-    passarg.markfile = markfile;
+    passarg.markfname = markfile;
     passarg.result   = tmp;
     passarg.reslen   = MAXPASSLEN;
     int ret = getpass_front(&passarg);

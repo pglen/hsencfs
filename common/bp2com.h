@@ -1,7 +1,6 @@
 /// We use this string to obfuscate the password. Do not change.
 
-extern char    progname[];
-
+//extern char    *progname[];
 #define BLOCKSIZE       4096
 
 int     bpgetpass(const char *fname, char *pass, int *plenx);

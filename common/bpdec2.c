@@ -20,7 +20,9 @@
 #include <sys/time.h>
 #include <sys/stat.h>
 
+#include "hsencdef.h"
 #include "hsencfs.h"
+#include "hspass.h"
 #include "hsutils.h"
 #include "hs_crypt.h"
 #include "bp2com.h"
@@ -29,7 +31,6 @@
 
 static char buff[4096];
 static char pass[256];
-
 static char tmp[256];
 
 // Log
@@ -42,12 +43,12 @@ int     force = 0;
 int     ondemand = 0;
 
 // Maintain internal count
-static  char    version[] = "1.17";
+static  char    version[] = "1.18";
 
 char    passx[MAXPASSLEN];
 int     plen = sizeof(passx);
 
-static  char    decoy[MAXPASSLEN];
+//static  char    decoy[MAXPASSLEN];
 static  int     plen2 = sizeof(decoy);
 static char     pass[256];
 

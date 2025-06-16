@@ -13,21 +13,6 @@
 
    ======================================================================= */
 
-//#define FALSE (0==1)
-//#define TRUE  (0==0)
-//
-//#ifndef MAX
-//#define MAX(x, y) (((x) > (y)) ? (x) : (y))
-//#endif
-//
-//#ifndef MIN
-//#define MIN(x, y) (((x) < (y)) ? (x) : (y))
-//#endif
-//
-//typedef unsigned int  uint;
-//typedef unsigned char uchar;
-//
-
 #define EXIT_NOERROR    0
 #define EXIT_ERROR      1
 #define EXIT_ALREADY    2
