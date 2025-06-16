@@ -695,7 +695,7 @@ int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
         return -errno;
         }
     //hsprint(TO_EL, 9, "shadow file: '%s'", path2);
-    if(defpassx[0] == 0)
+    if(gotdefpass == 0)
         {
         hsprint(TO_EL, 9, "Empty pass on create file: %s uid: %d", path, getuid());
         int retp = openpass(path);

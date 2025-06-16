@@ -18,11 +18,14 @@
 #define     MAXPASSLEN      256
 #define     MARK_SIZE   4096
 
+#define     HS_PROGNAME    "HSENCFS"
+
 extern  char    *myext;
 extern  char    defpassx[MAXPASSLEN] ;
 extern  char    defpassx2[MAXPASSLEN] ;
 extern  char    decoy[MAXPASSLEN] ;
 extern  char    decoy2[MAXPASSLEN] ;
+extern  char    *progname;
 
 extern  int     gotdefpass;
 

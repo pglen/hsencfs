@@ -28,8 +28,6 @@
 //typedef unsigned char uchar;
 //
 
-#define     HS_PROGNAME    "HSENCFS"
-
 #define EXIT_NOERROR    0
 #define EXIT_ERROR      1
 #define EXIT_ALREADY    2
@@ -50,7 +48,6 @@
 
 extern  char    mountpoint[PATH_MAX] ;
 extern  char    mountsecret[PATH_MAX] ;
-extern  char    progname[];
 extern  char    passback[2*PATH_MAX] ;
 extern  char    passprog[2*PATH_MAX] ;
 extern  char    markfile[PATH_MAX] ;

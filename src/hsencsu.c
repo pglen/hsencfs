@@ -80,7 +80,7 @@ int     openpass(const char *path)
 {
     int pret = 0;
     hslog(3, "Openpass() path: '%s'", path);
-    if(defpassx[0] != '\0')
+    if(gotdefpass)
         {
         hslog(1, "Using default pass '%s'", defpassx);
         return 0;
@@ -91,13 +91,14 @@ int     openpass(const char *path)
         pret = 1;
         goto endx;
         }
-    char *tmp = xmalloc(MAXPASSLEN);
-    if (!tmp)
-        {
-        hslog(1, "Cannot alloc tmp: '%s'\n", path);
-        pret = 1; goto endx2;
-        }
     PassArg passarg;
+    passarg.result = xmalloc(MAXPASSLEN);
+    if (!passarg.result)
+        {
+        hslog(1, "openpass() cannot alloc tmp: '%s'\n", path);
+        pret = 1; goto endx;
+        }
+    memset(passarg.result, '\0', MAXPASSLEN);
     if (access(markfile, R_OK) < 0)
         passarg.create = 1;
     else
@@ -108,24 +109,20 @@ int     openpass(const char *path)
     passarg.passprog = passprog;
     passarg.mountstr = (char *)path;
     passarg.markfname = markfile;
-    passarg.result = tmp;
     passarg.reslen = MAXPASSLEN;
     pret = getpass_front(&passarg);
     if(pret == HSPASS_OK)
         {
         //printf("passarg res: '%s'\n", passarg.result);
-        strcpy(defpassx, passarg.result);
+        memcpy(defpassx, passarg.result, MAXPASSLEN);
         }
     else
         {
         // Error ?
-        hslog(0, "Cannot get pass for '%s' with %s\n", path, passprog);
-        pret = EKEYREJECTED;
+        hslog(3, "Cannot get pass for '%s' with %s\n", path, passprog);
+        pret = 1; //EKEYREJECTED;
         }
   endx:
-    if(tmp)
-        free(tmp);
-  endx2:
     return pret;
 }
 

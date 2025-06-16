@@ -100,9 +100,6 @@ char  markfile[PATH_MAX] = {0, };
 char  passprog[2 * PATH_MAX] = {0, };
 char  passback[2 * PATH_MAX] = {0, };
 
-/// We use this as a string to obfuscate the password. Do not change.
-char    progname[] =  HS_PROGNAME;
-
 int   ondemand = 1;
 
 // -----------------------------------------------------------------------
@@ -351,15 +348,13 @@ void    parse_comline(int argc, char *argv[])
                 if(verbose)
                     printf("Setting passprog: '%s'\n", passprog);
                 break;
-
            case 'l':
                loglevel = atoi(optarg);
                 if(verbose)
                     printf("Setting log Level: %d\n", loglevel);
                break;
-
            case 'p':
-                if (!gotdefpass)
+                if (gotdefpass)
                     {
                     fprintf(stderr, "%s Error: multiple passes on command line.\n", argv[0]);
                     exit(EXIT_ERROR);
@@ -367,6 +362,7 @@ void    parse_comline(int argc, char *argv[])
                 randmem(decoy, sizeof(decoy));
                 fprintf(stderr, "Warning: Cleartext password.\n");
                 strcpy(defpassx, optarg);
+                //bluepoint2_encrypt(defpassx, sizeof(defpassx), progname, strlen(progname));
                 randmem(decoy2, sizeof(decoy));
                 randmem(defpassx2, sizeof(defpassx2));
                 gotdefpass = TRUE;
@@ -375,25 +371,20 @@ void    parse_comline(int argc, char *argv[])
                 if(verbose)
                     printf("Pass provided on command line.\n");
                 break;
-
            case 'o':
                ondemand = 0;
                break;
-
             case 'n':
                nobg = 1;
                break;
-
             case 'v':
                verbose += 1;
                break;
-
            case 'V':
                printf("%s Version: %s Fuse Version: %d - Built on: %s \n",
                             argv[0], version, FUSE_USE_VERSION, build);
                exit(EXIT_NOERROR);
                break;
-
            case 'u':
                 //umountx = 1;
                 break;
@@ -402,13 +393,11 @@ void    parse_comline(int argc, char *argv[])
                     printf("Showing help.\n");
                helpfunc(); exit(EXIT_NOERROR);
                break;
-
            case '?':
                 //fprintf(stderr, "%s Error: invalid option on command line.\n",
                 //                    argv[0]);
                 exit(EXIT_ERROR);
                 break;
-
            default:
                printf ("Invalid option: '%c'\n", cc);
                exit(EXIT_ERROR);
@@ -620,7 +609,7 @@ int     main(int argc, char *argv[])
             hsprint(TO_EL, 1, "Directory not empty or mounted already.");
         exit(EXIT_NONEMPTY);
         }
-    bluepoint2_encrypt(defpassx2, sizeof(defpassx2), progname, sizeof(progname));
+    bluepoint2_encrypt(defpassx2, sizeof(defpassx2), progname, strlen(progname));
     // Check if valid askpass
     if(ondemand)
         {
@@ -630,7 +619,7 @@ int     main(int argc, char *argv[])
             exit(EXIT_NOASKPASS);
             }
         }
-    bluepoint2_encrypt(decoy, sizeof(decoy), progname, sizeof(progname));
+    bluepoint2_encrypt(decoy, sizeof(decoy), progname, strlen(progname));
 
     // Create markfile name
     snprintf(markfile, PATH_MAX, "%s%s", mountsecret, passfname);
@@ -641,52 +630,53 @@ int     main(int argc, char *argv[])
 
     if (!ondemand)
         {
+        int pret = 0;
         if (verbose)
             {
             printf("Ondemand pass option deactivated.\n");
             }
-        int pret = 0;
-        if(gotdefpass == 0)
+        if(gotdefpass)
             {
-            char *tmp = xmalloc(MAXPASSLEN);
-            if(!tmp)
-                {
-                printf("Askpass no memory.\n");
-                }
+            printf("getpass comline() '%s'\n", defpassx);
+            // Just check
+            bluepoint2_encrypt(defpassx, sizeof(defpassx), progname, strlen(progname));
+            pret = check_markfile(markfile, defpassx, sizeof(defpassx));
+            }
+        else
+            {
+            // Ask for it
             PassArg passarg;
+
+            passarg.result = xmalloc(MAXPASSLEN);
+            if(!passarg.result)
+                {
+                printf("Askpass: no memory.\n");
+                pret = HSPASS_MALLOC;
+                goto eval_ret;
+                }
+            memset(passarg.result, '\0', MAXPASSLEN);
             if (access(markfile, R_OK) < 0)
                 passarg.create = 1;
             else
                 passarg.create = 0;
-
-            //printf("create = %d\n", passarg.create);
-
             passarg.prompt = "\'  Enter pass:  \'",
             passarg.title = mountpoint;
             passarg.gui = 0;
             passarg.passprog = passprog;
             passarg.mountstr = mountpoint;
             passarg.markfname = markfile;
-            passarg.result = tmp;
             passarg.reslen = MAXPASSLEN;
             pret = getpass_front(&passarg);
-            if(pret == HSPASS_OK)
-                {
-                strcpy(defpassx, passarg.result);
-                free(passarg.result);
-                gotdefpass = TRUE;
-                }
+            memcpy(defpassx, passarg.result, MAXPASSLEN);
+            free(passarg.result);
             }
-        else
-            {
-            // Just check
-            pret = check_markfile(markfile, defpassx, sizeof(defpassx));
-            }
-        //xsfree(markfile);
+         // Do not debug secrets:
+        //printf("Pass: '%s'\n", hexdump(defpassx, 16));
+
+       eval_ret:
         if(pret == HSPASS_OK)
             {
-            // Do not debug sectrets
-            //printf("Pass OK. '%s'\n", defpassx);
+            gotdefpass = TRUE;
             }
         else
             {
@@ -705,7 +695,6 @@ int     main(int argc, char *argv[])
             exit(1);
             }
         }
-
     // Check access
     if (access(mountpoint, W_OK) < 0)
         {

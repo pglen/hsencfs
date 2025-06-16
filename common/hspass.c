@@ -56,6 +56,9 @@ char    decoy2[MAXPASSLEN] = {0,};
 char    defpassx2[MAXPASSLEN] = {0,};
 int     gotdefpass = 0;
 
+/// We use this as a string to obfuscate the password. Do not change.
+char    *progname =  HS_PROGNAME;
+
 char    *passfname = ".passdata.datx";
 char    *myext = ".datx";
 
@@ -267,9 +270,9 @@ int     public_encrypt(uchar *data, int data_len, uchar *key, uchar *ebuf)
         printf("Cannot encrypt. (too long) %d\n", data_len);
         return -1;
         }
-    int result = RSA_public_encrypt(data_len, data, ebuf, rsa, pad);
+    int resx = RSA_public_encrypt(data_len, data, ebuf, rsa, pad);
     RSA_free(rsa);
-    return result;
+    return resx;
 }
 
 int     private_decrypt(uchar * enc_data, int data_len, uchar *key, uchar *dbuf)
@@ -277,10 +280,10 @@ int     private_decrypt(uchar * enc_data, int data_len, uchar *key, uchar *dbuf)
     RSA *rsa = createRSA(key, 0);
     if (!rsa)
         return -1;
-    int  result = RSA_private_decrypt(data_len, enc_data,
+    int  resy = RSA_private_decrypt(data_len, enc_data,
                                         dbuf, rsa, pad);
     RSA_free(rsa);
-    return result;
+    return resy;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -299,7 +302,6 @@ int     create_markfile(const char *name, char *pass, int plen)
     char *ttt = NULL, *ttt2 = NULL;
 
     //printf("use pass '%s'\n", pass);
-
     ttt = xmalloc(MARK_SIZE);
     if(!ttt)
         {
@@ -316,15 +318,12 @@ int     create_markfile(const char *name, char *pass, int plen)
         {
         ttt[loop] = rand() % 0xff;
         }
-
     // Verify:
     //for(loop = 0; loop < 30; loop++)
     //    printf("%x ", ttt[loop] & 0xff);
-
     memcpy(ttt2, ttt, MARK_SIZE / 2);
     bluepoint2_encrypt(ttt2, MARK_SIZE / 2, pass, plen);
     memcpy(ttt + MARK_SIZE / 2, ttt2, MARK_SIZE / 2);
-
     //int fh = open(name, O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR);
     fh = open(name, O_CREAT | O_TRUNC | O_WRONLY, S_IRUSR | S_IWUSR);
     if(fh < 0)
@@ -368,9 +367,7 @@ int     check_markfile(const char *fname, char *pass, int plen)
 
 {
     int ret = 0;
-
     //printf("use pass '%s'\n", pass);
-
     // Checking
     char *ttt = xmalloc(MARK_SIZE);
     if(!ttt)
@@ -391,10 +388,8 @@ int     check_markfile(const char *fname, char *pass, int plen)
         goto cleanup;
         }
     close(fh);
-
     bluepoint2_decrypt(ttt + MARK_SIZE / 2, MARK_SIZE / 2, pass, plen);
     ret = seccomp(ttt, ttt + MARK_SIZE / 2, MARK_SIZE / 2);
-
   cleanup:
     if(ttt) xsfree(ttt);
     return ret;
@@ -417,6 +412,8 @@ char    *getpassx(char *prompt)
     char *tmp = xmalloc(MAXPASSLEN);
     if(!tmp)
         return(NULL);
+
+    memset(tmp, '\0', MAXPASSLEN);
     sighandler_t oldsig = signal(SIGINT, sigint_local);
     printf("%s", prompt); fflush(stdout);
     struct termios newt;
@@ -441,17 +438,28 @@ char    *getpassx(char *prompt)
             break;
             }
         int ddd = getchar();
-        if(ddd == '\r' || ddd == '\n' || ddd == '\0')
+        //printf("%d ", ddd);
+        if(ddd == 127)   // Backspace
+            {
+            if(prog)
+                {
+                printf("%c %c", '\b', '\b');
+                prog--;
+                }
+            continue;
+            }
+        if(ddd == '\r' || ddd == '\n' || ddd == '\0' || ddd == 4)
             {
             tmp[prog] = '\0';
             break;
             }
+        printf("%c", '*');
         tmp[prog] = (char)ddd;
         prog++;
         }
     tcsetattr(0, TCSANOW, &oldt);
     signal(SIGINT, oldsig);
-    //printf("\n");
+    //printf("'%s'\n", tmp);
     return tmp;
 }
 
@@ -562,17 +570,24 @@ int     hs_askpass(PassArg *parg)
         }
     else
         {
-        //printf("hspass() decoded:\n");
+        //hsprint(TO_EL, 3, "hspass() decoded: %s", );
         //hexdump(res2, olen); printf("\n");
-        char *tmp5 = xmalloc(MAXPASSLEN * 2);
+        char *tmp5 = xmalloc(MAXPASSLEN * 4);
         if(tmp5)
             {
-            memset(tmp5, '\0', MAXPASSLEN * 2);
+            memset(tmp5, '\0', MAXPASSLEN * 4);
             int   ret = private_decrypt(res2, olen, priv_ptr, tmp5);
             //printf("decoded: len=%d '%s'\n", ret, tmp5);
+            //hsprint(TO_EL, 3, "'%s'", tmp5);
             xsfree(res2);
             if(ret >= 0)
+                {
                 strcpy(parg->result, tmp5);
+                // Do not debug secrets
+                //printf("decoded: '%s'\n", parg->result);
+                bluepoint2_encrypt(parg->result, MAXPASSLEN, progname, strlen(progname));
+                gotdefpass = TRUE;
+                }
             xsfree(tmp5);
             }
         }
@@ -673,27 +688,19 @@ int     pass_ritual(PassArg *parg)
             zret = HSPASS_NOMATCH;
             goto cleanup;
             }
-        zret = create_markfile(parg->markfname, xpass, xlen);
-        if(zret == 0)
-            {
-            printf("created markfile, pass '%s'\n", xpass);
-            //printf("created markfile: %d\n", ret);
-            strcpy(parg->result, xpass);
-            }
-        xsfree(xpass); xsfree(xpass2);
+        strcpy(parg->result, xpass);
+        bluepoint2_encrypt(parg->result, MAXPASSLEN, progname, strlen(progname));
+        zret = create_markfile(parg->markfname, parg->result, MAXPASSLEN);
+        xsfree(xpass2);
         }
     else
         {
-        //printf("xpass '%s'\n", xpass);
-        zret = check_markfile(parg->markfname, xpass, xlen);
-        if (zret == 0)
-            {
-            //printf("check markfile, pass '%s'\n", xpass);
-            strcpy(parg->result, xpass);
-            }
-        //printf("checked markfile: %d\n", ret);
-        xsfree(xpass);
+        strcpy(parg->result, xpass);
+        bluepoint2_encrypt(parg->result, MAXPASSLEN, progname, strlen(progname));
+        zret = check_markfile(parg->markfname, parg->result, MAXPASSLEN);
         }
+    //printf("getpass_ritual(): '%s'\n", xpass);
+    xsfree(xpass);
    cleanup:
     //xmdump(0);
     return zret;
