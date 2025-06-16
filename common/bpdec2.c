@@ -165,7 +165,7 @@ int main(int argc, char *argv[])
                     ((char*)optarg)[loop] = rand() % 0x80;
                     }
 
-                bluepoint2_encrypt(passx, plen, progname, strlen(progname));
+                bluepoint2_encrypt(passx, sizeof(passx), progname, strlen(progname));
 
                 if(verbose)
                     printf("Pass provided on command line.\n");

@@ -1,0 +1,138 @@
+# ------------------------------------------------------------------------
+# HSENCFS (High Security EnCrypting File System)
+# Fuse based encrypted file system.
+# It will encrypt data on write, decrypt data on read.
+#
+
+SUBDIRS = common bluepoint src  docs systemd
+
+PAN_SERV=GNOME_HSENCApplet.server
+BONOBO_DIR=/usr/lib/bonobo/servers
+
+# Docs for distribution
+dist_doc_DATA = PASSES FUSEOPTS QUICKSTART SECURITY PASSHINTS DISCLAIMER\
+        hsencfs.spec hsencfs.init
+
+#           compall.sh hard-remove.sh \
+#            lazy.sh
+#                $(PAN_SERV).in
+
+# Scripts for askpass and tray
+dist_bin_SCRIPTS =                  \
+        askpass/hsaskpass.py        \
+        hstray.py
+
+EXTRA_DIST =                        \
+        checksum.sh                 \
+        enctest.sh                  \
+        gensum.sh                   \
+        lazy.sh                     \
+        sha1.sum                    \
+        SUMFILE
+
+# Auxiliaries
+#EXTRA_DIST = src/hsencrw.c src/hsencop.c
+#EXTRA_DIST += common/hspass.c common/hsutils.c
+#EXTRA_DIST += images/hsicon.png images/hsicon.svg images/hspadlock.png \
+#                    images/hspadlock.svg images/screenshot.png
+##EXTRA_DIST += study
+#EXTRA_DIST  += hsaskpass.py hsaskpass.sh
+
+# Fake it into the distribution
+# use: ls *.py *.sh *.server SUMFILE sha*
+
+#GNOME_HSENCApplet.server.in
+
+#check:
+#    # Create new folder, destroy at end. Good example of installation-less
+#    # creation of a secret folder with the force option
+#	@./src/hsencfs -q -l 2 -f -p 1234 ~/.testdata ~/testsecrets
+#	@-$(srcdir)/enctest.sh
+#	@-fusermount -u ~/testsecrets
+#	@-rm -rf ~/testsecrets ~/.testdata
+
+clean-local:
+	rm -f *.o *~
+
+clean:
+	rm -f *.o *~
+
+#	@-chmod -R u+w src/hsencfs-*   > /dev/null 2>&1
+#	@-rm -rf src/hsencfs-*.rpm     > /dev/null 2>&1
+#	@-rm -rf src/hsencfs-*.tar.gz  > /dev/null 2>&1
+#	@-rm -f $(PAN_SERV)
+
+#	@-chmod -R u+w src/hsencfs-*   > /dev/null 2>&1
+#	@-rm -rf src/hsencfs-*.rpm     > /dev/null 2>&1
+#	@-rm -rf src/hsencfs-*.tar.gz  > /dev/null 2>&1
+#	@-rm -f $(PAN_SERV)
+
+# We are forcing this to go to /usr/lib as panel will look for it there
+# 1.) Generate correct .server file for current bin 2.) Put it in bonobo lib dir
+# Allow failure without terminating the build. This is because the distcheck
+# will fail on tying to create bonobo files, but it is not an error to fail
+# in user mode creating a system file.
+
+#cat $(srcdir)/$(PAN_SERV).in | \
+#        sed s%HSTRAY_BIN%$(bindir)/hstray.py% > $(top_builddir)/$(PAN_SERV)
+
+#	-$(INSTALL) $(top_builddir)/$(PAN_SERV) $(BONOBO_DIR)
+
+install-data-local:
+	-$(mkinstalldirs) $(BONOBO_DIR)
+	$(mkinstalldirs) $(DESTDIR)/$(datarootdir)/pixmaps
+
+#	$(INSTALL) $(srcdir)/hsicon.png  $(DESTDIR)/$(datarootdir)/pixmaps
+#	$(INSTALL) $(srcdir)/hspadlock.png $(DESTDIR)/$(datarootdir)/pixmaps
+
+uninstall-local:
+	-rm -f $(top_builddir)/$(PAN_SERV)
+	-rm -f $(BONOBO_DIR)/$(PAN_SERV)
+
+#	-rm -f $(DESTDIR)/$(datarootdir)/pixmaps/hsicon.png
+#	-rm -f $(DESTDIR)/$(datarootdir)/pixmaps/hspadlock.png
+
+gensum:
+	-./gensum.sh
+
+chksum:
+	-./chksum.sh
+
+# Make RPMS. To run on an older system, the RPM subsystem needed patching.
+# We patched the files as follows:
+#
+# 1.) Added redirect (>>rpmwarn) to /usr/lib/rpm/check-files.sh
+# The check delivers a warning instead of an error. Context:
+#
+# while read f; do
+#   echo $f | sed -e "s#^$RPM_BUILD_ROOT#   #g" >> rpmwarn
+# done
+#
+# 2.) Commented out strict=true line in /usr/lib/rpm/find-debuginfo.sh
+# The check delivers a warning instead of an error.  Context:
+#
+# while [ $# -gt 0 ]; do
+#  case "$1" in
+#  --strict-build-id)
+#    #strict=true
+#    ;;
+#
+# All this was necessary to allow both RPM build and distcheck to pass.
+
+rpm: rpm-src rpm-bin
+
+rpm-src:  dist
+	rpmbuild -ts hs*.tar.gz
+	-cp ~/rpmbuild/SOURCES/hsenc*.rpm $(top_builddir)
+	@echo  "*******************************************"
+	@echo  Done RPM SRC Creation. SRPM in current dir
+	@echo  "*******************************************"
+
+rpm-bin:  dist
+	rpmbuild -tb *.tar.gz
+	-cp ~/rpmbuild/RPMS/`uname -m`/hsenc*.rpm $(top_builddir)
+	@echo  "*******************************************"
+	³<ÉÚƒz“&}ƒX8£F-1ùD£5¬9·—‰Za\UˆÙ%P]ŠÎĞLÑí)·/ô,…D i±ÈÀtcna/¦´3¯7ç•‚“Èü[àK§&&7Ğ?=ö{Ş_½Å;¿0h÷&yĞßmûs‹_i‚ìR2RÉäş,¢h‘0ˆ°´9Ù4„œ÷¦z0#X°h)6„B¸¹à
+Œåºìş1™Eø«lú?{=†„ğ¯|FkrFá³õÈrÖ™Ô}^Ö%É2z»ˆ¸ÁõËÖ»Ú¾ W‰Qèkè¾€jT:m‚Qà¾V€>Z(ãqT8ÀÊ–‰YğQšàÚAx7ÅIRN€öC×æ-èK-˜|Sß¬n%9%-7¹à¨JU‡³½p'Œ‹¾}SÔÑh¢w7mĞ8xÅ–¹rçG)¼±Äv–x4åñÖ™®Ü’ñÙ¡ì´c´Ãô•}Ê>K›/‚–Áˆ‚ûl1±s¤´¤Ğ|Áòeì×ÅÄvSè³ıô¿UJ]xn»z$¸¤ÂsCø]O:C]q‡¨$M)Íiè¦j¸{¬%èºá|Ü%3)™´ï/˜Ğz’éâ¦ˆÃšş€ÂşŒDòN	bÀ—ä‰¬ï¶×¶|°õ(9˜Ö=8Â«hŠ¡<İpM„ú}>rS‚S)zõIc.™Í=Câ%Iú–üµ©%9óÓŒÙêŞş\Ğ„+Üj,%H¥T¨²ÇS
+hMq¿¾°¡Ÿ?(ì’}ƒX8£F-1ùD£5¬9·—‰Za\UˆÙ%P]ŠÎĞLÑí)·/ô,…D i±ÈÀtcna/¦´3¯7ç•‚“Èü[àK§&&7Ğ?=ö{Ş_½Å;¿0h÷&yĞßmûs‹_i‚ìR2RÉäş,¢h‘0ˆ°´9Ù4„œ÷¦z0#X°h)6„B¸¹à
+Œåºìş1™Eø«lú?{=†„ğ¯|FkrFá³õÈrÖ™Ô}^Ö%É2z»ˆ¸ÁõËÖ»Ú¾ W‰Qèkè¾€jT:m‚Qà¾V€>Z(ãqT8ÀÊ–‰YğQšàÚAx7ÅIRN€öC×æ-èK-˜|Sß¬n%9%-7¹à¨JU

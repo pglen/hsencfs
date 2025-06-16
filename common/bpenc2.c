@@ -270,14 +270,10 @@ int main(int argc, char *argv[])
         {
         memset(buff, 0, sizeof(buff));
         int loop, len, len2;
-
         len = fread(buff, 1, sizeof(buff), fp);
-
         if(len <= 0)
             break;
-
         hs_encrypt(buff, sizeof(buff), pass, plen);
-
         int curr = 0;
         // Is this the last one?
         if(prog + BLOCKSIZE > fsize)
@@ -288,7 +284,6 @@ int main(int argc, char *argv[])
             sb.serial = (prog / BLOCKSIZE) + 1;
             if(verbose)
                 printf("sideblock serial %d\n", sb.serial);
-
             fwrite(&sb, 1, sizeof(sideblock_t), fp3);
             }
         else
