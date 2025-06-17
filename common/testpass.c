@@ -41,6 +41,8 @@ int main(int argc, char *argv[])
 
     //xmalloc_randfail = 3;
 
+    strcpy(markfile, "markile");
+
     while (1)
         {
         opterr = 0;
@@ -84,7 +86,7 @@ int main(int argc, char *argv[])
 
             case 'm':
                 //printf("option m %s\n", optarg);
-                //markfile = strdup(optarg);
+                strcpy(markfile, optarg);
                 break;
 
             case 'l':
@@ -117,6 +119,8 @@ int main(int argc, char *argv[])
         }
 
     char tmp[MAXPASSLEN];
+    memset(tmp, '\0', MAXPASSLEN);
+
     PassArg passarg;
     passarg.prompt   = "\'  Enter pass:  \'",
     passarg.title    = "\' Title Here: \'";
@@ -129,10 +133,10 @@ int main(int argc, char *argv[])
     passarg.reslen   = MAXPASSLEN;
     int ret = getpass_front(&passarg);
 
+    printf("pass '%s'\n", hexdump(passarg.result, 16));
     if(ret == HSPASS_OK)
         {
         printf("Pass OK.\n");
-        printf("pass '%s'\n", passarg.result);
         }
     else if(ret == HSPASS_NOPASS)
         printf("Empty pass.\n");

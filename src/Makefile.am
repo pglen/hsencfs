@@ -30,9 +30,9 @@ clean-local:
 	@-rm -f *.o
 	@-rm -f hsencfs dualwrite zigzag zigjump
 
-clean:
-	@-rm -f  *~ *.o
-	@-rm -f dualwrite zigzag zigjump
+#clean:
+#	@-rm -f  *~ *.o
+#	@-rm -f dualwrite zigzag zigjump
 
 # Help
 

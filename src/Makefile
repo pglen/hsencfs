@@ -912,6 +912,8 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
+clean: clean-am
+
 clean-am: clean-binPROGRAMS clean-generic clean-local mostlyclean-am
 
 distclean: distclean-am
@@ -1033,9 +1035,9 @@ clean-local:
 	@-rm -f *.o
 	@-rm -f hsencfs dualwrite zigzag zigjump
 
-clean:
-	@-rm -f  *~ *.o
-	@-rm -f dualwrite zigzag zigjump
+#clean:
+#	@-rm -f  *~ *.o
+#	@-rm -f dualwrite zigzag zigjump
 
 # Help
 

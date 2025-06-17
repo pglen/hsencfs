@@ -819,6 +819,8 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
+clean: clean-recursive
+
 clean-am: clean-generic clean-local mostlyclean-am
 
 distclean: distclean-recursive
@@ -932,9 +934,6 @@ uninstall-am: uninstall-dist_binSCRIPTS uninstall-dist_docDATA \
 #	@-rm -rf ~/testsecrets ~/.testdata
 
 clean-local:
-	rm -f *.o *~
-
-clean:
 	rm -f *.o *~
 
 #	@-chmod -R u+w src/hsencfs-*   > /dev/null 2>&1

@@ -54,9 +54,6 @@ EXTRA_DIST =                        \
 clean-local:
 	rm -f *.o *~
 
-clean:
-	rm -f *.o *~
-
 #	@-chmod -R u+w src/hsencfs-*   > /dev/null 2>&1
 #	@-rm -rf src/hsencfs-*.rpm     > /dev/null 2>&1
 #	@-rm -rf src/hsencfs-*.tar.gz  > /dev/null 2>&1
