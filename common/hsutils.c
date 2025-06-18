@@ -1,6 +1,21 @@
+
+/* =====[ hsutils.c ]========================================================
+
+   File Name:       hsutils.c
+
+   Description:     Functions for hsutils.c
+
+   Revisions:
+
+      REV   DATE                BY              DESCRIPTION
+      ----  -----------         ----------      --------------------------
+      0.00  Tue 12.Apr.2022     Peter Glen      Virtual remake started
+
+   ======================================================================= */
+
 /*
- *  High security encryption file system. We make use of the API offered by
- *  the fuse subsystem to intercept file operations.
+ *  High security encryption file system. We make use of the
+ *  API offered by the fuse subsystem to intercept file operations.
  */
 
 //#define FUSE_USE_VERSION 26

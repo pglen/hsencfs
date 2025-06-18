@@ -106,7 +106,7 @@ int   ondemand = 1;
 
 // Maintain internal version string
 static  char    version[] = "1.5.0";
-static  char    build[]   = "Thu 12.Jun.2025";
+static  char    build[]   = "Wed 18.Jun.2025";
 
 static  char    tmpsecret[PATH_MAX] ;
 static  char    inodedir[PATH_MAX] ;
@@ -331,7 +331,7 @@ void    parse_comline(int argc, char *argv[])
                     }
                 else
                     {
-                    // Relative path
+                    // Relative  path
                     char cwd[PATH_MAX];
                     char *pp = getcwd(cwd, sizeof(cwd));
                     snprintf(passprog, sizeof(passprog), "%s/%s", cwd, optarg);

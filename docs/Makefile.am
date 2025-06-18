@@ -3,12 +3,12 @@
 
 AUTOMAKE_OPTIONS = subdir-objects
 
-EXTRA_DIST = TODO hsencfs.1
+EXTRA_DIST = TODO
 
 dist_man_MANS = hsencfs.1
+hsencfs_TEXINFOS = hsencfs.texi
 
+#man1_MANS = hsencfs.1
 info_TEXINFOS = hsencfs.texi
-hsencfs_TEXINFOS = gpl.texi
-man1_MANS = hsencfs.1
 
 # EOF

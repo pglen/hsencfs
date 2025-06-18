@@ -1,3 +1,18 @@
+
+/* =====[ hspass.c ]========================================================
+
+   File Name:       hspass.c
+
+   Description:     Functions for hspass.c
+
+   Revisions:
+
+      REV   DATE                BY              DESCRIPTION
+      ----  -----------         ----------      --------------------------
+      0.00  Tue 12.Apr.2022     Peter Glen      Virtual remake started
+
+   ======================================================================= */
+
 /*
  *   High security encryption file system. Password routines.
  */
