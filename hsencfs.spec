@@ -1,22 +1,22 @@
 Name:           hsencfs
 Version:        1.5.0
-Release:        3
-Summary:        High Security Encrypted File System
-Maintainer:	    peterglen99@gmail.com
+Release:        4
+Summary:        High Security Encrypted File System.
+Maintainer:	    "peterglen99@gmail.com"
 Group:          Encryption
 License:        GPL
 URL:            http://www.sourceforge.net
 Source0:        hsencfs-1.5.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  fuse3 ssl crypto
-Requires:       fuse3 ssl crypto
-%description
- HSENCFS is a user space encrypting file system. Simple to set up, seamless  \
-to use, fast, safe, secure and maintenance free. It will seamlessly encrypt  \
-data written to it, decrypt data read from it. It only uses storage space    \
-for actual data stored, no pre-allocation needed. It is fast enough for real \
-time video encryption. HSENCFS is classified as a variable key length  \
-encryption.
+BuildRequires:  fuse3, libssl2, libcrypto
+Requires:       fuse3, libssl3
+Description:
+  HSENCFS is a user space encrypting file system. Simple to set up, seamless
+  to use, fast, safe, secure and maintenance free. It will seamlessly encrypt
+  data written to it, decrypt data read from it. It only uses storage space
+  for actual data stored, no pre-allocation needed. It is fast enough for real
+  time video encryption. HSENCFS is classified as a variable key length
+  encryption.
 
 %prep
 %setup -q

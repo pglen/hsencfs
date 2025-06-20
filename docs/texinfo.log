@@ -1,0 +1,797 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2025.6.18)  18 JUN 2025 14:18
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**texinfo.tex
+(./texinfo.tex
+LaTeX2e <2021-11-15> patch level 1
+L3 programming layer <2022-01-21> Loading texinfo [version 2021-04-25.21]:
+\outerhsize=\dimen138
+\outervsize=\dimen139
+\topandbottommargin=\dimen140
+\bindingoffset=\dimen141
+\normaloffset=\dimen142
+\txipagewidth=\dimen143
+\txipageheight=\dimen144
+\defaultoutput=\toks16
+\headlinebox=\box50
+\footlinebox=\box51
+\savedtopmark=\toks17
+\margin=\insert199
+\EMsimple=\toks18
+\groupbox=\box52
+\groupinvalidhelp=\toks19
+\mil=\dimen145
+\exdentamount=\skip47
+\inmarginspacing=\skip48
+\centerpenalty=\count185
+
+pdf,
+\tempnum=\count186
+\lnkcount=\count187
+\filename=\toks20
+\filenamelength=\count188
+\pgn=\count189
+\toksA=\toks21
+\toksB=\toks22
+\toksC=\toks23
+\toksD=\toks24
+\boxA=\box53
+\boxB=\box54
+\countA=\count190
+\pagecount=\count191
+\romancount=\count192
+\arabiccount=\count193
+\nopdfimagehelp=\toks25
+ fonts,
+\textleading=\dimen146
+\sffam=\mathgroup4
+
+! Undefined control sequence.
+\resetmathfonts ...ont 2=\syfont \textfont \itfam 
+                                                  =\itfont \textfont \slfam ...
+l.2684 \definetextfontsizexi
+                            
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Missing number, treated as zero.
+<to be read again> 
+                   =
+l.2684 \definetextfontsizexi
+                            
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+! Undefined control sequence.
+\resetmathfonts ...tfam =\itfont \textfont \slfam 
+                                                  =\slfont \textfont \bffam ...
+l.2684 \definetextfontsizexi
+                            
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Missing number, treated as zero.
+<to be read again> 
+                   =
+l.2684 \definetextfontsizexi
+                            
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+! Undefined control sequence.
+\resetmathfonts ...lfam =\slfont \textfont \bffam 
+                                                  =\bffont \textfont \ttfam ...
+l.2684 \definetextfontsizexi
+                            
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Missing number, treated as zero.
+<to be read again> 
+                   =
+l.2684 \definetextfontsizexi
+                            
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+! Undefined control sequence.
+\resetmathfonts ...ffam =\bffont \textfont \ttfam 
+                                                  =\ttfont \textfont \sffam ...
+l.2684 \definetextfontsizexi
+                            
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Missing number, treated as zero.
+<to be read again> 
+                   =
+l.2684 \definetextfontsizexi
+                            
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+! Undefined control sequence.
+\resetmathfonts ... 2=\sevensy \scriptfont \itfam 
+                                                  =\sevenit \scriptfont \slf...
+l.2684 \definetextfontsizexi
+                            
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Missing number, treated as zero.
+<to be read again> 
+                   =
+l.2684 \definetextfontsizexi
+                            
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+! Undefined control sequence.
+\resetmathfonts ...m =\sevenit \scriptfont \slfam 
+                                                  =\sevensl \scriptfont \bff...
+l.2684 \definetextfontsizexi
+                            
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Missing number, treated as zero.
+<to be read again> 
+                   =
+l.2684 \definetextfontsizexi
+                            
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+! Undefined control sequence.
+\resetmathfonts ...m =\sevensl \scriptfont \bffam 
+                                                  =\sevenbf \scriptfont \ttf...
+l.2684 \definetextfontsizexi
+                            
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Missing number, treated as zero.
+<to be read again> 
+                   =
+l.2684 \definetextfontsizexi
+                            
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+! Undefined control sequence.
+\resetmathfonts ...m =\sevenbf \scriptfont \ttfam 
+                                                  =\seventt \scriptfont \sff...
+l.2684 \definetextfontsizexi
+                            
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Missing number, treated as zero.
+<to be read again> 
+                   =
+l.2684 \definetextfontsizexi
+                            
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+\fontdepth=\count194
+glyphs,
+\errorbox=\box55
+ page headings,
+\titlepagetopglue=\skip49
+\titlepagebottomglue=\skip50
+\evenheadline=\toks26
+\oddheadline=\toks27
+\evenchapheadline=\toks28
+\oddchapheadline=\toks29
+\evenfootline=\toks30
+\oddfootline=\toks31
+
+! Undefined control sequence.
+l.3837 \headline
+                ={{\textfonts\rm
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+! LaTeX Error: Missing \begin{document}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.3837 \headline=
+                 {{\textfonts\rm
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+! Undefined control sequence.
+\resetmathfonts ...ont 2=\syfont \textfont \itfam 
+                                                  =\itfont \textfont \slfam ...
+l.3837 \headline={{\textfonts
+                             \rm
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Missing number, treated as zero.
+<to be read again> 
+                   =
+l.3837 \headline={{\textfonts
+                             \rm
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+! Undefined control sequence.
+\resetmathfonts ...tfam =\itfont \textfont \slfam 
+                                                  =\slfont \textfont \bffam ...
+l.3837 \headline={{\textfonts
+                             \rm
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Missing number, treated as zero.
+<to be read again> 
+                   =
+l.3837 \headline={{\textfonts
+                             \rm
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+! Undefined control sequence.
+\resetmathfonts ...lfam =\slfont \textfont \bffam 
+                                                  =\bffont \textfont \ttfam ...
+l.3837 \headline={{\textfonts
+                             \rm
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Missing number, treated as zero.
+<to be read again> 
+                   =
+l.3837 \headline={{\textfonts
+                             \rm
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+! Undefined control sequence.
+\resetmathfonts ...ffam =\bffont \textfont \ttfam 
+                                                  =\ttfont \textfont \sffam ...
+l.3837 \headline={{\textfonts
+                             \rm
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Missing number, treated as zero.
+<to be read again> 
+                   =
+l.3837 \headline={{\textfonts
+                             \rm
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+! Undefined control sequence.
+\resetmathfonts ... 2=\sevensy \scriptfont \itfam 
+                                                  =\sevenit \scriptfont \slf...
+l.3837 \headline={{\textfonts
+                             \rm
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Missing number, treated as zero.
+<to be read again> 
+                   =
+l.3837 \headline={{\textfonts
+                             \rm
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+! Undefined control sequence.
+\resetmathfonts ...m =\sevenit \scriptfont \slfam 
+                                                  =\sevensl \scriptfont \bff...
+l.3837 \headline={{\textfonts
+                             \rm
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Missing number, treated as zero.
+<to be read again> 
+                   =
+l.3837 \headline={{\textfonts
+                             \rm
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+! Undefined control sequence.
+\resetmathfonts ...m =\sevensl \scriptfont \bffam 
+                                                  =\sevenbf \scriptfont \ttf...
+l.3837 \headline={{\textfonts
+                             \rm
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Missing number, treated as zero.
+<to be read again> 
+                   =
+l.3837 \headline={{\textfonts
+                             \rm
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+! Undefined control sequence.
+\resetmathfonts ...m =\sevenbf \scriptfont \ttfam 
+                                                  =\seventt \scriptfont \sff...
+l.3837 \headline={{\textfonts
+                             \rm
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Missing number, treated as zero.
+<to be read again> 
+                   =
+l.3837 \headline={{\textfonts
+                             \rm
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+! Undefined control sequence.
+l.3841               \ifodd\pageno
+                                  \the\oddheadline\else\the\evenheadline\fi
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Missing number, treated as zero.
+<to be read again> 
+                   \relax 
+l.3841 ...      \ifodd\pageno\the\oddheadline\else
+                                                  \the\evenheadline\fi
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+
+Overfull \hbox (28.5167pt too wide) in paragraph at lines 3837--3843
+[]\textrm = 
+ []
+
+! Undefined control sequence.
+l.3844 \footline
+                ={{\textfonts\rm \ifodd\pageno \the\oddfootline
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+! LaTeX Error: Missing \begin{document}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.3844 \footline=
+                 {{\textfonts\rm \ifodd\pageno \the\oddfootline
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+! Undefined control sequence.
+\resetmathfonts ...ont 2=\syfont \textfont \itfam 
+                                                  =\itfont \textfont \slfam ...
+l.3844 \footline={{\textfonts
+                             \rm \ifodd\pageno \the\oddfootline
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Missing number, treated as zero.
+<to be read again> 
+                   =
+l.3844 \footline={{\textfonts
+                             \rm \ifodd\pageno \the\oddfootline
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+! Undefined control sequence.
+\resetmathfonts ...tfam =\itfont \textfont \slfam 
+                                                  =\slfont \textfont \bffam ...
+l.3844 \footline={{\textfonts
+                             \rm \ifodd\pageno \the\oddfootline
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Missing number, treated as zero.
+<to be read again> 
+                   =
+l.3844 \footline={{\textfonts
+                             \rm \ifodd\pageno \the\oddfootline
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+! Undefined control sequence.
+\resetmathfonts ...lfam =\slfont \textfont \bffam 
+                                                  =\bffont \textfont \ttfam ...
+l.3844 \footline={{\textfonts
+                             \rm \ifodd\pageno \the\oddfootline
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Missing number, treated as zero.
+<to be read again> 
+                   =
+l.3844 \footline={{\textfonts
+                             \rm \ifodd\pageno \the\oddfootline
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+! Undefined control sequence.
+\resetmathfonts ...ffam =\bffont \textfont \ttfam 
+                                                  =\ttfont \textfont \sffam ...
+l.3844 \footline={{\textfonts
+                             \rm \ifodd\pageno \the\oddfootline
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Missing number, treated as zero.
+<to be read again> 
+                   =
+l.3844 \footline={{\textfonts
+                             \rm \ifodd\pageno \the\oddfootline
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+! Undefined control sequence.
+\resetmathfonts ... 2=\sevensy \scriptfont \itfam 
+                                                  =\sevenit \scriptfont \slf...
+l.3844 \footline={{\textfonts
+                             \rm \ifodd\pageno \the\oddfootline
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Missing number, treated as zero.
+<to be read again> 
+                   =
+l.3844 \footline={{\textfonts
+                             \rm \ifodd\pageno \the\oddfootline
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+! Undefined control sequence.
+\resetmathfonts ...m =\sevenit \scriptfont \slfam 
+                                                  =\sevensl \scriptfont \bff...
+l.3844 \footline={{\textfonts
+                             \rm \ifodd\pageno \the\oddfootline
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Missing number, treated as zero.
+<to be read again> 
+                   =
+l.3844 \footline={{\textfonts
+                             \rm \ifodd\pageno \the\oddfootline
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+! Undefined control sequence.
+\resetmathfonts ...m =\sevensl \scriptfont \bffam 
+                                                  =\sevenbf \scriptfont \ttf...
+l.3844 \footline={{\textfonts
+                             \rm \ifodd\pageno \the\oddfootline
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Missing number, treated as zero.
+<to be read again> 
+                   =
+l.3844 \footline={{\textfonts
+                             \rm \ifodd\pageno \the\oddfootline
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+! Undefined control sequence.
+\resetmathfonts ...m =\sevenbf \scriptfont \ttfam 
+                                                  =\seventt \scriptfont \sff...
+l.3844 \footline={{\textfonts
+                             \rm \ifodd\pageno \the\oddfootline
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Missing number, treated as zero.
+<to be read again> 
+                   =
+l.3844 \footline={{\textfonts
+                             \rm \ifodd\pageno \the\oddfootline
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+! Undefined control sequence.
+l.3844 \footline={{\textfonts\rm \ifodd\pageno
+                                               \the\oddfootline
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Missing number, treated as zero.
+<to be read again> 
+                   \relax 
+l.3845                             \else
+                                         \the\evenfootline \fi}\HEADINGShook}
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+! Undefined control sequence.
+l.3845 ...else \the\evenfootline \fi}\HEADINGShook
+                                                  }
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+Overfull \hbox (28.5167pt too wide) in paragraph at lines 3844--3847
+[]\textrm = 
+ []
+
+tables,
+\tableindent=\dimen147
+\itemindent=\dimen148
+\itemmargin=\dimen149
+\itemmax=\dimen150
+\itemno=\count195
+\colcount=\count196
+\everytab=\toks32
+ conditionals,
+\doignorecount=\count197
+ indexing,
+\dummybox=\box56
+\whatsitskip=\skip51
+\whatsitpenalty=\count198
+\entryrightmargin=\dimen151
+\thinshrinkable=\skip52
+\partialpage=\box57
+\doublecolumnhsize=\dimen152
+\balancedcolumns=\box58
+
+
+! LaTeX Error: Missing \begin{document}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.5904 \setbox\balancedcolumns=\vbox{s
+                                      houldnt see this}%
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+Overfull \hbox (61.12338pt too wide) in paragraph at lines 5904--5904
+[]\textrm shouldnt
+ []
+
+
+Overfull \hbox (14.0525pt too wide) in paragraph at lines 5904--5904
+\textrm see
+ []
+
+
+Overfull \hbox (17.70253pt too wide) in paragraph at lines 5904--5904
+\textrm this 
+ []
+
+sectioning,
+\unnumberedno=\count266
+\chapno=\count267
+\secno=\count268
+\subsecno=\count269
+\subsubsecno=\count270
+\appendixno=\count271
+\absseclevel=\count272
+\secbase=\count273
+\chapheadingskip=\skip53
+\secheadingskip=\skip54
+\subsecheadingskip=\skip55
+ toc,
+\tocfile=\write3
+\contentsrightmargin=\skip56
+\savepageno=\count274
+\lastnegativepageno=\count275
+\tocindent=\dimen153
+ environments,
+\lispnarrowing=\skip57
+\envskipamount=\skip58
+\lskip=\skip59
+\rskip=\skip60
+\circthick=\dimen154
+\cartouter=\dimen155
+\cartinner=\dimen156
+\normbskip=\skip61
+\normpskip=\skip62
+\normlskip=\skip63
+\nonfillparindent=\dimen157
+\tabw=\dimen158
+
+! Undefined control sequence.
+\tt ->\fam =\ttfam 
+                   \setfontstyle {tt}
+l.7417 \newdimen\tabw \setbox0=\hbox{\tt
+                                        \space} \tabw=8\wd0 % tab amount
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Missing number, treated as zero.
+<to be read again> 
+                   \def 
+l.7417 \newdimen\tabw \setbox0=\hbox{\tt
+                                        \space} \tabw=8\wd0 % tab amount
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+\verbbox=\box59
+defuns,
+\defbodyindent=\skip64
+\defargsindent=\skip65
+\deflastargmargin=\skip66
+\defunpenalty=\count276
+\parencount=\count277
+\brackcount=\count278
+ macros,
+\paramno=\count279
+\macname=\toks33
+ cross references,
+\auxfile=\write4
+\savesfregister=\count280
+\toprefbox=\box60
+\printedrefnamebox=\box61
+\infofilenamebox=\box62
+\printedmanualbox=\box63
+ insertions,
+\footnoteno=\count281
+\SAVEfootins=\box64
+\SAVEmargin=\box65
+
+(/usr/share/texlive/texmf-dist/tex/generic/epsf/epsf.tex
+This is `epsf.tex' v2.7.4 <14 February 2011>
+\epsffilein=\read2
+\epsfframemargin=\dimen159
+\epsfframethickness=\dimen160
+\epsfrsize=\dimen161
+\epsftmp=\dimen162
+\epsftsize=\dimen163
+\epsfxsize=\dimen164
+\epsfysize=\dimen165
+\pspoints=\dimen166
+)
+\noepsfhelp=\toks34
+ localization,
+\nolanghelp=\toks35
+\countUTFx=\count282
+\countUTFy=\count283
+\countUTFz=\count284
+ formatting,
+\defaultparindent=\dimen167
+ and turning on texinfo input format.)
+! Emergency stop.
+<*> texinfo.tex
+               
+*** (job aborted, no legal \end found)
+
+ 
+Here is how much of TeX's memory you used:
+ 2864 strings out of 480204
+ 30315 string characters out of 5895010
+ 332606 words of memory out of 5000000
+ 20763 multiletter control sequences out of 15000+600000
+ 494219 words of font info for 116 fonts, out of 8000000 for 9000
+ 73 hyphenation exceptions out of 8191
+ 13i,3n,12p,273b,33s stack positions out of 5000i,500n,10000p,200000b,80000s
+!  ==> Fatal error occurred, no output PDF file produced!

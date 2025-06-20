@@ -10,10 +10,9 @@
       REV   DATE                BY              DESCRIPTION
       ----  -----------         ----------      --------------------------
       0.00  Tue 12.Apr.2022     Peter Glen      Virtual remake started
+      0.00  Fri 20.Jun.2025     Peter Glen      Close to completion
 
    ======================================================================= */
-
-// Old header
 
 /*! \mainpage
  *
@@ -43,7 +42,6 @@
  *  Command above will expose the ~/secrets directory. It is sourced from the
  *  backing directory ~/.secrets
  */
-
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -106,7 +104,7 @@ int   ondemand = 1;
 
 // Maintain internal version string
 static  char    version[] = "1.5.0";
-static  char    build[]   = "Wed 18.Jun.2025";
+static  char    build[]   = "Fri 20.Jun.2025";
 
 static  char    tmpsecret[PATH_MAX] ;
 static  char    inodedir[PATH_MAX] ;
@@ -512,7 +510,8 @@ int     main(int argc, char *argv[])
     // separate terminal.
 
     // Init stuff
-    snprintf(passprog, sizeof(passprog), "%s/%s", startdir, "hsaskpass.py");
+    //snprintf(passprog, sizeof(passprog), "%s/%s", startdir, "hsaskpass.py");
+    snprintf(passprog, sizeof(passprog), "%s", "hsaskpass.py");
     snprintf(passback, sizeof(passback), "%s/%s", startdir, "hsaskpass.sh");
     openlog("HSEncFs",  LOG_PID,  LOG_DAEMON);
     parse_comline(argc, argv);
@@ -611,11 +610,20 @@ int     main(int argc, char *argv[])
     // Check if valid askpass
     if(ondemand)
         {
-        if (access(passprog, X_OK) < 0)
-            {
-            hsprint(TO_EL, -1, "Askpass program '%s' is not an executable.", passprog);
-            exit(EXIT_NOASKPASS);
-            }
+        printf("testing: %s\n", passprog);
+        int got = 0;
+        //if (access(passprog, X_OK) < 0)
+        //    {
+        //    }
+        //else
+        //    {
+        //
+        //    }
+        //if (!got)
+        //    {
+        //    hsprint(TO_EL, 1, "Askpass program '%s' is not an executable.", passprog);
+        //    //exit(EXIT_NOASKPASS);
+        //    }
         }
     bluepoint2_encrypt(decoy, sizeof(decoy), progname, strlen(progname));
 
@@ -678,6 +686,8 @@ int     main(int argc, char *argv[])
             }
         else
             {
+            gotdefpass = FALSE;
+
             if(pret == HSPASS_NOPASS)
                 hsprint(TO_EL, 0, "Empty pass.");
             else if(pret == HSPASS_NOEXEC)

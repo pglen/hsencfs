@@ -10,6 +10,7 @@
       REV   DATE                BY              DESCRIPTION
       ----  -----------         ----------      --------------------------
       0.00  Tue 12.Apr.2022     Peter Glen      Virtual remake started
+      0.00  Fri 20.Jun.2025     Peter Glen      Close to completion
 
    ======================================================================= */
 
@@ -489,9 +490,8 @@ int     hs_askpass(PassArg *parg)
     struct sigaction  sa, saved_sa_pipe;
     int pfd[2];  pid_t pid;
     int mainret = 0;
-
-    //printf("hsaskpass() progfile: '%s'\n", program);
-
+    hsprint(TO_ERR | TO_LOG, 3,
+                "hsaskpass() progfile: '%s'\n", parg->passprog);
     char *argx[12]; argx[0] = NULL;
     int idx = parse_comstr(argx, sizeof(argx)/sizeof(char*),
                                         parg->passprog);
@@ -601,7 +601,7 @@ int     hs_askpass(PassArg *parg)
                 // Do not debug secrets
                 //printf("decoded: '%s'\n", parg->result);
                 bluepoint2_encrypt(parg->result, MAXPASSLEN, progname, strlen(progname));
-                gotdefpass = TRUE;
+                //gotdefpass = TRUE;
                 }
             xsfree(tmp5);
             }

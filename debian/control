@@ -1,0 +1,30 @@
+# Comment
+Maintainer: <Peter Glen> peterglen99@gmail.com
+Source: hsencfs
+Build-Depends: fuse3 [amd64]
+#Version: 1.5.0-4
+Description:
+  HSENCFS is a user space encrypting file system. Simple to set up, seamless
+  to use, fast, safe, secure and maintenance free. It will seamlessly encrypt
+  data written to it, decrypt data read from it. It only uses storage space
+  for actual data stored, no pre-allocation needed. It is fast enough for real
+  time video encryption. HSENCFS is classified as a variable key length
+  encryption.
+
+Package: hsencfs
+#Installed-Size: 852
+Essential: no
+Pre-Depends: libc6 (>= 2.0.105)
+Priority: extra
+Section: Encryption
+Provides: hsencfs
+Architecture: amd64
+#Standards-Version: 1
+Description:
+  HSENCFS is a user space encrypting file system. Simple to set up, seamless
+  to use, fast, safe, secure and maintenance free. It will seamlessly encrypt
+  data written to it, decrypt data read from it. It only uses storage space
+  for actual data stored, no pre-allocation needed. It is fast enough for real
+  time video encryption. HSENCFS is classified as a variable key length
+  encryption.
+

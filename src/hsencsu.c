@@ -121,8 +121,10 @@ int     openpass(const char *path)
         // Error ?
         hslog(3, "Cannot get pass for '%s' with %s\n", path, passprog);
         pret = 1; //EKEYREJECTED;
+        memset(defpassx, '\0', sizeof(defpassx));
+        gotdefpass = FALSE;
         }
-  endx:
+   endx:
     return pret;
 }
 
