@@ -86,6 +86,7 @@
 
 int     verbose = 0;
 int     nobg = 0;
+int     ondemand = 1;
 
 // Main directories for data / encryption
 
@@ -94,11 +95,7 @@ char  mountsecret[PATH_MAX] = {0, } ;
 char  fullpath[PATH_MAX] = {0, };
 char  startdir[PATH_MAX] = {0, };
 char  markfile[PATH_MAX] = {0, };
-
 char  passprog[2 * PATH_MAX] = {0, };
-char  passback[2 * PATH_MAX] = {0, };
-
-int   ondemand = 1;
 
 // -----------------------------------------------------------------------
 
@@ -107,7 +104,6 @@ static  char    version[] = "1.5.0";
 static  char    build[]   = "Fri 20.Jun.2025";
 
 static  char    tmpsecret[PATH_MAX] ;
-static  char    inodedir[PATH_MAX] ;
 
 // -----------------------------------------------------------------------
 
@@ -512,7 +508,6 @@ int     main(int argc, char *argv[])
     // Init stuff
     //snprintf(passprog, sizeof(passprog), "%s/%s", startdir, "hsaskpass.py");
     snprintf(passprog, sizeof(passprog), "%s", "hsaskpass.py");
-    snprintf(passback, sizeof(passback), "%s/%s", startdir, "hsaskpass.sh");
     openlog("HSEncFs",  LOG_PID,  LOG_DAEMON);
     parse_comline(argc, argv);
 
