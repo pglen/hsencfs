@@ -1,6 +1,6 @@
 Name:           hsencfs
 Version:        1.5.0
-Release:        4
+Release:        5
 Summary:        High Security Encrypted File System.
 Maintainer:	    "peterglen99@gmail.com"
 Group:          Encryption

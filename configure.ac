@@ -15,7 +15,7 @@ AM_CONDITIONAL([AUTOCHECK_DEFINED], [test x"$AUTOCHECK" != x""])
 AC_PROG_CC
 AC_PROG_INSTALL
 
-AC_PREFIX_DEFAULT(/usr/local)
+AC_PREFIX_DEFAULT(/usr)
 
 SERVICE_FILE=systemd/hsencfs.service
 SYSTEMD_DIR=`pkg-config systemd --variable=systemdsystemunitdir`

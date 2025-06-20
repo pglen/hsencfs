@@ -32,7 +32,7 @@ AC_CHECK_LIB([ulockmgr], [main])
 # Checks for programs.
 AC_PROG_CC
 AC_PROG_INSTALL
-AC_PREFIX_DEFAULT(/usr/local)
+AC_PREFIX_DEFAULT(/usr)
 AC_OUTPUT
 
 # EOF

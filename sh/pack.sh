@@ -7,8 +7,8 @@ VER=`cat VERSION`
 CURR=`pwd | awk -F '/' {'print $NF'} |  sort -n | tail -1`
 #echo $CURR-$VER
 
-if [ -f ../$CURR-$VER.tgz ] ; then
-    echo "Already exists: ../$CURR-$VER.tgz ; Please delete first."
+if [ -f $CURR-$VER.tgz ] ; then
+    echo "Already exists: $CURR-$VER.tgz ; Please delete first."
     exit 1
 fi
 
@@ -19,7 +19,4 @@ tar cfz $CURR-$VER.tgz $CURR
 cd $SSS
 #mv ../$CURR-$VER.tgz .
 
-
-
-
-
+# EOF

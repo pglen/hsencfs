@@ -615,7 +615,7 @@ PACKAGE_STRING='hsencfs 1.5.0'
 PACKAGE_BUGREPORT='peterglen99@gmail.com'
 PACKAGE_URL=''
 
-ac_default_prefix=/usr/local
+ac_default_prefix=/usr
 ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS

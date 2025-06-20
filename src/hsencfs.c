@@ -97,13 +97,14 @@ char  startdir[PATH_MAX] = {0, };
 char  markfile[PATH_MAX] = {0, };
 char  passprog[2 * PATH_MAX] = {0, };
 
+static  char    tmpsecret[PATH_MAX] ;
+
 // -----------------------------------------------------------------------
 
 // Maintain internal version string
 static  char    version[] = "1.5.0";
-static  char    build[]   = "Fri 20.Jun.2025";
-
-static  char    tmpsecret[PATH_MAX] ;
+static  char    build[]   = "5";
+static  char    bdate[]   = "Fri 20.Jun.2025";
 
 // -----------------------------------------------------------------------
 
@@ -373,8 +374,8 @@ void    parse_comline(int argc, char *argv[])
                verbose += 1;
                break;
            case 'V':
-               printf("%s Version: %s Fuse Version: %d - Built on: %s \n",
-                            argv[0], version, FUSE_USE_VERSION, build);
+               printf("HSencFS Version: %s Build: %s on %s Fuse Version: %d \n",
+                             version,  build, bdate, FUSE_USE_VERSION);
                exit(EXIT_NOERROR);
                break;
            case 'u':
