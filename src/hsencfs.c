@@ -606,7 +606,7 @@ int     main(int argc, char *argv[])
     // Check if valid askpass
     if(ondemand)
         {
-        printf("testing: %s\n", passprog);
+        //printf("testing: %s\n", passprog);
         int got = 0;
         //if (access(passprog, X_OK) < 0)
         //    {
@@ -639,7 +639,7 @@ int     main(int argc, char *argv[])
             }
         if(gotdefpass)
             {
-            printf("getpass comline() '%s'\n", defpassx);
+            //printf("getpass comline() '%s'\n", defpassx);
             // Just check
             bluepoint2_encrypt(defpassx, sizeof(defpassx), progname, strlen(progname));
             pret = check_markfile(markfile, defpassx, sizeof(defpassx));
@@ -652,7 +652,7 @@ int     main(int argc, char *argv[])
             passarg.result = xmalloc(MAXPASSLEN);
             if(!passarg.result)
                 {
-                printf("Askpass: no memory.\n");
+                hsprint(TO_EL, 1, "Askpass: no memory.\n");
                 pret = HSPASS_MALLOC;
                 goto eval_ret;
                 }
